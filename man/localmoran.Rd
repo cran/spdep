@@ -41,6 +41,7 @@ data(afcon)
 oid <- order(afcon$id)
 resI <- localmoran(spNamedVec("totcon", afcon), nb2listw(paper.nb))
 print(data.frame(resI[oid,], row.names=afcon$name[oid]), digits=2)
+hist(pnorm(resI[,4]))
 totcon <- spNamedVec("totcon", afcon)
 is.na(totcon) <- sample(1:length(totcon), 5)
 totcon

@@ -11,7 +11,7 @@ approximation to global Moran's I's reference distribution.
 }
 \usage{
 lm.morantest.sad(model, listw, zero.policy=FALSE, alternative="greater", 
-  spChk=NULL, tol=.Machine$double.eps^0.5, maxiter=1000)
+  spChk=NULL, tol=.Machine$double.eps^0.5, maxiter=1000, tol.bounds=0.0001)
 print.moransad(x, ...)
 summary.moransad(object, ...)
 print.summary.moransad(x, ...) 
@@ -28,6 +28,7 @@ must be one of greater (default), less or two.sided.}
   \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
   \item{tol}{the desired accuracy (convergence tolerance) for \code{uniroot}}
   \item{maxiter}{the maximum number of iterations for \code{uniroot}}
+  \item{tol.bounds}{offset from bounds for \code{uniroot}}
   \item{x}{object to be printed}
   \item{object}{object to be summarised}
   \item{...}{arguments to be passed through}

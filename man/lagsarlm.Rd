@@ -130,17 +130,17 @@ COL.lag.eig <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb), method="eigen", quiet=FALSE)
 COL.lag.sp <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb), method="sparse", quiet=FALSE)
-summary(COL.lag.eig)
-summary(COL.lag.sp)
+summary(COL.lag.eig, correlation=TRUE)
+summary(COL.lag.sp, correlation=TRUE)
 COL.lag.B <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb, style="B"))
-summary(COL.lag.B)
+summary(COL.lag.B, correlation=TRUE)
 COL.mixed.B <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb, style="B"), type="mixed", tol.solve=1e-9)
-summary(COL.mixed.B)
+summary(COL.mixed.B, correlation=TRUE)
 COL.mixed.W <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb, style="W"), type="mixed")
-summary(COL.mixed.W)
+summary(COL.mixed.W, correlation=TRUE)
 NA.COL.OLD <- COL.OLD
 NA.COL.OLD$CRIME[20:25] <- NA
 COL.lag.NA <- lagsarlm(CRIME ~ INC + HOVAL, data=NA.COL.OLD,

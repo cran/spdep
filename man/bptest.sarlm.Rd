@@ -1,0 +1,53 @@
+% Copyright 2004 by Roger S. Bivand
+\name{bptest.sarlm}
+\alias{bptest.sarlm}
+%- Also NEED an '\alias' for EACH other topic documented here.
+\title{Breusch-Pagan test for spatial models}
+\description{
+  Performs the Breusch-Pagan test for heteroskedasticity on the least squares fit of the spatial models taking the spatial coefficients rho or lambda into account. This function is a copy of the \code{bptest} function in package "lmtest", modified to use objects returned by spatial simultaneous autoregressive models.
+}
+\usage{
+bptest.sarlm(object, studentize = TRUE)
+}
+%- maybe also 'usage' for other objects documented here.
+\arguments{
+  \item{object}{An object of class \code{"sarlm"} from \code{errorsarlm()} or \code{lagsarlm()}.}
+  \item{studentize}{logical. If set to \code{TRUE} Koenker's studentized
+   version of the test statistic will be used.}
+}
+\details{
+   Asymptotically this corresponds to the test given by Anselin (1988), but is not exactly the same. The studentized version is more conservative and perhaps to be prefered. The residuals, and for spatial error models the RHS variables, are adjusted for the spatial coefficient, as suggested bt Luc Anselin (personal communication).
+}
+
+\value{
+ A list with class \code{"htest"} containing the following components:
+  \item{statistic}{the value of the test statistic.}
+  \item{p.value}{the p-value of the test.}
+  \item{parameter}{degrees of freedom.}
+  \item{method}{a character string indicating what type of test was
+    performed.}
+}
+}
+\references{T.S. Breusch & A.R. Pagan (1979),
+A Simple Test for Heteroscedasticity and Random Coefficient Variation.
+\emph{Econometrica} \bold{47}, 1287--1294
+
+W. Krämer & H. Sonnberger (1986),
+\emph{The Linear Regression Model under Test}. Heidelberg: Physica.
+
+L. Anselin (1988) \emph{Spatial econometrics: methods and models.}
+Dordrecht: Kluwer, pp. 121--122.
+}
+\author{Torsten Hothorn \email{Torsten.Hothorn@rzmail.uni-erlangen.de} and
+ Achim Zeileis \email{zeileis@ci.tuwien.ac.at}, modified by Roger Bivand \email{Roger.Bivand@nhh.no}}
+
+\seealso{\code{\link{errorsarlm}}, \code{\link{lagsarlm}}}
+\examples{
+data(columbus)
+error.col <- errorsarlm(CRIME ~ HOVAL + INC, data=columbus,
+ nb2listw(col.gal.nb))
+bptest.sarlm(error.col)
+bptest.sarlm(error.col, studentize=FALSE)
+}
+\keyword{spatial}
+

@@ -109,6 +109,7 @@ lagsarlm <- function(formula, data = list(), listw,
 		rho.se <- NULL
 		LMtest <- NULL
 		ase <- FALSE
+		varb <- FALSE
 	} else {
 		LLs <- NULL
 		tr <- function(A) sum(diag(A))
@@ -130,6 +131,8 @@ lagsarlm <- function(formula, data = list(), listw,
 		inf3 <- rbind(zero, t(xtawxb), xtx)
 		inf <- cbind(inf1, inf2, inf3)
 		varb <- (s2^2) * solve(inf, tol=tol.solve)
+		rownames(varb) <- colnames(varb) <- 
+			c("sigma", "rho", colnames(x))
 		rest.se <- sqrt(diag(varb))[-c(1:2)]
 		rho.se <- sqrt(varb[2,2])
 		TW <- (W %*% W) + (t(W) %*% W)
@@ -147,7 +150,7 @@ lagsarlm <- function(formula, data = list(), listw,
 		lm.target=lm.lag, fitted.values=fit,
 		se.fit=NULL, formula=formula,
 		ase=ase, LLs=LLs, rho.se=rho.se, LMtest=LMtest, 
-		zero.policy=zero.policy), class=c("sarlm"))
+		resvar=varb, zero.policy=zero.policy), class=c("sarlm"))
 	if (zero.policy) {
 		zero.regs <- attr(listw$neighbours, 
 			"region.id")[which(card(listw$neighbours) == 0)]

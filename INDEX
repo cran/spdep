@@ -6,6 +6,7 @@ auckland                Marshall's infant mortality in Auckland
                         dataset
 baltimore               House sales prices, Baltimore, MD 1978
 boston                  Corrected Boston Housing Data
+bptest.sarlm            Breusch-Pagan test for spatial models
 card                    Cardinalities for neighbours lists
 cell2nb                 Generate neighbours list for grid cells
 choynowski              Choynowski probability map values
@@ -74,8 +75,7 @@ predict.sarlm           Prediction for spatial simultaneous
                         autoregressive linear model objects
 probmap                 Probability mapping for rates
 read.gal                Read a GAL lattice file into a neighbours list
-read.gwt2nb             Read and write GeoDa GWT spatial neighbour
-                        files
+read.gwt2nb             Read and write spatial neighbour files
 residuals.sarlm         Access functions for spatial simultaneous
                         autoregressive linear model objects
 set.spChkOption         Control checking of spatial object IDs

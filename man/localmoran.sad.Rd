@@ -1,4 +1,4 @@
-% Copyright 2002 by Roger S. Bivand
+% Copyright 2002-4 by Roger S. Bivand
 \name{localmoran.sad}
 \alias{localmoran.sad}
 \alias{listw2star}
@@ -10,16 +10,19 @@
 \title{Saddlepoint approximation of local Moran's Ii tests}
 \description{
   The function implements Tiefelsdorf's application of the Saddlepoint
-approximation to local Moran's Ii's reference distribution. Tests are
-reported for separately for each zone selected, and may be summarised
-using \code{summary.localmoransad}.  Values of local Moran's Ii
-agree with those from \code{localmoran()}, but in that function, the
-standard deviate - here the Saddlepoint approximation - is based on the
-randomisation assumption.
+approximation to local Moran's Ii's reference distribution. If the model
+object is of class "lm", global independence is assumed; if of class
+"sarlm", global dependence is assumed to be represented by the spatial
+parameter of that model. Tests are reported separately for each zone
+selected, and may be summarised using \code{summary.localmoransad}.
+Values of local Moran's Ii agree with those from \code{localmoran()},
+but in that function, the standard deviate - here the Saddlepoint
+approximation - is based on the randomisation assumption.
 }
 \usage{
 localmoran.sad(model, select, nb, glist=NULL, style="W", zero.policy=FALSE,
-  alternative="greater", spChk=NULL, save.Vi=FALSE)
+  alternative="greater", spChk=NULL, save.Vi=FALSE, 
+  tol = .Machine$double.eps^0.5, maxiter = 1000, tol.bounds=0.0001)
 as.data.frame.localmoransad(x, row.names=NULL, optional=FALSE) 
 print.localmoransad(x, ...)
 summary.localmoransad(object, ...)
@@ -28,8 +31,7 @@ listw2star(listw, ireg, style, n, D, a, zero.policy=FALSE)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
-  \item{model}{an object of class \code{lm} returned by \code{lm}; weights
-and offsets should not be used}
+  \item{model}{an object of class \code{lm} returned by \code{lm} (assuming no global spatial autocorrelation), or an object of class \code{sarlm} returned by a spatial simultaneous autoregressive model fit (assuming global spatial autocorrelation represented by the model spatial coefficient); weights and offsets should not be used}
   \item{select}{an integer vector of the id. numbers of zones to be tested}
   \item{nb}{a list of neighbours of class \code{nb}}
   \item{glist}{a list of general weights corresponding to neighbours}
@@ -41,6 +43,9 @@ must be one of greater (default), less or two.sided.}
   \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
   \item{save.Vi}{if TRUE, return the star-shaped weights lists for each zone 
 tested}
+  \item{tol}{the desired accuracy (convergence tolerance) for \code{uniroot}}
+  \item{maxiter}{the maximum number of iterations for \code{uniroot}}
+  \item{tol.bounds}{offset from bounds for \code{uniroot}}
   \item{x}{object to be printed}
   \item{row.names}{ignored argument to \code{as.data.frame.localmoransad};
 row names assigned from localmoransad object}
@@ -58,9 +63,18 @@ row names assigned from localmoransad object}
   The function implements the analytical eigenvalue calculation together with
 trace shortcuts given or suggested in Tiefelsdorf (2002), partly
 following remarks by J. Keith Ord, and uses the
-Saddlepoint analytical solution from Tiefelsdorf's SPSS code. No n by n
-matrices are needed at any point, the star-shaped weights matrices being
-handled as listw lists.
+Saddlepoint analytical solution from Tiefelsdorf's SPSS code. 
+
+If a histogram of the probability values of the saddlepoint estimate
+for the assumption of global independence is not approximately flat,
+the assumption is probably unjustified, and re-estimation with global
+dependence is recommended.
+
+No n by n matrices are needed at any point for the test assuming no global
+dependence, the star-shaped weights matrices being handled as listw
+lists. When the test is made on residuals from a spatial regression,
+taking a global process into account. n by n matrices are necessary,
+and memory constraints may be reached for large lattices.
 }
 \value{
 A list with class \code{localmoransad} containing "select" lists, each with
@@ -84,13 +98,21 @@ Geographical Analysis, 34, pp. 187--206; see also Tiefelsdorf's SPSS code:
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 
 \seealso{\code{\link{localmoran}}, \code{\link{lm.morantest}},
- \code{\link{lm.morantest.sad}}}
+ \code{\link{lm.morantest.sad}}, \code{\link{errorsarlm}}}
 
 \examples{
 data(eire)
 e.lm <- lm(OWNCONS ~ ROADACC, data=eire.df)
 e.locmor <- summary(localmoran.sad(e.lm, eire.nb, select=1:nrow(eire.df)))
+e.locmor
 mean(e.locmor[,1])
 lm.morantest(e.lm, nb2listw(eire.nb))
+hist(e.locmor[,"Pr. (Sad)"])
+e.errorsar <- errorsarlm(OWNCONS ~ ROADACC, data=eire.df,
+ listw=nb2listw(eire.nb))
+e.errorsar
+e.clocmor <- summary(localmoran.sad(e.errorsar, eire.nb, select=1:nrow(eire.df)))
+e.clocmor
+hist(e.clocmor[,"Pr. (Sad)"])
 }
 \keyword{spatial}
