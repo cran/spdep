@@ -66,6 +66,7 @@ summary.listw <- function(object, coords=NULL, lonlat=FALSE,
 		scale=scale, ...)
 	style <- object$style
 	cat(paste("\nWeights style:", style, "\n"))
+	if (is.na(style)) style = "NA"
 	cat("Weights constants summary:\n")
 	print(data.frame(rbind(unlist(spweights.constants(object,
 		zero.policy=zero.policy))[c(1, 5:8)]), row.names=style))
@@ -77,6 +78,7 @@ print.listw <- function(x, zero.policy=FALSE, ...) {
 	print.nb(x$neighbours, ...)
 	style <- x$style
 	cat(paste("\nWeights style:", style, "\n"))
+	if (is.na(style)) style = "NA"
 	cat("Weights constants summary:\n")
 	print(data.frame(rbind(unlist(spweights.constants(x,
 		zero.policy=zero.policy))[c(1, 5:8)]), row.names=style))

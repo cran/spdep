@@ -34,7 +34,7 @@ Wald1.sarlm(object)
   \code{LR1.sarlm} and \code{Wald1.sarlm} returm objects of class \code{htest}
 }
 
-\note{The numbers of degrees of freedom returned by \code{logLik.sarlm()}} include nuisance parameters, that is the number of regression coefficients, plus sigma, plus spatial parameter esitmate(s).}
+\note{The numbers of degrees of freedom returned by \code{logLik.sarlm()} include nuisance parameters, that is the number of regression coefficients, plus sigma, plus spatial parameter esitmate(s).}
 
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 

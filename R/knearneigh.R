@@ -1,4 +1,4 @@
-# Copyright 2001-3 by Roger S. Bivand. 
+# Copyright 2001-4 by Roger S. Bivand. 
 #
 
 knearneigh <- function(x, k=1, lonlat=FALSE)
@@ -6,7 +6,7 @@ knearneigh <- function(x, k=1, lonlat=FALSE)
     if (!is.numeric(x)) stop("Data non-numeric")
     if (!is.matrix(x)) stop("Data not in matrix form")
     if (any(is.na(x))) stop("Data include NAs")
-    if (!is.double(x)) x <- as.double(x)
+    if (!is.double(x)) storage.mode(x) <- "double"
     np <- nrow(x)
     dimension <- ncol(x)
     if (dimension > 2) stop("Only 2D data accepted")
