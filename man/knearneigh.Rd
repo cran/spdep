@@ -40,7 +40,11 @@ title(main="K nearest neighbours, k = 4")
 data(state)
 us48.fipsno <- read.geoda(system.file("etc/weights/us48.txt",
  package="spdep")[1])
-m50.48 <- match(us48.fipsno$State.name, state.name)
+if (as.numeric(paste(version$major, version$minor, sep="")) < 19) {
+ m50.48 <- match(us48.fipsno$"State.name", state.name)
+} else {
+ m50.48 <- match(us48.fipsno$"State_name", state.name)
+}
 xy <- as.matrix(as.data.frame(state.center))[m50.48,]
 llk4.nb <- knn2nb(knearneigh(xy, k=4, lonlat=FALSE))
 gck4.nb <- knn2nb(knearneigh(xy, k=4, lonlat=TRUE))

@@ -25,6 +25,8 @@ Luc Anselin (2003): Spatial Analysis Laboratory, Department of Agricultural and 
 The function returns an object of class \code{nb} with a list of integer vectors containing neighbour region number ids.
 }
 
+\warning{The column names read by read.geoda() change between R releases 1.8.x and 1.9.0, because the underscore character becomes a valid character from that release.}
+
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 
 \note{Example data downloaded from: \url{http://sal.agecon.uiuc.edu/weights/zips/us48.zip}}
@@ -39,7 +41,11 @@ us48.q <- read.gal(system.file("etc/weights/us48_q.GAL", package="spdep")[1],
 us48.r <- read.gal(system.file("etc/weights/us48_rk.GAL", package="spdep")[1],
  us48.fipsno$Fipsno)
 data(state)
-m50.48 <- match(us48.fipsno$State.name, state.name)
+if (as.numeric(paste(version$major, version$minor, sep="")) < 19) {
+ m50.48 <- match(us48.fipsno$"State.name", state.name)
+} else {
+ m50.48 <- match(us48.fipsno$"State_name", state.name)
+}
 plot(us48.q, as.matrix(as.data.frame(state.center))[m50.48,])
 plot(diffnb(us48.r, us48.q),
  as.matrix(as.data.frame(state.center))[m50.48,], add=TRUE, col="red")

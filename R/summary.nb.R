@@ -68,7 +68,7 @@ summary.listw <- function(object, coords=NULL, lonlat=FALSE,
 	cat(paste("\nWeights style:", style, "\n"))
 	cat("Weights constants summary:\n")
 	print(data.frame(rbind(unlist(spweights.constants(object,
-		zero.policy=zero.policy))), row.names=style))
+		zero.policy=zero.policy))[c(1, 5:8)]), row.names=style))
 
 }
 
@@ -79,7 +79,7 @@ print.listw <- function(x, zero.policy=FALSE, ...) {
 	cat(paste("\nWeights style:", style, "\n"))
 	cat("Weights constants summary:\n")
 	print(data.frame(rbind(unlist(spweights.constants(x,
-		zero.policy=zero.policy))), row.names=style))
+		zero.policy=zero.policy))[c(1, 5:8)]), row.names=style))
 	invisible(x)
 
 }

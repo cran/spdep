@@ -28,17 +28,36 @@ lagsarlm <- function(formula, data = list(), listw, type="lag",
 	wy <- lag.listw(listw, y, zero.policy=zero.policy)
 	if (any(is.na(wy))) stop("NAs in lagged dependent variable")
 	if (type != "lag") {
-		WX <- matrix(nrow=n,ncol=(m-(K-1)))
-		for (k in K:m) {
-			wx <- lag.listw(listw, x[,k], zero.policy=zero.policy)
-			if (any(is.na(wx))) 
-				stop("NAs in lagged independent variable")
-			WX[,(k-(K-1))] <- wx
+		# check if there are enough regressors
+	        if (m > 1) {
+			WX <- matrix(nrow=n,ncol=(m-(K-1)))
+			for (k in K:m) {
+				wx <- lag.listw(listw, x[,k], 
+				    zero.policy=zero.policy)
+				if (any(is.na(wx))) 
+				    stop("NAs in lagged independent variable")
+				WX[,(k-(K-1))] <- wx
+			}
 		}
-		xxcolnames <- character(2*m - (K-1))
+		if (K == 2) {
+         	    # unnormalized weight matrices
+                	if (!(listw$style == "W")) {
+ 	      			intercept <- as.double(rep(1, n))
+       	        		wx <- lag.listw(listw, intercept, 
+					zero.policy = zero.policy)
+                    		if (m > 1) {
+                        		WX <- cbind(wx, WX)
+                    		} else {
+			      		WX <- matrix(wx, nrow = n, ncol = 1)
+                    		}
+                	} 
+            	}   
+		m1 <- m + 1
+		mm <- NCOL(x) + NCOL(WX)
+            	xxcolnames <- character(mm)
 		for (k in 1:m) xxcolnames[k] <- xcolnames[k]
-		for (k in K:m) xxcolnames[m + (k-(K-1))] <-
-			paste("lag.", xcolnames[k], sep="")
+		for (k in m1:mm) 
+		    xxcolnames[k] <- paste("lag.", xcolnames[k-mm+m], sep="")
 		x <- cbind(x, WX)
 		colnames(x) <- xxcolnames
 		m <- NCOL(x)
@@ -48,7 +67,7 @@ lagsarlm <- function(formula, data = list(), listw, type="lag",
 		if (!quiet) cat("Computing eigenvalues ...\n")
 		eig <- eigenw(listw)
 		cat("\n")
-#range inverted 031031, email from Salvati Nicola
+#range inverted 031031, email from Salvati Nicola (and Rein Halbersma)
 		if (is.complex(eig)) eig.range <- 1/range(Re(eig))
 		else eig.range <- 1/range(eig)
 		lm.null <- lm(y ~ x - 1)
@@ -146,7 +165,7 @@ sar.lag.mixed.f.s <- function(rho, sn, e.a, e.b, e.c, n, quiet, sparsedebug)
 {
 	SSE <- e.a - 2*rho*e.b + rho*rho*e.c
 	s2 <- SSE/n
-	ret <- (log.spwdet(sparseweights=sn, rho=rho, debug=sparsedebug)
+	ret <- (logSpwdet(sparseweights=sn, rho=rho, debug=sparsedebug)
 		- ((n/2)*log(2*pi)) - (n/2)*log(s2) - (1/(2*s2))*SSE)
 	if (!quiet) cat("Rho:\t", rho, "\tfunction value:\t", ret, "\n")
 	ret

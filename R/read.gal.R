@@ -21,7 +21,7 @@ read.gal <- function(file, region.id=NULL, override.id=FALSE)
 	    		stop("non-unique region.id given")
 	if (is.null(region.id)) region.id <- as.character(1:n)
 	if (n != length(region.id))
-		stop("Mismatch in dimensions of GWT file and region.id")
+		stop("Mismatch in dimensions of GAL file and region.id")
     	rn <- character(n)
 	res <- vector(mode="list", length=n)
 	for (i in 1:n) {

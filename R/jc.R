@@ -16,6 +16,7 @@ joincount <- function(dums, listw) {
 
 joincount.test <- function(fx, listw, zero.policy=FALSE,
 	alternative="greater", spChk=NULL) {
+	alternative <- match.arg(alternative, c("greater", "less", "two.sided"))
 	if (!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
 	if (!is.factor(fx)) stop(paste(deparse(substitute(x)),
@@ -29,8 +30,7 @@ joincount.test <- function(fx, listw, zero.policy=FALSE,
 	if (is.null(spChk)) spChk <- get.spChkOption()
 	if (spChk && !chkIDs(fx, listw))
 		stop("Check of data and weights ID integrity failed")
-	if (!(alternative %in% c("greater", "less", "two.sided")))
-		stop("alternative must be one of: \"greater\", \"less\", or \"two.sided\"")
+
 	wc <- spweights.constants(listw, zero.policy=zero.policy)
 	S02 <- wc$S0*wc$S0
 
@@ -79,6 +79,7 @@ print.jclist <- function(x, ...) {
 
 joincount.mc <- function(fx, listw, nsim, zero.policy=FALSE,
 	alternative="greater", spChk=NULL) {
+	alternative <- match.arg(alternative, c("greater", "less"))
 	if(!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
 	if(!is.factor(fx)) stop(paste(deparse(substitute(fx)),
@@ -94,8 +95,7 @@ joincount.mc <- function(fx, listw, nsim, zero.policy=FALSE,
 	if (spChk && !chkIDs(fx, listw))
 		stop("Check of data and weights ID integrity failed")
 	if(nsim > gamma(n+1)) stop("nsim too large for this n")
-	if (!(alternative %in% c("greater", "less", "two.sided")))
-		stop("alternative must be one of: \"greater\", \"less\", or \"two.sided\"")
+
 	ff <- ~ fx - 1
 	dums <- model.matrix(ff, model.frame(ff))
 	nc <- ncol(dums)
@@ -119,9 +119,11 @@ joincount.mc <- function(fx, listw, nsim, zero.policy=FALSE,
 		names(parameter) <- "rank of observed statistic"
 		diff <- nsim - xrank[i]
 		diff <- ifelse(diff > 0, diff, 0)
-        	pval <- (diff + 1)/(nsim+1)
-		if (alternative == "less") pval <- 1 - pval
-		else if (alternative == "two.sided") pval <- 2 * pval
+        	if (alternative == "less") 
+        		pval <- punif((diff + 1)/(nsim + 1), lower.tail=FALSE)
+    		else if (alternative == "greater") 
+        		pval <- punif((diff + 1)/(nsim + 1))
+
 		method <- "Monte-Carlo simulation of join-count statistic"
 		data.name <- paste(deparse(substitute(fx)), "\nweights:",
 			deparse(substitute(listw)),

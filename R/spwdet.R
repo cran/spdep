@@ -27,7 +27,7 @@ spwdet <- function(sparseweights, rho, debug=FALSE)
 	list(det=z$determinant, exp=z$exponent)
 }
 
-log.spwdet <- function(sparseweights, rho, debug=FALSE)
+logSpwdet <- function(sparseweights, rho, debug=FALSE)
 {
 	if(!inherits(sparseweights, "spatial.neighbour"))
              stop("Not a sparse weights object")

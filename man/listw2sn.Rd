@@ -3,7 +3,7 @@
 \alias{listw2sn}
 \alias{sn2listw}
 \alias{spwdet}
-\alias{log.spwdet}
+\alias{logSpwdet}
 \title{Spatial neighbour sparse representation}
 \description{
 The function makes a \code{"spatial neighbour"} object representation
@@ -16,7 +16,7 @@ the "sparse" method is chosen in \code{errorsarlm()} and \code{lagsarlm()}. \cod
 listw2sn(listw)
 sn2listw(sn)
 spwdet(sparseweights, rho, debug=FALSE)
-log.spwdet(sparseweights, rho, debug=FALSE)
+logSpwdet(sparseweights, rho, debug=FALSE)
 
 }
 \arguments{
@@ -55,7 +55,7 @@ A data frame with three columns, and with class \code{spatial.neighbour}:
   \item{from}{region number id for the start of the link (S-PLUS row.id)}
   \item{to}{region number id for the end of the link (S-PLUS col.id)}
   \item{weights}{weight for this link}
-\code{log.spwdet} returns log det(I - rho * W).
+\code{logSpwdet} returns log det(I - rho * W).
 }
 
 \references{R. Kelley Pace and R. P. Barry (1998) Quick computations
@@ -100,6 +100,6 @@ col.sn <- listw2sn(col.listw)
 col.sn[col.sn[,1] == 1,]
 rho <- seq(-0.8, 0.9, 0.1)
 for (i in rho) print(paste("rho:", i, "log(det(I - rho*W))",
-  log.spwdet(col.sn, i)), quote=TRUE)
+  logSpwdet(col.sn, i)), quote=TRUE)
 }
 \keyword{spatial}

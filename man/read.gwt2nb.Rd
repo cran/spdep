@@ -20,10 +20,10 @@ write.sn2gwt(sn, file, shpfile=NULL, ind=NULL)
   \item{ind}{region id indicator variable name}
 }
 \details{
-  
+ Now attempts to honour the region.id argument given when reading GWT files. 
 }
 \value{
-  
+  \code{read.gwt2nb} returns a neighbour "nb" object with the generalised weights stored as a list element called "dlist" of the "GeoDa" attribute.
 }
 
 \references{Luc Anselin (2003) \emph{GeoDa 0.9 User's Guide}, pp. 80--81, Spatial Analysis Laboratory, Department of Agricultural and Consumer Economics, University of Illinois, Urbana-Champaign, \url{http://agec221.agecon.uiuc.edu/csiss/pdf/geoda093.pdf}}

@@ -13,6 +13,7 @@ moran <- function(x, listw, n, S0, zero.policy=FALSE) {
 
 moran.test <- function(x, listw, randomisation=TRUE, zero.policy=FALSE,
 	alternative="greater", rank = FALSE, spChk=NULL) {
+	alternative <- match.arg(alternative, c("greater", "less", "two.sided"))
 	if (!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
 	if (!is.numeric(x)) stop(paste(deparse(substitute(x)),
@@ -23,8 +24,7 @@ moran.test <- function(x, listw, randomisation=TRUE, zero.policy=FALSE,
 	if (is.null(spChk)) spChk <- get.spChkOption()
 	if (spChk && !chkIDs(x, listw))
 		stop("Check of data and weights ID integrity failed")
-	if (!(alternative %in% c("greater", "less", "two.sided")))
-		stop("alternative must be one of: \"greater\", \"less\", or \"two.sided\"")
+	
 	wc <- spweights.constants(listw, zero.policy=zero.policy)
 	S02 <- wc$S0*wc$S0
 	res <- moran(x, listw, wc$n, wc$S0, zero.policy=zero.policy)
@@ -64,6 +64,7 @@ moran.test <- function(x, listw, randomisation=TRUE, zero.policy=FALSE,
 
 moran.mc <- function(x, listw, nsim, zero.policy=FALSE,
 	alternative="greater", spChk=NULL) {
+	alternative <- match.arg(alternative, c("greater", "less"))
 	if(!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
 	if(!is.numeric(x)) stop(paste(deparse(substitute(x)),
@@ -76,8 +77,7 @@ moran.mc <- function(x, listw, nsim, zero.policy=FALSE,
 	if (spChk && !chkIDs(x, listw))
 		stop("Check of data and weights ID integrity failed")
 	if(nsim > gamma(n+1)) stop("nsim too large for this n")
-	if (!(alternative %in% c("greater", "less", "two.sided")))
-		stop("alternative must be one of: \"greater\", \"less\", or \"two.sided\"")
+	
 	S0 <- Szero(listw)
 	res <- numeric(length=nsim+1)
 	for (i in 1:nsim) res[i] <- moran(sample(x), listw, n, S0,
@@ -87,9 +87,10 @@ moran.mc <- function(x, listw, nsim, zero.policy=FALSE,
 	xrank <- rankres[length(res)]
 	diff <- nsim - xrank
 	diff <- ifelse(diff > 0, diff, 0)
-        pval <- (diff + 1)/(nsim+1)
-	if (alternative == "less") pval <- 1 - pval
-	else if (alternative == "two.sided") pval <- 2 * pval
+	if (alternative == "less") 
+        	pval <- punif((diff + 1)/(nsim + 1), lower.tail=FALSE)
+    	else if (alternative == "greater") 
+        	pval <- punif((diff + 1)/(nsim + 1))
 	statistic <- res[nsim+1]
 	names(statistic) <- "statistic"
 	parameter <- xrank

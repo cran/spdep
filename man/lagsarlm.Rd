@@ -31,10 +31,10 @@ of model specification are given for \code{lm()}}
 By default the variables are taken from the environment which the function 
 is called.}
   \item{listw}{a \code{listw} object created for example by \code{nb2listw}}
-  \item{type}{default "lag", may be set to "mixed"}
+  \item{type}{default "lag", may be set to "mixed"; when "mixed", the lagged intercept is dropped for spatial weights style "W", that is row-standardised weights, but otherwise included}
   \item{method}{"eigen" (default) - the Jacobian is computed as the product 
 of (1 - rho*eigenvalue) using \code{eigenw} , and "sparse" - computes the 
-determinant of the sparse matrix (I - rho*W) directly using \code{log.spwdet}.
+determinant of the sparse matrix (I - rho*W) directly using \code{logSpwdet}.
 }
   \item{quiet}{default=TRUE; if FALSE, reports function values during optimization.}
   \item{zero.policy}{if TRUE assign zero to the lagged value of zones without 
@@ -117,7 +117,7 @@ pp. 237-289.}
 Bernat for contributions to the asymptotic standard error code.}
 
 \seealso{\code{\link{lm}}, \code{\link{errorsarlm}}, 
-\code{\link{eigenw}}, \code{\link{log.spwdet}}, \code{\link{predict.sarlm}},
+\code{\link{eigenw}}, \code{\link{logSpwdet}}, \code{\link{predict.sarlm}},
 \code{\link{residuals.sarlm}}
 }
 
@@ -129,5 +129,14 @@ COL.lag.sp <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb), method="sparse", quiet=FALSE)
 summary(COL.lag.eig)
 summary(COL.lag.sp)
+COL.lag.B <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
+ nb2listw(COL.nb, style="B"))
+summary(COL.lag.B)
+COL.mixed.B <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
+ nb2listw(COL.nb, style="B"), type="mixed", tol.solve=1e-9)
+summary(COL.mixed.B)
+COL.mixed.W <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
+ nb2listw(COL.nb, style="W"), type="mixed")
+summary(COL.mixed.W)
 }
 \keyword{spatial}

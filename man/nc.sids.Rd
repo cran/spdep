@@ -42,18 +42,18 @@ sids <- sids.shp$att.data
 sidspolys <- Map2poly(sids.shp)
 sidscents <- get.Pcent(sids.shp)
 data(nc.sids)
-sids[1:5, c("CNTY.ID", "NAME", "BIR74")]
+sids[1:5, c(4, 5, 9)]
 nc.sids[1:5, c("CNTY.ID", "BIR74")]
 attr(ncCC89.nb, "region.id")[1:5]
 tmpGAL <- tempfile(pattern="GAL")
 write.nb.gal(ncCC89.nb, file=tmpGAL, oldstyle=FALSE, 
  shpfile="sids", ind="CNTY.ID")
-CNTY.ID <- sids$CNTY.ID
+CNTY.ID <- sids[, 4]
 ncCC89.2.nb <- read.gal(file=tmpGAL, region.id=CNTY.ID)
 tmpGAL <- tempfile(pattern="GAL")
 write.nb.gal(ncCR85.nb, file=tmpGAL, oldstyle=FALSE, 
  shpfile="sids", ind="CNTY.ID")
-CNTY.ID <- sids$CNTY.ID
+CNTY.ID <- sids[, 4]
 ncCR85.2.nb <- read.gal(file=tmpGAL, region.id=CNTY.ID)
 plotpolys(sidspolys, border="grey")
 plot(ncCR85.2.nb, sidscents, add=TRUE, col="blue")

@@ -1,4 +1,4 @@
-% Copyright 2001 by Roger S. Bivand
+% Copyright 2001-3 by Roger S. Bivand
 \name{lag.listw}
 \alias{lag.listw}
 \title{Spatial lag of a numeric vector}
@@ -6,16 +6,17 @@
  Using a \code{listw} sparse representation of a spatial weights matrix, compute the lag vector \eqn{V x}
 }
 \usage{
-lag.listw(listw, x, zero.policy=FALSE)
+lag.listw(x, var, zero.policy=FALSE, ...)
 }
 
 \arguments{
-  \item{listw}{a \code{listw} object created for example by \code{nb2listw}}
-  \item{x}{a numeric vector the same length as the neighbours list in listw}
+  \item{x}{a \code{listw} object created for example by \code{nb2listw}}
+  \item{var}{a numeric vector the same length as the neighbours list in listw}
   \item{zero.policy}{if TRUE assign zero to the lagged value of zones without neighbours, if FALSE assign NA}
+  \item{...}{additional arguments}
 }
 \value{
-  a numeric vector the same length as x
+  a numeric vector the same length as var
 }
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 

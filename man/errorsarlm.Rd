@@ -31,7 +31,7 @@ is called.}
   \item{method}{"eigen" (default) - the Jacobian is computed as the product 
 of (1 - rho*eigenvalue) using \code{eigenw}
 , and "sparse" - computes the 
-determinant of the sparse matrix (I - rho*W) directly using \code{log.spwdet}.
+determinant of the sparse matrix (I - rho*W) directly using \code{logSpwdet}.
 }
   \item{quiet}{default=TRUE; if FALSE, reports function values during optimization.}
   \item{zero.policy}{if TRUE assign zero to the lagged value of zones without 
@@ -65,7 +65,7 @@ number of allocated blocks. At present, \code{spwdet} will fail when
 this increases over the number initially allocated, but will not release
 memory allocated by the sparse functions. In the event of problems,
 save your workspace and quit R. Problems seem to be related to larger
-n, and to an unknown trigger precipitating incontrolled fillin, in the
+n, and to an unknown trigger precipitating uncontrolled fillin, in the
 course of which the sparse routines lose track of their memory pointers,
 and then provoke a segmentation fault trying to free unallocated memory.
 }
@@ -109,17 +109,20 @@ pp. 237-289.}
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 
 \seealso{\code{\link{lm}}, \code{\link{lagsarlm}}, 
-\code{\link{eigenw}}, \code{\link{log.spwdet}}, \code{\link{predict.sarlm}},
+\code{\link{eigenw}}, \code{\link{logSpwdet}}, \code{\link{predict.sarlm}},
 \code{\link{residuals.sarlm}}
 }
 
 \examples{
 data(oldcol)
-COL.err.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb), method="eigen", quiet=FALSE)
-COL.err.sp <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb), method="sparse", quiet=FALSE)
-summary(COL.err.eig)
-summary(COL.err.sp)
+COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
+ nb2listw(COL.nb, style="W"), method="eigen", quiet=FALSE)
+COL.errB.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
+ nb2listw(COL.nb, style="B"), method="eigen", quiet=FALSE)
+COL.errW.sp <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
+ nb2listw(COL.nb, style="W"), method="sparse", quiet=FALSE)
+summary(COL.errW.eig)
+summary(COL.errB.eig)
+summary(COL.errW.sp)
 }
 \keyword{spatial}

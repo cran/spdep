@@ -3,6 +3,7 @@
 
 sp.mantel.mc <- function(var, listw, nsim, type="moran", zero.policy=FALSE,
 	alternative="greater", spChk=NULL) {
+	alternative <- match.arg(alternative, c("greater", "less"))
 	if(!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
 	if(!is.numeric(var)) stop(paste(deparse(substitute(var)),
@@ -15,8 +16,7 @@ sp.mantel.mc <- function(var, listw, nsim, type="moran", zero.policy=FALSE,
 	if (is.null(spChk)) spChk <- get.spChkOption()
 	if (spChk && !chkIDs(var, listw))
 		stop("Check of data and weights ID integrity failed")
-	if (!(alternative %in% c("greater", "less", "two.sided")))
-		stop("alternative must be one of: \"greater\", \"less\", or \"two.sided\"")
+	
 	listw.U <- listw2U(listw)
 	mantel.moran <- function(x, listwU, zero.policy) {
 		res <- x * lag.listw(listw.U, x, zero.policy=zero.policy)
@@ -50,9 +50,10 @@ sp.mantel.mc <- function(var, listw, nsim, type="moran", zero.policy=FALSE,
 	xrank <- rankres[length(res)]
 	diff <- nsim - xrank
 	diff <- ifelse(diff > 0, diff, 0)
-        pval <- (diff + 1)/(nsim+1)
-	if (alternative == "less") pval <- 1 - pval
-	else if (alternative == "two.sided") pval <- 2 * pval
+        if (alternative == "less") 
+        	pval <- punif((diff + 1)/(nsim + 1), lower.tail=FALSE)
+    	else if (alternative == "greater") 
+        	pval <- punif((diff + 1)/(nsim + 1))
 	statistic <- res[nsim+1]
 	names(statistic) <- "statistic"
 	parameter <- xrank

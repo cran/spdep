@@ -48,7 +48,9 @@ Szero <- function(listw) {
 	sum(unlist(listw$weights))
 }
 
-lag.listw <- function(listw, x, zero.policy=FALSE) {
+lag.listw <- function(x, var, zero.policy=FALSE, ...) {
+	listw <- x
+	x <- var
 	if (!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
 	if (!is.numeric(x)) stop(paste(deparse(substitute(listw)),
