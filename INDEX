@@ -9,10 +9,7 @@ boston                  Corrected Boston Housing Data
 card                    Cardinalities for neighbours lists
 cell2nb                 Generate neighbours list for grid cells
 choynowski              Choynowski probability map values
-oldcol                  Columbus OH spatial analysis data set - old
-                        numbering
 columbus                Columbus OH spatial analysis data set
-Graph Components        Depth First Search on Neighbor Lists
 diffnb                  Differences between neighbours lists
 dnearneigh              Neighbourhood contiguity by distance
 droplinks               Drop links in a neighbours list
@@ -24,14 +21,16 @@ eigenw                  Spatial weights matrix eigenvalues
 eire                    Eire data sets
 errorsarlm              Spatial simultaneous autoregressive error
                         model estimation
-geary.mc                Permutation test for Geary's C statistic
+gabrielneigh            Graph based spatial weights
 geary                   Compute Geary's C
+geary.mc                Permutation test for Geary's C statistic
 geary.test              Geary's C test for spatial autocorrelation
 getisord                Getis-Ord remote sensing example data
 globalG.test            test for spatial autocorrelation
-graphneigh              Graph based spatial weights
 include.self            Include self in neighbours list
+intersect.nb            Set operations on neighborhood objects
 invIrM                  Compute SAR generating operator
+is.symmetric.nb         Test a neighbours list for symmetry
 joincount.mc            Permutation test for same colour join count
                         statistics
 joincount.test          BB join count statistic for k-coloured factors
@@ -54,16 +53,18 @@ localmoran.sad          Saddlepoint approximation of local Moran's Ii
 LR.sarlm                Likelihood ratio test
 mat2listw               Convert a square spatial weights matrix to a
                         weights list object
+moran                   Compute Moran's I
 moran.mc                Permutation test for Moran's I statistic
 moran.plot              Moran scatterplot
-moran                   Compute Moran's I
 moran.test              Moran's I test for spatial autocorrelation
 nb2listw                Spatial weights for neighbours lists
 nb2mat                  Spatial weights matrices for neighbours lists
 nbdists                 Spatial link distance measures
 nblag                   Higher order neighbours lists
-nb.set.operations       Set operations on neighborhood objects
+n.comp.nb               Depth First Search on Neighbor Lists
 nc.sids                 North Carolina SIDS data
+oldcol                  Columbus OH spatial analysis data set - old
+                        numbering
 plot.nb                 Plot a neighbours list
 poly2nb                 Construct neighbours list from polygon list
 predict.sarlm           Prediction for spatial simultaneous
@@ -86,7 +87,6 @@ subset.nb               Subset a neighbours list
 summary.nb              Print and summary function for neighbours and
                         weights lists
 summary.sarlm           summary method for class sarlm
-is.symmetric.nb         Test a neighbours list for symmetry
 tri2nb                  Neighbours list from tri object
 used.cars               US 1960 used car prices
 write.nb.gal            Write a neighbours list as a GAL lattice file

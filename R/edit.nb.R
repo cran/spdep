@@ -69,7 +69,7 @@ edit.nb <- function(name, coords, polys=NULL, ...) {
       #plot.new()
       #plot.window(xlim = xlim, ylim = ylim, "", asp=1)
       #if (!is.null(polys))
-      #  plotpolys(polys, border="grey", add=TRUE)
+      #  plot(polys, border="grey", add=TRUE)
       #for (i in 1:n) {
       #  inb <- nb[[i]]
       #  for (j in inb)
@@ -101,7 +101,7 @@ edit.nb <- function(name, coords, polys=NULL, ...) {
 #          plot.new()
 #          plot.window(xlim = xlim, ylim = ylim, "", asp=1)
 #          if (!is.null(polys))
-#            plotpolys(polys, border="grey", add=TRUE)
+#            plot(polys, border="grey", add=TRUE)
 #          for (i in 1:n) {
 #            inb <- nb[[i]]
 #            for (j in inb)
