@@ -1,0 +1,91 @@
+# Copyright 2003 by Luc Anselin and Roger Bivand
+#
+
+# LA 6/28/03 read.gwt
+# LA 7/12/03 revised, sorted ids
+# LA 9/30/03 use match to correct orders
+
+read.gwt2nb <- function(file, region.id=NULL) {
+	con <- file(file, open="r")   #opens the file
+	firstline <- unlist(strsplit(readLines(con,1)," "))
+	if (length(firstline) == 4) {
+		n <- as.integer(firstline[2])
+		shpfile <- firstline[3]
+		ind <- firstline[4]
+		if (ind != deparse(substitute(region.id)))
+			warning(paste("region.id not named", ind))
+	} else if (length(firstline) == 1) {
+		n <- as.integer(firstline[1])
+		shpfile <- as.character(NA)
+		ind <- as.character(NA)
+		warning("Old-style GWT file")
+	} else stop("Invalid header line format for GWT file")
+	close(con)
+	nseq <- 1:n
+	if (is.null(region.id)) region.id <- nseq
+	if (n != length(region.id))
+		stop("Mismatch in dimensions of GWT file and region.id")
+	if (length(unique(region.id)) != length(region.id))
+	    stop("non-unique region.id given")
+	odij <- read.table(file, skip=1)
+	    # convert region.id to order
+	regodij <- match(odij[,1], region.id)
+	regddij <- match(odij[,2], region.id)
+	odij <- cbind(regodij, regddij, odij[,3])
+	qorder <- order(odij[,1],odij[,2])
+	odij <- odij[qorder,]
+	origvec <- unique(odij[,1])
+	if (!all(nseq %in% origvec))
+		warning(paste(paste(region.id[which(!(nseq %in% origvec))], 
+			collapse=", "), "are not origins"))
+	destvec <- unique(odij[,2])
+	if (!all(nseq %in% destvec))
+		warning(paste(paste(region.id[which(!(nseq %in% destvec))], 
+			collapse=", "), "are not destinations"))
+
+	res <- vector(mode="list", length=n)
+	vlist <- vector(mode="list", length=n)
+	rle.sn <- rle(odij[,1])
+	cs1.sn <- cumsum(rle.sn$lengths)
+	cs0.sn <- c(1, cs1.sn[1:(n-1)]+1)
+	ii <- 1
+	for (i in 1:n) {
+		if (rle.sn$value[ii] == i) {
+			res[[i]] <- as.integer(odij[cs0.sn[ii]:cs1.sn[ii],2])
+			vlist[[i]] <- as.double(odij[cs0.sn[ii]:cs1.sn[ii],3])
+			ii <- ii+1
+		} else {
+			res[[i]] <- as.integer(0)
+		}
+	}
+
+	class(res) <- c("nb", "GWT")
+	attr(res, "region.id") <- region.id
+	attr(res, "neighbours.attrs") <- as.character(NA)
+	attr(res, "weights.attrs") <- as.character(NA)
+	attr(res, "GeoDa") <- list(dist=vlist, shpfile=shpfile, ind=ind)
+	attr(res, "call") <- match.call()
+	attr(res, "n") <- n
+	invisible(res)
+}
+
+write.sn2gwt <- function(sn, file, shpfile=NULL, ind=NULL) {
+	if(!inherits(sn, "spatial.neighbour")) 
+	    stop("not a spatial.neighbour object")
+	n <- attr(sn, "n")
+	if (is.null(shpfile)) {
+		tmp <- attr(sn, "GeoDa")$shpfile
+		if (is.null(tmp)) shpfile <- "unknown"
+		else shpfile <- tmp
+	}
+	if (is.null(ind)) {
+		tmp <- attr(sn, "GeoDa")$ind
+		if (is.null(tmp)) ind <- "unknown"
+		else ind <- tmp
+	}
+	con <- file(file, open="w")
+	writeLines(paste("0", n, shpfile, ind, sep=" "), con)
+	write.table(as.data.frame(sn), file=con, append=TRUE,
+		row.names=FALSE, col.names=FALSE)
+	close(con)
+}
