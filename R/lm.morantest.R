@@ -1,15 +1,15 @@
-# Copyright 2001-3 by Roger Bivand 
+# Copyright 2001-4 by Roger Bivand 
 #
 
 lm.morantest <- function(model, listw, zero.policy=FALSE, 
-	    alternative = "greater", spChk=NULL) {
+	    alternative = "greater", spChk=NULL, resfun=weighted.residuals) {
 	alternative <- match.arg(alternative, c("greater", "less", "two.sided"))
 	if (!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
 	if(class(model) != "lm") stop(paste(deparse(substitute(model)),
 		"not an lm object"))
  	N <- length(listw$neighbours)
-	u <- residuals(model)
+	u <- resfun(model)
 	if (N != length(u)) 
             stop("objects of different length")
 	if (is.null(spChk)) spChk <- get.spChkOption()
@@ -28,6 +28,9 @@ lm.morantest <- function(model, listw, zero.policy=FALSE,
 	p1 <- 1:p
 	XtXinv <- chol2inv(model$qr$qr[p1, p1, drop = FALSE])
 	X <- model.matrix(terms(model), model.frame(model))
+	if (!is.null(wts <- weights(model))) {
+		X <- sqrt(diag(wts)) %*% X
+	}
 # Cliff/Ord 1981, p. 203
 	Z <- lag.listw(listw.U, X, zero.policy=zero.policy)
 	C1 <- t(X) %*% Z
