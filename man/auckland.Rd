@@ -1,0 +1,27 @@
+\name{auckland}
+\alias{auckland}
+\alias{auckland.nb}
+\alias{auckpolys}
+\alias{auckbbs}
+\non_function{}
+\title{Marshall's infant mortality in Auckland dataset}
+\usage{data(auckland)}
+\description{
+The \code{auckland} data frame has 167 rows (census area units --- CAU) and 4 columns. The dataset also includes the "nb" object \code{auckland.nb} of neighbour relations based on contiguity, the "polylist" object \code{auckpolys} of polygon boundaries for the CAU, and a matrix of CAU bounding boxes \code{auckbbs}. The \code{auckland} data frame includes the following columns:
+}
+\format{
+  This data frame contains the following columns:
+  \describe{
+    \item{Easting}{a numeric vector of x coordinates in an unknown spatial reference system}
+    \item{Northing}{a numeric vector of y coordinates in an unknown spatial reference system}
+    \item{Deaths.1977.85}{a numeric vector of counts of infant (under 5 years of age) deaths in Auckland, 1977-1985}
+    \item{Under.5.1981}{a numeric vector of population under 5 years of age at the 1981 Census}
+  }
+}
+\details{
+ The contiguous neighbours object does not completely replicate results in the sources, and was reconstructed from \code{auckpolys}; examination of figures in the sources suggests that there are differences in detail, although probably not in substance.
+}
+\source{
+ Marshall R M (1991) Mapping disease and mortality rates using Empirical Bayes Estimators, Applied Statistics, 40, 283--294; Bailey T, Gatrell A (1995) Interactive Spatial Data Analysis, Harlow: Longman --- INFOMAP data set used with permission.
+}
+\keyword{datasets}

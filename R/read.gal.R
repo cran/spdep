@@ -5,7 +5,6 @@
 read.gal <- function(file, row.names=NULL) 
 {
 	con <- file(file, open="r")
-	open(con, open="r")
 	n <- readLines(con, 1)
 	n <- as.integer(n)
 	if (n < 1) stop("Non-positive number of regions")

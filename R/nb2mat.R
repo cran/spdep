@@ -40,7 +40,7 @@ invIrM <- function(neighbours, rho, glist=NULL, style="W") {
 }
 
 invIrW <- function(listw, rho) {
-	if(class(listw) != "listw") stop("Not a weights list")
+	if(!inherits(listw, "listw")) stop("Not a weights list")
 	n <- length(listw$neighbours)
 	V <- listw2mat(listw)
 	e <- eigen(V, only.values = TRUE)$values

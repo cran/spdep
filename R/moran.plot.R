@@ -4,7 +4,7 @@
 moran.plot <- function(x, listw, zero.policy=FALSE, spChk=NULL,
  labels=NULL, xlab=NULL, ylab=NULL, ...)
 {
-	if (class(listw) != "listw") stop(paste(deparse(substitute(listw)),
+	if (!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
 	xname <- deparse(substitute(x))
 	if (!is.numeric(x)) stop(paste(xname, "is not a numeric vector"))

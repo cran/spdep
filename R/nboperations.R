@@ -108,7 +108,7 @@ complement.nb<-function(nb.obj){
   cmp<-1:n
   attributes(new.nb)<-attributes(nb.obj)
   for(i in 1:n) {
-    if (card1 == 0) new.nb[[i]] <- cmp
+    if (card1[i] == 0) new.nb[[i]] <- cmp
     else {
       res <- sort(cmp[-nb.obj[[i]]])
       if(length(res) == 0) new.nb[[i]] <- 0

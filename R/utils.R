@@ -2,7 +2,7 @@
 #
 
 spweights.constants <- function(listw, zero.policy=FALSE) {
-	if(class(listw) != "listw") stop(paste(deparse(substitute(listw)),
+	if(!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
 	cards <- card(listw$neighbours)
 	if (!zero.policy && any(cards == 0))
@@ -49,7 +49,7 @@ Szero <- function(listw) {
 }
 
 lag.listw <- function(listw, x, zero.policy=FALSE) {
-	if (class(listw) != "listw") stop(paste(deparse(substitute(listw)),
+	if (!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
 	if (!is.numeric(x)) stop(paste(deparse(substitute(listw)),
 		"not numeric"))
@@ -59,14 +59,14 @@ lag.listw <- function(listw, x, zero.policy=FALSE) {
 	if (is.vector(x)) {
 		if (length(x) != n) stop("object lengths differ")
 		res <- .Call("lagw", listw$neighbours, listw$weights,
-			as.numeric(x), as.integer(cardnb),
+			as.double(x), as.integer(cardnb),
 			as.logical(zero.policy), PACKAGE="spdep")
 	} else if (is.matrix(x)) {
 		if (nrow(x) != n) stop("object lengths differ")
 		res <- matrix(0, nrow=nrow(x), ncol=ncol(x))
 		for (i in 1:ncol(x)) {
 			res[,i] <- .Call("lagw", listw$neighbours,
-				listw$weights, as.numeric(x[,i]),
+				listw$weights, as.double(x[,i]),
 				as.integer(cardnb), as.logical(zero.policy),
 				PACKAGE="spdep")
 
@@ -80,7 +80,7 @@ lag.listw <- function(listw, x, zero.policy=FALSE) {
 }
 
 listw2U <- function(listw) {
-	if (class(listw) != "listw") stop(paste(deparse(substitute(listw)),
+	if (!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
 	nb <- listw$neighbours
 	wts <- listw$weights

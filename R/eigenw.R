@@ -3,7 +3,7 @@
 
 eigenw <- function(listw, quiet=TRUE)
 {
-	if(class(listw) != "listw") stop("not a listw object")
+	if(!inherits(listw, "listw")) stop("not a listw object")
 	w <- listw2mat(listw)
 	e <- eigen(w, only.values=TRUE)$values
 	if (is.complex(e)) {

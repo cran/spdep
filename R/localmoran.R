@@ -3,7 +3,7 @@
 
 localmoran <- function(x, listw, zero.policy=FALSE, spChk=NULL)
 {
-	if (class(listw) != "listw")
+	if (!inherits(listw, "listw"))
 		stop(paste(deparse(substitute(listw)), "is not a listw object"))
 	if (!is.null(attr(listw$neighbours, "self.included")) &&
 		attr(listw$neighbours, "self.included"))

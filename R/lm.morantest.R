@@ -3,7 +3,7 @@
 
 lm.morantest <- function(model, listw, zero.policy=FALSE, 
 	    alternative = "greater", spChk=NULL) {
-	if (class(listw) != "listw") stop(paste(deparse(substitute(listw)),
+	if (!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
 	if(class(model) != "lm") stop(paste(deparse(substitute(model)),
 		"not an lm object"))

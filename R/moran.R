@@ -13,7 +13,7 @@ moran <- function(x, listw, n, S0, zero.policy=FALSE) {
 
 moran.test <- function(x, listw, randomisation=TRUE, zero.policy=FALSE,
 	alternative="greater", rank = FALSE, spChk=NULL) {
-	if (class(listw) != "listw") stop(paste(deparse(substitute(listw)),
+	if (!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
 	if (!is.numeric(x)) stop(paste(deparse(substitute(x)),
 		"is not a numeric vector"))
@@ -61,7 +61,7 @@ moran.test <- function(x, listw, randomisation=TRUE, zero.policy=FALSE,
 
 moran.mc <- function(x, listw, nsim, zero.policy=FALSE,
 	alternative="greater", spChk=NULL) {
-	if(class(listw) != "listw") stop(paste(deparse(substitute(listw)),
+	if(!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
 	if(!is.numeric(x)) stop(paste(deparse(substitute(x)),
 		"is not a numeric vector"))

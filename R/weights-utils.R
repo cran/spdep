@@ -5,7 +5,6 @@ write.nb.gal <- function(nb, file) {
 	if(class(nb) != "nb") stop("not an nb object")
 	n <- length(nb)
 	con <- file(file, open="w")
-	open(con, open="w")
 	writeLines(paste(n), con)
 	for (i in 1:n) {
 		writeLines(paste(i, length(nb[[i]]), collapse=" "), con)

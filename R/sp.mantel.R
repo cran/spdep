@@ -3,7 +3,7 @@
 
 sp.mantel.mc <- function(var, listw, nsim, type="moran", zero.policy=FALSE,
 	alternative="greater", spChk=NULL) {
-	if(class(listw) != "listw") stop(paste(deparse(substitute(listw)),
+	if(!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
 	if(!is.numeric(var)) stop(paste(deparse(substitute(var)),
 		"is not a numeric vector"))
