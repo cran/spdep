@@ -233,21 +233,21 @@ are endless).
 To see what is going on, we can list the first five rows of the
 \code{sids} data frame taken from the shapefile, and the first five
 rows of the \code{nc.sids} data frame included in \pkg{spdep} and taken
-directly from listings in the sources refered to above. The \code{CNTY.ID}
-variable is included in both sources, and is also the \code{region.id}
+directly from listings in the sources refered to above. The county ID
+variable is included in both sources\footnote{prior to R 1.9, the underscore in the DBF file feild name \code{CNTY\_ID} is converted to a point, \code{CNTY.ID}.}, and is also the \code{region.id}
 attribute of the Cressie/Chan 30 mile neighbour relations neighbour
 object.
 
 \begin{footnotesize}
 <<echo=TRUE>>= 
-sids[1:5, c("CNTY.ID", "NAME", "BIR74")]
+sids[1:5, c(4, 5, 9)]
 nc.sids[1:5, c("CNTY.ID", "BIR74")]
 attr(ncCC89.nb, "region.id")[1:5]
 @ 
 \end{footnotesize}
 We can see that the \code{nc.sids} data frame is ordered alphabetically
 by county name (as are the neighbour objects), while the \code{sids} data
-frame is ordered by ascending \code{CNTY.ID} (as are the polygons). To
+frame is ordered by ascending county IDs (as are the polygons). To
 resolve this, we could swap the rows of the neighbour list objects,
 but we would also need to change all the identification numbers of
 the spatial objects too, so it seems best to use a temporary file and
@@ -259,7 +259,7 @@ exchanging them with other software (including GeoDa).
 tmpGAL <- tempfile(pattern="GAL")
 write.nb.gal(ncCC89.nb, file=tmpGAL, oldstyle=FALSE, 
  shpfile="sids", ind="CNTY.ID")
-CNTY.ID <- sids$CNTY.ID
+CNTY.ID <- sids[, 4]
 ncCC89.2.nb <- read.gal(file=tmpGAL, region.id=CNTY.ID)
 @ 
 \end{footnotesize}

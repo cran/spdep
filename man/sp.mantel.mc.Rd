@@ -26,7 +26,7 @@ plot.mc.sim(x, ...)
   \item{zero.policy}{if TRUE assign zero to the lagged value of zones without 
   neighbours, if FALSE assign NA}
   \item{alternative}{a character string specifying the alternative hypothesis, 
-  must be one of greater (default), less or two.sided.}
+  must be one of "greater" (default), or "less".}
   \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
   \item{x}{the object to be plotted}
   \item{...}{further arguments passed through}

@@ -13,6 +13,7 @@ EBImoran <- function (z, listw, nn, S0, zero.policy = FALSE)
 EBImoran.mc <- function (n, x, listw, nsim, zero.policy = FALSE,
  alternative = "greater", spChk = NULL) 
 {
+    alternative <- match.arg(alternative, c("greater", "less"))
     if (!inherits(listw, "listw")) 
         stop(paste(deparse(substitute(listw)), "is not a listw object"))
     if (missing(nsim)) 
@@ -30,8 +31,6 @@ EBImoran.mc <- function (n, x, listw, nsim, zero.policy = FALSE,
         stop("Check of data and weights ID integrity failed")
     if (nsim > gamma(m + 1)) 
         stop("nsim too large for this number of observations")
-    if (!(alternative %in% c("greater", "less", "two.sided")))
-	stop("alternative must be one of: \"greater\", \"less\", or \"two.sided\"")
     S0 <- Szero(listw)
     EB <- EBest(n, x)
     p <- EB$raw
@@ -48,11 +47,10 @@ EBImoran.mc <- function (n, x, listw, nsim, zero.policy = FALSE,
     zrank <- rankres[length(res)]
     diff <- nsim - zrank
     diff <- ifelse(diff > 0, diff, 0)
-    pval <- (diff + 1)/(nsim + 1)
     if (alternative == "less") 
-        pval <- 1 - pval
-    else if (alternative == "two.sided") 
-        pval <- 2 * pval
+        pval <- punif((diff + 1)/(nsim + 1), lower.tail=FALSE)
+    else if (alternative == "greater") 
+        pval <- punif((diff + 1)/(nsim + 1))
     statistic <- res[nsim + 1]
     names(statistic) <- "statistic"
     parameter <- zrank

@@ -77,7 +77,8 @@ lm.morantest.sad <- function (model, listw, zero.policy = FALSE,
 }
 
 print.moransad <- function(x, ...) {
-    print.htest(x, ...)
+    class(x) <- c("htest", "moransad")
+    print(x, ...)
     invisible(x)
 }
 
@@ -103,7 +104,8 @@ summary.moransad <- function(object, ...) {
 }
 
 print.summary.moransad <- function(x, ...) {
-    print.htest(x, ...)
+    class(x) <- c("htest", "summary.moransad", "moransad")
+    print(x, ...)
     print(c(x$xtra, x$internal1), ...)
     if (!is.null(x$internal2)) print(x$internal2, ...)
     invisible(x)

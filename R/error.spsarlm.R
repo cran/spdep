@@ -1,4 +1,4 @@
-# Copyright 1998-2003 by Roger Bivand
+# Copyright 1998-2003 by Roger Bivand (non-W styles Rein Halbersma)
 #
 
 errorsarlm <- function(formula, data = list(), listw, method="eigen",
@@ -36,7 +36,9 @@ errorsarlm <- function(formula, data = list(), listw, method="eigen",
 	    }
 	}
 	if (K == 2) {
-		wx <- 1
+# modified to meet other styles, email from Rein Halbersma
+		wx1 <- as.double(rep(1, n))
+		wx <- lag.listw(listw, wx1, zero.policy=zero.policy)
 		if (m > 1) WX <- cbind(wx, WX)
 		else WX <- matrix(wx, nrow=n, ncol=1)
 	}
@@ -46,7 +48,7 @@ errorsarlm <- function(formula, data = list(), listw, method="eigen",
 		if (!quiet) cat("Computing eigenvalues ...\n")
 		eig <- eigenw(listw)
 		cat("\n")
-#range inverted 031031, email from Salvati Nicola
+# range inverted 031031, email from Salvati Nicola (and Rein Halbersma)
 		if (is.complex(eig)) eig.range <- 1/range(Re(eig))
 		else eig.range <- 1/range(eig)
 		opt <- optimize(sar.error.f, interval=eig.range, maximum=TRUE,
@@ -128,7 +130,7 @@ sar.error.f.s <- function(lambda, sn, y, wy, x, WX, n, quiet, sparsedebug)
 	xl.q.yl <- t(xl.q) %*% yl
 	SSE <- t(yl) %*% yl - t(xl.q.yl) %*% xl.q.yl
 	s2 <- SSE/n
-	ret <- (log.spwdet(sparseweights=sn, rho=lambda, debug=sparsedebug) - 
+	ret <- (logSpwdet(sparseweights=sn, rho=lambda, debug=sparsedebug) - 
 		((n/2)*log(2*pi)) - (n/2)*log(s2) - (1/(2*(s2)))*SSE)
 	if (!quiet) cat("Lambda:\t", lambda, "\tfunction value:\t", ret, "\n")
 	ret

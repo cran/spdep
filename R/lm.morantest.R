@@ -3,6 +3,7 @@
 
 lm.morantest <- function(model, listw, zero.policy=FALSE, 
 	    alternative = "greater", spChk=NULL) {
+	alternative <- match.arg(alternative, c("greater", "less", "two.sided"))
 	if (!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
 	if(class(model) != "lm") stop(paste(deparse(substitute(model)),
@@ -14,8 +15,7 @@ lm.morantest <- function(model, listw, zero.policy=FALSE,
 	if (is.null(spChk)) spChk <- get.spChkOption()
 	if (spChk && !chkIDs(u, listw))
 		stop("Check of data and weights ID integrity failed")
-	if (!(alternative %in% c("greater", "less", "two.sided")))
-		stop("alternative must be one of: \"greater\", \"less\", or \"two.sided\"")
+	
 	u <- as.vector(u)
 	listw.U <- listw2U(listw)
 
@@ -31,8 +31,9 @@ lm.morantest <- function(model, listw, zero.policy=FALSE,
 # Cliff/Ord 1981, p. 203
 	Z <- lag.listw(listw.U, X, zero.policy=zero.policy)
 	C1 <- t(X) %*% Z
-	trA <- -(sum(diag(XtXinv %*% C1)))
-	EI <- ((N * trA) / ((N-p) * S0))
+	trA <- (sum(diag(XtXinv %*% C1)))
+	EI <- -((N * trA) / ((N-p) * S0))
+# minus changed from trA to EI (Luis Galvis, Dec 2, 2003)
 	C2 <- t(Z) %*% Z
 	C3 <- XtXinv %*% C1
 	trA2 <- sum(diag(C3 %*% C3))

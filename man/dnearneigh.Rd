@@ -37,7 +37,11 @@ title(main=paste("Distance based neighbours 0-",  format(all.linked),
 data(state)
 us48.fipsno <- read.geoda(system.file("etc/weights/us48.txt",
  package="spdep")[1])
-m50.48 <- match(us48.fipsno$State.name, state.name)
+if (as.numeric(paste(version$major, version$minor, sep="")) < 19) {
+ m50.48 <- match(us48.fipsno$"State.name", state.name)
+} else {
+ m50.48 <- match(us48.fipsno$"State_name", state.name)
+}
 xy <- as.matrix(as.data.frame(state.center))[m50.48,]
 llk1 <- knn2nb(knearneigh(xy, k=1, lonlat=FALSE))
 all.linked <- max(unlist(nbdists(llk1, xy, lonlat=FALSE)))
