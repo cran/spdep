@@ -11,6 +11,7 @@ union.nb<-function(nb.obj1, nb.obj2){
   }
   n <- length(nb.obj1)
   if (n != length(nb.obj2)) stop("Both arguments must be of same length")
+  if (n < 1) stop("non-positive number of entities")
   card1 <- card(nb.obj1)
   card2 <- card(nb.obj2)
   new.nb<-vector(mode="list", length=n)
@@ -39,6 +40,7 @@ intersect.nb<-function(nb.obj1, nb.obj2){
   }
   n <- length(nb.obj1)
   if (n != length(nb.obj2)) stop("Both arguments must be of same length")
+  if (n < 1) stop("non-positive number of entities")
   card1 <- card(nb.obj1)
   card2 <- card(nb.obj2)
   new.nb<-vector(mode="list", length=n)
@@ -64,6 +66,7 @@ setdiff.nb<-function(nb.obj1, nb.obj2){
   	}
   	n <- length(nb.obj1)
   	if (n != length(nb.obj2)) stop("Both arguments must be of same length")
+	if (n < 1) stop("non-positive number of entities")
   	card1 <- card(nb.obj1)
   	card2 <- card(nb.obj2)
   	new.nb<-vector(mode="list", length=n)
@@ -103,6 +106,7 @@ complement.nb<-function(nb.obj){
     stop("Argument must be of class nb")
    }
   n <- length(nb.obj)
+  if (n < 1) stop("non-positive number of entities")
   card1 <- card(nb.obj)
   new.nb<-vector(mode="list", length=n)
   cmp<-1:n

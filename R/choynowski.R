@@ -1,12 +1,14 @@
-# Copyright 2004 by Roger Bivand 
+# Copyright 2004-5 by Roger Bivand 
 #
 
 choynowski <- function(n, x, row.names=NULL, tol=.Machine$double.eps^0.5) {
   len <- length(n)
+  if (len < 1) stop("non-positive number of observations")
   res <- numeric(len)
   nsum <- sum(n)
   xsum <- sum(x)
   b <- nsum/xsum
+  if (b > 1) stop("sum of cases larger than sum of populations at risk")
   E <- x*b
   type <- (n < E)
   for (i in 1:len) {

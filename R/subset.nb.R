@@ -1,4 +1,4 @@
-# Copyright 2001-4 by Roger Bivand
+# Copyright 2001-5 by Roger Bivand and Yong Cai
 #
 
 subset.nb <- function(x, subset, ...) {
@@ -17,9 +17,12 @@ subset.nb <- function(x, subset, ...) {
     for (i in 1:nz) {
 	zi <- z[[i]]
 	res <- NULL
-	for (j in 1:length(zi)) {
-	    a <- new.ids[zi[j]]
-	    if (!is.na(a)) res <- c(res, a)
+# bug report 20050107 Yong Cai, now handles no-neighbour entities correctly
+	if (!(length(zi) == 1 & zi[1] == 0)) {
+	    for (j in seq(along=zi)) {
+	        a <- new.ids[zi[j]]
+	        if (!is.na(a)) res <- c(res, a)
+	    }
 	}
 	if (is.null(res)) z[[i]] <- 0
 	else z[[i]] <- sort(unique(res))
@@ -29,6 +32,7 @@ subset.nb <- function(x, subset, ...) {
 	if (xattrs[i] != "region.id")
 	    attr(z, xattrs[i]) <- attr(x, xattrs[i])
     }
+    z <- sym.attr.nb(z)
     invisible(z)
 }
 

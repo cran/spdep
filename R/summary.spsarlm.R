@@ -137,8 +137,17 @@ print.summary.sarlm <- function(x, digits = max(5, .Options$digits - 3),
 			zero.regs, "\n")
 	}
 	cat("Coefficients:", x$coeftitle, "\n")
-	printCoefmat(x$Coef, signif.stars=signif.stars, digits=digits,
-		na.print="")
+	coefs <- x$Coef
+	if (!is.null(aliased <- x$aliased) && any(x$aliased)){
+		cat("    (", table(aliased)["TRUE"], 
+			" not defined because of singularities)\n", sep = "")
+		cn <- names(aliased)
+		coefs <- matrix(NA, length(aliased), 4, dimnames = list(cn, 
+                	colnames(x$Coef)))
+            	coefs[!aliased, ] <- x$Coef
+	}
+	printCoefmat(coefs, signif.stars=signif.stars, digits=digits,
+		na.print="NA")
 #	res <- LR.sarlm(x, x$lm.model)
 	res <- x$LR1
 	if (x$type == "error") {

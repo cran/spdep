@@ -66,6 +66,8 @@ read.gal <- function(file, region.id=NULL, override.id=FALSE)
 write.nb.gal <- function(nb, file, oldstyle=TRUE, shpfile=NULL, ind=NULL) {
 	if(class(nb) != "nb") stop("not an nb object")
 	n <- length(nb)
+	if (n < 1) stop("non-positive number of entities")
+	cn <- card(nb)
 	rn <- attr(nb, "region.id")
 	if (is.null(shpfile)) {
 		tmp <- attr(nb, "GeoDa")$shpfile
@@ -82,12 +84,14 @@ write.nb.gal <- function(nb, file, oldstyle=TRUE, shpfile=NULL, ind=NULL) {
 	else writeLines(paste("0", n, shpfile, ind, sep=" "), con)
 	for (i in 1:n) {
 		if (oldstyle) 
-			writeLines(paste(i, length(nb[[i]]), 
+			writeLines(paste(i, cn[i], 
 				collapse=" "), con)
-		else writeLines(paste(rn[i], length(nb[[i]]),
+		else writeLines(paste(rn[i], cn[i],
 			collapse=" "), con)
-		if (oldstyle) writeLines(paste(nb[[i]], collapse=" "), con)
-		else writeLines(paste(rn[nb[[i]]], collapse=" "), con)
+		if (oldstyle) writeLines(ifelse(cn[i] > 0, 
+			paste(nb[[i]], collapse=" "), ""), con)
+		else writeLines(ifelse(cn[i] > 0,
+			paste(rn[nb[[i]]], collapse=" "), ""), con)
 	}
 	close(con)
 }

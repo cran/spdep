@@ -38,6 +38,7 @@ joincount.test <- function(fx, listw, zero.policy=FALSE,
 	dums <- model.matrix(ff, model.frame(ff))
 	BB <- joincount(dums, listw)
 	nBB <- length(BB)
+	if (nBB < 1) stop("non-positive BB length")
 	res <- vector(mode="list", length=nBB)
 	tab <- table(fx)
 	BB5 <- 0.5 * BB
@@ -78,7 +79,7 @@ joincount.test <- function(fx, listw, zero.policy=FALSE,
 }
 
 print.jclist <- function(x, ...) {
-	for (i in 1:length(x)) print(x[[i]], ...)
+	for (i in seq(along=x)) print(x[[i]], ...)
 	invisible(x)
 }
 
@@ -104,6 +105,8 @@ joincount.mc <- function(fx, listw, nsim, zero.policy=FALSE,
 	ff <- ~ fx - 1
 	dums <- model.matrix(ff, model.frame(ff))
 	nc <- ncol(dums)
+	if (nc < 1) stop("non-positive nc")
+	if (nsim < 1) stop("non-positive nsim")
 	res <- matrix(0, nrow=nsim+1, ncol=nc)
 	res[nsim+1,] <- 0.5 * joincount(dums, listw)
 	tab <- table(fx)
@@ -168,6 +171,8 @@ joincount.multi <- function(fx, listw, zero.policy=FALSE,
 		stop("Check of data and weights ID integrity failed")
 	ifx <- as.integer(fx)
 	k <- length(levels(fx))
+	if (k < 2) stop("must be at least two levels in factor")
+
 	sn <- listw2sn(listw)
 	y <- factor(paste(ifx[sn[,1]], ":", ifx[sn[,2]], sep=""), 
 		levels=as.vector(outer(1:k, 1:k, 
@@ -282,29 +287,4 @@ print.jcmulti <- function(x, ...) {
 
 
 
-#joincount.diffcol <- function(fx, listw, zero.policy=FALSE,
-#	spChk=NULL) {
-#	if(!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
-#		"is not a listw object"))
-#	if(!is.factor(fx)) stop(paste(deparse(substitute(fx)),
-#		"is not a factor"))
-#	if (any(is.na(fx))) stop("NA in factor")
-#	n <- length(listw$neighbours)
-#	if (n != length(fx)) stop("objects of different length")
-#	cards <- card(listw$neighbours)
-#	if (!zero.policy && any(cards == 0))
-#		stop("regions with no neighbours found")
-#	if (is.null(spChk)) spChk <- get.spChkOption()
-#	if (spChk && !chkIDs(fx, listw))
-#		stop("Check of data and weights ID integrity failed")
-#	ifx <- as.integer(fx)
-#	
-#	cardnb <- card(listw$neighbours)
-#	res <- .Call("jcdiffs", listw$neighbours,
-#			listw$weights, as.integer(ifx),
-#			as.integer(cardnb), PACKAGE="spdep")
-#	
-#	res <- list(diffcount=res, tot=sum(cardnb)/2)
-#	res
-#}
 

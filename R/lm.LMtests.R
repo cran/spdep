@@ -1,4 +1,4 @@
-# Copyright 2001-3 by Roger Bivand 
+# Copyright 2001-5 by Roger Bivand 
 #
 
 lm.LMtests <- function(model, listw, zero.policy=FALSE, test="LMerr",
@@ -27,6 +27,9 @@ lm.LMtests <- function(model, listw, zero.policy=FALSE, test="LMerr",
 	yhat <- as.vector(fitted(model))
 	p <- model$rank
 	p1 <- 1:p
+	nacoefs <- which(is.na(coefficients(model)))
+# fixed after looking at TOWN dummy in Boston data
+	if (length(nacoefs > 0)) X <- X[,-nacoefs]
 	XtXinv <- chol2inv(model$qr$qr[p1, p1, drop = FALSE])
 	sigma2 <- (t(u) %*% u) / N
 	TrW <- tracew(listw)
@@ -42,6 +45,7 @@ lm.LMtests <- function(model, listw, zero.policy=FALSE, test="LMerr",
 		(TrW * sigma2))
 	dutWy <- (t(u) %*% Wy) / sigma2
 	nt <- length(test)
+	if (nt < 1) stop("non-positive number of tests")
 	tres <- vector(mode="list", length=nt)
 	names(tres) <- test
 	for (i in 1:nt) {
@@ -78,18 +82,19 @@ lm.LMtests <- function(model, listw, zero.policy=FALSE, test="LMerr",
 }
 
 print.LMtestlist <- function(x, ...) {
-	for (i in 1:length(x)) print(x[[i]])
+	for (i in seq(along=x)) print(x[[i]])
 	invisible(x)
 }
 
 tracew <- function (listw) {
 	dlmtr <- 0
 	n <- length(listw$neighbours)
+	if (n < 1) stop("non-positive n")
+	ndij <- card(listw$neighbours)
 	for (i in 1:n) {
 		dij <- listw$neighbours[[i]]
-		ndij <- length(dij)
 		wdij <- listw$weights[[i]]
-		for (j in 1:ndij) {
+		for (j in seq(length=ndij[i])) {
 			k <- dij[j]
 			if (k > i) {
 			    dk <- which(listw$neighbours[[k]] == i)

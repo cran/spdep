@@ -1,4 +1,4 @@
-# Copyright 2001 by Roger Bivand
+# Copyright 2001-5 by Roger Bivand
 #
 
 
@@ -9,6 +9,7 @@ plot.nb <- function(x, coords, col="black", points=TRUE, add=FALSE,
 	x <- coords[,1]
 	y <- coords[,2]
 	n <- length(nb)
+	if (n < 1) stop("non-positive number of entities")
 	xlim <- range(x)
 	ylim <- range(y)
 	if (!add) {
@@ -36,4 +37,10 @@ plot.nb <- function(x, coords, col="black", points=TRUE, add=FALSE,
 		}
 	}
 	if (points) points(x, y, ...)
+}
+
+plot.listw <- function(x, coords, col="black", points=TRUE, add=FALSE, 
+	arrows=FALSE, length=0.1, ...) {
+	plot.nb(x$neighbours, coords=coords, col=col, points=points, add=add, 
+	arrows=arrows, length=length, ...)
 }

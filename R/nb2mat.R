@@ -14,6 +14,7 @@ nb2mat <- function(neighbours, glist=NULL, style="W", zero.policy=FALSE)
 
 listw2mat <- function(listw) {
 	n <- length(listw$neighbours)
+	if (n < 1) stop("non-positive number of entities")
 	cardnb <- card(listw$neighbours)
 	if (any(is.na(unlist(listw$weights))))
 		stop ("NAs in general weights list")
@@ -59,6 +60,7 @@ invIrW <- function(listw, rho) {
 mat2listw <- function(x, row.names=NULL) {
 	if (!is.matrix(x)) stop("x is not a matrix")
 	n <- nrow(x)
+	if (n < 1) stop("non-positive number of entities")
 	m <- ncol(x)
 	if (n != m) stop("x must be a square matrix")
 	if (any(x < 0)) stop("values in x cannot be negative")

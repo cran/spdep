@@ -4,8 +4,7 @@
 lagsarlm <- function(formula, data = list(), listw, 
 	na.action=na.fail, type="lag", method="eigen", quiet=TRUE, 
 	zero.policy=FALSE, interval=c(-1,0.999), tol.solve=1.0e-10, 
-	tol.opt=.Machine$double.eps^0.5, control, optim=FALSE, 
-	sparsedebug=FALSE) {
+	tol.opt=.Machine$double.eps^0.5, control, optim=FALSE) {
 	mt <- terms(formula, data = data)
 	mf <- lm(formula, data, na.action=na.action, 
 		method="model.frame")
@@ -24,8 +23,6 @@ lagsarlm <- function(formula, data = list(), listw,
 	if (!quiet) cat("Jacobian calculated using ")
 	switch(method, 
 		eigen = if (!quiet) cat("neighbourhood matrix eigenvalues\n"),
-		sparse = {warning("the sparse method will be withdrawn shortly")
-		if (!quiet) cat("sparse matrix techniques\n")},
 	        SparseM = {
 		    if (listw$style %in% c("W", "S") && !can.sim)
 		    stop("SparseM method requires symmetric weights")
@@ -35,7 +32,8 @@ lagsarlm <- function(formula, data = list(), listw,
 		    if (!quiet) cat("sparse matrix techniques using SparseM\n")
 		},
 		stop("...\nUnknown method\n"))
-	y <- model.response(mf, "numeric")
+	y <- model.extract(mf, "response")
+#	y <- model.response(mf, "numeric")
 #	if (any(is.na(y))) stop("NAs in dependent variable")
 	x <- model.matrix(mt, mf)
 #	if (any(is.na(x))) stop("NAs in independent variable")
@@ -83,6 +81,16 @@ lagsarlm <- function(formula, data = list(), listw,
 		m <- NCOL(x)
 		rm(wx, WX)
 	}
+# added aliased after trying boston with TOWN dummy
+	lm.base <- lm(y ~ x - 1)
+	aliased <- is.na(coefficients(lm.base))
+	cn <- names(aliased)
+	names(aliased) <- substr(cn, 2, nchar(cn))
+	if (any(aliased)) {
+		nacoef <- which(aliased)
+		x <- x[,-nacoef]
+	}
+	m <- NCOL(x)
 	similar <- FALSE
 	if (missing(control)) {
 		control <- list(trace=0, fnscale=-1, factr=tol.opt,
@@ -135,9 +143,8 @@ lagsarlm <- function(formula, data = list(), listw,
 		}
 	} else {
 		opt <- dosparse(listw=listw, y=y, x=x, wy=wy, K=K, quiet=quiet,
-			tol.opt=tol.opt, sparsedebug=sparsedebug, 
-			control=control, method=method, interval=interval, 
-			can.sim=can.sim, optim=optim)
+			tol.opt=tol.opt, control=control, method=method, 
+			interval=interval, can.sim=can.sim, optim=optim)
 		rho <- c(opt$maximum)
 		names(rho) <- "rho"
 		LL <- c(opt$objective)
@@ -200,7 +207,8 @@ lagsarlm <- function(formula, data = list(), listw,
 		lm.target=lm.lag, fitted.values=fit,
 		se.fit=NULL, formula=formula, similar=similar,
 		ase=ase, LLs=LLs, rho.se=rho.se, LMtest=LMtest, 
-		resvar=varb, zero.policy=zero.policy), class=c("sarlm"))
+		resvar=varb, zero.policy=zero.policy, aliased=aliased),
+		class=c("sarlm"))
 	if (zero.policy) {
 		zero.regs <- attr(listw$neighbours, 
 			"region.id")[which(card(listw$neighbours) == 0)]
@@ -224,16 +232,6 @@ sar.lag.mixed.f <- function(rho, eig, e.a, e.b, e.c, n, quiet)
 	ret
 }
 
-sar.lag.mixed.f.s <- function(rho, sn, e.a, e.b, e.c, n, quiet, sparsedebug)
-{
-	SSE <- e.a - 2*rho*e.b + rho*rho*e.c
-	s2 <- SSE/n
-	ret <- (logSpwdet(sparseweights=sn, rho=rho, debug=sparsedebug)
-		- ((n/2)*log(2*pi)) - (n/2)*log(s2) - (1/(2*s2))*SSE)
-	if (!quiet) 
-	    cat("(sparse) rho:\t", rho, "\tfunction value:\t", ret, "\n")
-	ret
-}
 
 
 sar.lag.mix.f.sM <- function(rho, W, I, e.a, e.b, e.c, n, tmpmax, quiet)
@@ -249,12 +247,11 @@ sar.lag.mix.f.sM <- function(rho, W, I, e.a, e.b, e.c, n, tmpmax, quiet)
 	ret
 }
 
-dosparse <- function (listw, y, x, wy, K, quiet, tol.opt, sparsedebug, 
+dosparse <- function (listw, y, x, wy, K, quiet, tol.opt, 
 	control, method, interval, can.sim, optim) {
 	similar <- FALSE
 	m <- ncol(x)
 	n <- nrow(x)
-	if (method == "sparse") sn <- listw2sn(listw)
 	if (method == "SparseM") {
 		if (listw$style %in% c("W", "S") && can.sim) {
 			W <- asMatrixCsrListw(similar.listw(listw))
@@ -270,7 +267,8 @@ dosparse <- function (listw, y, x, wy, K, quiet, tol.opt, sparsedebug,
 	LLs <- vector(mode="list", length=length(K:m))
 	j <- 1
 	for (i in K:m) {
-		thisx <- x[,-i]
+		# drop bug found by Gilles Spielvogel 20050128
+		thisx <- x[,-i, drop = FALSE]
 		lm.null <- lm.fit(thisx, y)
 		lm.w <- lm.fit(thisx, wy)
 		e.null <- lm.null$residuals
@@ -278,12 +276,7 @@ dosparse <- function (listw, y, x, wy, K, quiet, tol.opt, sparsedebug,
 		e.a <- t(e.null) %*% e.null
 		e.b <- t(e.w) %*% e.null
 		e.c <- t(e.w) %*% e.w
-		if (method == "sparse") LLs[[j]] <- optimize(sar.lag.mixed.f.s,
-			interval=interval, maximum=TRUE, tol=tol.opt, sn=sn,
-			e.a=e.a, e.b=e.b, e.c=e.c, n=n, quiet=quiet,
-			sparsedebug=sparsedebug)$objective
-		else if (method == "SparseM") {
-		    if (optim) { 
+		if (optim) { 
 			lm.rho <- lm.fit(cbind(thisx, wy), y)
 			rho <- coef(lm.rho)[length(coef(lm.rho))]
 			if (rho <= interval[1]) rho <- 0.0
@@ -300,14 +293,13 @@ dosparse <- function (listw, y, x, wy, K, quiet, tol.opt, sparsedebug,
 			if (opt$convergence == 51) warning(opt$message)
 			if (opt$convergence == 52) warning(opt$message)
 			LLs[[j]] <- c(opt$value)
-		    } else {
+		} else {
 			LLs[[j]] <- optimize(sar.lag.mix.f.sM,
 			interval=interval, maximum=TRUE, tol=tol.opt, W=W, I=I,
 			e.a=e.a, e.b=e.b, e.c=e.c, n=n, tmpmax=tmpmax, 
 			quiet=quiet)$objective
-		    }
-		    gc(FALSE)
 		}
+		gc(FALSE)
 		attr(LLs[[j]], "nall") <- n
 		attr(LLs[[j]], "nobs") <- n
 		attr(LLs[[j]], "df") <- (m+2)-1
@@ -323,12 +315,7 @@ dosparse <- function (listw, y, x, wy, K, quiet, tol.opt, sparsedebug,
 	e.b <- t(e.w) %*% e.null
 	e.c <- t(e.w) %*% e.w
 	sn <- listw2sn(listw)
-	if (method == "sparse") opt <- optimize(sar.lag.mixed.f.s, 
-		interval=interval, maximum=TRUE, tol=tol.opt, sn=sn,
-		e.a=e.a, e.b=e.b, e.c=e.c, n=n, quiet=quiet, 
-		sparsedebug=sparsedebug)
-	if (method == "SparseM") {
-	    if (optim) {
+	if (optim) {
 		lm.rho <- lm.fit(cbind(x, wy), y)
 		rho <- coef(lm.rho)[length(coef(lm.rho))]
 		if (rho <= interval[1]) rho <- 0.0
@@ -345,15 +332,14 @@ dosparse <- function (listw, y, x, wy, K, quiet, tol.opt, sparsedebug,
 		if (opt$convergence == 52) warning(opt$message)
 		maximum <- c(opt$par[1])
 		objective <- c(opt$value)
-	    } else {
+	} else {
 		opt <- optimize(sar.lag.mix.f.sM,
 		    interval=interval, maximum=TRUE, tol=tol.opt, W=W, I=I,
 		    e.a=e.a, e.b=e.b, e.c=e.c, n=n, tmpmax=tmpmax, quiet=quiet)
 		maximum <- opt$maximum
 		objective <- opt$objective
-	    }
-	    gc(FALSE)
 	}
+	gc(FALSE)
 	res <- list(maximum=maximum, objective=objective, LLs=LLs,
 		lm.null=lm.null, similar=similar, opt=opt)
 }

@@ -30,6 +30,7 @@ asListwMatrixCsr <- function(mcsr) {
 	dim <- mcsr@dimension
 	if (dim[1] != dim[2]) warning("rectangular matrix")
 	n <- dim[1]
+	if (n < 1) stop("non-positive dimension")
 	ra <- mcsr@ra
 	ja <- mcsr@ja
 	ia <- mcsr@ia

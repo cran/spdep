@@ -1,4 +1,5 @@
 % Copyright 2004 by Roger S. Bivand
+\encoding{latin1}
 \name{bptest.sarlm}
 \alias{bptest.sarlm}
 %- Also NEED an '\alias' for EACH other topic documented here.

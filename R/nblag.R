@@ -8,6 +8,8 @@ nblag <- function(neighbours, maxlag)
 		(as.logical(attributes(neighbours)$self.included)))
 		stop("No lags for neighbours lists including self")
 	n <- length(neighbours)
+	if (n < 1) stop("non-positive number of entities")
+	if (maxlag < 2) stop("maxlag less than 2")
 	lags <- vector(mode="list", length=maxlag)
 	lags[[1]] <- neighbours
 	cds <- card(neighbours)

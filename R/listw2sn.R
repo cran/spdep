@@ -25,6 +25,7 @@ sn2listw <- function(sn) {
 	if(!inherits(sn, "spatial.neighbour")) 
 	    stop("not a spatial.neighbour object")
 	n <- attr(sn, "n")
+	if (n < 1) stop("non-positive n")
 	region.id <- attr(sn, "region.id")
 	nlist <- vector(mode="list", length=n)
 	class(nlist) <- "nb"

@@ -35,14 +35,18 @@ localmoran.sad <- function (model, select, nb, glist = NULL, style = "W",
 	stop("alternative must be one of: \"greater\", \"less\", or \"two.sided\"")
     u <- as.vector(u)
     select <- unique(as.integer(select))
+    if (length(select) < 1) stop("select too short")
     if (any(select < 1 || select > n))
         stop("select out of range")
     utu <- c(t(u) %*% u)
     p <- model$rank
     p1 <- 1:p
+    nacoefs <- which(is.na(coefficients(model)))
     m <- n - p - 2
     XtXinv <- chol2inv(model$qr$qr[p1, p1, drop = FALSE])
     X <- model.matrix(terms(model), model.frame(model))
+# fixed after looking at TOWN dummy in Boston data
+    if (length(nacoefs > 0)) X <- X[,-nacoefs]
     if (!is.null(wts <- weights(model))) {
 	X <- sqrt(diag(wts)) %*% X
     }
@@ -178,6 +182,7 @@ print.localmoransad <- function(x, ...) {
 }
 as.data.frame.localmoransad <- function(x, row.names=NULL, optional=FALSE) {
     n <- length(x)
+    if (n < 1) stop("x too short")
     res <- matrix(0, nrow=n, ncol=14)
     regnames <- NULL
     if (!is.null(row.names)) 

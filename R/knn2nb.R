@@ -11,6 +11,7 @@ knn2nb <- function(knn, row.names=NULL, sym=FALSE) {
 		if (length(unique(row.names)) != length(row.names))
 	    		stop("non-unique row.names given")
     	}
+	if (knn$np < 1) stop("non-positive number of spatial units")
     	if (is.null(row.names)) row.names <- as.character(1:knn$np)
         if(sym){
           to<-as.vector(knn$nn)

@@ -94,6 +94,7 @@ geary.mc <- function(x, listw, nsim, zero.policy=FALSE,
 	if (spChk && !chkIDs(x, listw))
 		stop("Check of data and weights ID integrity failed")
 	if(nsim > gamma(n+1)) stop("nsim too large for this n")
+	if (nsim < 1) stop("non-positive nsim")
 	wc <- spweights.constants(listw, zero.policy)
 	res <- numeric(length=nsim+1)
 	for (i in 1:nsim) res[i] <- geary(sample(x), listw, n, wc$n1, wc$S0,

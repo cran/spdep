@@ -21,6 +21,7 @@ read.gwt2nb <- function(file, region.id=NULL) {
 		warning("Old-style GWT file")
 	} else stop("Invalid header line format for GWT file")
 	close(con)
+	if (n < 1) stop("non-positive number of entities")
 	nseq <- 1:n
 	if (is.null(region.id)) region.id <- nseq
 	if (n != length(region.id))
@@ -66,6 +67,7 @@ read.gwt2nb <- function(file, region.id=NULL) {
 	attr(res, "GeoDa") <- list(dist=vlist, shpfile=shpfile, ind=ind)
 	attr(res, "call") <- match.call()
 	attr(res, "n") <- n
+	res <- sym.attr.nb(res)
 	invisible(res)
 }
 
@@ -73,6 +75,7 @@ write.sn2gwt <- function(sn, file, shpfile=NULL, ind=NULL) {
 	if(!inherits(sn, "spatial.neighbour")) 
 	    stop("not a spatial.neighbour object")
 	n <- attr(sn, "n")
+	if (n < 1) stop("non-positive number of entities")
 	if (is.null(shpfile)) {
 		tmp <- attr(sn, "GeoDa")$shpfile
 		if (is.null(tmp)) shpfile <- "unknown"

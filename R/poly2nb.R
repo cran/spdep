@@ -1,4 +1,4 @@
-# Copyright 2001-2004 by Roger Bivand 
+# Copyright 2001-2005 by Roger Bivand 
 #
 	
 
@@ -8,6 +8,7 @@ poly2nb <- function(pl, row.names=NULL, snap=sqrt(.Machine$double.eps),
 	if (!inherits(pl, "polylist")) stop("Not a polygon list")
 	if (inherits(pl, "multiparts")) stop("Convert to newer polylist format")
 	n <- length(pl)
+	if (n < 1) stop("non-positive number of entities")
 	regid <- attr(pl, "region.id")
 	if (is.null(regid)) {
 		if(is.null(row.names)) regid <- as.character(1:n)
@@ -21,6 +22,7 @@ poly2nb <- function(pl, row.names=NULL, snap=sqrt(.Machine$double.eps),
 	}
 	poly2bbs <- function(pl) {
 		n <- length(pl)
+		if (n < 1) stop("non-positive number of entities")
 		res <- matrix(0, nrow=n, ncol=4)
 		for (i in 1:n) res[i,] <- attr(pl[[i]], "bbox")
 		res
@@ -63,6 +65,7 @@ poly2nb <- function(pl, row.names=NULL, snap=sqrt(.Machine$double.eps),
 	attr(ans, "call") <- match.call()
 	if (queen) attr(ans, "type") <- "queen"
 	else attr(ans, "type") <- "rook"
+	ans <- sym.attr.nb(ans)
 	invisible(ans)
 }
 

@@ -325,7 +325,7 @@ legend(c(-84,-81), c(33.9,34.5), fill=cols, legend=leglabs(brks),
 <<zfig>>
 @ 
 \end{center}
-\caption{Probability map of North Carolina counties, SIDS cases 1974--78, reproducing \citet{kaluznyetal:1996}, p. 67, Figure 3.28.}
+\caption{Probability map of North Carolina counties, SIDS cases 1974--78, reproducing \citet{kaluznyetal:1996}, p. 57, Figure 3.28.}
 \label{poismap}
 \end{figure}
 

@@ -1,9 +1,6 @@
 % Copyright 2002-4 by Roger S. Bivand
 \name{lagsarlm}
 \alias{lagsarlm}
-%\alias{sar.lag.mixed.f}
-%\alias{sar.lag.mixed.f.s}
-%\alias{dosparse}
 \title{Spatial simultaneous autoregressive lag model estimation}
 \description{
   Maximum likelihood estimation of spatial simultaneous autoregressive
@@ -11,16 +8,13 @@ lag and mixed models of the form:
 
 \deqn{y = \rho W y + X \beta + \varepsilon}{y = rho W y + X beta + e}
 
-where $\rho$ is found by \code{optim()} using method "L-BFGS-B" first and $\beta$ and other parameters by generalized least squares subsequently. In the mixed model, the spatially lagged independent variables are added to X.
+where $\rho$ is found by \code{optimize()}, or \code{optim()} using method "L-BFGS-B" if argument optim=TRUE, first, and $\beta$ and other parameters by generalized least squares subsequently. In the mixed model, the spatially lagged independent variables are added to X.
 }
 \usage{
 lagsarlm(formula, data=list(), listw, na.action=na.fail,
   type="lag", method="eigen", quiet=TRUE,
   zero.policy=FALSE, interval = c(-1, 0.999), tol.solve=1.0e-10, 
-  tol.opt=.Machine$double.eps^0.5, control, optim=FALSE, sparsedebug=FALSE)
-%sar.lag.mixed.f.s(rho, sn, e.a, e.b, e.c, n, quiet, sparsedebug)
-%sar.lag.mixed.f(rho, eig, e.a, e.b, e.c, n, quiet)
-%dosparse(listw, y, x, wy, K, quiet, tol.opt, sparsedebug)
+  tol.opt=.Machine$double.eps^0.5, control, optim=FALSE)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
@@ -33,7 +27,7 @@ is called.}
   \item{na.action}{a function (default \code{na.fail}), can also be \code{na.omit} or \code{na.exclude} with consequences for residuals and fitted values - in these cases the weights list will be subsetted to remove NAs in the data. It may be necessary to set zero.policy to TRUE because this subsetting may create no-neighbour observations. Note that only weights lists created without using the glist argument to \code{nb2listw} may be subsetted.}
   \item{type}{default "lag", may be set to "mixed"; when "mixed", the lagged intercept is dropped for spatial weights style "W", that is row-standardised weights, but otherwise included}
   \item{method}{"eigen" (default) - the Jacobian is computed as the product 
-of (1 - rho*eigenvalue) using \code{eigenw}, "SparseM" for strictly symmetric weights lists of styles "B", "C" and "U", or made symmetric by similarity (Ord, 1975, Appendix C) if possible for styles "W" and "S", using code from the SparseM package to calculate the determinant, and "sparse" - (deprecated from this release) computes the determinant of the sparse matrix (I - rho*W) directly using \code{logSpwdet}.
+of (1 - rho*eigenvalue) using \code{eigenw}, and "SparseM" for strictly symmetric weights lists of styles "B", "C" and "U", or made symmetric by similarity (Ord, 1975, Appendix C) if possible for styles "W" and "S", using code from the SparseM package to calculate the determinant.
 }
   \item{quiet}{default=TRUE; if FALSE, reports function values during optimization.}
   \item{zero.policy}{if TRUE assign zero to the lagged value of zones without 
@@ -43,36 +37,18 @@ neighbours, if FALSE (default) assign NA - causing \code{lagsarlm()} to terminat
   \item{tol.opt}{the desired accuracy of the optimization - passed to \code{optimize()} (default=square root of double precision machine tolerance)}
   \item{control}{A list of control parameters passed to \code{optim}, se details in \code{\link[stats]{optim}}}
   \item{optim}{If TRUE use experimental \code{optim} branch and control argument}
-  \item{sparsedebug}{if TRUE, writes a log file on sparse matrix operations
-(name sparsestats) in the current directory. To be used if sparse estimation
-fails!}
-%  \item{rho}{value of the spatial parameter}
-%  \item{eig}{eigenvalues of the full spatial weights matrix from \code{eigenw}}
-%  \item{y}{dependent variable}
-%  \item{wy}{spatially lagged dependent variable}
-%  \item{x}{independent variables}
-%  \item{n}{length of y (and eig)}
-%  \item{e.a}{term used in computing likelihood}
-%  \item{e.b}{term used in computing likelihood}
-%  \item{e.c}{term used in computing likelihood}
-%  \item{K}{1 if no intercept, 2 if intercept present in x}
-%  \item{sn}{sparse spatial neighbour object from \code{listw2sn}}
 }
 \details{
-When using the sparse method, the user takes (unfortunately) full
-responsibility for possible failures, including R terminating with
-a core dump! Safeguards have been put in place to try to trap errant
-behaviour in the sparse functions' memory allocation, but they may
-not always help. When sparsedebug is TRUE, a log file (sparsestats)
-is written in the working directory - the figure of interest is the
-number of allocated blocks. At present, \code{spwdet} will fail when
-this increases over the number initially allocated, but will not release
-memory allocated by the sparse functions. In the event of problems,
-save your workspace and quit R. Problems seem to be related to larger
-n, and to an unknown trigger precipitating incontrolled fillin, in the
-course of which the sparse routines lose track of their memory pointers,
-and then provoke a segmentation fault trying to free unallocated memory.
+  The asymptotic standard error of $\rho$ is only computed when
+method=eigen, because the full matrix operations involved would be costly
+for large n typically associated with the choice of method="SparseM". The
+same applies to the coefficient covariance matrix. Taken as the
+asymptotic matrix from the literature, it is typically badly scaled, and with the elements involving rho being very small,
+while other parts of the matrix can be very large (often many orders
+of magnitude in difference). It often happens that the \code{tol.solve}
+argument needs to be set to a smaller value than the default, or the RHS variables can be centred or reduced in range.
 }
+
 \value{
   A list object of class \code{sarlm}
   \item{type}{"lag" or "mixed"}
@@ -92,7 +68,7 @@ and then provoke a segmentation fault trying to free unallocated memory.
   \item{se.fit}{Not used yet}
   \item{formula}{model formula}
   \item{ase}{TRUE if method=eigen}
-  \item{LLs}{if ase=FALSE (for method="SparseM" and method="sparse"), the log likelihood values of
+  \item{LLs}{if ase=FALSE (for method="SparseM"), the log likelihood values of
 models estimated dropping each of the independent variables in turn, used
 in the summary function as a substitute for variable coefficient
 significance tests}
@@ -120,7 +96,7 @@ pp. 237-289.}
 Bernat for contributions to the asymptotic standard error code.}
 
 \seealso{\code{\link{lm}}, \code{\link{errorsarlm}}, 
-\code{\link{eigenw}}, \code{\link{logSpwdet}}, \code{\link{predict.sarlm}},
+\code{\link{eigenw}}, \code{\link{asMatrixCsrListw}}, \code{\link{predict.sarlm}},
 \code{\link{residuals.sarlm}}
 }
 
@@ -129,8 +105,7 @@ data(oldcol)
 COL.lag.eig <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb), method="eigen", quiet=FALSE)
 COL.lag.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb, style="W"), method="eigen", control=list(trace=3, fnscale=-1,
- factr=.Machine$double.eps^0.5, pgtol=.Machine$double.eps^0.5))
+ nb2listw(COL.nb, style="W"), method="eigen", quiet=FALSE)
 COL.lag.SM <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb), method="SparseM", quiet=FALSE)
 summary(COL.lag.eig, correlation=TRUE)
