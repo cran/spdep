@@ -84,8 +84,10 @@ lagsarlm <- function(formula, data = list(), listw, type="lag",
 	} else {
 		LLs <- NULL
 		tr <- function(A) sum(diag(A))
+# beware of complex eigenvalues!
 		O <- (eig/(1-rho*eig))^2
 		omega <- sum(O)
+		if (is.complex(omega)) omega <- Re(omega)
 		W <- listw2mat(listw)
 		A <- solve(diag(n) - rho*W, tol=tol.solve)
 		AW <- A %*% W
