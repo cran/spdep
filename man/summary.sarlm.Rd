@@ -9,7 +9,7 @@
   Methods used for presenting the results of estimating spatial SAR models.
 }
 \usage{
-summary.sarlm(object, ...)
+summary.sarlm(object, correlation = FALSE, ...)
 print.sarlm(x, ...)
 print.summary.sarlm(x, digits = max(5, .Options$digits - 3),
 	signif.stars = FALSE, ...)
@@ -17,6 +17,7 @@ print.summary.sarlm(x, digits = max(5, .Options$digits - 3),
 %- maybe also `usage' for other objects documented here.
 \arguments{
   \item{object}{\code{sarlm} object from \code{lagsarlm} or \code{errorsarlm}}
+  \item{correlation}{logical; if 'TRUE', the correlation matrix of the estimated parameters including sigma is returned and printed (default=FALSE)}
   \item{x}{\code{sarlm} object from \code{lagsarlm} or \code{errorsarlm} in
 \code{print.sarlm}, summary object from \code{summary.sarlm} for 
 \code{print.summary.sarlm}}
@@ -54,6 +55,6 @@ pp. 237-289.}
 data(oldcol)
 COL.mix.eig <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb), type="mixed", method="eigen", quiet=FALSE)
-summary(COL.mix.eig)
+summary(COL.mix.eig, correlation=TRUE)
 }
 \keyword{spatial}

@@ -27,6 +27,8 @@ sn2listw <- function(sn) {
 	n <- attr(sn, "n")
 	region.id <- attr(sn, "region.id")
 	nlist <- vector(mode="list", length=n)
+	class(nlist) <- "nb"
+	attr(nlist, "region.id") <- region.id
 	vlist <- vector(mode="list", length=n)
 	rle.sn <- rle(sn[,1])
 	if (n != length(rle.sn$lengths))

@@ -27,12 +27,7 @@ lag.listw(x, var, zero.policy=FALSE, NAOK=FALSE, ...)
 data(oldcol)
 Vx <- lag.listw(nb2listw(COL.nb, style="W"), COL.OLD$CRIME)
 plot(Vx, COL.OLD$CRIME)
-x <- try(ecdf(COL.OLD$CRIME))
-if (class(x) == "try-error") {
-  require(stepfun)
-  x <- ecdf(COL.OLD$CRIME)
-}
-plot(x)
+plot(ecdf(COL.OLD$CRIME))
 plot(ecdf(Vx), add=TRUE, col.points="red", col.hor="red")
 }
 \keyword{spatial}

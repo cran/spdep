@@ -1,4 +1,5 @@
-# Copyright 1998-2003 by Roger Bivand (Wald test suggested by Rein Halbersma)
+# Copyright 1998-2004 by Roger Bivand (Wald test suggested by Rein Halbersma,
+# output of correlations suggested by Michael Tiefelsdorf)
 #
 
 print.sarlm <- function(x, ...)
@@ -12,7 +13,7 @@ print.sarlm <- function(x, ...)
 	invisible(x)
 }
 
-summary.sarlm <- function(object, ...)
+summary.sarlm <- function(object, correlation = FALSE, ...)
 {
 	if (object$type == "error" || ((object$type == "lag" || 
 		object$type == "mixed") && object$ase)) {
@@ -48,7 +49,15 @@ summary.sarlm <- function(object, ...)
 		colnames(object$Coef) <- c("Estimate", "Log likelihood",
 			"LR statistic", "Pr(>|z|)")
 	}
-	if (object$ase) object$Wald1 <- Wald1.sarlm(object)
+	if (object$ase) {
+		object$Wald1 <- Wald1.sarlm(object)
+		if (correlation) {
+			object$correlation <- diag((diag(object$resvar))
+				^(-1/2)) %*% object$resvar %*% 
+				diag((diag(object$resvar))^(-1/2))
+			dimnames(object$correlation) <- dimnames(object$resvar)
+		}
+	}
 	object$LR1 <- LR1.sarlm(object)
 	rownames(object$Coef) <- names(object$coefficients)
 
@@ -111,7 +120,6 @@ Wald1.sarlm <- function(object) {
 print.summary.sarlm <- function(x, digits = max(5, .Options$digits - 3),
 	signif.stars = FALSE, ...)
 {
-	if (version$minor < 8) printCoefmat <- print.coefmat
 	cat("\nCall:", deparse(x$call),	sep = "", fill=TRUE)
 	cat("\nResiduals:\n")
 	resid <- residuals(x)
@@ -178,6 +186,17 @@ print.summary.sarlm <- function(x, digits = max(5, .Options$digits - 3),
 			"p-value:", format.pval((1 - pchisq(x$LMtest, 1)), 
 			digits), "\n")
 	}
-	cat("\n")
-	invisible(x)
+    	correl <- x$correlation
+    	if (!is.null(correl)) {
+        	p <- NCOL(correl)
+        	if (p > 1) {
+            		cat("\nCorrelation of Coefficients:\n")
+                	correl <- format(round(correl, 2), nsmall = 2, 
+                  	digits = digits)
+                	correl[!lower.tri(correl)] <- ""
+                	print(correl[-1, -p, drop = FALSE], quote = FALSE)
+            	}
+    	}
+    	cat("\n")
+        invisible(x)
 }

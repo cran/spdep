@@ -44,10 +44,6 @@ predict.sarlm <- function(object, newdata=NULL, listw=NULL,
 		}
 	}
 	else {
-		if (is.null(listw) || !inherits(listw, "listw")) 
-			stop ("spatial weights list required")
-		if (nrow(newdata) != length(listw$neighbours))
-			stop("mismatch between newdata and spatial weights")
 		if (object$type == "error") {
 			B <- coefficients(object$lm.target)
 			tt <- terms(object$lm.model) 
@@ -58,6 +54,10 @@ predict.sarlm <- function(object, newdata=NULL, listw=NULL,
 			attr(res, "trend") <- trend
 			attr(res, "signal") <- signal
 		} else if (object$type == "mixed") {
+			if (is.null(listw) || !inherits(listw, "listw")) 
+				stop ("spatial weights list required")
+			if (nrow(newdata) != length(listw$neighbours))
+				stop("mismatch between newdata and spatial weights")
 			B <- coefficients(object$lm.target)
 			mt <- terms(object$formula, data = newdata)
 			mf <- lm(object$formula, newdata, method="model.frame")
@@ -82,6 +82,10 @@ predict.sarlm <- function(object, newdata=NULL, listw=NULL,
 			attr(res, "signal") <- signal
 
 		} else {
+			if (is.null(listw) || !inherits(listw, "listw")) 
+				stop ("spatial weights list required")
+			if (nrow(newdata) != length(listw$neighbours))
+				stop("mismatch between newdata and spatial weights")
 			B <- coefficients(object$lm.target)
 			mt <- terms(object$formula, data = newdata)
 			mf <- lm(object$formula, newdata, method="model.frame")

@@ -15,7 +15,7 @@ parameters by generalized least squares subsequently.
 }
 \usage{
 errorsarlm(formula, data=list(), listw, na.action=na.fail, method="eigen",
-  quiet=TRUE, zero.policy=FALSE, tol.solve=1.0e-7, 
+  quiet=TRUE, zero.policy=FALSE, tol.solve=1.0e-10, 
   tol.opt=.Machine$double.eps^0.5, sparsedebug=FALSE)
 %sar.error.f(lambda, eig, y, wy, x, WX, n, quiet)
 %sar.error.f.s(lambda, sn, y, wy, x, WX, n, quiet, sparsedebug)
@@ -37,7 +37,7 @@ determinant of the sparse matrix (I - rho*W) directly using \code{logSpwdet}.
   \item{quiet}{default=TRUE; if FALSE, reports function values during optimization.}
   \item{zero.policy}{if TRUE assign zero to the lagged value of zones without 
 neighbours, if FALSE (default) assign NA - causing \code{errorsarlm()} to terminate with an error}
-  \item{tol.solve}{the tolerance for detecting linear dependencies in the columns of matrices to be inverted - passed to \code{solve()} (default=1.0e-7). This may be used if necessary to extract coefficient standard errors (for instance lowering to 1e-10), but errors in \code{solve()} may constitute indications of misspecification}
+  \item{tol.solve}{the tolerance for detecting linear dependencies in the columns of matrices to be inverted - passed to \code{solve()} (default=1.0e-10). This may be used if necessary to extract coefficient standard errors (for instance lowering to 1e-12), but errors in \code{solve()} may constitute indications of poorly scaled variables}
   \item{tol.opt}{the desired accuracy of the optimization - passed to \code{optimize()} (default=square root of double precision machine tolerance)}
   \item{sparsedebug}{if TRUE, writes a log file on sparse matrix operations
 (name sparsestats) in the current directory. To be used if sparse estimation
@@ -52,9 +52,15 @@ fails!}
 %  \item{sn}{sparse spatial neighbour object from \code{listw2sn}}
 }
 \details{
-  The asymptotic standard error of $\lambda$ is only computed when 
+  The asymptotic standard error of $\lambda$ is only computed when
 method=eigen, because the full matrix operations involved would be costly
-for large n typically associated with the choice of method=sparse. 
+for large n typically associated with the choice of method=sparse. The
+same applies to the coefficient covariance matrix. Taken as the
+asymptotic matrix from the literature, it is typically badly scaled, being
+block-diagonal, and with the elements involving lambda being very small,
+while other parts of the matrix can be very large (often many orders
+of magnitude in difference). It often happens that the \code{tol.solve}
+argument needs to be set to a smaller value than the default.
 
 When using the sparse method, the user takes (unfortunately) full
 responsibility for possible failures, including R terminating with
@@ -123,9 +129,9 @@ COL.errB.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb, style="B"), method="eigen", quiet=FALSE)
 COL.errW.sp <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb, style="W"), method="sparse", quiet=FALSE)
-summary(COL.errW.eig)
-summary(COL.errB.eig)
-summary(COL.errW.sp)
+summary(COL.errW.eig, correlation=TRUE)
+summary(COL.errB.eig, correlation=TRUE)
+summary(COL.errW.sp, correlation=TRUE)
 NA.COL.OLD <- COL.OLD
 NA.COL.OLD$CRIME[20:25] <- NA
 COL.err.NA <- errorsarlm(CRIME ~ INC + HOVAL, data=NA.COL.OLD,

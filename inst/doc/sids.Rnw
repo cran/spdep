@@ -312,7 +312,7 @@ ch <- choynowski(nc.sids$SID74, nc.sids$BIR74)
 \end{figure}
 
 <<label=poismap,echo=FALSE,eval=FALSE>>= 
-plot(sidspolys, col=cols[findInterval2(pmap$pmap, brks)])
+plot(sidspolys, col=cols[findInterval(pmap$pmap, brks)])
 legend(c(-84,-81), c(33.9,34.5), fill=cols, legend=leglabs(brks),
  bty="n", ncol=2)
 @
@@ -390,7 +390,7 @@ hist(pmap$pmap, main="")
 \end{figure}
 
 <<label=poismap2,echo=FALSE,eval=FALSE>>= 
-plot(sidspolys, col=cols[findInterval2(stdres, brks)])
+plot(sidspolys, col=cols[findInterval(stdres, brks)])
 legend(c(-84,-81), c(33.9,34.5), fill=cols, legend=leglabs(brks),
  bty="n", ncol=2)
 @
@@ -445,7 +445,7 @@ from a Negative Binomial.
 plot(sidspolys)
 legend(c(-84,-81), c(33.9,34.5), fill=cols, legend=leglabs(brks),
  bty="n", ncol=2)
-plot(subset(sidspolys, sub), col=cols[findInterval2(res$est[sub]*1000, brks)], add=TRUE)
+plot(subset(sidspolys, sub), col=cols[findInterval(res$est[sub]*1000, brks)], add=TRUE)
 points(sidscents[!sub,], pch=8)
 @
 

@@ -1,4 +1,4 @@
-# Copyright 2003 by Luc Anselin and Roger Bivand
+# Copyright 2003-4 by Luc Anselin and Roger Bivand
 #
 
 # LA 6/28/03 read.gwt
@@ -89,3 +89,22 @@ write.sn2gwt <- function(sn, file, shpfile=NULL, ind=NULL) {
 		row.names=FALSE, col.names=FALSE)
 	close(con)
 }
+
+write.sn2dat <- function(sn, file) {
+	if(!inherits(sn, "spatial.neighbour")) 
+	    stop("not a spatial.neighbour object")
+	write.table(data.frame(sn[order(sn[,2]), ]), 
+	    file=file, col.names=FALSE, row.names=FALSE)
+}
+
+read.dat2listw <- function(file) {
+	wmat <- read.table(file)
+	sn <- wmat[order(wmat[,1]),]
+	IDS <- unique(sn[,1])
+	class(sn) <- c("spatial.neighbour", "data.frame")
+	attr(sn, "n") <- length(IDS)
+	attr(sn, "region.id") <- as.character(IDS)
+	listw <- sn2listw(sn)
+	invisible(listw)
+}
+

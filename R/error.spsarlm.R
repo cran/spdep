@@ -2,7 +2,7 @@
 #
 
 errorsarlm <- function(formula, data = list(), listw, na.action=na.fail, 
-	method="eigen", quiet=TRUE, zero.policy=FALSE, tol.solve=1.0e-7, 
+	method="eigen", quiet=TRUE, zero.policy=FALSE, tol.solve=1.0e-10, 
         tol.opt=.Machine$double.eps^0.5, sparsedebug=FALSE) {
 	mt <- terms(formula, data = data)
 	mf <- lm(formula, data, na.action=na.action, method="model.frame")
@@ -81,17 +81,23 @@ errorsarlm <- function(formula, data = list(), listw, na.action=na.fail,
 	ase <- FALSE
 	lambda.se <- NULL
 	LMtest <- NULL
+	asyvar1 <- FALSE
 	if (method == "eigen") {
 		tr <- function(A) sum(diag(A))
 		W <- listw2mat(listw)
 		A <- solve(diag(n) - lambda*W, tol=tol.solve)
 		WA <- W %*% A
-		asyvar <- matrix(0, nrow=2, ncol=2)
-		asyvar[2,2] <- n / (2*(s2^2))
+		asyvar <- matrix(0, nrow=2+p, ncol=2+p)
+		asyvar[1,1] <- n / (2*(s2^2))
 		asyvar[2,1] <- asyvar[1,2] <- tr(WA) / s2
-		asyvar[1,1] <- tr(WA %*% WA) + tr(t(WA) %*% WA)
+		asyvar[2,2] <- tr(WA %*% WA) + tr(t(WA) %*% WA)
+		asyvar[3:(p+2),3:(p+2)] <- s2*(t(x - lambda*WX) %*% 
+			(x - lambda*WX))
 		asyvar1 <- solve(asyvar, tol=tol.solve)
-		lambda.se <- sqrt(asyvar1[1,1])
+		rownames(asyvar1) <- colnames(asyvar1) <- 
+			c("sigma", "lambda", xcolnames)
+		
+		lambda.se <- sqrt(asyvar1[2,2])
 		ase <- TRUE
 	}
 	call <- match.call()
@@ -102,7 +108,7 @@ errorsarlm <- function(formula, data = list(), listw, na.action=na.fail,
 		LL=LL, s2=s2, SSE=SSE, parameters=(m+2), lm.model=lm.model, 
 		method=method, call=call, residuals=r, lm.target=lm.target,
 		fitted.values=fit, ase=ase, formula=formula,
-		se.fit=NULL,
+		se.fit=NULL, resvar=asyvar1,
 		lambda.se=lambda.se, LMtest=LMtest, zero.policy=zero.policy), 
 		class=c("sarlm"))
 	if (zero.policy) {

@@ -3,7 +3,7 @@
 
 lm.morantest.sad <- function (model, listw, zero.policy = FALSE, 
     alternative = "greater", spChk=NULL, tol = .Machine$double.eps^0.5,
-    maxiter = 1000) 
+    maxiter = 1000, tol.bounds=0.0001) 
 {
     if (!inherits(listw, "listw")) 
         stop(paste(deparse(substitute(listw)), "is not a listw object"))
@@ -38,8 +38,8 @@ lm.morantest.sad <- function (model, listw, zero.policy = FALSE,
     tau <- evalue[1:idxpos]
     tau <- c(tau, evalue[(idxpos+1+p):N])
     taumi <- tau - I
-    low <- (1 / (2*taumi[length(taumi)])) + 0.01
-    high <- (1 / (2*taumi[1])) - 0.01
+    low <- (1 / (2*taumi[length(taumi)])) + tol.bounds
+    high <- (1 / (2*taumi[1])) - tol.bounds
     f <- function(omega, taumi) {sum(taumi/(1 - (2*omega*taumi)))}
     root <- uniroot(f, lower=low, upper=high, tol=tol, maxiter=maxiter,
         taumi=taumi)

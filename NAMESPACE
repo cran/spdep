@@ -23,7 +23,8 @@ export(EBImoran.mc, probmap, choynowski, EBest, EBlocal, LR.sarlm,
 	summary.moransad, print.summary.moransad, print.spcor, plot.spcor, 
 	print.sarlm, summary.sarlm, residuals.sarlm, deviance.sarlm, 
 	coef.sarlm, fitted.sarlm, logLik.sarlm, anova.sarlm, 
-	predict.sarlm, print.summary.sarlm, print.sarlm.pred)
+	predict.sarlm, print.summary.sarlm, print.sarlm.pred, bptest.sarlm,
+	write.sn2dat, read.dat2listw)
 
 import(maptools)
 
