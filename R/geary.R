@@ -7,16 +7,14 @@ geary <- function(x, listw, n, n1, S0, zero.policy=FALSE) {
 	zz <- sum(z^2)
 	K <- (n*sum(z^4))/(zz^2)
 	res <- as.numeric(rep(0, n))
+	cardnb <- card(listw$neighbours)
 	for (i in 1:n) {
-		if (length(listw$neighbours[[i]]) == 0) {
+		if (cardnb[i] == 0) {
 			if (zero.policy) res[i] <- 0
 			else res[i] <- NA
 		} else {
-			for (j in 1:length(listw$neighbours[[i]])) {
-				jl <- listw$neighbours[[i]]
-				res[i] <- res[i] + (listw$weights[[i]][j] * 
-					(x[i] - x[jl[j]])^2)
-			}
+			res[i] <- sum(listw$weights[[i]] * 
+				((x[i] - x[listw$neighbours[[i]]])^2))
 		}
 	}
 	C <- (n1 / (2*S0)) * (sum(res) / zz)
@@ -37,6 +35,7 @@ geary.test <- function(x, listw, randomisation=TRUE, zero.policy=FALSE,
 	S02 <- wc$S0*wc$S0
 	res <- geary(x, listw, wc$n, wc$n1, wc$S0, zero.policy)
 	C <- res$C
+	if (is.na(C)) stop("NAs generated in geary - check zero.policy")
 	K <- res$K
 	EC <- 1
 	if(randomisation) {

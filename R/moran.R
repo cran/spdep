@@ -4,8 +4,8 @@
 moran <- function(x, listw, n, S0, zero.policy=FALSE) {
 	z <- scale(x, scale=FALSE)
 	zz <- sum(z^2)
-	K <- (n*sum(z^4))/(zz^2)
-	lz <- lag.listw(listw, z, zero.policy)
+	K <- (length(x)*sum(z^4))/(zz^2)
+	lz <- lag.listw(listw, z, zero.policy=zero.policy)
 	I <- (n / S0) * ((t(z) %*% lz) / zz)
 	res <- list(I=I, K=K)
 	res
@@ -20,19 +20,19 @@ moran.test <- function(x, listw, randomisation=TRUE, zero.policy=FALSE,
 	if (any(is.na(x))) stop("NA in X")
 	n <- length(listw$neighbours)
 	if (n != length(x)) stop("objects of different length")
-	wc <- spweights.constants(listw, zero.policy)
+	wc <- spweights.constants(listw, zero.policy=zero.policy)
 	S02 <- wc$S0*wc$S0
-	res <- moran(x, listw, wc$n, wc$S0, zero.policy)
+	res <- moran(x, listw, wc$n, wc$S0, zero.policy=zero.policy)
 	I <- res$I
 	K <- res$K
 	EI <- (-1) / wc$n1
 	if(randomisation) {
-		VI <- n*(wc$S1*(wc$nn - 3*n + 3) - n*wc$S2 + 3*S02)
-		tmp <- K*(wc$S1*(wc$nn - n) - 2*n*wc$S2 + 6*S02)
+		VI <- wc$n*(wc$S1*(wc$nn - 3*wc$n + 3) - wc$n*wc$S2 + 3*S02)
+		tmp <- K*(wc$S1*(wc$nn - wc$n) - 2*wc$n*wc$S2 + 6*S02)
 		VI <- (VI - tmp) / (wc$n1*wc$n2*wc$n3*S02)
 		VI <- VI - EI^2
 	} else {
-		VI <- (wc$nn*wc$S1 - n*wc$S2 + 3*S02) / (S02*(wc$nn - 1))
+		VI <- (wc$nn*wc$S1 - wc$n*wc$S2 + 3*S02) / (S02*(wc$nn - 1))
 		VI <- VI - EI^2
 	}
 	ZI <- (I - EI) / sqrt(VI)

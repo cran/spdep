@@ -16,7 +16,9 @@ lm.morantest.sad <- function (model, listw, zero.policy = FALSE,
     listw.U <- listw2U(listw)
     S0 <- sum(unlist(listw.U$weights))
     lu <- lag.listw(listw.U, u, zero.policy = zero.policy)
-    I <- (N/S0) * ((t(u) %*% lu)/(t(u) %*% u))
+    Nnn <- N
+    if (zero.policy) Nnn <- length(which(card(listw$neighbours) > 0))
+    I <- (Nnn/S0) * ((t(u) %*% lu)/(t(u) %*% u))
     p <- model$rank
     p1 <- 1:p
     XtXinv <- chol2inv(model$qr$qr[p1, p1, drop = FALSE])

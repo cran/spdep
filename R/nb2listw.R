@@ -13,7 +13,6 @@ nb2listw <- function(neighbours, glist=NULL, style="W", zero.policy=FALSE)
 		glist <- vector(mode="list", length=n)
 		for (i in 1:n)
 			if(cardnb[i] > 0) glist[[i]] <- rep(1, length=cardnb[i])
-			else glist[[i]] <- NULL
 		attr(vlist, "binary") <- TRUE
 	} else {
 		attr(vlist, "general") <- TRUE
@@ -30,23 +29,24 @@ nb2listw <- function(neighbours, glist=NULL, style="W", zero.policy=FALSE)
 		d <- unlist(lapply(glist, sum))
 		for (i in 1:n) {
 			if (cardnb[i] > 0) vlist[[i]] <- (1/d[i]) * glist[[i]]
-			else vlist[[i]] <- NULL
 		}
 	}
 	if (style == "B") {
 		for (i in 1:n) {
 			if (cardnb[i] > 0) vlist[[i]] <- rep(1, cardnb[i])
-			else vlist[[i]] <- NULL
 		}
 	}
 	if (style == "C") {
 		D <- sum(unlist(glist))
 		if (is.na(D) || !(D > 0))
 			stop(paste("Failure in sum of weights:", D))
+		if (zero.policy) {
+			eff.n <- n - length(which(cardnb == 0))
+			if (eff.n < 1) stop("No valid observations")
+		} else eff.n <- n
 		for (i in 1:n) {
 			if (cardnb[i] > 0)
-				vlist[[i]] <- (n/D) * glist[[i]]
-			else vlist[[i]] <- NULL
+				vlist[[i]] <- (eff.n/D) * glist[[i]]
 		}
 	}
 	if (style == "S") {
@@ -55,15 +55,17 @@ nb2listw <- function(neighbours, glist=NULL, style="W", zero.policy=FALSE)
 		for (i in 1:n) {
 			if (cardnb[i] > 0)
 				glist[[i]] <- (1/q[i]) * glist[[i]]
-			else glist[[i]] <- NULL
 		}
 		Q <- sum(unlist(glist))
 		if (is.na(Q) || !(Q > 0))
 		    stop(paste("Failure in sum of intermediate weights:", Q))
+		if (zero.policy) {
+			eff.n <- n - length(which(cardnb == 0))
+			if (eff.n < 1) stop("No valid observations")
+		} else eff.n <- n
 		for (i in 1:n) {
 			if (cardnb[i] > 0)
-				vlist[[i]] <- (n/Q) * glist[[i]]
-			else glist[[i]] <- NULL
+				vlist[[i]] <- (eff.n/Q) * glist[[i]]
 		}
 	}
 	style <- style

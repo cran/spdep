@@ -19,7 +19,8 @@ localmoran.sad <- function (model, select, nb, glist = NULL, style = "W",
     p1 <- 1:p
     XtXinv <- chol2inv(model$qr$qr[p1, p1, drop = FALSE])
     X <- model.matrix(terms(model), model.frame(model))
-    B <- listw2U(nb2listw(nb, glist=glist, style="B"))
+    B <- listw2U(nb2listw(nb, glist=glist, style="B",
+	zero.policy=zero.policy))
     D <- NULL
     a <- NULL
     if (style == "W") {
@@ -30,7 +31,8 @@ localmoran.sad <- function (model, select, nb, glist = NULL, style = "W",
     } else if (style == "C") a <- sum(unlist(B$weights))
     res <- vector(mode="list", length=length(select))
     for (i in 1:length(select)) {
-        Vi <- listw2star(B, select[i], style=style, n, D, a)
+        Vi <- listw2star(B, select[i], style=style, n, D, a,
+	    zero.policy=zero.policy)
         Viu <- lag.listw(Vi, u, zero.policy=TRUE)
 	Ii <- c((t(u) %*% Viu) / utu)
 	ViX <- lag.listw(Vi, X, zero.policy=TRUE)
@@ -56,12 +58,17 @@ localmoran.sad <- function (model, select, nb, glist = NULL, style = "W",
         c2root= 2*l*h * (2*l*h - 2*l*mi - 2*h*mi - 2*m*mi**2 -
 	    m**2 * mi**2 + mi**2)
         omega= 0.25*((aroot-sqrt(c1root+c2root))/broot)
-        tau <- c(c(e1), rep(0, m), c(en))
-	taumi <- tau - Ii
-        if (omega < 0 ) sad.r <- -sqrt(sum(log(1 - 2*omega*taumi)))
-        else sad.r <- sqrt(sum(log(1 - 2*omega*taumi)))
-        sad.u <- omega * sqrt(2*sum(taumi^2 / (1 - (2*omega*taumi))^2))
-        sad.p <- sad.r - ((1/sad.r)*log(sad.r/sad.u))
+	if (is.nan(omega)) {
+	    warning (paste("In zone:", select[i], "omega not a number"))
+	    sad.r <- sad.u <- sad.p <- NaN
+	} else { 
+            tau <- c(c(e1), rep(0, m), c(en))
+	    taumi <- tau - Ii
+            if (omega < 0 ) sad.r <- -sqrt(sum(log(1 - 2*omega*taumi)))
+            else sad.r <- sqrt(sum(log(1 - 2*omega*taumi)))
+            sad.u <- omega * sqrt(2*sum(taumi^2 / (1 - (2*omega*taumi))^2))
+            sad.p <- sad.r - ((1/sad.r)*log(sad.r/sad.u))
+	}
         if (alternative == "two.sided") p.sad <- 2 * (1 - pnorm(sad.p))
         else if (alternative == "greater")
             p.sad <- pnorm(sad.p, lower.tail=FALSE)

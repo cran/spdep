@@ -24,7 +24,7 @@ as.data.frame.localmoransad(x, row.names=NULL, optional=FALSE)
 print.localmoransad(x, ...)
 summary.localmoransad(object, ...)
 print.summary.localmoransad(x, ...)
-listw2star(listw, ireg, style, n, D, a)
+listw2star(listw, ireg, style, n, D, a, zero.policy=FALSE)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{

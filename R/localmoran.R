@@ -26,7 +26,9 @@ localmoran <- function(x, listw, zero.policy=FALSE)
 	B <- (2*b2 - n) / ((n-1)*(n-2))
 	C <- Wi^2 / ((n-1)^2)
 	Wi2 <- sapply(listw$weights, function(x) sum(x^2))
-	Wikh2 <- sapply(listw$weights, function(x) {1 - crossprod(x,x)})
+	Wikh2 <- sapply(listw$weights, function(x) {
+		ifelse(is.null(x), 0, 1 - crossprod(x,x))
+	})
 	res[,3] <- A*Wi2 + B*Wikh2 - C
 	res[,4] <- (res[,1] - res[,2]) / sqrt(res[,3])
 	attr(res, "call") <- match.call()
