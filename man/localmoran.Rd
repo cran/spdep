@@ -1,4 +1,4 @@
-% Copyright 2001 by Roger S. Bivand
+% Copyright 2001-4 by Roger S. Bivand
 \name{localmoran}
 \alias{localmoran}
 \title{Local Moran's I statistic}
@@ -10,13 +10,16 @@ used as a diagnostic tool. The statistic is:
 and its expectation and variance are given in Anselin (1995).
 }
 \usage{
-localmoran(x, listw, zero.policy=FALSE, na.action=na.fail, spChk=NULL)
+localmoran(x, listw, zero.policy=FALSE, na.action=na.fail, 
+	alternative = "greater", p.adjust.method="none", spChk=NULL)
 }
 \arguments{
   \item{x}{a numeric vector the same length as the neighbours list in listw}
   \item{listw}{a \code{listw} object created for example by \code{nb2listw}}
   \item{zero.policy}{if TRUE assign zero to the lagged value of zones without neighbours, if FALSE assign NA}
   \item{na.action}{a function (default \code{na.fail}), can also be \code{na.omit} or \code{na.exclude} - in these cases the weights list will be subsetted to remove NAs in the data. It may be necessary to set zero.policy to TRUE because this subsetting may create no-neighbour observations. Note that only weights lists created without using the glist argument to \code{nb2listw} may be subsetted. If \code{na.pass} is used, zero is substituted for NA values in calculating the spatial lag. (Note that na.exclude will only work properly starting from R 1.9.0, na.omit and na.exclude assign the wrong classes in 1.8.*)}
+  \item{alternative}{a character string specifying the alternative hypothesis, must be one of greater (default), less or two.sided.}
+  \item{p.adjust.method}{a character string specifying the probability value adjustment for multiple tests, default "none"; see \code{\link{p.adjustSP}}. Note that the number of multiple tests for each region is only taken as the number of neighbours + 1 for each region, rather than the total number of regions.}
   \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
 }
 \value{
@@ -25,6 +28,7 @@ localmoran(x, listw, zero.policy=FALSE, na.action=na.fail, spChk=NULL)
   \item{E.Ii}{expectation of local moran statistic}
   \item{Var.Ii}{variance of local moran statistic}
   \item{Z.Ii}{standard deviate of local moran statistic}
+  \item{Pr()}{p-value of local moran statistic}
 }
 \references{Anselin, L. 1995. Local indicators of spatial association,
 Geographical Analysis, 27, 93--115;
@@ -40,8 +44,11 @@ International), 261--277.}
 data(afcon)
 oid <- order(afcon$id)
 resI <- localmoran(spNamedVec("totcon", afcon), nb2listw(paper.nb))
-print(data.frame(resI[oid,], row.names=afcon$name[oid]), digits=2)
-hist(pnorm(resI[,4]))
+printCoefmat(data.frame(resI[oid,], row.names=afcon$name[oid]), check.names=FALSE)
+hist(resI[,5])
+resI <- localmoran(spNamedVec("totcon", afcon), nb2listw(paper.nb), p.adjust.method="bonferroni")
+printCoefmat(data.frame(resI[oid,], row.names=afcon$name[oid]), check.names=FALSE)
+hist(resI[,5])
 totcon <- spNamedVec("totcon", afcon)
 is.na(totcon) <- sample(1:length(totcon), 5)
 totcon

@@ -37,7 +37,7 @@ attr(res, "parameters")
 cols <- grey(6:2/7)
 brks <- c(-Inf,2,2.5,3,3.5,Inf)
 library(maptools)
-plot(auckpolys, col=cols[findInterval(res$estmm*1000, brks)])
+plot(auckpolys, col=cols[findInterval(res$estmm*1000, brks)], forcefill=FALSE)
 legend(c(70,90), c(70,95), fill=cols, legend=leglabs(brks), bty="n")
 title(main="Global moment estimator of infant mortality per 1000 per year")
 }

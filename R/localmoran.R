@@ -2,7 +2,7 @@
 #
 
 localmoran <- function(x, listw, zero.policy=FALSE, na.action=na.fail, 
-	spChk=NULL) {
+	alternative = "greater", p.adjust.method="none", spChk=NULL) {
 	if (!inherits(listw, "listw"))
 		stop(paste(deparse(substitute(listw)), "is not a listw object"))
 	if (!is.null(attr(listw$neighbours, "self.included")) &&
@@ -24,8 +24,11 @@ localmoran <- function(x, listw, zero.policy=FALSE, na.action=na.fail,
 	}
 	n <- length(listw$neighbours)
 	if (n != length(x))stop("Different numbers of observations")
-	res <- matrix(nrow=n,ncol=4)
-	colnames(res) <- c("Ii", "E.Ii", "Var.Ii", "Z.Ii")
+	res <- matrix(nrow=n, ncol=5)
+        if (alternative == "two.sided") Prname <- "Pr(z != 0)"
+        else if (alternative == "greater") Prname <- "Pr(z > 0)"
+        else Prname <- "Pr(z < 0)"
+	colnames(res) <- c("Ii", "E.Ii", "Var.Ii", "Z.Ii", Prname)
 	xx <- mean(x, na.rm=NAOK)
 	z <- x - xx
 #	z <- scale(x, scale=FALSE)
@@ -44,12 +47,18 @@ localmoran <- function(x, listw, zero.policy=FALSE, na.action=na.fail,
 	})
 	res[,3] <- A*Wi2 + B*Wikh2 - C
 	res[,4] <- (res[,1] - res[,2]) / sqrt(res[,3])
+        if (alternative == "two.sided") pv <- 2 * pnorm(abs(res[,4]), 
+	    lower.tail=FALSE)
+        else if (alternative == "greater")
+            pv <- pnorm(res[,4], lower.tail=FALSE)
+        else pv <- pnorm(res[,4])
+	res[,5] <- p.adjustSP(pv, listw$neighbours, method=p.adjust.method)
 	if (!is.null(na.act) && excl) {
 		res <- naresid(na.act, res)
 	}
 	attr(res, "call") <- match.call()
 	if (!is.null(na.act)) attr(res, "na.action") <- na.act
-	class(res) <- c(class(res), "localmoran")
+	class(res) <- c("localmoran", class(res))
 	invisible(res)
 }
 

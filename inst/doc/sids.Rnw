@@ -30,6 +30,8 @@
 <<echo=FALSE>>= 
 owidth <- getOption("width")
 options("width"=70)
+ow <- getOption("warn")
+options("warn"=-1)
 .PngNo <- 0
 @
 
@@ -106,7 +108,7 @@ for each shape in \code{"Shapes"}. Let us move the attribute data to a
 separate data frame for convenience:
 
 <<label=plotNC1,echo=FALSE,eval=FALSE>>= 
-plot(sidspolys)
+plot(sidspolys, forcefill=FALSE)
 points(sidscents)
 @
 
@@ -114,7 +116,7 @@ points(sidscents)
 <<echo=TRUE>>= 
 sids <- sids.shp$att.data
 names(sids)
-sidspolys <- Map2poly(sids.shp)
+sidspolys <- Map2poly(sids.shp, raw=FALSE)
 sidscents <- get.Pcent(sids.shp)
 @
 <<fig=FALSE,echo=TRUE, eval=FALSE>>= 
@@ -191,7 +193,7 @@ sidscents[56,]
 
 
 <<label=plot-CC89.nb,echo=FALSE,eval=FALSE>>= 
-plot(sidspolys, border="grey")
+plot(sidspolys, border="grey", forcefill=FALSE)
 plot(ncCC89.nb, sidscents, add=TRUE, col="blue")
 @ 
 
@@ -262,13 +264,13 @@ with those from the literature.
 \subsection{Probability mapping}
 
 <<label=choymap,echo=FALSE,eval=FALSE>>= 
-plot(sidspolys)
+plot(sidspolys, forcefill=FALSE)
 legend(c(-84,-81), c(33.9,34.5), fill=grey(c(2,5)/7),
  legend=c("high", "low"), bty="n", ncol=2)
 plot(subset(sidspolys, ((ch$pmap < 0.05) & (ch$type))),
- col=grey(5/7), add=TRUE)
+ col=grey(5/7), add=TRUE, forcefill=FALSE)
 plot(subset(sidspolys, ((ch$pmap < 0.05) & (!ch$type))),
- col=grey(2/7), add=TRUE)
+ col=grey(2/7), add=TRUE, forcefill=FALSE)
 @
 
 Rather than review functions for measuring and modelling spatial
@@ -312,7 +314,7 @@ ch <- choynowski(nc.sids$SID74, nc.sids$BIR74)
 \end{figure}
 
 <<label=poismap,echo=FALSE,eval=FALSE>>= 
-plot(sidspolys, col=cols[findInterval(pmap$pmap, brks)])
+plot(sidspolys, col=cols[findInterval(pmap$pmap, brks)], forcefill=FALSE)
 legend(c(-84,-81), c(33.9,34.5), fill=cols, legend=leglabs(brks),
  bty="n", ncol=2)
 @
@@ -390,7 +392,7 @@ hist(pmap$pmap, main="")
 \end{figure}
 
 <<label=poismap2,echo=FALSE,eval=FALSE>>= 
-plot(sidspolys, col=cols[findInterval(stdres, brks)])
+plot(sidspolys, col=cols[findInterval(stdres, brks)], forcefill=FALSE)
 legend(c(-84,-81), c(33.9,34.5), fill=cols, legend=leglabs(brks),
  bty="n", ncol=2)
 @
@@ -442,10 +444,10 @@ from a Negative Binomial.
 
 
 <<label=EBlocal,echo=FALSE,eval=FALSE>>= 
-plot(sidspolys)
+plot(sidspolys, forcefill=FALSE)
 legend(c(-84,-81), c(33.9,34.5), fill=cols, legend=leglabs(brks),
  bty="n", ncol=2)
-plot(subset(sidspolys, sub), col=cols[findInterval(res$est[sub]*1000, brks)], add=TRUE)
+plot(subset(sidspolys, sub), col=cols[findInterval(res$est[sub]*1000, brks)], add=TRUE, forcefill=FALSE)
 points(sidscents[!sub,], pch=8)
 @
 
@@ -509,7 +511,7 @@ to recall that the \code{nc.sids} data frame is not in the same order
 as the polygons.
 
 <<label=LMmap,echo=FALSE,eval=FALSE>>= 
-plot(sidspolys, col=cols[both[order(nc.sids$CNTY.ID)]])
+plot(sidspolys, col=cols[both[order(nc.sids$CNTY.ID)]], forcefill=FALSE)
 legend(c(-84, -81), c(33.5, 34.6), legend=levels(both), fill=cols,
  bty="n", cex=0.9, y.intersp=0.9, ncol=2)
 @
@@ -540,6 +542,7 @@ cols <- sample(rainbow(length(table(unclass(both)))))
 
 <<echo=FALSE>>=
 options("width"=owidth)
+options("warn"=ow)
 @
 
 \section*{References}
