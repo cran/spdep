@@ -2,7 +2,7 @@
 \name{lm.LMtests}
 \alias{lm.LMtests}
 \alias{print.LMtestlist}
-\alias{tracew}
+%\alias{tracew}
 \title{Lagrange Multiplier diagnostics for spatial dependence in linear models}
 \description{
 The function reports the estimates of tests chosen among five statistics for
@@ -17,7 +17,7 @@ dependent variable, RLMlag the other way round), and a portmanteau test
 \usage{
 lm.LMtests(model, listw, zero.policy=FALSE, test="LMerr", spChk=NULL)
 print.LMtestlist(x, ...)
-tracew(listw)
+%tracew(listw)
 }
 
 \arguments{

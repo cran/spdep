@@ -34,8 +34,7 @@ options("width"=80)
 <<label=afig,echo=FALSE,eval=FALSE>>= 
 .PngNo <- .PngNo + 1; file <- paste("Fig-bitmap-", .PngNo, ".png", sep="")
 png(file=file, width = 700, height = 400, pointsize = 12, bg = "white")
-opar <- par(no.readonly = TRUE)
-par(mar=c(3,3,1,1)+0.1)
+opar <- par(mar=c(3,3,1,1)+0.1)
 @
 
 <<label=zfig,echo=FALSE,eval=FALSE>>=
@@ -171,8 +170,7 @@ box of this object. Its appearance is shown in Figure \ref{poly6}.
 \begin{figure}[htbp]
 \begin{center} 
 <<fig=TRUE,echo=FALSE,width=2,height=2>>= 
-opar <- par(no.readonly = TRUE)
-par(mar=c(3,3,1,1)+0.1)
+opar <- par(mar=c(3,3,1,1)+0.1)
 <<poly6>>
 par(opar)
 @ 
