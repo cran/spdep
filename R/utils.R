@@ -48,35 +48,33 @@ Szero <- function(listw) {
 	sum(unlist(listw$weights))
 }
 
-lag.listw <- function(x, var, zero.policy=FALSE, ...) {
+lag.listw <- function(x, var, zero.policy=FALSE, NAOK=FALSE, ...) {
 	listw <- x
 	x <- var
 	if (!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
 	if (!is.numeric(x)) stop(paste(deparse(substitute(listw)),
 		"not numeric"))
-	if (any(is.na(x))) stop("NA in X")
+	if (!is.logical(NAOK)) stop("NAOK must be logical")
+#	if (any(is.na(x))) stop("NA in X")
 	n <- length(listw$neighbours)
 	cardnb <- card(listw$neighbours)
-	if (is.vector(x)) {
+	if (is.null(dim(x))) {
 		if (length(x) != n) stop("object lengths differ")
 		res <- .Call("lagw", listw$neighbours, listw$weights,
 			as.double(x), as.integer(cardnb),
-			as.logical(zero.policy), PACKAGE="spdep")
-	} else if (is.matrix(x)) {
+			as.logical(zero.policy), NAOK=NAOK, PACKAGE="spdep")
+	} else {
 		if (nrow(x) != n) stop("object lengths differ")
 		res <- matrix(0, nrow=nrow(x), ncol=ncol(x))
 		for (i in 1:ncol(x)) {
 			res[,i] <- .Call("lagw", listw$neighbours,
 				listw$weights, as.double(x[,i]),
 				as.integer(cardnb), as.logical(zero.policy),
-				PACKAGE="spdep")
+				NAOK=NAOK, PACKAGE="spdep")
 
 		}
-	} else {
-		stop(paste(deparse(substitute(x)),
-			"neither a numeric vector or matrix"))
-	}
+	} 
 	if (any(is.na(res))) warning("NAs in lagged values")
 	invisible(res)
 }

@@ -27,12 +27,15 @@ geary.mc                Permutation test for Geary's C statistic
 geary.test              Geary's C test for spatial autocorrelation
 getisord                Getis-Ord remote sensing example data
 globalG.test            test for spatial autocorrelation
+hopkins                 Hopkins burnt savanna herb remains
 include.self            Include self in neighbours list
 intersect.nb            Set operations on neighborhood objects
 invIrM                  Compute SAR generating operator
 is.symmetric.nb         Test a neighbours list for symmetry
 joincount.mc            Permutation test for same colour join count
                         statistics
+joincount.multi         BB, BW and Jtot join count statistic for
+                        k-coloured factors
 joincount.test          BB join count statistic for k-coloured factors
 knearneigh              K nearest neighbours for spatial weights
 knn2nb                  Neighbours list from knn object

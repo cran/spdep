@@ -9,7 +9,7 @@
 }{I = (n sum_i sum_j w_ij (x_i - xbar) (x_j - xbar)) / (S0 sum_i (x_i - xbar)^2)}
 }
 \usage{
-moran(x, listw, n, S0, zero.policy=FALSE)
+moran(x, listw, n, S0, zero.policy=FALSE, NAOK=FALSE)
 }
 \arguments{
   \item{x}{a numeric vector the same length as the neighbours list in listw}
@@ -17,6 +17,7 @@ moran(x, listw, n, S0, zero.policy=FALSE)
   \item{n}{number of zones}
   \item{S0}{global sum of weights}
   \item{zero.policy}{if TRUE assign zero to the lagged value of zones without neighbours, if FALSE assign NA}
+  \item{NAOK}{if 'TRUE' then any 'NA' or 'NaN' or 'Inf' values in x are passed on to the foreign function.  If 'FALSE', the presence of 'NA' or 'NaN' or 'Inf' values is regarded as an error.}
 }
 
 \value{
@@ -32,6 +33,9 @@ a list of
 \examples{
 data(oldcol)
 col.W <- nb2listw(COL.nb, style="W")
-str(moran(COL.OLD$CRIME, col.W, length(COL.nb), Szero(col.W)))
+crime <- spNamedVec("CRIME", COL.OLD)
+str(moran(crime, col.W, length(COL.nb), Szero(col.W)))
+is.na(crime) <- sample(1:length(crime), 10)
+str(moran(crime, col.W, length(COL.nb), Szero(col.W), NAOK=TRUE))
 }
 \keyword{spatial}
