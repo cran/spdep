@@ -27,7 +27,7 @@ A list of class \code{knn}
 }
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 
-\seealso{\code{\link{knn}}, \code{\link{dnearneigh}},
+\seealso{\code{\link[class]{knn}}, \code{\link{dnearneigh}},
 \code{\link{knn2nb}}}
 
 \examples{

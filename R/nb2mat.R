@@ -1,4 +1,4 @@
-# Copyright 2001 by Roger Bivand
+# Copyright 2001-3 by Roger Bivand
 #
 
 
@@ -21,6 +21,8 @@ listw2mat <- function(listw) {
 	for (i in 1:n)
 	    if (cardnb[i] > 0)
 		res[i, listw$neighbours[[i]]] <- listw$weights[[i]]
+	if (!is.null(attr(listw, "region.id")))
+		row.names(res) <- attr(listw, "region.id")
 	invisible(res)
 }
 
@@ -52,4 +54,48 @@ invIrW <- function(listw, rho) {
 	res <- solve(mat)
 	attr(res, "call") <- match.call()
 	invisible(res)
+}
+
+mat2listw <- function(x, row.names=NULL) {
+	if (!is.matrix(x)) stop("x is not a matrix")
+	n <- nrow(x)
+	m <- ncol(x)
+	if (n != m) stop("x must be a square matrix")
+	if (any(x < 0)) stop("values in x cannot be negative")
+	if (any(is.na(x))) stop("NA values in x not allowed")
+    	if (!is.null(row.names)) {
+		if(length(row.names) != n)
+            		stop("row.names wrong length")
+		if (length(unique(row.names)) != length(row.names))
+	    		stop("non-unique row.names given")
+    	}
+    	if (is.null(row.names)) {
+		if (!is.null(row.names(x))) {
+			row.names <- row.names(x)
+		} else {
+			row.names <- as.character(1:n)
+		}
+	}
+	style <- "M"
+	neighbours <- vector(mode="list", length=n)
+	weights <- vector(mode="list", length=n)
+	for (i in 1:n) {
+		nbs  <- which(x[i,] > 0.0)
+		if (length(nbs) > 0) {
+			neighbours[[i]] <- nbs
+			weights[[i]] <- x[i, nbs]
+		} else {
+			neighbours[[i]] <- 0
+		}
+	}
+	class(neighbours) <- "nb"
+	attr(neighbours, "region.id") <- row.names
+ 	attr(neighbours, "call") <- NA
+        attr(neighbours, "sym") <- is.symmetric.nb(neighbours, 
+		verbose=FALSE, force=TRUE)
+	res <- list(style=style, neighbours=neighbours, weights=weights)
+	class(res) <- c("listw", "nb")
+	attr(res, "region.id") <- attr(neighbours, "region.id")
+	attr(res, "call") <- match.call()
+	invisible(res)	
 }

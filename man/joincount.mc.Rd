@@ -33,7 +33,7 @@ A list with class \code{jclist} of lists with class \code{htest} and \code{mc.si
 \references{Cliff, A. D., Ord, J. K. 1981 Spatial processes, Pion, p. 63-5.}
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 
-\seealso{\code{\link{joincount}}, \code{\link{joincount.test}}}
+\seealso{\code{\link{joincount.test}}}
 
 \examples{
 data(oldcol)

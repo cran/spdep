@@ -33,7 +33,6 @@ include.self            Include self in neighbours list
 invIrM                  Compute SAR generating operator
 joincount.mc            Permutation test for same colour join count
                         statistics
-joincount               Count joins between same colours
 joincount.test          BB join count statistic for k-coloured factors
 knearneigh              K nearest neighbours for spatial weights
 knn2nb                  Neighbours list from knn object
@@ -52,6 +51,8 @@ localmoran              Local Moran's I statistic
 localmoran.sad          Saddlepoint approximation of local Moran's Ii
                         tests
 LR.sarlm                Likelihood ratio test
+mat2listw               Convert a square spatial weights matrix to a
+                        weights list object
 moran.mc                Permutation test for Moran's I statistic
 moran.plot              Moran scatterplot
 moran                   Compute Moran's I

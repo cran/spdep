@@ -10,8 +10,6 @@
 #include <R_ext/Applic.h>
 #define ROFFSET 1
 
-#define MAX_TIES 1000
-
 void gcdist(double *lon1, double *lon2, double *lat1, double *lat2, 
 		double *dist);
 
@@ -19,7 +17,7 @@ SEXP
 dnearneigh(SEXP din1, SEXP din2, SEXP pnte, SEXP p, SEXP test, SEXP lonlat)
 {
     int   j, k, kn, npat, nte, pdim, pc=0, ll;
-    int   pos[MAX_TIES];
+    int   *pos;
     double dist, /*tmp,*/ dn, dn0;
     double lon1[1], lon2[1], lat1[1], lat2[1], gc[1];
     SEXP ans;
@@ -46,8 +44,11 @@ dnearneigh(SEXP din1, SEXP din2, SEXP pnte, SEXP p, SEXP test, SEXP lonlat)
     setAttrib(VECTOR_ELT(ans, 0), install("distances"), dists);
     dn0 = dn0;
     dn = dn;
+    pos = (int *) R_alloc(nte, sizeof(int));
     for (npat = 0; npat < nte; npat++) {
 	kn = 0;
+	lon1[0] = NUMERIC_POINTER(test)[npat];
+	lat1[0] = NUMERIC_POINTER(test)[npat + nte];
 	for (j = 0; j < nte; j++) {
 	    if (j == npat) continue;
 /*	    dist = 0.0;
@@ -56,8 +57,6 @@ dnearneigh(SEXP din1, SEXP din2, SEXP pnte, SEXP p, SEXP test, SEXP lonlat)
 			- NUMERIC_POINTER(test)[j + k * nte];
 		dist += tmp * tmp;
 	    } */
-	    lon1[0] = NUMERIC_POINTER(test)[npat];
-	    lat1[0] = NUMERIC_POINTER(test)[npat + nte];
 	    lon2[0] = NUMERIC_POINTER(test)[j];
 	    lat2[0] = NUMERIC_POINTER(test)[j + nte];
 	    if (ll == 0) dist = pythag((lon1[0]-lon2[0]), (lat1[0]-lat2[0]));
@@ -67,8 +66,10 @@ dnearneigh(SEXP din1, SEXP din2, SEXP pnte, SEXP p, SEXP test, SEXP lonlat)
 	    }
 	    if (dist > dn0 && dist <= dn) {
 		pos[kn] = j;
-		if (++kn == MAX_TIES - 1)
-		    error("too many ties in dnearneigh");
+		if (++kn == nte - 1 && j == nte) {
+			Rprintf("%d %d %d\n", kn, nte, j);
+		    error("position array overrun");
+		}
 	    }
 	}
 	if (kn < 1) {

@@ -1,9 +1,9 @@
 % Copyright 2002 by Roger S. Bivand
 \name{lagsarlm}
 \alias{lagsarlm}
-\alias{sar.lag.mixed.f}
-\alias{sar.lag.mixed.f.s}
-\alias{dosparse}
+%\alias{sar.lag.mixed.f}
+%\alias{sar.lag.mixed.f.s}
+%\alias{dosparse}
 \title{Spatial simultaneous autoregressive lag model estimation}
 \description{
   Maximum likelihood estimation of spatial simultaneous autoregressive
@@ -19,9 +19,9 @@ the spatially lagged independent variables are added to X.
 lagsarlm(formula, data=list(), listw, type="lag", method="eigen", quiet=TRUE,
   zero.policy=FALSE, tol.solve=1.0e-7, tol.opt=.Machine$double.eps^0.5,
   sparsedebug=FALSE)
-sar.lag.mixed.f.s(rho, sn, e.a, e.b, e.c, n, quiet, sparsedebug)
-sar.lag.mixed.f(rho, eig, e.a, e.b, e.c, n, quiet)
-dosparse(listw, y, x, wy, K, quiet, tol.opt, sparsedebug)
+%sar.lag.mixed.f.s(rho, sn, e.a, e.b, e.c, n, quiet, sparsedebug)
+%sar.lag.mixed.f(rho, eig, e.a, e.b, e.c, n, quiet)
+%dosparse(listw, y, x, wy, K, quiet, tol.opt, sparsedebug)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
@@ -44,17 +44,17 @@ neighbours, if FALSE (default) assign NA - causing \code{lagsarlm()} to terminat
   \item{sparsedebug}{if TRUE, writes a log file on sparse matrix operations
 (name sparsestats) in the current directory. To be used if sparse estimation
 fails!}
-  \item{rho}{value of the spatial parameter}
-  \item{eig}{eigenvalues of the full spatial weights matrix from \code{eigenw}}
-  \item{y}{dependent variable}
-  \item{wy}{spatially lagged dependent variable}
-  \item{x}{independent variables}
-  \item{n}{length of y (and eig)}
-  \item{e.a}{term used in computing likelihood}
-  \item{e.b}{term used in computing likelihood}
-  \item{e.c}{term used in computing likelihood}
-  \item{K}{1 if no intercept, 2 if intercept present in x}
-  \item{sn}{sparse spatial neighbour object from \code{listw2sn}}
+%  \item{rho}{value of the spatial parameter}
+%  \item{eig}{eigenvalues of the full spatial weights matrix from \code{eigenw}}
+%  \item{y}{dependent variable}
+%  \item{wy}{spatially lagged dependent variable}
+%  \item{x}{independent variables}
+%  \item{n}{length of y (and eig)}
+%  \item{e.a}{term used in computing likelihood}
+%  \item{e.b}{term used in computing likelihood}
+%  \item{e.c}{term used in computing likelihood}
+%  \item{K}{1 if no intercept, 2 if intercept present in x}
+%  \item{sn}{sparse spatial neighbour object from \code{listw2sn}}
 }
 \details{
 When using the sparse method, the user takes (unfortunately) full
@@ -99,8 +99,7 @@ significance tests}
 of spatial autocorrelation in the lag model residuals}
   \item{zero.policy}{zero.policy for this model}
 
-The sar.lag.mixed.* functions return the value of the log likelihood function
-at $\rho$.
+The internal sar.lag.mixed.* functions return the value of the log likelihood function at $\rho$.
 
 }
 \references{Cliff, A. D., Ord, J. K. 1981 \emph{Spatial processes}, Pion;

@@ -1,8 +1,8 @@
 % Copyright 2002 by Roger S. Bivand
 \name{errorsarlm}
 \alias{errorsarlm}
-\alias{sar.error.f}
-\alias{sar.error.f.s}
+%\alias{sar.error.f}
+%\alias{sar.error.f.s}
 \title{Spatial simultaneous autoregressive error model estimation}
 \description{
   Maximum likelihood estimation of spatial simultaneous autoregressive
@@ -17,8 +17,8 @@ parameters by generalized least squares subsequently.
 errorsarlm(formula, data=list(), listw, method="eigen", quiet=TRUE,
   zero.policy=FALSE, tol.solve=1.0e-7, tol.opt=.Machine$double.eps^0.5,
   sparsedebug=FALSE)
-sar.error.f(lambda, eig, y, wy, x, WX, n, quiet)
-sar.error.f.s(lambda, sn, y, wy, x, WX, n, quiet, sparsedebug)
+%sar.error.f(lambda, eig, y, wy, x, WX, n, quiet)
+%sar.error.f.s(lambda, sn, y, wy, x, WX, n, quiet, sparsedebug)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
@@ -41,14 +41,14 @@ neighbours, if FALSE (default) assign NA - causing \code{errorsarlm()} to termin
   \item{sparsedebug}{if TRUE, writes a log file on sparse matrix operations
 (name sparsestats) in the current directory. To be used if sparse estimation
 fails!}
-  \item{lambda}{value of the spatial parameter}
-  \item{eig}{eigenvalues of the full spatial weights matrix from \code{eigenw}}
-  \item{y}{dependent variable}
-  \item{wy}{spatially lagged dependent variable}
-  \item{x}{independent variables}
-  \item{WX}{spatially lagged independent variables}
-  \item{n}{length of y (and eig)}
-  \item{sn}{sparse spatial neighbour object from \code{listw2sn}}
+%  \item{lambda}{value of the spatial parameter}
+%  \item{eig}{eigenvalues of the full spatial weights matrix from \code{eigenw}}
+%  \item{y}{dependent variable}
+%  \item{wy}{spatially lagged dependent variable}
+%  \item{x}{independent variables}
+%  \item{WX}{spatially lagged independent variables}
+%  \item{n}{length of y (and eig)}
+%  \item{sn}{sparse spatial neighbour object from \code{listw2sn}}
 }
 \details{
   The asymptotic standard error of $\lambda$ is only computed when 
@@ -93,8 +93,7 @@ standard errors)}
   \item{LMtest}{NULL for this model}
   \item{zero.policy}{zero.policy for this model}
 
-The sar.error.* functions return the value of the log likelihood function
-at $\lambda$.
+The internal sar.error.* functions return the value of the log likelihood function at $\lambda$.
 }
 \references{Cliff, A. D., Ord, J. K. 1981 \emph{Spatial processes}, Pion;
 Ord, J. K. 1975 Estimation methods for models of spatial interaction,

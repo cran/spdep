@@ -29,6 +29,7 @@ k1 <- knn2nb(knearneigh(coords))
 all.linked <- max(unlist(nbdists(k1, coords)))
 col.nb.0.all <- dnearneigh(coords, 0, all.linked, row.names=rownames(columbus))
 summary(col.nb.0.all, coords)
+library(maptools)
 plotpolys(polys, bbs, border="grey")
 plot(col.nb.0.all, coords, add=TRUE)
 title(main=paste("Distance based neighbours 0-",  format(all.linked),
