@@ -82,9 +82,6 @@ and are assumed to use the NAD83 datum.
 <<echo=TRUE,eval=FALSE>>= 
 library(spdep)
 @
-<<echo=TRUE>>= 
-library(maptools)
-@ 
 \end{footnotesize}
 
 The shapefile format presupposes that you have three files with extensions
@@ -94,18 +91,10 @@ data. They are required to have the same name apart from the extension,
 and are read using \code{read.shape()}. By default, this function reads
 in the data in all three files, although it is only given the name of
 the file with the geometry.
-
-\begin{footnotesize}
-<<echo=TRUE>>= 
-sids.shp <- read.shape(system.file("shapes/sids.shp",
- package="maptools"))
-@ 
-\end{footnotesize}
 The imported object in \RR~has class \code{Map}, and is a list with
 two components, \code{"Shapes"}, which is a list of shapes, and
 \code{"att.data"}, which is a data frame with tabular data, one row
-for each shape in \code{"Shapes"}. Let us move the attribute data to a
-separate data frame for convenience:
+for each shape in \code{"Shapes"}. Here we will be using data previously read from the shapefile, and stored in the \code{nc.sids} data set:
 
 <<label=plotNC1,echo=FALSE,eval=FALSE>>= 
 plot(sidspolys, forcefill=FALSE)
@@ -114,11 +103,8 @@ points(sidscents)
 
 \begin{footnotesize}
 <<echo=TRUE>>= 
-sids <- sids.shp$att.data
-names(sids)
-sidspolys <- Map2poly(sids.shp, raw=FALSE)
-sidscents <- get.Pcent(sids.shp)
-@
+data(nc.sids)
+@ 
 <<fig=FALSE,echo=TRUE, eval=FALSE>>= 
 <<plotNC1>>
 @ 
@@ -197,14 +183,11 @@ plot(sidspolys, border="grey", forcefill=FALSE)
 plot(ncCC89.nb, sidscents, add=TRUE, col="blue")
 @ 
 
-We will now access the data set reproduced from Cressie and collaborators,
+We will now examine the data set reproduced from Cressie and collaborators,
 included in \pkg{spdep}, and add the neighbour relationships used in
 \citet{cressie+chan:1989} to the background map as a graph shown in Figure \ref{plot-CC89.nb}:
 
 \begin{footnotesize}
-<<echo=TRUE>>= 
-data(nc.sids)
-@ 
 <<fig=FALSE,echo=TRUE, eval=FALSE>>= 
 <<plot-CC89.nb>>
 @ 

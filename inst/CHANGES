@@ -1,3 +1,11 @@
+0.2-18 Removed read.shape() from example(nc.sids) because of odd problems 
+	building Windows binary for CRAN, polylist object and centroids 
+	added to nc.sids.rda.
+
+0.2-17 Further changes to poly2nb() reducing a 40 hour run for 44K polygons 
+	in Australia to 11 hours. Added p.adjustSP() with Danlin Yu for 
+	adjusting p-values for local statistics.
+
 0.2-16 Added text to help page for tri2nb() to show ways of triangulating 
 	on a grid; added nb2blocknb to fill out an nb object with spatial
 	"replications" that have to neighbour each other; poly2nb() altered
