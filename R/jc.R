@@ -18,7 +18,7 @@ joincount <- function(dums, listw) {
 	res
 }
 
-joincount.test <- function(fx, listw,
+joincount.test <- function(fx, listw, zero.policy=FALSE,
 	alternative="greater") {
 	if (class(listw) != "listw") stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
@@ -27,7 +27,7 @@ joincount.test <- function(fx, listw,
 	if (any(is.na(fx))) stop("NA in factor")
 	n <- length(listw$neighbours)
 	if (n != length(fx)) stop("objects of different length")
-	wc <- spweights.constants(listw)
+	wc <- spweights.constants(listw, zero.policy)
 	S02 <- wc$S0*wc$S0
 
 	dums <- lm(codes(fx) ~ fx - 1, x=TRUE)$x

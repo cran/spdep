@@ -1,7 +1,7 @@
 # Copyright 2000-2 by Roger S. Bivand. 
 #
 
-spwdet <- function(sparseweights, rho)
+spwdet <- function(sparseweights, rho, debug=FALSE)
 {
 	if(!inherits(sparseweights, "spatial.neighbour"))
              stop("Not a sparse weights object")
@@ -10,9 +10,12 @@ spwdet <- function(sparseweights, rho)
 	n <- length(attr(sparseweights, "region.id"))
 	size <- length(sparseweights$weights)
 	vals <- -rho*sparseweights$weights
+	if (debug) verbose <- 1
+	else verbose <- 0
 	z <- .C("spRdet",
 			n = as.integer(n),
 			size = as.integer(size),
+			verbose = as.integer(verbose),
 			p1 = as.integer(sparseweights$from),
 			p2 = as.integer(sparseweights$to),
 			value = as.double(vals),
@@ -24,19 +27,15 @@ spwdet <- function(sparseweights, rho)
 	list(det=z$determinant, exp=z$exponent)
 }
 
-log.spwdet <- function(sparseweights, rho)
+log.spwdet <- function(sparseweights, rho, debug=FALSE)
 {
 	if(!inherits(sparseweights, "spatial.neighbour"))
              stop("Not a sparse weights object")
 	if(missing(rho) || !is.numeric(rho) ||
 		rho >= 1 || rho <= -1)
 		stop("rho incorrectly specified")
-	res <- spwdet(sparseweights, rho=rho)
-	det <- res$det * 10^res$exp
-	if (det < .Machine$double.eps^0.5) {
-		warning(paste("failure in spwdet:", det, res$det, res$exp))
-		fres <- NaN
-	} else	fres <- log(det)
+	res <- spwdet(sparseweights, rho=rho, debug=debug)
+	fres <- log(res$det) + log(10)*res$exp
 	fres
 }
 

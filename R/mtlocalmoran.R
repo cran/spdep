@@ -77,7 +77,9 @@ localmoran.sad <- function (model, select, nb, glist = NULL, style = "W",
             "(Barndorff-Nielsen formula)")
         data.name <- paste("region:", select[i],
 	    attr(nb, "region.id")[select[i]],
-	    "\nmodel:", deparse(model$call),
+	    "\n", paste(strwrap(paste("model: ", gsub(" *", " ", 
+	    paste(deparse(model$call), sep="", collapse="")))),
+	    collapse="\n"),
             "\nneighbours:", deparse(substitute(nb)),
 	    "style:", style, "\n")
         obj <- list(statistic = statistic, p.value = p.value,

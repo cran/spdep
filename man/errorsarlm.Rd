@@ -15,9 +15,10 @@ parameters by generalized least squares subsequently.
 }
 \usage{
 errorsarlm(formula, data=list(), listw, method="eigen", quiet=TRUE,
-  zero.policy=FALSE, tol.solve=1.0e-7, tol.opt=.Machine$double.eps^0.5)
+  zero.policy=FALSE, tol.solve=1.0e-7, tol.opt=.Machine$double.eps^0.5,
+  sparsedebug=FALSE)
 sar.error.f(lambda, eig, y, wy, x, WX, n, quiet)
-sar.error.f.s(lambda, sn, y, wy, x, WX, n, quiet)
+sar.error.f.s(lambda, sn, y, wy, x, WX, n, quiet, sparsedebug)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
@@ -37,6 +38,9 @@ determinant of the sparse matrix (I - rho*W) directly using \code{log.spwdet}.
 neighbours, if FALSE (default) assign NA - causing \code{errorsarlm()} to terminate with an error}
   \item{tol.solve}{the tolerance for detecting linear dependencies in the columns of matrices to be inverted - passed to \code{solve()} (default=1.0e-7)}
   \item{tol.opt}{the desired accuracy of the optimization - passed to \code{optimize()} (default=square root of double precision machine tolerance)}
+  \item{sparsedebug}{if TRUE, writes a log file on sparse matrix operations
+(name sparsestats) in the current directory. To be used if sparse estimation
+fails!}
   \item{lambda}{value of the spatial parameter}
   \item{eig}{eigenvalues of the full spatial weights matrix from \code{eigenw}}
   \item{y}{dependent variable}
@@ -50,6 +54,20 @@ neighbours, if FALSE (default) assign NA - causing \code{errorsarlm()} to termin
   The asymptotic standard error of $\lambda$ is only computed when 
 method=eigen, because the full matrix operations involved would be costly
 for large n typically associated with the choice of method=sparse. 
+
+When using the sparse method, the user takes (unfortunately) full
+responsibility for possible failures, including R terminating with
+a core dump! Safeguards have been put in place to try to trap errant
+behaviour in the sparse functions' memmory allocation, but they may
+not always help. When sparsedebug is TRUE, a log file (sparsestats)
+is written in the working directory - the figure of interest is the
+number of allocated blocks. At present, \code{spwdet} will fail when
+this increases over the number initially allocated, but will not release
+memory allocated by the sparse functions. In the event of problems,
+save your workspace and quit R. Problems seem to be related to larger
+n, and to an unknown trigger precipitating incontrolled fillin, in the
+course of which the sparse routines lose track of their memory pointers,
+and then provoke a segmentation fault trying to free unallocated memory.
 }
 \value{
   A list object of class \code{sarlm}

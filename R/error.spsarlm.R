@@ -3,7 +3,7 @@
 
 errorsarlm <- function(formula, data = list(), listw, method="eigen",
 	quiet=TRUE, zero.policy=FALSE, tol.solve=1.0e-7, 
-        tol.opt=.Machine$double.eps^0.5) {
+        tol.opt=.Machine$double.eps^0.5, sparsedebug=FALSE) {
 	mt <- terms(formula, data = data)
 	mf <- lm(formula, data, method="model.frame")
 	if (class(listw) != "listw") stop("No neighbourhood list")
@@ -51,7 +51,7 @@ errorsarlm <- function(formula, data = list(), listw, method="eigen",
 		sn <- listw2sn(listw)
 		opt <- optimize(sar.error.f.s, interval=c(-1,1), maximum=TRUE,
 			tol=tol.opt, sn=sn,
-			y=y, wy=wy, x=x, WX=WX, n=n, quiet=quiet)
+			y=y, wy=wy, x=x, WX=WX, n=n, quiet=quiet, sparsedebug=sparsedebug)
 	}
 	lambda <- opt$maximum
 	LL <- opt$objective
@@ -112,7 +112,7 @@ sar.error.f <- function(lambda, eig, y, wy, x, WX, n, quiet)
 	ret
 }
 
-sar.error.f.s <- function(lambda, sn, y, wy, x, WX, n, quiet)
+sar.error.f.s <- function(lambda, sn, y, wy, x, WX, n, quiet, sparsedebug)
 {
 	yl <- y - lambda*wy
 	xl <- x - lambda*WX
@@ -120,7 +120,7 @@ sar.error.f.s <- function(lambda, sn, y, wy, x, WX, n, quiet)
 	xl.q.yl <- t(xl.q) %*% yl
 	SSE <- t(yl) %*% yl - t(xl.q.yl) %*% xl.q.yl
 	s2 <- SSE/n
-	ret <- (log.spwdet(sparseweights=sn, rho=lambda) - 
+	ret <- (log.spwdet(sparseweights=sn, rho=lambda, debug=sparsedebug) - 
 		((n/2)*log(2*pi)) - (n/2)*log(s2) - (1/(2*(s2)))*SSE)
 	if (!quiet) cat("Lambda:\t", lambda, "\tfunction value:\t", ret, "\n")
 	ret

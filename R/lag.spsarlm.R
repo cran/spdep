@@ -3,7 +3,7 @@
 
 lagsarlm <- function(formula, data = list(), listw, type="lag",
 	method="eigen", quiet=TRUE, zero.policy=FALSE, tol.solve=1.0e-7, 
-        tol.opt=.Machine$double.eps^0.5) {
+        tol.opt=.Machine$double.eps^0.5, sparsedebug=FALSE) {
 	mt <- terms(formula, data = data)
 	mf <- lm(formula, data, method="model.frame")
 	if (missing(listw)) stop("No neighbourhood list")
@@ -59,7 +59,7 @@ lagsarlm <- function(formula, data = list(), listw, type="lag",
 			maximum=TRUE, tol=tol.opt, eig=eig,
 			e.a=e.a, e.b=e.b, e.c=e.c, n=n, quiet=quiet)
 	} else {
-		opt <- dosparse(listw, y, x, wy, K, quiet, tol.opt)
+		opt <- dosparse(listw, y, x, wy, K, quiet, tol.opt, sparsedebug)
 	}
 	rho <- c(opt$maximum)
 	LL <- c(opt$objective)
@@ -132,18 +132,18 @@ sar.lag.mixed.f <- function(rho, eig, e.a, e.b, e.c, n, quiet)
 	ret
 }
 
-sar.lag.mixed.f.s <- function(rho, sn, e.a, e.b, e.c, n, quiet)
+sar.lag.mixed.f.s <- function(rho, sn, e.a, e.b, e.c, n, quiet, sparsedebug)
 {
 	SSE <- e.a - 2*rho*e.b + rho*rho*e.c
 	s2 <- SSE/n
-	ret <- (log.spwdet(sparseweights=sn, rho=rho) - ((n/2)*log(2*pi))
-		- (n/2)*log(s2) - (1/(2*s2))*SSE)
+	ret <- (log.spwdet(sparseweights=sn, rho=rho, debug=sparsedebug)
+		- ((n/2)*log(2*pi)) - (n/2)*log(s2) - (1/(2*s2))*SSE)
 	if (!quiet) cat("Rho:\t", rho, "\tfunction value:\t", ret, "\n")
 	ret
 }
 
 
-dosparse <- function (listw, y, x, wy, K, quiet, tol.opt) {
+dosparse <- function (listw, y, x, wy, K, quiet, tol.opt, sparsedebug) {
 	sn <- listw2sn(listw)
 	m <- ncol(x)
 	n <- nrow(x)
@@ -160,7 +160,8 @@ dosparse <- function (listw, y, x, wy, K, quiet, tol.opt) {
 		e.c <- t(e.w) %*% e.w
 		LLs[[j]] <- optimize(sar.lag.mixed.f.s, interval=c(-1,1),
 		maximum=TRUE, tol=tol.opt, sn=sn,
-		e.a=e.a, e.b=e.b, e.c=e.c, n=n, quiet=quiet)$objective
+		e.a=e.a, e.b=e.b, e.c=e.c, n=n, quiet=quiet,
+		sparsedebug=sparsedebug)$objective
 		attr(LLs[[j]], "nall") <- n
 		attr(LLs[[j]], "nobs") <- n
 		attr(LLs[[j]], "df") <- m-1
@@ -178,7 +179,8 @@ dosparse <- function (listw, y, x, wy, K, quiet, tol.opt) {
 	sn <- listw2sn(listw)
 	opt <- optimize(sar.lag.mixed.f.s, interval=c(-1,1),
 		maximum=TRUE, tol=tol.opt, sn=sn,
-		e.a=e.a, e.b=e.b, e.c=e.c, n=n, quiet=quiet)
+		e.a=e.a, e.b=e.b, e.c=e.c, n=n, quiet=quiet, 
+		sparsedebug=sparsedebug)
 	maximum <- opt$maximum
 	objective <- opt$objective
 	res <- list(maximum=maximum, objective=objective, LLs=LLs,

@@ -13,21 +13,39 @@ the "sparse" method is chosen in \code{errorsarlm} and \code{lagsarlm}.
 }
 \usage{
 listw2sn(listw)
-spwdet(sparseweights, rho)
-log.spwdet(sparseweights, rho)
+spwdet(sparseweights, rho, debug=FALSE)
+log.spwdet(sparseweights, rho, debug=FALSE)
 
 }
 \arguments{
   \item{listw}{a \code{listw} object from for example \code{nb2listw}}
   \item{sparseweights}{a \code{spatial.neighbour} object}
   \item{rho}{spatial autoregressive parameter value}
+  \item{debug}{if TRUE, writes a log file on sparse matrix operations
+(name sparsestats) in the current directory. To be used if sparse estimation
+fails!}
 }
 
 \details{The methods used for finding the determinant directly by sparse
 matrix techniques are given by R. Kelley Pace and R. P. Barry (1998),
 and are implemented here using the sparse library by Kenneth Kundert
 and Alberto Sangiovanni-Vincentelli; the same reference is used by the
-S-PLUS spatial statistics module.}
+S-PLUS spatial statistics module.
+
+When using the sparse method, the user takes (unfortunately) full
+responsibility for possible failures, including R terminating with
+a core dump! Safeguards have been put in place to try to trap errant
+behaviour in the sparse functions' memmory allocation, but they may
+not always help. When sparsedebug is TRUE, a log file (sparsestats)
+is written in the working directory - the figure of interest is the
+number of allocated blocks. At present, \code{spwdet} will fail when
+this increases over the number initially allocated, but will not release
+memory allocated by the sparse functions. In the event of problems,
+save your workspace and quit R. Problems seem to be related to larger
+n, and to an unknown trigger precipitating incontrolled fillin, in the
+course of which the sparse routines lose track of their memory pointers,
+and then provoke a segmentation fault trying to free unallocated memory.
+}
 
 \value{
 A data frame with three columns, and with class \code{spatial.neighbour}:

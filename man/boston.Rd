@@ -1,0 +1,99 @@
+\name{boston}
+\alias{boston.c}
+\alias{boston}
+\alias{boston.soi}
+\alias{boston.utm}
+\non_function{}
+\title{Corrected Boston Housing Data}
+\usage{data(boston)}
+\description{
+The \code{boston.c} data frame has 506 rows and 20 columns. It contains
+the Harrison and Rubinfeld (1978) data corrected for a few minor errors
+and augmented with the latitude and longitude of the observations. Gilley
+and Pace also point out that MEDV is censored, in that median values
+at or over USD 50,000 are set to USD 50,000. The original data set
+without the corrections is also included in package \code{mlbench} as
+\code{BostonHousing}. In addition, a matrix of tract point coordinates
+projected to UTM zone 20 is included as \code{boston.utm}, and a sphere
+of influence neighbours list as \code{boston.soi}.
+}
+\format{
+  This data frame contains the following columns:
+  \describe{
+    \item{TOWN}{a factor with levels given by town names}
+    \item{TOWNNO}{a numeric vector corresponding to TOWN}
+    \item{TRACT}{a numeric vector of tract ID numbers}
+    \item{LON}{a numeric vector of tract point longitudes in decimal degrees}
+    \item{LAT}{a numeric vector of tract point latitudes in decimal degrees}
+    \item{MEDV}{a numeric vector of median values of owner-occupied housing
+ in USD 1000}
+    \item{CMEDV}{a numeric vector of corrected median values of
+ owner-occupied housing in USD 1000}
+    \item{CRIM}{a numeric vector of per capita crime}
+    \item{ZN}{a numeric vector of proportions of residential land zoned
+ for lots over 25000 sq. ft per town (constant for all Boston tracts)}
+    \item{INDUS}{a numeric vector of proportions of non-retail business
+ acres per town (constant for all Boston tracts)}
+    \item{CHAS}{a factor with levels 1 if tract borders Charles River;
+ 0 otherwise}
+    \item{NOX}{a numeric vector of nitric oxides concentration (parts per
+ 10 million) per town}
+    \item{RM}{a numeric vector of average numbers of rooms per dwelling}
+    \item{AGE}{a numeric vector of proportions of owner-occupied units
+ built prior to 1940}
+    \item{DIS}{a numeric vector of weighted distances to five Boston
+ employment centres}
+    \item{RAD}{a numeric vector of an index of accessibility to radial
+ highways per town (constant for all Boston tracts)}
+    \item{TAX}{a numeric vector full-value property-tax rate per USD
+ 10,000 per town (constant for all Boston tracts)}
+    \item{PTRATIO}{a numeric vector of pupil-teacher ratios per town
+ (constant for all Boston tracts)}
+    \item{B}{a numeric vector of \code{1000*(Bk - 0.63)^2} where Bk is the
+ proportion of blacks}
+    \item{LSTAT}{a numeric vector of percentage values of lower status
+ population}
+  }
+}
+
+\source{
+ \url{http://lib.stat.cmu.edu/datasets/boston_corrected.txt}
+}
+\references{
+Harrison, David, and Daniel L. Rubinfeld, Hedonic Housing Prices and
+ the Demand for Clean Air, \emph{Journal of Environmental Economics
+ and Management}, Volume 5, (1978), 81-102. Original data.
+
+Gilley, O.W., and R. Kelley Pace, On the Harrison and Rubinfeld Data,
+ \emph{Journal of Environmental Economics and Management}, 31 (1996),
+ 403-405. Provided corrections and examined censoring.
+
+Pace, R. Kelley, and O.W. Gilley, Using the Spatial Configuration of
+ the Data to Improve Estimation,  \emph{Journal of the Real Estate
+ Finance and Economics}, 14 (1997), 333-340.
+}
+
+
+
+\examples{
+data(boston)
+hr0 <- lm(log(MEDV) ~ CRIM + ZN + INDUS + CHAS + I(NOX^2) + I(RM^2) +
+ AGE + log(DIS) + log(RAD) + TAX + PTRATIO + B + log(LSTAT), data=boston.c)
+summary(hr0)
+logLik(hr0)
+gp0 <- lm(log(CMEDV) ~ CRIM + ZN + INDUS + CHAS + I(NOX^2) + I(RM^2) +
+ AGE + log(DIS) + log(RAD) + TAX + PTRATIO + B + log(LSTAT), data=boston.c)
+summary(gp0)
+logLik(gp0)
+lm.morantest(hr0, nb2listw(boston.soi))
+gp1 <- errorsarlm(log(CMEDV) ~ CRIM + ZN + INDUS + CHAS + I(NOX^2) + I(RM^2)
+ +  AGE + log(DIS) + log(RAD) + TAX + PTRATIO + B + log(LSTAT),
+ data=boston.c, nb2listw(boston.soi), method="sparse")
+summary(gp1)
+gp2 <- lagsarlm(log(CMEDV) ~ CRIM + ZN + INDUS + CHAS + I(NOX^2) + I(RM^2)
+ +  AGE + log(DIS) + log(RAD) + TAX + PTRATIO + B + log(LSTAT),
+ data=boston.c, nb2listw(boston.soi), method="sparse")
+summary(gp2)
+
+}
+\keyword{datasets}

@@ -38,14 +38,16 @@ lm.morantest <- function(model, listw, zero.policy=FALSE,
 	        pv <- pnorm(ZI, lower.tail=FALSE)
     	else pv <- pnorm(ZI)
     	statistic <- ZI
-    	attr(statistic, "names") <- "Saddlepoint approximation"
+    	attr(statistic, "names") <- "Moran I statistic standard deviate"
     	p.value <- pv
     	estimate <- c(I, EI, VI)
     	attr(estimate, "names") <- c("Observed Moran's I", "Expectation",
 	    "Variance")
     	method <- "Global Moran's I for regression residuals"
-    	data.name <- paste("model:", deparse(model$call),
-    	    "\nweights:", deparse(substitute(listw)), "\n")
+    	data.name <- paste("\n", paste(strwrap(paste("model: ",
+	    gsub(" *", " ", 
+	    paste(deparse(model$call), sep="", collapse="")))), collapse="\n"),
+    	    "\nweights: ", deparse(substitute(listw)), "\n", sep="")
     	res <- list(statistic = statistic, p.value = p.value,
 	       estimate = estimate, method = method,
 		alternative = alternative, data.name = data.name)
