@@ -2,12 +2,14 @@
 \alias{nc.sids}
 \alias{ncCR85.nb}
 \alias{ncCC89.nb}
+\alias{sidspolys}
+\alias{sidscents}
 \non_function{}
 \title{North Carolina SIDS data}
 \usage{data(nc.sids)}
 \description{
 The \code{nc.sids} data frame has 100 rows and 9 columns. It contains data
-given in Cressie (1991, pp. 386-9), Cressie and Read (1985) and Cressie and Chan (1989) on sudden infant deaths in North Carolina for 1974-78 and 1979-84. The data set also contains the neighbour list given by Cressie and Chan (1989) omitting self-neighbours (ncCC89.nb), and the neighbour list given by Cressie and Read (1985) for contiguities (ncCR85.nb). The data are ordered by county ID number, not alphabetically as in the source tables.
+given in Cressie (1991, pp. 386-9), Cressie and Read (1985) and Cressie and Chan (1989) on sudden infant deaths in North Carolina for 1974-78 and 1979-84. The data set also contains the neighbour list given by Cressie and Chan (1989) omitting self-neighbours (ncCC89.nb), and the neighbour list given by Cressie and Read (1985) for contiguities (ncCR85.nb). The data are ordered by county ID number, not alphabetically as in the source tables \code{sidspolys} is a "polylist" object of polygon boundaries, and \code{sidscents} is a matrix of their centroids.
 
 }
 \format{
@@ -36,11 +38,6 @@ given in Cressie (1991, pp. 386-9), Cressie and Read (1985) and Cressie and Chan
 
 \examples{
 library(maptools)
-sids.shp <- read.shape(system.file("shapes/sids.shp",
- package="maptools"))
-sids <- sids.shp$att.data
-sidspolys <- Map2poly(sids.shp, raw=FALSE)
-sidscents <- get.Pcent(sids.shp)
 data(nc.sids)
 plot(sidspolys, border="grey", forcefill=FALSE)
 plot(ncCR85.nb, sidscents, add=TRUE, col="blue")

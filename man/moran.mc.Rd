@@ -1,9 +1,9 @@
-% Copyright 2001-2 by Roger S. Bivand
+% Copyright 2001-4 by Roger S. Bivand
 \name{moran.mc}
 \alias{moran.mc}
 \title{Permutation test for Moran's I statistic}
 \description{
- A permutation test for Moran's I statistic calculated by using nsim random permutations of x for the given spatial weighting scheme, to establish the rank of the observed statistic in relation to the nsim simulated values.
+ A permutation test for Moran's I statistic calculated by using nsim random permutations of x for the given spatial weighting scheme, to establish the rank of the observed statistic in relation to the nsim simulated values. The examples show how \code{boot(sim="permutation")} can replicate this function (thanks to Virgilio Gómez Rubio and the DCluster package).
 }
 \usage{
 moran.mc(x, listw, nsim, zero.policy=FALSE, alternative="greater", na.action=na.fail, spChk=NULL)
@@ -35,17 +35,33 @@ A list with class \code{htest} and \code{mc.sim} containing the following compon
 
 \examples{
 data(oldcol)
-sim1 <- moran.mc(spNamedVec("CRIME", COL.OLD), nb2listw(COL.nb, style="W"),
- nsim=99)
-mean(sim1$res)
-var(sim1$res)
-summary(sim1$res)
+colw <- nb2listw(COL.nb, style="W")
+nsim <- 99
+set.seed(1234)
+sim1 <- moran.mc(spNamedVec("CRIME", COL.OLD), listw=colw, nsim=nsim)
+sim1
+mean(sim1$res[1:nsim])
+var(sim1$res[1:nsim])
+summary(sim1$res[1:nsim])
+MoranI.boot <- function(var, i, ...) {
+var <- var[i]
+return(moran(x=var, ...)$I)
+}
+set.seed(1234)
+library(boot)
+boot1 <- boot(spNamedVec("CRIME", COL.OLD), statistic=MoranI.boot, R=nsim, sim="permutation", listw=colw, n=nrow(COL.OLD), S0=Szero(colw))
+boot1
+plot(boot1)
+mean(boot1$t)
+var(boot1$t)
+summary(boot1$t)
 colold.lags <- nblag(COL.nb, 3)
+set.seed(1234)
 sim2 <- moran.mc(spNamedVec("CRIME", COL.OLD), nb2listw(colold.lags[[2]],
- style="W"), nsim=99)
-summary(sim2$res)
+ style="W"), nsim=nsim)
+summary(sim2$res[1:nsim])
 sim3 <- moran.mc(spNamedVec("CRIME", COL.OLD), nb2listw(colold.lags[[3]],
- style="W"), nsim=99)
-summary(sim3$res)
+ style="W"), nsim=nsim)
+summary(sim3$res[1:nsim])
 }
 \keyword{spatial}
