@@ -20,7 +20,7 @@ A neighbours list with class \code{nb}
 }
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 
-\seealso{\code{\link{summary.nb}}, \code{\link[maptools]{plotpolys}}}
+\seealso{\code{\link{summary.nb}}, \code{\link[maptools]{plot.polylist}}}
 
 \examples{
 data(columbus)

@@ -4,6 +4,7 @@
 \alias{col.gal.nb}
 \alias{coords}
 \alias{polys}
+\alias{bbs}
 \non_function{}
 \title{Columbus OH spatial analysis data set}
 \usage{data(columbus)}
@@ -13,7 +14,7 @@ Unit of analysis: 49 neighbourhoods in Columbus, OH, 1980 data.
 In addition the data set includes a \code{polylist} object \code{polys}
 with the boundaries of the neighbourhoods, a matrix of polygon centroids
 \code{coords}, and \code{col.gal.nb}, the neighbours list
-from an original GAL-format file.
+from an original GAL-format file. The matrix \code{bbs} is DEPRECATED, but retained for other packages using this data set.
 }
 \format{
   This data frame contains the following columns:

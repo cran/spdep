@@ -106,7 +106,7 @@ for each shape in \code{"Shapes"}. Let us move the attribute data to a
 separate data frame for convenience:
 
 <<label=plotNC1,echo=FALSE,eval=FALSE>>= 
-plotpolys(sidspolys)
+plot(sidspolys)
 points(sidscents)
 @
 
@@ -121,15 +121,15 @@ sidscents <- get.Pcent(sids.shp)
 <<plotNC1>>
 @ 
 \end{footnotesize}
-We can examine the names of the columns of the data frame to see
-what it contains --- in fact some of the same columns that we will
-be examining below, and some others which will be useful in cleaning
-the data set. We will similarly convert the geometry format of the
-\code{Map} object to that of a \code{polylist} object, which will
-be easier to handle. Finally, we retreive the centroids of the county
-polygons to use as label points. Using the \code{plotpolys()} function
-from \pkg{maptools}, we can display the polygon boundaries and centroids,
-shown in Figure \ref{plotNC1}.
+We can examine the names of the columns of the data frame to see what it
+contains --- in fact some of the same columns that we will be examining
+below, and some others which will be useful in cleaning the data
+set. We will similarly convert the geometry format of the \code{Map}
+object to that of a \code{polylist} object, which will be easier to
+handle. Finally, we retreive the centroids of the county polygons to use
+as label points. Using the \code{plot()} function for \code{"polylist"}
+objects from \pkg{maptools}, we can display the polygon boundaries and
+centroids, shown in Figure \ref{plotNC1}.
 
 \begin{figure}[htbp]
 \begin{center} 
@@ -191,7 +191,7 @@ sidscents[56,]
 
 
 <<label=plot-CC89.nb,echo=FALSE,eval=FALSE>>= 
-plotpolys(sidspolys, border="grey")
+plot(sidspolys, border="grey")
 plot(ncCC89.nb, sidscents, add=TRUE, col="blue")
 @ 
 
@@ -509,7 +509,7 @@ to recall that the \code{nc.sids} data frame is not in the same order
 as the polygons.
 
 <<label=LMmap,echo=FALSE,eval=FALSE>>= 
-plotpolys(sidspolys, col=cols[both[order(nc.sids$CNTY.ID)]])
+plot(sidspolys, col=cols[both[order(nc.sids$CNTY.ID)]])
 legend(c(-84, -81), c(33.5, 34.6), legend=levels(both), fill=cols,
  bty="n", cex=0.9, y.intersp=0.9, ncol=2)
 @

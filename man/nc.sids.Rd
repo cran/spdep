@@ -42,9 +42,9 @@ sids <- sids.shp$att.data
 sidspolys <- Map2poly(sids.shp)
 sidscents <- get.Pcent(sids.shp)
 data(nc.sids)
-plotpolys(sidspolys, border="grey")
+plot(sidspolys, border="grey")
 plot(ncCR85.nb, sidscents, add=TRUE, col="blue")
-plotpolys(sidspolys, border="grey")
+plot(sidspolys, border="grey")
 plot(ncCC89.nb, cbind(nc.sids$lon, nc.sids$lat),
  add=TRUE, col="blue")
 }
