@@ -46,8 +46,9 @@ errorsarlm <- function(formula, data = list(), listw, method="eigen",
 		if (!quiet) cat("Computing eigenvalues ...\n")
 		eig <- eigenw(listw)
 		cat("\n")
-		if (is.complex(eig)) eig.range <- range(Re(eig))
-		else eig.range <- range(eig)
+#range inverted 031031, email from Salvati Nicola
+		if (is.complex(eig)) eig.range <- 1/range(Re(eig))
+		else eig.range <- 1/range(eig)
 		opt <- optimize(sar.error.f, interval=eig.range, maximum=TRUE,
 			tol=tol.opt, eig=eig,
 			y=y, wy=wy, x=x, WX=WX, n=n, quiet=quiet)

@@ -138,7 +138,7 @@ listw2U <- function(listw) {
 }
 
 
-listw2star <- function(listw, ireg, style, n, D, a, zero.policy) {
+listw2star <- function(listw, ireg, style, n, D, a, zero.policy=FALSE) {
     nb <- vector(mode="list", length=n)
     class(nb) <- "nb"
     wts <- vector(mode="list", length=n)

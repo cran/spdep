@@ -48,8 +48,9 @@ lagsarlm <- function(formula, data = list(), listw, type="lag",
 		if (!quiet) cat("Computing eigenvalues ...\n")
 		eig <- eigenw(listw)
 		cat("\n")
-		if (is.complex(eig)) eig.range <- range(Re(eig))
-		else eig.range <- range(eig)
+#range inverted 031031, email from Salvati Nicola
+		if (is.complex(eig)) eig.range <- 1/range(Re(eig))
+		else eig.range <- 1/range(eig)
 		lm.null <- lm(y ~ x - 1)
 		lm.w <- lm.fit(x, wy)
 		e.null <- lm.null$residuals
