@@ -60,7 +60,7 @@ data(auckland)
 If the counts data were collected from census aggregates all having the same population of under-five children, the mortality rates (numbers per thousand per year) would already be standardised for variations in the sizes of the populations at risk. Since they are not --- as we can see from the summary of \code{Under.5.1981} in the \code{auckland} data frame, we need to standardise.
 
 <<label=raw,echo=FALSE,eval=FALSE>>= 
-plotpolys(auckpolys, auckbbs, col=cols[findInterval2(res$raw*1000, brks)])
+plot(auckpolys, col=cols[findInterval2(res$raw*1000, brks)])
 legend(c(70,90), c(70,95), fill=cols, legend=leglabs(brks), bty="n")
 @
 
@@ -97,7 +97,7 @@ cols <- c("#F7F7F7", "#CCCCCC", "#969696", "#636363", "#252525")
 \end{figure}
 
 <<label=rel,echo=FALSE,eval=FALSE>>= 
-plotpolys(auckpolys, auckbbs, col=cols[findInterval2(res$relRisk, brks)])
+plot(auckpolys, col=cols[findInterval2(res$relRisk, brks)])
 legend(c(70,90), c(70,95), fill=cols, legend=leglabs(brks), bty="n")
 @
 
@@ -125,7 +125,7 @@ Next, we calculate the mean (expected) count as $\hat{\mu}_i = n_i ( \frac{\sum{
 \end{figure}
 
 <<label=pmap,echo=FALSE,eval=FALSE>>= 
-plotpolys(auckpolys, auckbbs, col=cols[findInterval2(res$pmap, brks)])
+plot(auckpolys, col=cols[findInterval2(res$pmap, brks)])
 legend(c(70,90), c(70,95), fill=cols, legend=leglabs(brks), bty="n")
 @
 
@@ -166,7 +166,7 @@ res <- EBest(auckland$Deaths.1977.85, 9*auckland$Under.5.1981)
 Using the method of moments, the estimated values of the mean $\hat{\phi} = $ \Sexpr{formatC(attr(res, "parameters")$a, 4, 3, "e")}, and variance $\hat{\gamma} = $ \Sexpr{formatC(attr(res, "parameters")$b, 4, 3, "e")} (returned as attributes of the data frame yielded by \code{EBest()}) correspond to those on p. 306. The mapped values (Figure \ref{EBest}) are essentially the same as Figure 8.3, but with the grey scale reversed, ``shrinking'' the rates of districts with small populations at risk towards the overall mean. 
 
 <<label=EBest,echo=FALSE,eval=FALSE>>= 
-plotpolys(auckpolys, auckbbs, col=cols[findInterval2(res$estmm*1000, brks)])
+plot(auckpolys, col=cols[findInterval2(res$estmm*1000, brks)])
 legend(c(70,90), c(70,95), fill=cols, legend=leglabs(brks), bty="n")
 @
 
@@ -207,7 +207,7 @@ res <- EBlocal(spNamedVec("Deaths.1977.85", auckland),
 As we can see, some neighbourhoods contain few districts, others relatively many. The idea is to ``shrink'' towards mean values that are appropriate for the part of the city that the district lies in, rather than to the overall mean value. On the other hand, the results will critically depend on our definition of neighbourhood.
 
 <<label=EBloc,echo=FALSE,eval=FALSE>>= 
-plotpolys(auckpolys, auckbbs, col=cols[findInterval2(res$est*1000, brks)])
+plot(auckpolys, col=cols[findInterval2(res$est*1000, brks)])
 legend(c(70,90), c(70,95), fill=cols, legend=leglabs(brks), bty="n")
 @
 

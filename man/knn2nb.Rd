@@ -27,7 +27,7 @@ The function returns an object of class \code{nb} with a list of integer vectors
 data(columbus)
 col.knn <- knearneigh(coords, k=4)
 library(maptools)
-plotpolys(polys, bbs, border="grey")
+plot(polys, border="grey")
 plot(knn2nb(col.knn), coords, add=TRUE)
 title(main="K nearest neighbours, k = 4")
 }

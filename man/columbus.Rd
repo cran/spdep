@@ -1,7 +1,6 @@
 % Copyright 2001 by Roger S. Bivand
 \name{columbus}
 \alias{columbus}
-\alias{bbs}
 \alias{col.gal.nb}
 \alias{coords}
 \alias{polys}
@@ -13,8 +12,7 @@ The \code{columbus} data frame has 49 rows and 22 columns.
 Unit of analysis: 49 neighbourhoods in Columbus, OH, 1980 data.
 In addition the data set includes a \code{polylist} object \code{polys}
 with the boundaries of the neighbourhoods, a matrix of polygon centroids
-\code{coords}, a matrix \code{bbs} with
-the bounding boxes of the polygons, and \code{col.gal.nb}, the neighbours list
+\code{coords}, and \code{col.gal.nb}, the neighbours list
 from an original GAL-format file.
 }
 \format{

@@ -4,7 +4,6 @@
 \alias{eire.df}
 \alias{eire.polys.utm}
 \alias{eire.coords.utm}
-\alias{eire.bbs.utm}
 \alias{eire.nb}
 \non_function{}
 \title{Eire data sets}
@@ -13,8 +12,7 @@
 The \code{eire.df} data frame has 26 rows and 9 columns. In addition,
 polygons of the 26 counties are provided as a multipart polylist in
 eire.polys.utm (coordinates in km, projection UTM zone 30). Their
-centroids are in eire.coords.utm, and their bounding boxes in
-eire.bbs.utm. The original Cliff and Ord binary contiguities are in
+centroids are in eire.coords.utm. The original Cliff and Ord binary contiguities are in
 eire.nb.
 }
 \format{
@@ -45,11 +43,11 @@ summary(eire.df$A)
 brks <- round(fivenum(eire.df$A), digits=2)
 cols <- rev(heat.colors(4))
 library(maptools)
-plotpolys(eire.polys.utm, eire.bbs.utm,
+plot(eire.polys.utm,
  col=cols[findInterval2(eire.df$A, brks)])
 title(main="Percentage with blood group A in Eire")
 legend(x=c(-50, 70), y=c(6120, 6050), leglabs(brks), fill=cols, bty="n")
-plotpolys(eire.polys.utm, eire.bbs.utm)
+plot(eire.polys.utm)
 plot(eire.nb, eire.coords.utm, add=TRUE)
 lA <- lag.listw(nb2listw(eire.nb), eire.df$A)
 summary(lA)
@@ -63,7 +61,7 @@ summary(A.lm)
 res <- residuals(A.lm)
 brks <- c(min(res),-2,-1,0,1,2,max(res))
 cols <- rev(cm.colors(6))
-plotpolys(eire.polys.utm, eire.bbs.utm, col=cols[findInterval2(res, brks)])
+plot(eire.polys.utm, col=cols[findInterval2(res, brks)])
 title(main="Regression residuals")
 legend(x=c(-50, 70), y=c(6120, 6050), legend=leglabs(brks), fill=cols,
   bty="n")
@@ -73,7 +71,7 @@ lm.LMtests(A.lm, nb2listw(eire.nb), test="LMerr")
 % Eire agricultural data
 brks <- round(fivenum(eire.df$OWNCONS), digits=2)
 cols <- grey(4:1/5)
-plotpolys(eire.polys.utm, eire.bbs.utm,
+plot(eire.polys.utm,
  col=cols[findInterval2(eire.df$OWNCONS, brks)])
 title(main="Percentage own consumption of agricultural produce")
 legend(x=c(-50, 70), y=c(6120, 6050), legend=leglabs(brks),
@@ -84,7 +82,7 @@ e.lm <- lm(OWNCONS ~ ROADACC, data=eire.df)
 res <- residuals(e.lm)
 brks <- c(min(res),-2,-1,0,1,2,max(res))
 cols <- rev(cm.colors(6))
-plotpolys(eire.polys.utm, eire.bbs.utm, col=cols[findInterval2(res, brks)])
+plot(eire.polys.utm, col=cols[findInterval2(res, brks)])
 title(main="Regression residuals")
 legend(x=c(-50, 70), y=c(6120, 6050), legend=leglabs(brks), fill=cm.colors(6),
   bty="n")

@@ -10,14 +10,13 @@ committing. If the result is not assigned to a new object, the editing
 will be lost - as in \code{edit}.
 }
 \usage{
-edit.nb(name, coords, polys=NULL, bbs=NULL, ...)
+edit.nb(name, coords, polys=NULL, ...)
 }
 
 \arguments{
   \item{name}{an object of class \code{nb}}
   \item{coords}{matrix of region point coordinates}
   \item{polys}{if polygon boundaries supplied, will be used as background}
-  \item{bbs}{bounding boxes for polygons}
   \item{...}{further arguments passed to or from other methods}
 }
 \value{

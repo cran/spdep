@@ -8,6 +8,7 @@ baltimore               House sales prices, Baltimore, MD 1978
 boston                  Corrected Boston Housing Data
 card                    Cardinalities for neighbours lists
 cell2nb                 Generate neighbours list for grid cells
+choynowski              Choynowski probability map values
 oldcol                  Columbus OH spatial analysis data set - old
                         numbering
 columbus                Columbus OH spatial analysis data set

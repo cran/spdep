@@ -7,6 +7,8 @@
 \usepackage{times}
 \usepackage{mathptm}
 \usepackage{hyperref}
+\usepackage{natbib}
+
 \setkeys{Gin}{width=0.95\textwidth}
 \newcommand{\strong}[1]{{\normalfont\fontseries{b}\selectfont #1}}
 \let\pkg=\strong
@@ -27,7 +29,7 @@
 
 <<echo=FALSE>>= 
 owidth <- getOption("width")
-options("width"=80)
+options("width"=70)
 .PngNo <- 0
 @
 
@@ -45,20 +47,17 @@ cat("\\includegraphics{", file, "}\n\n", sep="")
 
 \section{Introduction}
 
-This data set was presented first in Symons et al. (1983), analysed with
-reference to the spatial nature of the data in Cressie and Read (1985),
-expanded in Cressie and Chan (1989), and used in detail in Cressie's
-monograph on statistics for spatial data (1991, revised 1993). It is for
+This data set was presented first in \citet{symonsetal:1983}, analysed with
+reference to the spatial nature of the data in \citet{cressie+read:1985},
+expanded in \citet{cressie+chan:1989}, and used in detail in \citet{cressie:1991}. It is for
 the 100 counties of North Carolina, and includes counts of numbers of
 live births (also non-white live births) and numbers of sudden infant
-deaths, for the 1974--1978 and 1979--1984 periods. In Cressie and Read
-(1985), a listing of county neighbours based on shared boundaries
-(contiguity) is given, and in Cressie and Chan (1989), and in Cressie
-(1991, pp. 386--389), a different listing based on the criterion of
+deaths, for the 1974--1978 and 1979--1984 periods. In \citet{cressie+read:1985}, a listing of county neighbours based on shared boundaries
+(contiguity) is given, and in \citet{cressie+chan:1989}, and in \citet[][pp. 386--389]{cressie:1991}, a different listing based on the criterion of
 distance between county seats, with a cutoff at 30 miles. The county seat
 location coordinates are given in miles in a local (unknown) coordinate
 reference system. The data are also used to exemplify a range of functions
-in the \SP spatial statistics module user's manual (Kaluzny et al., 1996).
+in the \SP~spatial statistics module user's manual \citep{kaluznyetal:1996}.
 
 <<echo=FALSE,eval=TRUE,results=hide>>= 
 library(spdep)
@@ -196,11 +195,9 @@ plotpolys(sidspolys, border="grey")
 plot(ncCC89.nb, sidscents, add=TRUE, col="blue")
 @ 
 
-\section{Getting the data ready to use}
-
 We will now access the data set reproduced from Cressie and collaborators,
 included in \pkg{spdep}, and add the neighbour relationships used in
-Cressie and Chan (1989) to the background map as a graph in blue:
+\citet{cressie+chan:1989} to the background map as a graph shown in Figure \ref{plot-CC89.nb}:
 
 \begin{footnotesize}
 <<echo=TRUE>>= 
@@ -210,13 +207,6 @@ data(nc.sids)
 <<plot-CC89.nb>>
 @ 
 \end{footnotesize}
-Figure \ref{plot-CC89.nb} does not show what we wanted --- it is
-obvious that the wrong nodes are being connected to each other. This is
-specifically included here because it is more the rule than the exception
-that spatial objects are placed in different order in different data
-sources (or the numbers of objects may not agree, or some objects are
-aggregated in one data source and not in another, the possibilities
-are endless).
 
 \begin{figure}[htbp]
 \begin{center} 
@@ -226,72 +216,11 @@ are endless).
 <<zfig>>
 @ 
 \end{center}
-\caption{Overplotting shapefile boundaries with 30 mile neighbour relations as a graph (first attempt).}
+\caption{Overplotting shapefile boundaries with 30 mile neighbour relations as a graph.}
 \label{plot-CC89.nb}
 \end{figure}
 
-To see what is going on, we can list the first five rows of the
-\code{sids} data frame taken from the shapefile, and the first five
-rows of the \code{nc.sids} data frame included in \pkg{spdep} and taken
-directly from listings in the sources refered to above. The county ID
-variable is included in both sources\footnote{prior to R 1.9, the underscore in the DBF file feild name \code{CNTY\_ID} is converted to a point, \code{CNTY.ID}.}, and is also the \code{region.id}
-attribute of the Cressie/Chan 30 mile neighbour relations neighbour
-object.
-
-\begin{footnotesize}
-<<echo=TRUE>>= 
-sids[1:5, c(4, 5, 9)]
-nc.sids[1:5, c("CNTY.ID", "BIR74")]
-attr(ncCC89.nb, "region.id")[1:5]
-@ 
-\end{footnotesize}
-We can see that the \code{nc.sids} data frame is ordered alphabetically
-by county name (as are the neighbour objects), while the \code{sids} data
-frame is ordered by ascending county IDs (as are the polygons). To
-resolve this, we could swap the rows of the neighbour list objects,
-but we would also need to change all the identification numbers of
-the spatial objects too, so it seems best to use a temporary file and
-functions for reading and writing neighbour lists, and especially for
-exchanging them with other software (including GeoDa).
-
-\begin{footnotesize}
-<<echo=TRUE>>= 
-tmpGAL <- tempfile(pattern="GAL")
-write.nb.gal(ncCC89.nb, file=tmpGAL, oldstyle=FALSE, 
- shpfile="sids", ind="CNTY.ID")
-CNTY.ID <- sids[, 4]
-ncCC89.2.nb <- read.gal(file=tmpGAL, region.id=CNTY.ID)
-@ 
-\end{footnotesize}
-When \code{read.gal()} is given a \code{region.id} argument, it is used
-to match the incoming data, and to reorder them on-the-fly, so that,
-as Figure \ref{plot-mod.nb} shows, the re-ordered neighbour list object
-now conforms with the order of the polygon list object.
-
-<<label=plot-mod.nb,echo=FALSE,eval=FALSE>>=
-plotpolys(sidspolys, border="grey")
-plot(ncCC89.2.nb, sidscents, add=TRUE, col="blue")
-@
-
-\begin{footnotesize}
-<<fig=FALSE,echo=TRUE, eval=FALSE>>= 
-<<plot-mod.nb>>
-@ 
-\end{footnotesize}
-
-\begin{figure}[htbp]
-\begin{center} 
-<<results=tex,echo=FALSE>>= 
-<<afig>>
-<<plot-mod.nb>>
-<<zfig>>
-@ 
-\end{center}
-\caption{Overplotting shapefile boundaries with 30 mile neighbour relations as a graph (re-ordered neighbour list)}
-\label{plot-mod.nb}
-\end{figure}
-
-Printing the new object shows that it is a neighbour list object, with a
+Printing the neighbour object shows that it is a neighbour list object, with a
 very sparse structure --- if displayed as a matrix, only 3.94\% of cells
 would be filled. Objects of class \code{nb} contain a list as long as
 the number of counties; each component of the list is a vector with the
@@ -304,21 +233,21 @@ argument. The names should be unique, as with data frame row names.
 
 \begin{footnotesize}
 <<echo=TRUE>>= 
-ncCC89.2.nb
-r.id <- attr(ncCC89.2.nb, "region.id")
-ncCC89.2.nb[[match("1825", r.id)]]
-r.id[ncCC89.2.nb[[match("1825", r.id)]]]
+ncCC89.nb
+r.id <- attr(ncCC89.nb, "region.id")
+ncCC89.nb[[match("1825", r.id)]]
+r.id[ncCC89.nb[[match("1825", r.id)]]]
 @ 
 \end{footnotesize}
 The neighbour list object records neighbours by their order in
 relation to the list itself, so the neighbours list for the county with
 \code{region.id} "1825" are the second, eighteenth, and nineteenth in
-the list. We can retreive their \code{CNTY.ID} codes by looking them up
+the list. We can retreive their codes by looking them up
 in the \code{region.id} attribute.
 
 \begin{footnotesize}
 <<echo=TRUE>>= 
-sids[card(ncCC89.2.nb) == 0,]
+nc.sids[card(ncCC89.nb) == 0,]
 @ 
 \end{footnotesize}
 We should also note that this neighbour criterion generates two counties
@@ -329,9 +258,250 @@ methods for handling no-neighbour objects later on. We will also show
 how new neighbours lists may be constructed in \RR, and compare these
 with those from the literature.
 
+
+\subsection{Probability mapping}
+
+<<label=choymap,echo=FALSE,eval=FALSE>>= 
+plot(sidspolys)
+legend(c(-84,-81), c(33.9,34.5), fill=grey(c(2,5)/7),
+ legend=c("high", "low"), bty="n", ncol=2)
+plot(subset(sidspolys, ((ch$pmap < 0.05) & (ch$type))),
+ col=grey(5/7), add=TRUE)
+plot(subset(sidspolys, ((ch$pmap < 0.05) & (!ch$type))),
+ col=grey(2/7), add=TRUE)
+@
+
+Rather than review functions for measuring and modelling spatial
+dependence in the \pkg{spdep} package, we will focus on probability
+mapping for disease rates data. Typically, we have counts of the incidence
+of some disease by spatial unit, associated with counts of populations
+at risk. The task is then to try to establish whether any spatial units
+seem to be characterised by higher or lower counts of cases than might
+have been expected in general terms \citep{bailey+gatrell:1995}.
+
+An early approach by \citet{choynowski:1959}, described by
+\citet{cressie+read:1985} and \citet{bailey+gatrell:1995}, assumes,
+given that the true rate for the spatial units is small, that as the
+population at risk increases to infinity, the spatial unit case counts
+are Poisson with mean value equal to the population at risk times the
+rate for the study area as a whole. Choynowski's approach folds the two
+tails of the measured probabilities together, so that small values, for
+a chosen $\alpha$, occur for spatial units with either unusually high
+or low rates. For this reason, the high and low counties are plotted
+separately in Figure \ref{choymap}.
+
+\begin{footnotesize}
+<<echo=TRUE>>= 
+ch <- choynowski(nc.sids$SID74, nc.sids$BIR74)
+@ 
+<<fig=FALSE,echo=TRUE, eval=FALSE>>= 
+<<choymap>>
+@
+\end{footnotesize}
+
+\begin{figure}[htbp]
+\begin{center} 
+<<results=tex,echo=FALSE>>= 
+<<afig>>
+<<choymap>>
+<<zfig>>
+@ 
+\end{center}
+\caption{Probability map of North Carolina counties, SIDS cases 1974--78, $\alpha = 0.05$, reproducing \citet{cressie+read:1985}, Figure 1.}
+\label{choymap}
+\end{figure}
+
+<<label=poismap,echo=FALSE,eval=FALSE>>= 
+plot(sidspolys, col=cols[findInterval2(pmap$pmap, brks)])
+legend(c(-84,-81), c(33.9,34.5), fill=cols, legend=leglabs(brks),
+ bty="n", ncol=2)
+@
+
+For more complicated thematic maps, it may be helpful to use ColorBrewer
+(\url{http://colorbrewer.org}) colour palettes. Here we will only use
+the grey sequential palette, available in \RR~in the \pkg{RColorBrewer}
+package (the colours are copied here to avoid loading the package).
+
+While the \code{choynowski()} function only provides the probability
+map valyes required, the \code{probmap()} function returns raw (crude)
+rates, expected counts (assuming a constant rate across the study area),
+relative risks, and Poisson probability map values calculated using the
+standard cumulative distribution function \code{ppois()}. This does not
+fold the tails together, so that counties with lower observed counts
+than expected, based on population size, have values in the lower tail,
+and those with higher observed counts than expected have values in the
+upper tail, as Figure \ref{poismap} shows.
+
+\begin{footnotesize}
+<<echo=TRUE>>= 
+pmap <- probmap(nc.sids$SID74, nc.sids$BIR74)
+brks <- c(0,0.001,0.01,0.025,0.05,0.95,0.975,0.99,0.999,1)
+cols <- c("#FFFFFF", "#F0F0F0", "#D9D9D9", "#BDBDBD", "#969696",
+ "#737373", "#525252", "#252525", "#000000")
+@ 
+<<fig=FALSE,echo=TRUE, eval=FALSE>>= 
+<<poismap>>
+@
+\end{footnotesize}
+
+\begin{figure}[htbp]
+\begin{center} 
+<<results=tex,echo=FALSE>>= 
+<<afig>>
+<<poismap>>
+<<zfig>>
+@ 
+\end{center}
+\caption{Probability map of North Carolina counties, SIDS cases 1974--78, reproducing \citet{kaluznyetal:1996}, p. 67, Figure 3.28.}
+\label{poismap}
+\end{figure}
+
+Marilia Carvalho (personal communication) and Virgilio Gómez Rubio
+\citep{gomez-rubio+ferrandiz+lopez:2003} have pointed to the unusual
+shape of the distribution of the Poisson probability values (Figure
+\ref{poishist}), repeating the doubts about probability mapping voiced
+by \citet[][p. 392]{cressie:1991}: ``an extreme value $\ldots$ may be
+more due to its lack of fit to the Poisson model than to its deviation
+from the constant rate assumption''. There are many more high values
+than one would have expected, suggesting perhaps overdispersion, that
+is that the ratio of the mean and variance is larger than unity.
+
+<<label=poishist,echo=FALSE,eval=FALSE>>= 
+hist(pmap$pmap, main="")
+@
+
+\begin{footnotesize}
+<<fig=FALSE,echo=TRUE, eval=FALSE>>= 
+<<poishist>>
+@
+\end{footnotesize}
+
+
+\begin{figure}[htbp]
+\begin{center} 
+<<results=tex,echo=FALSE>>= 
+<<afig>>
+<<poishist>>
+<<zfig>>
+@ 
+\end{center}
+\caption{Histogram of Poisson probability values.}
+\label{poishist}
+\end{figure}
+
+<<label=poismap2,echo=FALSE,eval=FALSE>>= 
+plot(sidspolys, col=cols[findInterval2(stdres, brks)])
+legend(c(-84,-81), c(33.9,34.5), fill=cols, legend=leglabs(brks),
+ bty="n", ncol=2)
+@
+
+One ad-hoc way to assess the impact of the possible failure of our
+assumption that the counts follow the Poisson distribution is to estimate
+the dispersion by fitting a general linear model of the observed counts
+including only the intercept (null model) and offset by the observed
+population at risk (suggested by Marilia Carvalho and associates):
+
+\begin{footnotesize}
+<<echo=TRUE>>= 
+res <- glm(nc.sids$SID74 ~ offset(log(BIR74)), data=nc.sids,
+ family="quasipoisson")
+stdres <- rstandard(res)
+brks <- c(-Inf, -2, -1.5, -1, 1, 1.5, 2, +Inf)
+cols <- c("#F7F7F7", "#D9D9D9", "#BDBDBD", "#969696", "#737373",
+ "#525252", "#252525")
+@
+<<fig=FALSE,echo=TRUE, eval=FALSE>>= 
+<<poismap2>>
+@
+\end{footnotesize}
+
+The dispersion is equal to \Sexpr{round(summary(res)$dispersion, digits=4)}, 
+much greater than unity; we calculate the corrected
+probability map values by taking the standardised residuals of the
+model, taking the size of the dispersion into account; the results
+are shown in Figure \ref{poismap2}. Many fewer counties appear
+now to have unexpectedly large or small numbers of cases. This is
+an ad-hoc adjustment made because \RR~provides access to a wide
+range of model-fitting functions that can be used to help check our
+assumptions. \citet{gomez-rubio+ferrandiz+lopez:2003} chose rather to
+construct a probability map under the hypothesis that data are drawn
+from a Negative Binomial.
+
+\begin{figure}[htbp]
+\begin{center} 
+<<results=tex,echo=FALSE>>= 
+<<afig>>
+<<poismap2>>
+<<zfig>>
+@ 
+\end{center}
+\caption{Standardised residual values from the fit of a quasi-Poisson fit of the null model for SIDS rates 1974-78, North Carolina counties.}
+\label{poismap2}
+\end{figure}
+@ 
+
+
+<<label=EBlocal,echo=FALSE,eval=FALSE>>= 
+plot(sidspolys)
+legend(c(-84,-81), c(33.9,34.5), fill=cols, legend=leglabs(brks),
+ bty="n", ncol=2)
+plot(subset(sidspolys, sub), col=cols[findInterval2(res$est[sub]*1000, brks)], add=TRUE)
+points(sidscents[!sub,], pch=8)
+@
+
+So far, none of the maps presented have made use of the spatial
+dependence possibly present in the data. A further elementary step that
+can be taken is to map Empirical Bayes estimates of the rates, which
+are smoothed in relation to the raw rates. The underlying question
+here is linked to the larger variance associated with rate estimates
+for counties with small populations at risk compared with counties with
+large populations at risk. Empirical Bayes estimates place more credence
+on the raw rates of counties with large populations at risk, and modify
+them much less than they modify rates for small counties. In the case
+of small populations at risk, more confidence is placed in either the
+global rate for the study area as a whole, or for local Empirical Bayes
+estimates, in rates for a larger moving window including the neighbours of
+the county being estimated. The function used for this in \pkg{spdep} is
+\code{EBlocal()}, initially contributed by Marilia Carvalho. It parallels
+a similar function in GeoDa, but uses the \citet{bailey+gatrell:1995}
+interpretation of \citet{marshall:1991}, rather than that in GeoDa
+\citep{anselin+syabri+smirnov:2002}.
+
+\begin{footnotesize}
+<<echo=TRUE>>= 
+res <- EBlocal(nc.sids$SID74, nc.sids$BIR74, ncCC89.nb, zero.policy=TRUE)
+brks <- c(-Inf,2,2.5,3,3.5,Inf)
+cols <- c("#F7F7F7", "#CCCCCC", "#969696", "#636363", "#252525")
+sub <- is.finite(res$est)
+@
+<<fig=FALSE,echo=TRUE, eval=FALSE>>= 
+<<EBlocal>>
+@
+\end{footnotesize}
+
+The results are shown in Figure \ref{EBlocal}. Like other relevant
+functions in \pkg{spdep}, \code{EBlocal()} takes a \code{zero.policy}
+argument to allow missing values to be passed through. In this case,
+no local estimate is available for the two counties with no neighbours,
+marked by stars.
+
+\begin{figure}[htbp]
+\begin{center} 
+<<results=tex,echo=FALSE>>= 
+<<afig>>
+<<EBlocal>>
+<<zfig>>
+@ 
+\end{center}
+\caption{Local Empirical Bayes estimates for SIDS rates per 1000 using the 30 mile county seat neighbours list.}
+\label{EBlocal}
+\end{figure}
+@ 
+
+
 \section{Preliminary exploration of the data (incomplete)}
 
-One of the first steps taken by Cressie and Read (1985) is to try to
+One of the first steps taken by \citet{cressie+read:1985} is to try to
 bring out spatial trends by dividing North Carolina up into $4\times4$
 rough rectangles. Just to see how this works, let us map these rough
 rectangles before proceeding further (see Figure \ref{LMmap}). We need
@@ -362,7 +532,7 @@ cols <- sample(rainbow(length(table(unclass(both)))))
 <<zfig>>
 @ 
 \end{center}
-\caption{Rough rectangles used by Cressie and Read (1985) to bring out spatial trends.}
+\caption{Rough rectangles used by \citet{cressie+read:1985} to bring out spatial trends.}
 \label{LMmap}
 \end{figure}
 
@@ -376,19 +546,71 @@ options("width"=owidth)
 
 \begin{description}
 
-\item Cressie, N (1991), Statistics for spatial data. New York: Wiley.
+\bibitem[\protect\citeauthoryear{Anselin, Syabri and Smirnov}{Anselin, Syabri and Smirnov}{2002}]{anselin+syabri+smirnov:2002}
+Anselin, L., Syabri, I., Smirnov, O., 2002.
+\newblock {Visualizing Multivariate Spatial Correlation with Dynamically Linked Windows}.
+\newblock {In Anselin, L., Rey, S. (Eds.), Proceedings, CSISS Workshop on New Tools for Spatial Data Analysis, Santa Barbara, CA, May 10-11, 2002. Center for Spatially Integrated Social Science},
+\newblock 20 pp., {\url{http://sal.agecon.uiuc.edu/csiss/pdf/multilisa.pdf}}.
 
-\item Cressie, N, Chan NH (1989), Spatial modelling of
-regional variables. \emph{Journal of the American Statistical
-Association} 84, 393--401.
+\bibitem[\protect\citeauthoryear{Bailey and Gatrell}{Bailey and Gatrell}{1995}]{bailey+gatrell:1995}
+Bailey, T.~C., Gatrell, A.~C., 1995.
+\newblock {Interactive Spatial Data Analysis}.
+\newblock {Harlow: Longman},
+\newblock 413 pp.
 
-\item Cressie, N, Read, TRC (1985), Do sudden
-infant deaths come in clusters? \emph{Statistics and Decisions}
-Supplement Issue 2, 333--349.
+\bibitem[\protect\citeauthoryear{Choynowski}{Choynowski}{1959}]{choynowski:1959}
+Choynowski, M., 1959
+\newblock {Maps based on probabilities}.
+\newblock {Journal of the American Statistical Association},
+\newblock 54 (286), {385--388}.
 
-\item Kaluzny, SP, Vega, SC, Cardoso, TP, Shelly, AA (1996), \emph{\SP SPATIALSTATS user's manual version 1.0}. Seattle: MathSoft Inc.
+\bibitem[\protect\citeauthoryear{Cressie}{Cressie}{1991}]{cressie:1991}
+Cressie, N., 1991.
+\newblock {Statistics for spatial data}.
+\newblock {New York: Wiley},
+\newblock 900 pp.
 
-\item Symons, MJ, Grimson, RC, Yuan, YC (1983), Clustering of rare events. \emph{Biometrics} 39, 193--205.
+\bibitem[\protect\citeauthoryear{Cressie and Chan}{Cressie and Chan}{1989}]{cressie+chan:1989}
+Cressie, N., Chan N.~H., 1989.
+\newblock {Spatial modelling of regional variables}.
+\newblock {Journal of the American Statistical Association},
+\newblock 84 (406), {393--401}.
+
+\bibitem[\protect\citeauthoryear{Cressie and Read}{Cressie and Read}{1985}]{cressie+read:1985}
+Cressie, N., Read, T.~R.~C., 1985.
+\newblock {Do sudden infant deaths come in clusters?}.
+\newblock {Statistics and Decisions},
+\newblock {Supplement Issue 2, 333--349}.
+
+\bibitem[\protect\citeauthoryear{Cressie and Read}{Cressie and Read}{1989}]{cressie+read:1989}
+Cressie, N., Read, T.~R.~C., 1989.
+\newblock {Spatial data-analysis of regional counts}.
+\newblock {Biometrical Journal},
+\newblock 31 (6), {699--719}.
+
+\bibitem[\protect\citeauthoryear{Gómez Rubio, Ferrándiz and López}{Gómez Rubio, Ferrándiz and López}{2003}]{gomez-rubio+ferrandiz+lopez:2003}
+Gómez Rubio, V., Ferrándiz, J., López, A., 2003
+\newblock {Detecting Disease Clusters with \RR}.
+\newblock {In: Hornik, K., Leisch, F., Zeilis, A. (Eds), Proceedings of the 3rd International Workshop on Distributed Statistical Computing, Vienna, Austria},
+\newblock 15 pp., {(\url{http://www.ci.tuwien.ac.at/Conferences/DSC-2003/Proceedings/GomezRubioEtAl.pdf})}.
+
+\bibitem[\protect\citeauthoryear{Kaluzny et al.}{Kaluzny et al.}{1996}]{kaluznyetal:1996}
+Kaluzny, S.~P., Vega, S.~C., Cardoso, T.~P., Shelly, A.~A., 1996.
+\newblock {\SP~SPATIALSTATS user's manual version 1.0}.
+\newblock {Seattle: MathSoft Inc.},
+\newblock 226 pp.
+
+\bibitem[\protect\citeauthoryear{Marshall}{Marshall}{1991}]{marshall:1991}
+Marshall, R.~M., 1991.
+\newblock {Mapping disease and mortality rates using Empirical Bayes Estimators}.
+\newblock {Applied Statistics},
+\newblock 40 (2), {283--294}.
+
+\bibitem[\protect\citeauthoryear{Symons et al.}{Symons et al.}{1983}]{symonsetal:1983}
+Symons, M.~J., Grimson, R.~C., Yuan, Y.~C., 1983.
+\newblock {Clustering of rare events}.
+\newblock {Biometrics},
+\newblock 39 (1), {193--205}.
 
 \end{description}
 

@@ -1,7 +1,7 @@
 # Copyright 2001 by Roger Bivand and Nicholas Lewin-Koh
 #
 
-edit.nb <- function(name, coords, polys=NULL, bbs=NULL, ...) {
+edit.nb <- function(name, coords, polys=NULL, ...) {
   nb <- name
   cnb <- card(nb)
   if (class(nb) != "nb") stop("Not a neighbours list")
@@ -14,8 +14,8 @@ edit.nb <- function(name, coords, polys=NULL, bbs=NULL, ...) {
   ylim <- range(y)
   plot.new()
   plot.window(xlim = xlim, ylim = ylim, "", asp=1)
-  if (!is.null(polys) && !is.null(bbs))
-    plotpolys(polys,bbs, border="grey", add=TRUE)
+  if (!is.null(polys))
+    plot(polys, border="grey", add=TRUE)
   for (i in 1:n) {
     #arrows(x[i],y[i],x[nb[[i]]],y[nb[[i]]],lenght=.08, angle=.15)
 ###
@@ -68,8 +68,8 @@ edit.nb <- function(name, coords, polys=NULL, bbs=NULL, ...) {
 
       #plot.new()
       #plot.window(xlim = xlim, ylim = ylim, "", asp=1)
-      #if (!is.null(polys) && !is.null(bbs))
-      #  plotpolys(polys,bbs, border="grey", add=TRUE)
+      #if (!is.null(polys))
+      #  plotpolys(polys, border="grey", add=TRUE)
       #for (i in 1:n) {
       #  inb <- nb[[i]]
       #  for (j in inb)
@@ -100,8 +100,8 @@ edit.nb <- function(name, coords, polys=NULL, bbs=NULL, ...) {
           }
 #          plot.new()
 #          plot.window(xlim = xlim, ylim = ylim, "", asp=1)
-#          if (!is.null(polys) && !is.null(bbs))
-#            plotpolys(polys,bbs, border="grey", add=TRUE)
+#          if (!is.null(polys))
+#            plotpolys(polys, border="grey", add=TRUE)
 #          for (i in 1:n) {
 #            inb <- nb[[i]]
 #            for (j in inb)
@@ -118,8 +118,8 @@ edit.nb <- function(name, coords, polys=NULL, bbs=NULL, ...) {
     if (finished == "r") {
       plot.new()
       plot.window(xlim = xlim, ylim = ylim, "", asp=1)
-      if (!is.null(polys) && !is.null(bbs))
-        plotpolys(polys,bbs, border="grey", add=TRUE)
+      if (!is.null(polys))
+        plot(polys, border="grey", add=TRUE)
       for (i in 1:n) {
         if(nb[[i]][1]!=0 & length(nb[[i]])>0)
           segments(x[i],y[i],x[nb[[i]]],y[nb[[i]]])

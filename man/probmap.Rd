@@ -6,11 +6,12 @@
   The function returns a data frame of rates for counts in populations at risk with crude rates, expected counts of cases, relative risks, and Poisson probabilities.
 }
 \usage{
-probmap(n, x)
+probmap(n, x, row.names=NULL)
 }
 \arguments{
   \item{n}{a numeric vector of counts of cases}
   \item{x}{a numeric vector of populations at risk}
+  \item{row.names}{row names passed through to output data frame}
 }
 \details{
   The function returns a data frame, from which rates may be mapped after class intervals have been chosen. The class intervals used in the examples are mostly taken from the referenced source.
@@ -32,17 +33,17 @@ res <- probmap(auckland$Deaths.1977.85, 9*auckland$Under.5.1981)
 brks <- c(-Inf,2,2.5,3,3.5,Inf)
 cols <- grey(6:2/7)
 library(maptools)
-plotpolys(auckpolys, auckbbs, col=cols[findInterval2(res$raw*1000, brks)])
+plotpolys(auckpolys, col=cols[findInterval2(res$raw*1000, brks)])
 legend(c(70,90), c(70,95), fill=cols, legend=leglabs(brks), bty="n")
 title(main="Crude (raw) estimates of infant mortality per 1000 per year")
 brks <- c(-Inf,47,83,118,154,190,Inf)
 cols <- cm.colors(6)
-plotpolys(auckpolys, auckbbs, col=cols[findInterval2(res$relRisk, brks)])
+plotpolys(auckpolys, col=cols[findInterval2(res$relRisk, brks)])
 legend(c(70,90), c(70,95), fill=cols, legend=leglabs(brks), bty="n")
 title(main="Standardised mortality ratios for Auckland child deaths")
 brks <- c(0,0.05,0.1,0.2,0.8,0.9,0.95,1)
 cols <- cm.colors(7)
-plotpolys(auckpolys, auckbbs, col=cols[findInterval2(res$pmap, brks)])
+plotpolys(auckpolys, col=cols[findInterval2(res$pmap, brks)])
 legend(c(70,90), c(70,95), fill=cols, legend=leglabs(brks), bty="n")
 title(main="Poisson probabilities for Auckland child mortality")
 }
