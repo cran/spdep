@@ -6,19 +6,22 @@
  A permutation test for Geary's C statistic calculated by using nsim random permutations of x for the given spatial weighting scheme, to establish the rank of the observed statistic in relation to the nsim simulated values.
 }
 \usage{
-geary.mc(x, listw, nsim, zero.policy=FALSE)
+geary.mc(x, listw, nsim, zero.policy=FALSE, alternative="less")
 }
 \arguments{
   \item{x}{a numeric vector the same length as the neighbours list in listw}
   \item{listw}{a \code{listw} object created for example by \code{nb2listw}}
   \item{nsim}{number of permutations}
   \item{zero.policy}{if TRUE assign zero to the lagged value of zones without neighbours, if FALSE assign NA}
+  \item{alternative}{a character string specifying the alternative hypothesis, must be one of less (default), greater or two.sided.}
 }
 
 \value{
-A list with class \code{htest} containing the following components:
+A list with class \code{htest} and \code{mc.sim} containing the following components:
   \item{statistic}{the value of the observed Geary's C.}
   \item{parameter}{the rank of the observed Geary's C.}
+  \item{p.value}{the pseudo p-value of the test.}
+  \item{alternative}{a character string describing the alternative hypothesis.}
   \item{method}{a character string giving the method used.}
   \item{data.name}{a character string giving the name(s) of the data, and the number of simulations.}
   \item{res}{nsim simulated values of statistic, final value is observed statistic}
@@ -30,7 +33,8 @@ A list with class \code{htest} containing the following components:
 
 \examples{
 data(oldcol)
-sim1 <- geary.mc(COL.OLD$CRIME, nb2listw(COL.nb, style="W"), nsim=99)
+sim1 <- geary.mc(COL.OLD$CRIME, nb2listw(COL.nb, style="W"), nsim=99,
+  alternative="less")
 sim1
 mean(sim1$res)
 var(sim1$res)

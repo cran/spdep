@@ -21,7 +21,8 @@ subset.nb <- function(x, subset, ...) {
 	    a <- new.ids[zi[j]]
 	    if (!is.na(a)) res <- c(res, a)
 	}
-	z[[i]] <- sort(unique(res))
+	if (is.null(res)) z[[i]] <- 0
+	else z[[i]] <- sort(unique(res))
     }
     attr(z, "region.id") <- reg.id
     for (i in 1:length(xattrs)) {

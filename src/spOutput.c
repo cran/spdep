@@ -34,12 +34,13 @@
  *  or implied warranty.
  */
 
+/*
 #ifndef lint
 static char copyright[] =
     "Sparse1.3: Copyright (c) 1985,86,87,88 by Kenneth S. Kundert";
 static char RCSid[] =
     "$Header: spOutput.c,v 1.2 88/06/18 11:15:36 kundert Exp $";
-#endif
+#endif */
 
 
 
@@ -146,7 +147,7 @@ int  PrintReordered, Data, Header;
 MatrixPtr  Matrix = (MatrixPtr)eMatrix;
 register  int  J = 0;
 int I, Row, Col, Size, Top, StartCol = 1, StopCol, Columns, ElementCount = 0;
-double  Magnitude, SmallestDiag, SmallestElement;
+double  Magnitude, SmallestDiag = 0.0, SmallestElement = 0.0;
 double  LargestElement = 0.0, LargestDiag = 0.0;
 ElementPtr  pElement, pImagElements[PRINTER_WIDTH/10+1];
 int  *PrintOrdToIntRowMap, *PrintOrdToIntColMap;
@@ -273,7 +274,7 @@ int  *PrintOrdToIntRowMap, *PrintOrdToIntColMap;
 
 /* Case where element exists */
                 {   if (Data)
-                        printf(" %9.3lg", (double)pElement->Real);
+                        printf(" %9.3g", (double)pElement->Real);
                     else
                         putchar('x');
 
@@ -316,8 +317,8 @@ int  *PrintOrdToIntRowMap, *PrintOrdToIntColMap;
         putchar('\n');
     }
     if (Header)
-    {   printf("\nLargest element in matrix = %-1.4lg.\n", LargestElement);
-        printf("Smallest element in matrix = %-1.4lg.\n", SmallestElement);
+    {   printf("\nLargest element in matrix = %-1.4g.\n", LargestElement);
+        printf("Smallest element in matrix = %-1.4g.\n", SmallestElement);
 
 /* Search for largest and smallest diagonal values */
         for (I = 1; I <= Size; I++)
@@ -330,16 +331,16 @@ int  *PrintOrdToIntRowMap, *PrintOrdToIntColMap;
 
     /* Print the largest and smallest diagonal values */
         if ( Matrix->Factored )
-        {   printf("\nLargest diagonal element = %-1.4lg.\n", LargestDiag);
-            printf("Smallest diagonal element = %-1.4lg.\n", SmallestDiag);
+        {   printf("\nLargest diagonal element = %-1.4g.\n", LargestDiag);
+            printf("Smallest diagonal element = %-1.4g.\n", SmallestDiag);
         }
         else
-        {   printf("\nLargest pivot element = %-1.4lg.\n", LargestDiag);
-            printf("Smallest pivot element = %-1.4lg.\n", SmallestDiag);
+        {   printf("\nLargest pivot element = %-1.4g.\n", LargestDiag);
+            printf("Smallest pivot element = %-1.4g.\n", SmallestDiag);
         }
 
     /* Calculate and print sparsity and number of fill-ins created. */
-        printf("\nDensity = %2.2lf%%.\n", ((double)(ElementCount * 100)) /
+        printf("\nDensity = %2.2f%%.\n", ((double)(ElementCount * 100)) /
                                                        ((double)(Size * Size)));
         if (NOT Matrix->NeedsOrdering)
             printf("Number of fill-ins = %1d.\n", Matrix->Fillins);
@@ -413,7 +414,7 @@ int Reordered, Data, Header;
 MatrixPtr  Matrix = (MatrixPtr)eMatrix;
 register  int  I, Size;
 register  ElementPtr  pElement;
-int  Row, Col, Err;
+int  Row, Col, Err = 0;
 FILE  *pMatrixFile, *fopen();
 
 /* Begin `spFileMatrix'. */
@@ -475,7 +476,7 @@ FILE  *pMatrixFile, *fopen();
                     Col = Matrix->IntToExtColMap[I];
                 }
                 Err = fprintf
-                (   pMatrixFile,"%d\t%d\t%-.15lg\t%-.15lg\n",
+                (   pMatrixFile,"%d\t%d\t%-.15g\t%-.15g\n",
                     Row, Col, (double)pElement->Real, (double)pElement->Imag
                 );
                 if (Err < 0) return 0;
@@ -497,7 +498,7 @@ FILE  *pMatrixFile, *fopen();
             {   Row = Matrix->IntToExtRowMap[pElement->Row];
                 Col = Matrix->IntToExtColMap[I];
                 Err = fprintf
-                (   pMatrixFile,"%d\t%d\t%-.15lg\n",
+                (   pMatrixFile,"%d\t%d\t%-.15g\n",
                     Row, Col, (double)pElement->Real
                 );
                 if (Err < 0) return 0;
@@ -566,7 +567,11 @@ char *eMatrix, *File;
 RealVector  RHS IMAG_RHS;
 {
 MatrixPtr  Matrix = (MatrixPtr)eMatrix;
+#if spCOMPLEX
 register  int  I, Size, Err;
+#else
+register  int  Size;
+#endif
 FILE  *pMatrixFile;
 FILE  *fopen();
 
@@ -604,7 +609,7 @@ FILE  *fopen();
 #if spSEPARATED_COMPLEX_VECTORS
         for (I = 1; I <= Size; I++)
         {   Err = fprintf
-            (   pMatrixFile, "%-.15lg\t%-.15lg\n",
+            (   pMatrixFile, "%-.15g\t%-.15g\n",
                 (double)RHS[I], (double)iRHS[I]
             );
             if (Err < 0) return 0;
@@ -612,7 +617,7 @@ FILE  *fopen();
 #else
         for (I = 1; I <= Size; I++)
         {   Err = fprintf
-            (   pMatrixFile, "%-.15lg\t%-.15lg\n",
+            (   pMatrixFile, "%-.15g\t%-.15g\n",
                 (double)RHS[2*I], (double)RHS[2*I+1]
             );
             if (Err < 0) return 0;
@@ -625,7 +630,7 @@ FILE  *fopen();
 #endif
 #if REAL
     {   for (I = 1; I <= Size; I++)
-        {   if (fprintf(pMatrixFile, "%-.15lg\n", (double)RHS[I]) < 0)
+        {   if (fprintf(pMatrixFile, "%-.15g\n", (double)RHS[I]) < 0)
                 return 0;
         }
     }
@@ -737,16 +742,16 @@ FILE  *pStatsFile, *fopen();
     fprintf(pStatsFile, "     Initial number of elements = %d\n",
             NumberOfElements - Matrix->Fillins);
     fprintf(pStatsFile,
-            "     Initial average number of elements per row = %lf\n",
+            "     Initial average number of elements per row = %f\n",
             (double)(NumberOfElements - Matrix->Fillins) / (double)Size);
     fprintf(pStatsFile, "     Fill-ins = %d\n",Matrix->Fillins);
-    fprintf(pStatsFile, "     Average number of fill-ins per row = %lf%%\n",
+    fprintf(pStatsFile, "     Average number of fill-ins per row = %f%%\n",
             (double)Matrix->Fillins / (double)Size);
     fprintf(pStatsFile, "     Total number of elements = %d\n",
             NumberOfElements);
-    fprintf(pStatsFile, "     Average number of elements per row = %lf\n",
+    fprintf(pStatsFile, "     Average number of elements per row = %f\n",
             (double)NumberOfElements / (double)Size);
-    fprintf(pStatsFile,"     Density = %lf%%\n",
+    fprintf(pStatsFile,"     Density = %f%%\n",
             (double)(100.0*NumberOfElements)/(double)(Size*Size));
     fprintf(pStatsFile,"     Relative Threshold = %e\n", Matrix->RelThreshold);
     fprintf(pStatsFile,"     Absolute Threshold = %e\n", Matrix->AbsThreshold);

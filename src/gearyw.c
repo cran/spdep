@@ -1,13 +1,14 @@
-/* Copyright 2001 by Roger S. Bivand. */
+/* Copyright 2002 by Roger S. Bivand. */
 
 #include <R.h>
 #include <Rdefines.h>
 #include <R_ext/Applic.h>
 #define ROFFSET 1
 
-SEXP lagw(SEXP nb, SEXP weights, SEXP x, SEXP card, SEXP zeropolicy) {
+SEXP gearyw(SEXP nb, SEXP weights, SEXP x, SEXP card, SEXP zeropolicy,
+	SEXP ftype) {
 	int i, j, k, n=length(card), pc=0;
-	double sum, wt;
+	double sum, wt, diff, xi, res;
 	SEXP ans;
 	PROTECT(ans = NEW_NUMERIC(n)); pc++;
 
@@ -20,10 +21,18 @@ SEXP lagw(SEXP nb, SEXP weights, SEXP x, SEXP card, SEXP zeropolicy) {
 	    }
 	    else {
 		sum = 0.0;
+		xi = NUMERIC_POINTER(x)[i];
 		for (j=0; j<INTEGER_POINTER(card)[i]; j++) {
 		    k = INTEGER_POINTER(VECTOR_ELT(nb, i))[j];
 		    wt = NUMERIC_POINTER(VECTOR_ELT(weights, i))[j];
-		    sum += NUMERIC_POINTER(x)[k-ROFFSET] * wt;
+		    diff = (xi - NUMERIC_POINTER(x)[k-ROFFSET]);
+		    if (LOGICAL_POINTER(ftype)[0] == TRUE) 
+			res = diff*diff;
+		    else {
+			res = diff;
+			if (res < 0.0) res = (-1) * res;
+		    }
+		    sum += wt * res;
 		}
 		NUMERIC_POINTER(ans)[i] = sum;
 	    }
@@ -32,5 +41,4 @@ SEXP lagw(SEXP nb, SEXP weights, SEXP x, SEXP card, SEXP zeropolicy) {
 	UNPROTECT(pc); /* ans */
 	return(ans);
 }
-
 

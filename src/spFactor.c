@@ -48,7 +48,7 @@
 static char copyright[] =
     "Sparse1.3: Copyright (c) 1985,86,87,88 by Kenneth S. Kundert";
 static char RCSid[] =
-    "@(#)$Header: /home/rsb/cvsroot/rsb/spdep/src/spFactor.c,v 1.1 2002/03/19 12:05:59 rsb Exp $";
+    "@(#)$Header: /home/rsb/cvsroot/rsb/spdep/src/spFactor.c,v 1.2 2002/08/20 07:12:21 rsb Exp $";
 #endif
 */
 
@@ -1846,7 +1846,7 @@ register  int  I, Size = Matrix->Size;
 register  ElementPtr  pElement;
 int  NumberOfTies = 0;
 long  Product, MinMarkowitzProduct;
-ElementPtr  ChosenPivot, pLargestElement;
+ElementPtr  ChosenPivot, pLargestElement = NULL;
 RealNumber  Magnitude, LargestElementMag, Ratio, RatioOfAccepted = 0.0, LargestInCol;
 RealNumber  FindLargestInCol();
 

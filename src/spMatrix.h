@@ -30,8 +30,8 @@
  *  software for any purpose.  It is provided `as is', without express
  *  or implied warranty.
  *
- *  $Date: 2002/03/19 12:05:59 $
- *  $Revision: 1.1 $
+ *  $Date: 2002/08/20 07:12:21 $
+ *  $Revision: 1.2 $
  */
 
 
@@ -283,6 +283,7 @@ extern  char    *spGetInitInfo( spREAL* );
 extern  int      spGetOnes( char*, int, int, int, struct spTemplate* );
 extern  int      spGetQuad( char*, int, int, int, int, struct spTemplate* );
 extern  int      spGetSize( char*, int );
+extern	int	 spHowManyHits( char* );
 extern  int      spInitialize( char*, int (*)() );
 extern  void     spInstallInitInfo( spREAL*, char* );
 extern  spREAL   spLargestElement( char* );

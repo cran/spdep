@@ -71,7 +71,8 @@ print.jclist <- function(x, ...) {
 	invisible(x)
 }
 
-joincount.mc <- function(fx, listw, nsim) {
+joincount.mc <- function(fx, listw, nsim,
+	alternative="greater") {
 	if(class(listw) != "listw") stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
 	if(!is.factor(fx)) stop(paste(deparse(substitute(fx)),
@@ -80,6 +81,7 @@ joincount.mc <- function(fx, listw, nsim) {
 	if (any(is.na(fx))) stop("NA in factor")
 	n <- length(listw$neighbours)
 	if (n != length(fx)) stop("objects of different length")
+	if(nsim > gamma(n+1)) stop("nsim too large for this n")
 	dums <- lm(codes(fx) ~ fx - 1, x=TRUE)$x
 	nc <- ncol(dums)
 	res <- matrix(0, nrow=nsim+1, ncol=nc)
@@ -99,6 +101,11 @@ joincount.mc <- function(fx, listw, nsim) {
 			names(tab)[i])
 		parameter <- xrank[i]
 		names(parameter) <- "rank of observed statistic"
+		diff <- nsim - xrank[i]
+		diff <- ifelse(diff > 0, diff, 0)
+        	pval <- (diff + 1)/(nsim+1)
+		if (alternative == "less") pval <- 1 - pval
+		else if (alternative == "two.sided") pval <- 2 * pval
 		method <- "Monte-Carlo simulation of join-count statistic"
 		data.name <- paste(deparse(substitute(fx)), "\nweights:",
 			deparse(substitute(listw)),
@@ -108,9 +115,9 @@ joincount.mc <- function(fx, listw, nsim) {
 		names(estimate) <- c("mean of simulation",
 			"variance of simulation")
 		lres[[i]] <- list(statistic=statistic, parameter=parameter,
-			method=method, data.name=data.name,
-			estimate=estimate, res=res[,i])
-		class(lres[[i]]) <- "htest"
+			method=method, data.name=data.name, p.value=pval, 
+			alternative=alternative, estimate=estimate, res=res[,i])
+		class(lres[[i]]) <- c("htest", "mc.sim")
 		
 	}
 	class(lres) <- "jclist"

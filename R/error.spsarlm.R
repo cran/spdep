@@ -52,13 +52,15 @@ errorsarlm <- function(formula, data = list(), listw, method="eigen",
 	} else {
 		sn <- listw2sn(listw)
 		opt <- optimize(sar.error.f.s, interval=c(-1,1), maximum=TRUE,
-			tol=tol.opt, sn=sn,
-			y=y, wy=wy, x=x, WX=WX, n=n, quiet=quiet, sparsedebug=sparsedebug)
+			tol=tol.opt, sn=sn, y=y, wy=wy, x=x, WX=WX, 
+			n=n, quiet=quiet, sparsedebug=sparsedebug)
 	}
 	lambda <- opt$maximum
+	names(lambda) <- "lambda"
 	LL <- opt$objective
 	lm.target <- lm(I(y - lambda*wy) ~ I(x - lambda*WX) - 1)
-	r <- residuals(lm.target)
+	r <- as.vector(residuals(lm.target))
+	fit <- as.vector(y - r)
 	p <- lm.target$rank
 	SSE <- deviance(lm.target)
 	s2 <- SSE/n
@@ -87,8 +89,8 @@ errorsarlm <- function(formula, data = list(), listw, method="eigen",
 		coefficients=coef.lambda, rest.se=rest.se, 
 		LL=LL, s2=s2, SSE=SSE, parameters=(m+1), lm.model=lm.model, 
 		method=method, call=call, residuals=r, lm.target=lm.target,
-		fitted.values=predict(lm.target), ase=ase,
-		se.fit=predict(lm.target, se.fit=TRUE)$se.fit,
+		fitted.values=fit, ase=ase, formula=formula,
+		se.fit=NULL,
 		lambda.se=lambda.se, LMtest=LMtest, zero.policy=zero.policy), 
 		class=c("sarlm"))
 	if (zero.policy) {

@@ -58,6 +58,9 @@ those subroutines remains his.
 File: R/lag.spsarlm.R is copyright (c) 1998-2002 by Roger Bivand and Andrew
 Bernat, and is subject to the licence at the foot of this file.
 
+File: R/globalG.R is copyright (c) 2002 by Hisaji ONO and Roger Bivand, 
+and is subject to the licence at the foot of this file.
+
 Files: R/mtlocalmoran.R and R/mtmoran.R are copyright (c) 2002 by Roger
 Bivand and Michael Tiefelsdorf, and are subject to the licence at the
 foot of this file.
