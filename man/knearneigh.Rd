@@ -34,7 +34,7 @@ A list of class \code{knn}
 data(columbus)
 col.knn <- knearneigh(coords, k=4)
 library(maptools)
-plot(polys, border="grey")
+plot(polys, border="grey", forcefill=FALSE)
 plot(knn2nb(col.knn), coords, add=TRUE)
 title(main="K nearest neighbours, k = 4")
 data(state)

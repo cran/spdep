@@ -39,12 +39,12 @@ library(maptools)
 sids.shp <- read.shape(system.file("shapes/sids.shp",
  package="maptools"))
 sids <- sids.shp$att.data
-sidspolys <- Map2poly(sids.shp)
+sidspolys <- Map2poly(sids.shp, raw=FALSE)
 sidscents <- get.Pcent(sids.shp)
 data(nc.sids)
-plot(sidspolys, border="grey")
+plot(sidspolys, border="grey", forcefill=FALSE)
 plot(ncCR85.nb, sidscents, add=TRUE, col="blue")
-plot(sidspolys, border="grey")
+plot(sidspolys, border="grey", forcefill=FALSE)
 plot(ncCC89.nb, cbind(nc.sids$lon, nc.sids$lat),
  add=TRUE, col="blue")
 }

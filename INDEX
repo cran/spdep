@@ -61,6 +61,8 @@ moran                   Compute Moran's I
 moran.mc                Permutation test for Moran's I statistic
 moran.plot              Moran scatterplot
 moran.test              Moran's I test for spatial autocorrelation
+nb2blocknb              Block up neighbour list for location-less
+                        observations
 nb2listw                Spatial weights for neighbours lists
 nb2mat                  Spatial weights matrices for neighbours lists
 nbdists                 Spatial link distance measures
@@ -69,6 +71,7 @@ n.comp.nb               Depth First Search on Neighbor Lists
 nc.sids                 North Carolina SIDS data
 oldcol                  Columbus OH spatial analysis data set - old
                         numbering
+p.adjustSP              Adjust local association measures' p-values
 plot.nb                 Plot a neighbours list
 poly2nb                 Construct neighbours list from polygon list
 predict.sarlm           Prediction for spatial simultaneous

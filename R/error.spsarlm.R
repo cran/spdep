@@ -52,7 +52,7 @@ errorsarlm <- function(formula, data = list(), listw, na.action=na.fail,
 	if (method == "eigen") {
 		if (!quiet) cat("Computing eigenvalues ...\n")
 		eig <- eigenw(listw)
-		cat("\n")
+		if (!quiet) cat("\n")
 # range inverted 031031, email from Salvati Nicola (and Rein Halbersma)
 		if (is.complex(eig)) eig.range <- 1/range(Re(eig))
 		else eig.range <- 1/range(eig)
