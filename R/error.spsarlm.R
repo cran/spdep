@@ -23,12 +23,14 @@ errorsarlm <- function(formula, data = list(), listw, method="eigen",
 	xcolnames <- colnames(x)
 	K <- ifelse(xcolnames[1] == "(Intercept)", 2, 1)
 	wy <- lag.listw(listw, y, zero.policy=zero.policy)
-	if (any(is.na(wy))) stop("NAs in lagged dependent variable")
+	if (any(is.na(wy)))
+	    stop("NAs in lagged dependent variable")
 	if (m > 1) {
 	    WX <- matrix(nrow=n,ncol=(m-(K-1)))
 	    for (k in K:m) {
 		wx <- lag.listw(listw, x[,k], zero.policy=zero.policy)
-		if (any(is.na(wx))) stop("NAs in lagged independent variable")
+		if (any(is.na(wx)))
+		    stop("NAs in lagged independent variable")
 		WX[,(k-(K-1))] <- wx
 	    }
 	}
@@ -90,7 +92,7 @@ errorsarlm <- function(formula, data = list(), listw, method="eigen",
 		lambda.se=lambda.se, LMtest=LMtest, zero.policy=zero.policy), 
 		class=c("sarlm"))
 	if (zero.policy) {
-		zero.regs <- attr(new, 
+		zero.regs <- attr(listw$neighbours, 
 			"region.id")[which(card(listw$neighbours) == 0)]
 		if (length(zero.regs) > 0)
 			attr(ret, "zero.regs") <- zero.regs

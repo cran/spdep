@@ -14,19 +14,23 @@ moran.plot <- function(x, listw, zero.policy=FALSE, labels=NULL, xlab=NULL, ylab
 	if (is.logical(labels) && !labels) labs <- FALSE
 	if (is.null(labels) || length(labels) != n)
 		labels <- as.character(1:n)
-	wx <- lag.listw(listw, x, zero.policy)
+	wx <- lag.listw(listw, x, zero.policy=zero.policy)
 	if (is.null(xlab)) xlab <- xname
 	if (is.null(ylab)) ylab <- paste("spatially lagged", xname)
 	plot(x, wx, xlab=xlab, ylab=ylab, ...)
-	if (zero.policy)
-		points(x[wx == 0.0], wx[wx == 0.0], col="orange", pch=19)
+	if (zero.policy) {
+		n0 <- wx == 0.0
+		symbols(x[n0], wx[n0], inches=FALSE, 
+		circles=rep(diff(range(x))/50, length(which(n0))),
+		bg="grey", add=TRUE)
+	}
 	xwx.lm <- lm(wx ~ x)
 	abline(xwx.lm)
 	abline(h=mean(wx), lty=2)
 	abline(v=mean(x), lty=2)
 	infl.xwx <- influence.measures(xwx.lm)
 	is.inf <- which(apply(infl.xwx$is.inf, 1, any))
-	points(x[is.inf], wx[is.inf], pch=9, col="red")
+	points(x[is.inf], wx[is.inf], pch=9, cex=1.2)
 	if (labs)
 	    text(x[is.inf], wx[is.inf], labels=labels[is.inf], pos=2, cex=0.7)
 	rownames(infl.xwx$infmat) <- labels

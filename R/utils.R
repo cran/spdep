@@ -4,7 +4,10 @@
 spweights.constants <- function(listw, zero.policy=FALSE) {
 	if(class(listw) != "listw") stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
-	n <- length(listw$neighbours)
+	cards <- card(listw$neighbours)
+	if (!zero.policy && any(cards == 0))
+		stop("regions with no neighbours found")
+	n <- length(which(cards > 0))
 	n1 <- n - 1
 	n2 <- n - 2
 	n3 <- n - 3
@@ -12,8 +15,7 @@ spweights.constants <- function(listw, zero.policy=FALSE) {
 	S0 <- Szero(listw)
 	S1 <- 0
 	S2 <- 0
-	cards <- card(listw$neighbours)
-	for (i in 1:n) {
+	for (i in 1:length(listw$neighbours)) {
 		cond <- TRUE
 		if (zero.policy && cards[i] == 0) cond <- FALSE
 		if (cond) {
@@ -100,9 +102,11 @@ listw2U <- function(listw) {
 			nlist[[i]] <- inb
 			iwt <- wts[[i]]
 			icd <- cardnb[i]
-			for (j in 1:icd) {
+			if (icd > 0) {
+			    for (j in 1:icd) {
 				vlist[[i]][j] <- 0.5 *
 				(iwt[j]+wts[[inb[j]]][which(nb[[inb[j]]] == i)])
+			    }
 			}
 		}
 	} else {
@@ -110,9 +114,10 @@ listw2U <- function(listw) {
 		for (i in 1:n) {
 			inb <- nb[[i]]
 			inl <- nlist[[i]]
-			iwt <- wts[[i]]
-			vlist[[i]] <- numeric(length=length(inl))
-			for (j in 1:length(inl)) {
+			if (inl > 0) {
+			    iwt <- wts[[i]]
+			    vlist[[i]] <- numeric(length=length(inl))
+			    for (j in 1:length(inl)) {
 				if (inl[j] %in% inb) a <-
 					iwt[which(inb == inl[j])]
 				else a <- 0
@@ -120,6 +125,7 @@ listw2U <- function(listw) {
 					wts[[inl[j]]][which(nb[[inl[j]]] == i)]
 				else b <- 0
 				vlist[[i]][j] <- 0.5 * (a + b)
+			    }
 			}
 		}
 	}
@@ -132,22 +138,27 @@ listw2U <- function(listw) {
 }
 
 
-listw2star <- function(listw, ireg, style, n, D, a) {
+listw2star <- function(listw, ireg, style, n, D, a, zero.policy) {
     nb <- vector(mode="list", length=n)
     class(nb) <- "nb"
     wts <- vector(mode="list", length=n)
     for (i in 1:n) nb[[i]] <- 0
     inb <- listw$neighbours[[ireg]]
     iwts <- listw$weights[[ireg]]
+    cond <- TRUE
+    if (inb == 0 || length(inb) == 0 || is.null(iwts)) cond <- FALSE
+    if (!cond && !zero.policy) stop("No-neighbour region found")
     if (style == "W") iwts <- (n*D[ireg]*iwts) / 2
     else if (style == "S") iwts <- ((n^2)*D[ireg]*iwts) / (2*a)
     else if (style == "C") iwts <- ((n^2)*iwts) / (2*a)
-    nb[[ireg]] <- inb
-    wts[[ireg]] <- iwts
-    for (j in 1:length(inb)) {
-        jj <- inb[j]
-        nb[[jj]] <- ireg
-        wts[[jj]] <- iwts[j]
+    if (cond) {
+    	nb[[ireg]] <- inb
+    	wts[[ireg]] <- iwts
+    	for (j in 1:length(inb)) {
+            jj <- inb[j]
+            nb[[jj]] <- ireg
+            wts[[jj]] <- iwts[j]
+	}
     }
     res <- list(style=style, neighbours=nb, weights=wts)
     class(res) <- c("listw", "star")

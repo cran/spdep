@@ -114,7 +114,7 @@ lagsarlm <- function(formula, data = list(), listw, type="lag",
 		ase=ase, LLs=LLs, rho.se=rho.se, LMtest=LMtest, 
 		zero.policy=zero.policy), class=c("sarlm"))
 	if (zero.policy) {
-		zero.regs <- attr(new, 
+		zero.regs <- attr(listw$neighbours, 
 			"region.id")[which(card(listw$neighbours) == 0)]
 		if (length(zero.regs) > 0)
 			attr(ret, "zero.regs") <- zero.regs
