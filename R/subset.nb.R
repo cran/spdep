@@ -1,4 +1,4 @@
-# Copyright 2001 by Roger Bivand
+# Copyright 2001-4 by Roger Bivand
 #
 
 subset.nb <- function(x, subset, ...) {
@@ -31,4 +31,23 @@ subset.nb <- function(x, subset, ...) {
     }
     invisible(z)
 }
+
+
+subset.listw <- function(x, subset, zero.policy=FALSE, ...) {
+    if (!inherits(x, "listw")) stop("not a weights list")
+    if (!is.logical(subset)) stop("subset not a logical vector")
+    nb <- x$neighbours
+    vlist <- x$weights
+    if (is.null(attr(vlist, "binary"))) 
+	stop("Not yet able to subset general weights lists")
+    style <- x$style
+    n <- length(nb)
+    if (n != length(subset))
+	stop("neighours list and subset vector different lengths")
+    subnb <- subset.nb(x=nb, subset=subset)
+    sublistw <- nb2listw(neighbours=subnb, glist=NULL, style=style,
+	zero.policy=zero.policy)
+    invisible(sublistw)
+}
+
 

@@ -1,12 +1,19 @@
-# Copyright 1998-2003 by Roger Bivand and Andrew Bernat
+# Copyright 1998-2004 by Roger Bivand and Andrew Bernat
 #
 
-lagsarlm <- function(formula, data = list(), listw, type="lag",
-	method="eigen", quiet=TRUE, zero.policy=FALSE, tol.solve=1.0e-7, 
-        tol.opt=.Machine$double.eps^0.5, sparsedebug=FALSE) {
+lagsarlm <- function(formula, data = list(), listw, 
+	na.action=na.fail, type="lag", method="eigen", quiet=TRUE, 
+	zero.policy=FALSE, tol.solve=1.0e-7, tol.opt=.Machine$double.eps^0.5, 
+	sparsedebug=FALSE) {
 	mt <- terms(formula, data = data)
-	mf <- lm(formula, data, method="model.frame")
-	if (missing(listw)) stop("No neighbourhood list")
+	mf <- lm(formula, data, na.action=na.action, 
+		method="model.frame")
+	na.act <- attr(mf, "na.action")
+	if (!inherits(listw, "listw")) stop("No neighbourhood list")
+	if (!is.null(na.act)) {
+	    subset <- !(1:length(listw$neighbours) %in% na.act)
+	    listw <- subset(listw, subset, zero.policy=zero.policy)
+	}
 	switch(type, lag = if (!quiet) cat("\nSpatial lag model\n"),
 	    mixed = if (!quiet) cat("\nSpatial mixed autoregressive model\n"),
 	    stop("\nUnknown model type\n"))
@@ -16,9 +23,9 @@ lagsarlm <- function(formula, data = list(), listw, type="lag",
 		sparse = if (!quiet) cat("sparse matrix techniques\n"),
 		stop("...\nUnknown method\n"))
 	y <- model.response(mf, "numeric")
-	if (any(is.na(y))) stop("NAs in dependent variable")
+#	if (any(is.na(y))) stop("NAs in dependent variable")
 	x <- model.matrix(mt, mf)
-	if (any(is.na(x))) stop("NAs in independent variable")
+#	if (any(is.na(x))) stop("NAs in independent variable")
 	if (NROW(x) != length(listw$neighbours))
 		stop("Input data and weights have different dimensions")
 	n <- NROW(x)
@@ -90,6 +97,7 @@ lagsarlm <- function(formula, data = list(), listw, type="lag",
 	lm.lag <- lm((y - rho*wy) ~ x - 1)
 	r <- residuals(lm.lag)
 	fit <- y - r
+	names(r) <- names(fit)
 	coef.rho <- coefficients(lm.lag)
 	names(coef.rho) <- colnames(x)
 	SSE <- deviance(lm.lag)
@@ -146,6 +154,8 @@ lagsarlm <- function(formula, data = list(), listw, type="lag",
 		if (length(zero.regs) > 0)
 			attr(ret, "zero.regs") <- zero.regs
 	}
+	if (!is.null(na.act))
+		ret$na.action <- na.act
 	ret
 }
 

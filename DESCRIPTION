@@ -1,12 +1,12 @@
 Package: spdep
-Version: 0.2-8
-Date: 2003-12-19
+Version: 0.2-9
+Date: 2004-01-07
 Title: Spatial dependence: weighting schemes, statistics and models
 Author: Roger Bivand <Roger.Bivand@nhh.no>, with contributions by Luc Anselin,
   Marilia Carvalho, Stéphane Dray, Nicholas Lewin-Koh, Hisaji Ono,
   and Michael Tiefelsdorf
 Maintainer: Roger Bivand <Roger.Bivand@nhh.no>
-Depends: R (>= 1.7.0), stepfun, tripack, maptools (>= 0.3)
+Depends: R (>= 1.7.0), tripack, maptools (>= 0.3)
 Description: A collection of functions to create spatial weights matrix
   objects from polygon contiguities (including the creation of polygon
   lists from imported shapefiles), from point patterns by distance and

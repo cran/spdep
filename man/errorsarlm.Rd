@@ -1,4 +1,4 @@
-% Copyright 2002 by Roger S. Bivand
+% Copyright 2002-4 by Roger S. Bivand
 \name{errorsarlm}
 \alias{errorsarlm}
 %\alias{sar.error.f}
@@ -14,9 +14,9 @@ where $\lambda$ is found by \code{optimize()} first and $\beta$ and other
 parameters by generalized least squares subsequently.
 }
 \usage{
-errorsarlm(formula, data=list(), listw, method="eigen", quiet=TRUE,
-  zero.policy=FALSE, tol.solve=1.0e-7, tol.opt=.Machine$double.eps^0.5,
-  sparsedebug=FALSE)
+errorsarlm(formula, data=list(), listw, na.action=na.fail, method="eigen",
+  quiet=TRUE, zero.policy=FALSE, tol.solve=1.0e-7, 
+  tol.opt=.Machine$double.eps^0.5, sparsedebug=FALSE)
 %sar.error.f(lambda, eig, y, wy, x, WX, n, quiet)
 %sar.error.f.s(lambda, sn, y, wy, x, WX, n, quiet, sparsedebug)
 }
@@ -28,6 +28,7 @@ of model specification are given for \code{lm()}}
 By default the variables are taken from the environment which the function 
 is called.}
   \item{listw}{a \code{listw} object created for example by \code{nb2listw}}
+  \item{na.action}{a function (default \code{na.fail}), can also be \code{na.omit} or \code{na.exclude} with consequences for residuals and fitted values - in these cases the weights list will be subsetted to remove NAs in the data. It may be necessary to set zero.policy to TRUE because this subsetting may create no-neighbour observations. Note that only weights lists created without using the glist argument to \code{nb2listw} may be subsetted.}
   \item{method}{"eigen" (default) - the Jacobian is computed as the product 
 of (1 - rho*eigenvalue) using \code{eigenw}
 , and "sparse" - computes the 
@@ -36,7 +37,7 @@ determinant of the sparse matrix (I - rho*W) directly using \code{logSpwdet}.
   \item{quiet}{default=TRUE; if FALSE, reports function values during optimization.}
   \item{zero.policy}{if TRUE assign zero to the lagged value of zones without 
 neighbours, if FALSE (default) assign NA - causing \code{errorsarlm()} to terminate with an error}
-  \item{tol.solve}{the tolerance for detecting linear dependencies in the columns of matrices to be inverted - passed to \code{solve()} (default=1.0e-7)}
+  \item{tol.solve}{the tolerance for detecting linear dependencies in the columns of matrices to be inverted - passed to \code{solve()} (default=1.0e-7). This may be used if necessary to extract coefficient standard errors (for instance lowering to 1e-10), but errors in \code{solve()} may constitute indications of misspecification}
   \item{tol.opt}{the desired accuracy of the optimization - passed to \code{optimize()} (default=square root of double precision machine tolerance)}
   \item{sparsedebug}{if TRUE, writes a log file on sparse matrix operations
 (name sparsestats) in the current directory. To be used if sparse estimation
@@ -92,6 +93,7 @@ standard errors)}
   \item{lambda.se}{if ase=TRUE, the asymptotic standard error of $\lambda$}
   \item{LMtest}{NULL for this model}
   \item{zero.policy}{zero.policy for this model}
+  \item{na.action}{(possibly) named vector of excluded or omitted observations if non-default na.action argument used}
 
 The internal sar.error.* functions return the value of the log likelihood function at $\lambda$.
 }
@@ -124,5 +126,12 @@ COL.errW.sp <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
 summary(COL.errW.eig)
 summary(COL.errB.eig)
 summary(COL.errW.sp)
+NA.COL.OLD <- COL.OLD
+NA.COL.OLD$CRIME[20:25] <- NA
+COL.err.NA <- errorsarlm(CRIME ~ INC + HOVAL, data=NA.COL.OLD,
+ nb2listw(COL.nb), na.action=na.exclude)
+COL.err.NA$na.action
+COL.err.NA
+resid(COL.err.NA)
 }
 \keyword{spatial}

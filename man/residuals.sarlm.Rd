@@ -1,9 +1,9 @@
-% Copyright 2002 by Roger S. Bivand
+% Copyright 2002-3 by Roger S. Bivand
 \name{residuals.sarlm}
 \alias{residuals.sarlm}
 \alias{deviance.sarlm}
 \alias{coef.sarlm}
-\alias{fitted.values.sarlm}
+\alias{fitted.sarlm}
 \title{Access functions for spatial simultaneous autoregressive linear
 model objects}
 \description{
@@ -14,7 +14,7 @@ from spatial simultaneous autoregressive linear model objects
 residuals.sarlm(object, ...)
 deviance.sarlm(object, ...)
 coef.sarlm(object, ...)
-fitted.values.sarlm(object, ...)
+fitted.sarlm(object, ...)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
@@ -27,7 +27,7 @@ fitted.values.sarlm(object, ...)
   Revelant vectors of numerical values.
 }
 
-\note{\code{fitted.values.sarlm()} returns the difference between 
+\note{\code{fitted.sarlm()} returns the difference between 
 \code{residuals()} for the same object and the response variable; 
 \code{predict.sarlm()} returns a decomposition into trend and signal 
 for the fit.}

@@ -1,12 +1,17 @@
-# Copyright 1998-2003 by Roger Bivand (non-W styles Rein Halbersma)
+# Copyright 1998-2004 by Roger Bivand (non-W styles Rein Halbersma)
 #
 
-errorsarlm <- function(formula, data = list(), listw, method="eigen",
-	quiet=TRUE, zero.policy=FALSE, tol.solve=1.0e-7, 
+errorsarlm <- function(formula, data = list(), listw, na.action=na.fail, 
+	method="eigen", quiet=TRUE, zero.policy=FALSE, tol.solve=1.0e-7, 
         tol.opt=.Machine$double.eps^0.5, sparsedebug=FALSE) {
 	mt <- terms(formula, data = data)
-	mf <- lm(formula, data, method="model.frame")
+	mf <- lm(formula, data, na.action=na.action, method="model.frame")
+	na.act <- attr(mf, "na.action")
 	if (!inherits(listw, "listw")) stop("No neighbourhood list")
+	if (!is.null(na.act)) {
+	    subset <- !(1:length(listw$neighbours) %in% na.act)
+	    listw <- subset(listw, subset, zero.policy=zero.policy)
+	}
 	if (!quiet) cat(paste("\nSpatial autoregressive error model\n", 
 		"Jacobian calculated using "))
 	switch(method,
@@ -90,6 +95,8 @@ errorsarlm <- function(formula, data = list(), listw, method="eigen",
 		ase <- TRUE
 	}
 	call <- match.call()
+	names(r) <- names(y)
+	names(fit) <- names(y)
 	ret <- structure(list(type="error", lambda=lambda, 
 		coefficients=coef.lambda, rest.se=rest.se, 
 		LL=LL, s2=s2, SSE=SSE, parameters=(m+2), lm.model=lm.model, 
@@ -104,6 +111,8 @@ errorsarlm <- function(formula, data = list(), listw, method="eigen",
 		if (length(zero.regs) > 0)
 			attr(ret, "zero.regs") <- zero.regs
 	}
+	if (!is.null(na.act))
+		ret$na.action <- na.act
 	ret
 }
 
