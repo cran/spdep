@@ -8,7 +8,7 @@ diffnb <- function(x, y, verbose=TRUE) {
 	n <- length(x)
 	if(n != length(y)) stop("lengths differ")
 	if (any(attr(x, "region.id") != attr(y, "region.id")))
-		warning("region.id differ")
+		warning("region.id differ; using ids of first list")
 	ids <- attr(x, "region.id")
 	res <- vector(mode="list", length=n)
 	for (i in 1:n) {

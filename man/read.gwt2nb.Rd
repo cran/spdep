@@ -37,10 +37,14 @@ data(baltimore)
 STATION <- baltimore$STATION
 gwt1 <- read.gwt2nb(system.file("etc/weights/baltk4.GWT", package="spdep")[1],
  STATION)
+cat(paste("Neighbours list symmetry;", is.symmetric.nb(gwt1, FALSE, TRUE),
+ "\n"))
 listw1 <- nb2listw(gwt1, style="B", glist=attr(gwt1, "GeoDa")$dist)
 tmpGWT <- tempfile()
 write.sn2gwt(listw2sn(listw1), tmpGWT)
 gwt2 <- read.gwt2nb(tmpGWT, STATION)
+cat(paste("Neighbours list symmetry;", is.symmetric.nb(gwt2, FALSE, TRUE),
+ "\n"))
 diffnb(gwt1, gwt2)
 }
 \keyword{spatial}

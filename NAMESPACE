@@ -1,0 +1,60 @@
+useDynLib(spdep)
+
+export(EBImoran.mc, probmap, EBest, EBlocal, LR.sarlm, airdist, card, 
+	rookcell, queencell, mrc2vi, vi2mrc, cell2nb, n.comp.nb, diffnb,
+	dnearneigh, droplinks, eigenw, errorsarlm, gabrielneigh, geary.test,
+	geary, geary.mc, globalG.test, graph2nb, joincount.test, joincount.mc,
+	knearneigh, knn2nb, lagsarlm, listw2sn, sn2listw, read.gwt2nb,
+	write.sn2gwt, lm.LMtests, lm.morantest, localG, localmoran, moran,
+	moran.test, moran.mc, moran.plot, localmoran.sad, lm.morantest.sad,
+	nb2listw, nb2mat, listw2mat, invIrM, invIrW, nbdists, nblag,
+	poly2nb, read.gal, write.nb.gal, read.geoda, relativeneigh,
+	soi.graph, sp.correlogram, sp.mantel.mc, set.spChkOption, chkIDs,
+	get.spChkOption, spNamedVec, spwdet, log.spwdet, tri2nb,
+	spweights.constants, lag.listw, listw2U, listw2star, is.symmetric.nb,
+	sym.attr.nb, include.self, make.sym.nb, union.nb, intersect.nb,
+	setdiff.nb, complement.nb, Szero, spdep)
+
+import(maptools)
+
+S3method(print, nb)
+S3method(summary, nb)
+S3method(plot, nb)
+S3method(edit, nb)
+S3method(subset, nb)
+
+S3method(summary, listw)
+S3method(print, listw)
+
+S3method(plot, Gabriel)
+S3method(plot, relative)
+
+S3method(print, jclist)
+S3method(print, LMtestlist)
+S3method(plot, mc.sim)
+
+S3method(as.data.frame, localmoransad)
+S3method(print, localmoransad)
+S3method(summary, localmoransad)
+S3method(print, summary.localmoransad)
+
+S3method(print, moransad)
+S3method(summary, moransad)
+S3method(print, summary.moransad)
+
+S3method(print, spcor)
+S3method(plot, spcor)
+
+S3method(print, sarlm)
+S3method(summary, sarlm)
+S3method(residuals, sarlm)
+S3method(deviance, sarlm)
+S3method(coef, sarlm)
+S3method(fitted.values, sarlm)
+S3method(logLik, sarlm)
+S3method(anova, sarlm)
+S3method(predict, sarlm)
+
+S3method(print, summary.sarlm)
+S3method(print, sarlm.pred)
+

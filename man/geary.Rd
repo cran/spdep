@@ -1,7 +1,7 @@
 % Copyright 2001 by Roger S. Bivand
 \name{geary}
 \alias{geary}
-\alias{geary.intern}
+%\alias{geary.intern}
 \title{Compute Geary's C}
 \description{
   A simple function to compute Geary's C, called by \code{geary.test} and \code{geary.mc};
@@ -13,7 +13,8 @@ criterion.
 }
 \usage{
 geary(x, listw, n, n1, S0, zero.policy=FALSE)
-geary.intern(x, listw, n, zero.policy, type="geary")}
+%geary.intern(x, listw, n, zero.policy, type="geary")
+}
 
 \arguments{
   \item{x}{a numeric vector the same length as the neighbours list in listw}
@@ -22,7 +23,7 @@ geary.intern(x, listw, n, zero.policy, type="geary")}
   \item{n1}{n - 1}
   \item{S0}{global sum of weights}
   \item{zero.policy}{if TRUE assign zero to the lagged value of zones without neighbours, if FALSE assign NA}
-  \item{type}{"geary" or "sokal" criteria for similarity}
+%  \item{type}{"geary" or "sokal" criteria for similarity}
 }
 
 \value{

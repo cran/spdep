@@ -7,8 +7,12 @@ dnearneigh <- function(x, d1, d2, row.names=NULL, lonlat=FALSE) {
     if (any(is.na(x))) stop("Data include NAs")
     if (!is.double(x)) storage.mode(x) <- "double"
     np <- nrow(x)
-    if (!is.null(row.names)) if(length(row.names) != np)
-        stop("row.names wrong length")
+    if (!is.null(row.names)) {
+	if(length(row.names) != np)
+            stop("row.names wrong length")
+	if (length(unique(row.names)) != length(row.names))
+	    stop("non-unique row.names given")
+    }
     if (is.null(row.names)) row.names <- as.character(1:np)
     dimension <- ncol(x)
     if (dimension > 2) stop("Only 2D data accepted")

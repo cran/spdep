@@ -1,0 +1,398 @@
+%\VignetteIndexEntry{North Carolina SIDS data set}
+%\VignetteDepends{}
+%\VignetteKeywords{spatial}
+%\VignettePackage{spdep}
+\documentclass[a4paper,10pt]{article} 
+\usepackage{/usr/local/lib/R/share/texmf/Sweave}
+\usepackage{times}
+\usepackage{mathptm}
+\usepackage{hyperref}
+\setkeys{Gin}{width=0.95\textwidth}
+\newcommand{\strong}[1]{{\normalfont\fontseries{b}\selectfont #1}}
+\let\pkg=\strong
+\RequirePackage{alltt}
+\newenvironment{example}{\begin{alltt}}{\end{alltt}}
+\newenvironment{smallexample}{\begin{alltt}\small}{\end{alltt}}
+\newcommand{\code}[1]{\texttt{\small #1}}
+\def\RR{\textsf{R}\/}
+\def\SP{\texttt{S-PLUS}\/}
+\def\SS{\texttt{S}\/}
+
+\title{Introduction to the North Carolina SIDS data set} 
+\author{Roger Bivand} 
+
+\begin{document} 
+
+\maketitle 
+
+<<echo=FALSE>>= 
+owidth <- getOption("width")
+options("width"=80)
+.PngNo <- 0
+@
+
+<<label=afig,echo=FALSE,eval=FALSE>>= 
+.PngNo <- .PngNo + 1; file <- paste("Fig-bitmap-", .PngNo, ".png", sep="")
+png(file=file, width = 700, height = 400, pointsize = 12, bg = "white")
+opar <- par(no.readonly = TRUE)
+par(mar=c(3,3,1,1)+0.1)
+@
+
+<<label=zfig,echo=FALSE,eval=FALSE>>=
+par(opar)
+dev.null <- dev.off()
+cat("\\includegraphics{", file, "}\n\n", sep="")
+@
+
+\section{Introduction}
+
+This data set was presented first in Symons et al. (1983), analysed with
+reference to the spatial nature of the data in Cressie and Read (1985),
+expanded in Cressie and Chan (1989), and used in detail in Cressie's
+monograph on statistics for spatial data (1991, revised 1993). It is for
+the 100 counties of North Carolina, and includes counts of numbers of
+live births (also non-white live births) and numbers of sudden infant
+deaths, for the 1974--1978 and 1979--1984 periods. In Cressie and Read
+(1985), a listing of county neighbours based on shared boundaries
+(contiguity) is given, and in Cressie and Chan (1989), and in Cressie
+(1991, pp. 386--389), a different listing based on the criterion of
+distance between county seats, with a cutoff at 30 miles. The county seat
+location coordinates are given in miles in a local (unknown) coordinate
+reference system. The data are also used to exemplify a range of functions
+in the \SP spatial statistics module user's manual (Kaluzny et al., 1996).
+
+<<echo=FALSE,eval=TRUE,results=hide>>= 
+library(spdep)
+@
+
+\section{Getting the data into \RR}
+
+We will be using the \pkg{spdep} package, here version:
+\Sexpr{spdep()[1]}, and the \pkg{maptools} package. The
+data from the sources refered to above is collected in the
+\code{nc.sids} data set in \pkg{spdep}. But to map it, we also
+need access to data for the county boundaries for North Carolina;
+this has been made available in the \pkg{maptools} package in
+shapefile format\footnote{These data are taken with permission from:
+\url{http://sal.agecon.uiuc.edu/datasets/sids.zip}.}. These data are known
+to be geographical coordinates (longitude-latitude in decimal degrees)
+and are assumed to use the NAD83 datum.
+
+\begin{footnotesize}
+<<echo=TRUE,eval=FALSE>>= 
+library(spdep)
+@
+<<echo=TRUE>>= 
+library(maptools)
+@ 
+\end{footnotesize}
+
+The shapefile format presupposes that you have three files with extensions
+\code{*.shp}, \code{*.shx}, and \code{*.dbf}, where the first contains the
+geometry data, the second the spatial index, and the third the attribute
+data. They are required to have the same name apart from the extension,
+and are read using \code{read.shape()}. By default, this function reads
+in the data in all three files, although it is only given the name of
+the file with the geometry.
+
+\begin{footnotesize}
+<<echo=TRUE>>= 
+sids.shp <- read.shape(system.file("shapes/sids.shp",
+ package="maptools"))
+@ 
+\end{footnotesize}
+The imported object in \RR~has class \code{Map}, and is a list with
+two components, \code{"Shapes"}, which is a list of shapes, and
+\code{"att.data"}, which is a data frame with tabular data, one row
+for each shape in \code{"Shapes"}. Let us move the attribute data to a
+separate data frame for convenience:
+
+<<label=plotNC1,echo=FALSE,eval=FALSE>>= 
+plotpolys(sidspolys)
+points(sidscents)
+@
+
+\begin{footnotesize}
+<<echo=TRUE>>= 
+sids <- sids.shp$att.data
+names(sids)
+sidspolys <- Map2poly(sids.shp)
+sidscents <- get.Pcent(sids.shp)
+@
+<<fig=FALSE,echo=TRUE, eval=FALSE>>= 
+<<plotNC1>>
+@ 
+\end{footnotesize}
+We can examine the names of the columns of the data frame to see
+what it contains --- in fact some of the same columns that we will
+be examining below, and some others which will be useful in cleaning
+the data set. We will similarly convert the geometry format of the
+\code{Map} object to that of a \code{polylist} object, which will
+be easier to handle. Finally, we retreive the centroids of the county
+polygons to use as label points. Using the \code{plotpolys()} function
+from \pkg{maptools}, we can display the polygon boundaries and centroids,
+shown in Figure \ref{plotNC1}.
+
+\begin{figure}[htbp]
+\begin{center} 
+<<results=tex,echo=FALSE>>= 
+<<afig>>
+<<plotNC1>>
+<<zfig>>
+@ 
+\end{center}
+\caption{County boundaries and polygon centroids, North Carolina}
+\label{plotNC1}
+\end{figure}
+
+<<label=poly6,echo=FALSE,eval=FALSE>>=
+plot(sidspolys[[56]], type="l", asp=1, axes=FALSE, xlab="", ylab="")
+@
+
+It may be of interest to look at the structure of a polygon
+list member. This is made up of a two-column matrix with polygon
+coordinates. In general, each sub-polygon will have equal first
+and last coordinates to ensure closure, but this is not absolutely
+required. Rows in the coordinate matrix set to \code{NA} represent
+breaks between sub-polygons, and are respected by the underlying
+\RR~graphics functions. The attributes contain further information about
+the polygon: \code{pstart} is a list with \code{from} and \code{to}
+components, which are vectors of first and last rows in the matrix for
+each sub-polygon in the object --- there are \code{nParts} elements
+in both \code{from} and \code{to}. \code{RingDir} and \code{ringDir}
+should be the same (but are not here, \code{ringDir} is correct, and
+\code{RingDir} is wrong!), and are computed in two different ways to
+determine whether each of the \code{nParts} sub-polygons runs clockwise
+or counter-clockwise. Counter-clockwise sub-polygons are ``holes'' in
+the surrounding sub-polygon. Finally, \code{bbox} contains the bounding
+box of this object. Its appearance is shown in Figure \ref{poly6}.
+
+\setkeys{Gin}{width=0.4\textwidth}
+\begin{figure}[htbp]
+\begin{center} 
+<<fig=TRUE,echo=FALSE,width=2,height=2>>= 
+opar <- par(no.readonly = TRUE)
+par(mar=c(3,3,1,1)+0.1)
+<<poly6>>
+par(opar)
+@ 
+\end{center}
+\caption{Plot of polygon 56 from the list of polygons.}
+\label{poly6}
+\end{figure}
+\setkeys{Gin}{width=0.95\textwidth}
+
+\begin{footnotesize}
+<<fig=FALSE,echo=TRUE>>= 
+round(t(sidspolys[[56]]), 3)
+sidscents[56,]
+@ 
+<<fig=FALSE,echo=TRUE,eval=FALSE>>= 
+<<poly6>>
+@ 
+\end{footnotesize}
+
+
+<<label=plot-CC89.nb,echo=FALSE,eval=FALSE>>= 
+plotpolys(sidspolys, border="grey")
+plot(ncCC89.nb, sidscents, add=TRUE, col="blue")
+@ 
+
+\section{Getting the data ready to use}
+
+We will now access the data set reproduced from Cressie and collaborators,
+included in \pkg{spdep}, and add the neighbour relationships used in
+Cressie and Chan (1989) to the background map as a graph in blue:
+
+\begin{footnotesize}
+<<echo=TRUE>>= 
+data(nc.sids)
+@ 
+<<fig=FALSE,echo=TRUE, eval=FALSE>>= 
+<<plot-CC89.nb>>
+@ 
+\end{footnotesize}
+Figure \ref{plot-CC89.nb} does not show what we wanted --- it is
+obvious that the wrong nodes are being connected to each other. This is
+specifically included here because it is more the rule than the exception
+that spatial objects are placed in different order in different data
+sources (or the numbers of objects may not agree, or some objects are
+aggregated in one data source and not in another, the possibilities
+are endless).
+
+\begin{figure}[htbp]
+\begin{center} 
+<<results=tex,echo=FALSE>>= 
+<<afig>>
+<<plot-CC89.nb>>
+<<zfig>>
+@ 
+\end{center}
+\caption{Overplotting shapefile boundaries with 30 mile neighbour relations as a graph (first attempt).}
+\label{plot-CC89.nb}
+\end{figure}
+
+To see what is going on, we can list the first five rows of the
+\code{sids} data frame taken from the shapefile, and the first five
+rows of the \code{nc.sids} data frame included in \pkg{spdep} and taken
+directly from listings in the sources refered to above. The \code{CNTY.ID}
+variable is included in both sources, and is also the \code{region.id}
+attribute of the Cressie/Chan 30 mile neighbour relations neighbour
+object.
+
+\begin{footnotesize}
+<<echo=TRUE>>= 
+sids[1:5, c("CNTY.ID", "NAME", "BIR74")]
+nc.sids[1:5, c("CNTY.ID", "BIR74")]
+attr(ncCC89.nb, "region.id")[1:5]
+@ 
+\end{footnotesize}
+We can see that the \code{nc.sids} data frame is ordered alphabetically
+by county name (as are the neighbour objects), while the \code{sids} data
+frame is ordered by ascending \code{CNTY.ID} (as are the polygons). To
+resolve this, we could swap the rows of the neighbour list objects,
+but we would also need to change all the identification numbers of
+the spatial objects too, so it seems best to use a temporary file and
+functions for reading and writing neighbour lists, and especially for
+exchanging them with other software (including GeoDa).
+
+\begin{footnotesize}
+<<echo=TRUE>>= 
+tmpGAL <- tempfile(pattern="GAL")
+write.nb.gal(ncCC89.nb, file=tmpGAL, oldstyle=FALSE, 
+ shpfile="sids", ind="CNTY.ID")
+CNTY.ID <- sids$CNTY.ID
+ncCC89.2.nb <- read.gal(file=tmpGAL, region.id=CNTY.ID)
+@ 
+\end{footnotesize}
+When \code{read.gal()} is given a \code{region.id} argument, it is used
+to match the incoming data, and to reorder them on-the-fly, so that,
+as Figure \ref{plot-mod.nb} shows, the re-ordered neighbour list object
+now conforms with the order of the polygon list object.
+
+<<label=plot-mod.nb,echo=FALSE,eval=FALSE>>=
+plotpolys(sidspolys, border="grey")
+plot(ncCC89.2.nb, sidscents, add=TRUE, col="blue")
+@
+
+\begin{footnotesize}
+<<fig=FALSE,echo=TRUE, eval=FALSE>>= 
+<<plot-mod.nb>>
+@ 
+\end{footnotesize}
+
+\begin{figure}[htbp]
+\begin{center} 
+<<results=tex,echo=FALSE>>= 
+<<afig>>
+<<plot-mod.nb>>
+<<zfig>>
+@ 
+\end{center}
+\caption{Overplotting shapefile boundaries with 30 mile neighbour relations as a graph (re-ordered neighbour list)}
+\label{plot-mod.nb}
+\end{figure}
+
+Printing the new object shows that it is a neighbour list object, with a
+very sparse structure --- if displayed as a matrix, only 3.94\% of cells
+would be filled. Objects of class \code{nb} contain a list as long as
+the number of counties; each component of the list is a vector with the
+index numbers of the neighbours of the county in question, so that the
+neighbours of the county with \code{region.id} of "1825" can be retreived
+by matching against the indices. More information can be obtained by
+using \code{summary()} on an \code{nb} object. Finally, we associate a
+vector of names with the neighbour list, through the \code{row.names}
+argument. The names should be unique, as with data frame row names.
+
+\begin{footnotesize}
+<<echo=TRUE>>= 
+ncCC89.2.nb
+r.id <- attr(ncCC89.2.nb, "region.id")
+ncCC89.2.nb[[match("1825", r.id)]]
+r.id[ncCC89.2.nb[[match("1825", r.id)]]]
+@ 
+\end{footnotesize}
+The neighbour list object records neighbours by their order in
+relation to the list itself, so the neighbours list for the county with
+\code{region.id} "1825" are the second, eighteenth, and nineteenth in
+the list. We can retreive their \code{CNTY.ID} codes by looking them up
+in the \code{region.id} attribute.
+
+\begin{footnotesize}
+<<echo=TRUE>>= 
+sids[card(ncCC89.2.nb) == 0,]
+@ 
+\end{footnotesize}
+We should also note that this neighbour criterion generates two counties
+with no neighbours, Dare and Hyde, whose county seats were more than
+30 miles from their nearest neighbours. The \code{card()} function
+returns the cardinality of the neighbour set. We need to return to
+methods for handling no-neighbour objects later on. We will also show
+how new neighbours lists may be constructed in \RR, and compare these
+with those from the literature.
+
+\section{Preliminary exploration of the data (incomplete)}
+
+One of the first steps taken by Cressie and Read (1985) is to try to
+bring out spatial trends by dividing North Carolina up into $4\times4$
+rough rectangles. Just to see how this works, let us map these rough
+rectangles before proceeding further (see Figure \ref{LMmap}). We need
+to recall that the \code{nc.sids} data frame is not in the same order
+as the polygons.
+
+<<label=LMmap,echo=FALSE,eval=FALSE>>= 
+plotpolys(sidspolys, col=cols[both[order(nc.sids$CNTY.ID)]])
+legend(c(-84, -81), c(33.5, 34.6), legend=levels(both), fill=cols,
+ bty="n", cex=0.9, y.intersp=0.9, ncol=2)
+@
+
+\begin{footnotesize}
+<<echo=TRUE>>= 
+both <- factor(paste(nc.sids$L.id, nc.sids$M.id, sep=":"))
+cols <- sample(rainbow(length(table(unclass(both)))))
+@ 
+<<fig=FALSE,echo=TRUE,eval=FALSE>>= 
+<<LMmap>>
+@ 
+\end{footnotesize}
+
+\begin{figure}[htbp]
+\begin{center} 
+<<results=tex,echo=FALSE>>= 
+<<afig>>
+<<LMmap>>
+<<zfig>>
+@ 
+\end{center}
+\caption{Rough rectangles used by Cressie and Read (1985) to bring out spatial trends.}
+\label{LMmap}
+\end{figure}
+
+(document to be extended in next release --- terminates here to at least show how \pkg{maptools} and \pkg{spdep} can be used together).
+
+<<echo=FALSE>>=
+options("width"=owidth)
+@
+
+\section*{References}
+
+\begin{description}
+
+\item Cressie, N (1991), Statistics for spatial data. New York: Wiley.
+
+\item Cressie, N, Chan NH (1989), Spatial modelling of
+regional variables. \emph{Journal of the American Statistical
+Association} 84, 393--401.
+
+\item Cressie, N, Read, TRC (1985), Do sudden
+infant deaths come in clusters? \emph{Statistics and Decisions}
+Supplement Issue 2, 333--349.
+
+\item Kaluzny, SP, Vega, SC, Cardoso, TP, Shelly, AA (1996), \emph{\SP SPATIALSTATS user's manual version 1.0}. Seattle: MathSoft Inc.
+
+\item Symons, MJ, Grimson, RC, Yuan, YC (1983), Clustering of rare events. \emph{Biometrics} 39, 193--205.
+
+\end{description}
+
+\end{document}
+

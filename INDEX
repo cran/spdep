@@ -52,8 +52,6 @@ localmoran              Local Moran's I statistic
 localmoran.sad          Saddlepoint approximation of local Moran's Ii
                         tests
 LR.sarlm                Likelihood ratio test
-Map2poly                Create polygon lists and bounding boxes from
-                        imported shapefiles
 moran.mc                Permutation test for Moran's I statistic
 moran.plot              Moran scatterplot
 moran                   Compute Moran's I
@@ -65,7 +63,6 @@ nblag                   Higher order neighbours lists
 nb.set.operations       Set operations on neighborhood objects
 nc.sids                 North Carolina SIDS data
 plot.nb                 Plot a neighbours list
-plotpolys               Plot polygons
 poly2nb                 Construct neighbours list from polygon list
 predict.sarlm           Prediction for spatial simultaneous
                         autoregressive linear model objects
@@ -77,6 +74,7 @@ residuals.sarlm         Access functions for spatial simultaneous
                         autoregressive linear model objects
 set.spChkOption         Control checking of spatial object IDs
 sp.correlogram          Spatial correlogram
+spdep                   Return package version number
 sp.mantel.mc            Mantel-Hubert spatial general cross product
                         statistic
 spweights.constants     Provides constants for spatial weights

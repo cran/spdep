@@ -56,7 +56,7 @@ joincount.test <- function(fx, listw, zero.policy=FALSE,
 		statistic <- (BB5[i] - Ejc[i]) / sqrt(Vjc[i])
 		names(statistic) <- paste("Std. deviate for", names(tab)[i])
 		if (alternative == "two.sided") 
-			p.value <- 2 * pnorm(-abs(statistic))
+			p.value <- 2 * pnorm(abs(statistic), lower.tail=FALSE)
 		else if (alternative == "greater")
 			p.value <- pnorm(statistic, lower.tail=FALSE)
 		else p.value <- pnorm(statistic)

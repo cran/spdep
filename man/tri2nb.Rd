@@ -26,6 +26,7 @@ The function returns an object of class \code{nb} with a list of integer vectors
 require(tripack)
 data(columbus)
 col.tri.nb <- tri2nb(coords, row.names=rownames(columbus))
+library(maptools)
 plotpolys(polys, bbs, border="grey")
 plot(col.tri.nb, coords, add=TRUE)
 title(main="Raw triangulation links")

@@ -166,4 +166,7 @@ listw2star <- function(listw, ireg, style, n, D, a, zero.policy) {
     res
 }
 
-
+spdep <- function(build=FALSE) {
+	if (build) return(c(.spdep.Version, .spdep.Build))
+	else return(.spdep.Version)
+}

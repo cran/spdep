@@ -57,7 +57,8 @@ geary.test <- function(x, listw, randomisation=TRUE, zero.policy=FALSE,
 	ZC <- (C - EC) / sqrt(VC)
 	statistic <- ZC
 	names(statistic) <- "Geary C statistic standard deviate"
-        if (alternative == "two.sided") PrC <- 2 * pnorm(-abs(ZC))
+        if (alternative == "two.sided") PrC <- 2 * pnorm(abs(ZC), 
+		lower.tail=FALSE)
         else if (alternative == "greater")
             PrC <- pnorm(ZC, lower.tail=FALSE)
         else PrC <- pnorm(ZC)

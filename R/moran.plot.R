@@ -2,7 +2,7 @@
 #
 
 moran.plot <- function(x, listw, zero.policy=FALSE, spChk=NULL,
- labels=NULL, xlab=NULL, ylab=NULL, ...)
+ labels=NULL, xlab=NULL, ylab=NULL, quiet=FALSE, ...)
 {
 	if (!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
@@ -17,7 +17,7 @@ moran.plot <- function(x, listw, zero.policy=FALSE, spChk=NULL,
 	labs <- TRUE
 	if (is.logical(labels) && !labels) labs <- FALSE
 	if (is.null(labels) || length(labels) != n)
-		labels <- as.character(1:n)
+		labels <- as.character(attr(listw, "region.id"))
 	wx <- lag.listw(listw, x, zero.policy=zero.policy)
 	if (is.null(xlab)) xlab <- xname
 	if (is.null(ylab)) ylab <- paste("spatially lagged", xname)
@@ -38,7 +38,7 @@ moran.plot <- function(x, listw, zero.policy=FALSE, spChk=NULL,
 	if (labs)
 	    text(x[is.inf], wx[is.inf], labels=labels[is.inf], pos=2, cex=0.7)
 	rownames(infl.xwx$infmat) <- labels
-	summary(infl.xwx)
+	if (!quiet) summary(infl.xwx)
 	invisible(infl.xwx)
 }
 

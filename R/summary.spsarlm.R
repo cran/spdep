@@ -57,8 +57,7 @@ print.summary.sarlm <- function(x, digits = max(5, .Options$digits - 3),
 	signif.stars = FALSE, ...)
 {
 	if (version$minor < 8) printCoefmat <- print.coefmat
-	cat("\nCall:", paste(deparse(x$call), sep = "", collapse = ""), 
-		sep = "", fill=TRUE)
+	cat("\nCall:", deparse(x$call),	sep = "", fill=TRUE)
 	cat("\nResiduals:\n")
 	resid <- residuals(x)
 	nam <- c("Min", "1Q", "Median", "3Q", "Max")

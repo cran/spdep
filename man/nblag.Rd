@@ -22,6 +22,7 @@ returns a list of lagged neighbours lists each with class \code{nb}
 \examples{
 data(columbus)
 summary(col.gal.nb, coords)
+library(maptools)
 plotpolys(polys, bbs, border="grey")
 plot(col.gal.nb, coords, add=TRUE)
 title(main="GAL order 1 (black) and 2 (red) links")

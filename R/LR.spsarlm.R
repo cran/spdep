@@ -35,5 +35,5 @@ logLik.sarlm <- function(object, ...) {
 	LL
 }
 
-residuals.sarlm <- function(object, ...) return(object$residuals)
+#residuals.sarlm <- function(object, ...) return(object$residuals)
 

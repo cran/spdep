@@ -1,10 +1,10 @@
-# Copyright 2001 by Roger Bivand 
+# Copyright 2001-3 by Roger Bivand 
 #
 
 
 is.symmetric.nb <- function(nb, verbose=TRUE, force=FALSE)
 {
-	if(class(nb) != "nb") stop("Not neighbours list")
+	if(!inherits(nb, "nb")) stop("Not neighbours list")
 	nbsym <- attr(nb, "sym")
 	if(!is.null(nbsym)) res <- nbsym
 	if(force || is.null(nbsym)) {
@@ -16,7 +16,7 @@ is.symmetric.nb <- function(nb, verbose=TRUE, force=FALSE)
 }
 
 sym.attr.nb <- function(nb) {
-	if(class(nb) != "nb") stop("Not neighbours list")
+	if(!inherits(nb, "nb")) stop("Not neighbours list")
 	nbsym <- attr(nb, "sym")
 	if(is.null(nbsym))
 		attr(nb, "sym") <- is.symmetric.nb(nb, verbose=FALSE,
@@ -37,7 +37,7 @@ include.self <- function(nb) {
 # Copyright 2001 by Nicholas Lewin-Koh 
 
 make.sym.nb <- function(nb){
-	if(class(nb) != "nb") stop("Not neighbours list")
+	if(!inherits(nb, "nb")) stop("Not neighbours list")
 	if (is.symmetric.nb(nb, FALSE, TRUE)) {
 		res <- nb
 	} else {

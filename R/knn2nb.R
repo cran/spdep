@@ -5,8 +5,12 @@
 knn2nb <- function(knn, row.names=NULL, sym=FALSE) {
 	if (class(knn) != "knn") stop("Not a knn object")
 	res <- vector(mode="list", length=knn$np)
-    	if (!is.null(row.names)) if(length(row.names) != knn$np)
-        	stop("row.names wrong length")
+    	if (!is.null(row.names)) {
+		if(length(row.names) != knn$np)
+            		stop("row.names wrong length")
+		if (length(unique(row.names)) != length(row.names))
+	    		stop("non-unique row.names given")
+    	}
     	if (is.null(row.names)) row.names <- as.character(1:knn$np)
         if(sym){
           to<-as.vector(knn$nn)
