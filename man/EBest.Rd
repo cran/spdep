@@ -19,7 +19,9 @@ EBest(n, x)
 A data frame with two columns:
   \item{raw}{a numerical vector of raw (crude) rates}
   \item{estmm}{a numerical vector of empirical Bayes estimates}
+
 and a \code{parameters} attribute list with components:
+
   \item{a}{global method of moments phi value}
   \item{m}{global method of moments gamma value}
 }

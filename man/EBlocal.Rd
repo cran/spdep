@@ -6,12 +6,12 @@
   The function computes local empirical Bayes estimates for rates "shrunk" to a neighbourhood mean for neighbourhoods given by the \code{nb} neighbourhood list.
 }
 \usage{
-EBlocal(n, x, nb, zero.policy = FALSE, spChk = NULL)
+EBlocal(ri, ni, nb, zero.policy = FALSE, spChk = NULL)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
-  \item{n}{a numeric vector of counts of cases the same length as the neighbours list in nb}
-  \item{x}{a numeric vector of populations at risk the same length as the neighbours list in nb}
+  \item{ri}{a numeric vector of counts of cases the same length as the neighbours list in nb}
+  \item{ni}{a numeric vector of populations at risk the same length as the neighbours list in nb}
   \item{nb}{a \code{nb} object of neighbour relationships}
   \item{zero.policy}{if TRUE assign zero to the lagged value of zones without neighbours, if FALSE assign NA}
   \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
@@ -24,7 +24,9 @@ Details of the implementation are to be found in Marshall, p. 286, and Bailey an
 A data frame with two columns:
   \item{raw}{a numerical vector of raw (crude) rates}
   \item{est}{a numerical vector of local empirical Bayes estimates}
+
 and a \code{parameters} attribute list with components:
+
   \item{a}{a numerical vector of local phi values}
   \item{m}{a numerical vector of local gamma values}
 }

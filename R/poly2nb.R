@@ -1,10 +1,9 @@
 # Copyright 2001-2003 by Roger Bivand
 #
-
-
+	
 plotpolys <- function(pl, bb, col=NA, border=par("fg"), add=FALSE, 
 	xlim=NULL, ylim=NULL) {
-	if (all(class(pl) != "polylist")) stop("Not a polygon list")
+	if (!inherits(pl, "polylist")) stop("Not a polygon list")
 	if (!add) {
 		if (is.null(xlim)) xlim <- c(min(bb[,1]), max(bb[,3]))
 		if (is.null(ylim)) ylim <- c(min(bb[,2]), max(bb[,4]))
@@ -14,20 +13,13 @@ plotpolys <- function(pl, bb, col=NA, border=par("fg"), add=FALSE,
 	if (length(col) != length(pl)) {
 		col <- rep(col, length(pl), length(pl))
 	}
-	for (j in 1:length(pl)) {
-		if ("multiparts" %in% class(pl)) {
-			for (k in 1:length(pl[[j]]))
-				polygon(pl[[j]][[k]], col=col[j], border=border)
-		} else {
-			polygon(pl[[j]], col=col[j], border=border)
-		}
-	}
+	for (j in 1:length(pl)) polygon(pl[[j]], col=col[j], border=border)
 }
-	
+
 poly2nb <- function(pl, bb, row.names=NULL, snap=sqrt(.Machine$double.eps),
 	queen=TRUE) {
-	if (all(class(pl) != "polylist")) stop("Not a polygon list")
-	if ("multiparts" %in% class(pl)) stop("No multiparts yet")
+	if (!inherits(pl, "polylist")) stop("Not a polygon list")
+	if (inherits(pl, "multiparts")) stop("Convert to newer polylist format")
 	n <- length(pl)
 	regid <- attr(pl, "region.id")
 	if (is.null(regid)) {
@@ -81,7 +73,8 @@ poly2nb <- function(pl, bb, row.names=NULL, snap=sqrt(.Machine$double.eps),
 			jhit <- pipbbij(bb[i,], bb[j,])
 			if (any(jhit)) {
 			    khit <- 0
-			    khit <- polypoly(pl[[i]], pl[[j]], snap)
+			    khit <- polypoly(na.omit(pl[[i]]), 
+				na.omit(pl[[j]]), snap)
 			    if (khit > criterion) {
 				ans[[i]] <- c(ans[[i]], j)
 				ans[[j]] <- c(ans[[j]], i)
@@ -96,5 +89,63 @@ poly2nb <- function(pl, bb, row.names=NULL, snap=sqrt(.Machine$double.eps),
 	if (queen) attr(ans, "type") <- "queen"
 	else attr(ans, "type") <- "rook"
 	invisible(ans)
+}
+
+get.polylist <- function(Map, region.id=NULL) {
+	if (class(Map) != "Map") stop("not a Map")
+	n <- length(Map$Shapes)
+	res <- vector(mode="list", length=n)
+	nParts <- integer(n)
+	for (i in 1:n) nParts[i] <- attr(Map$Shapes[[i]], "nParts")
+	if (any(nParts != 1)) {
+		for (i in 1:n) {
+			Pstart <- Map$Shapes[[i]]$Pstart
+			nVerts <- attr(Map$Shapes[[i]], "nVerts")
+			from <- integer(nParts[i])
+			to <- integer(nParts[i])
+			from[1] <- 1
+			for (j in 1:nParts[i]) {
+				if (j == nParts[i]) to[j] <- nVerts
+				else {
+					to[j] <- Pstart[j+1]
+					from[j+1] <- to[j]+1
+				}
+			}
+			res[[i]] <- Map$Shapes[[i]]$verts[from[1]:to[1],]
+			for (j in 2:nParts[i]) {
+			    res[[i]] <- rbind(res[[i]], c(NA, NA))
+			    res[[i]] <- rbind(res[[i]], 
+				Map$Shapes[[i]]$verts[from[j]:to[j],])
+			}
+		}
+	} else {
+		for (i in 1:n) res[[i]] <- Map$Shapes[[i]]$verts
+	}
+	if (is.null(region.id) || length(region.id) != n) {
+		attr(res, "region.id") <- as.character(1:n)
+	} else {
+		attr(res, "region.id") <- as.character(region.id)
+	}
+	class(res) <- "polylist"
+	invisible(res)
+}
+
+convert.pl <- function(pl) {
+	if (!inherits(pl, "multiparts")) stop("not a mulitpart polylist")
+	res <- vector(mode="list", length=length(pl))
+	for (i in 1:length(pl)) {
+		lp <- length(pl[[i]])
+		res[[i]] <- pl[[i]][[1]]
+		if (lp > 1) {
+			for (j in 2:lp) {
+				res[[i]] <- rbind(res[[i]], c(NA, NA))
+				res[[i]] <- rbind(res[[i]], pl[[i]][[j]])
+			}
+		}
+	}
+	if (!is.null(attr(pl, "region.id")))
+		attr(res, "region.id") <- attr(pl, "region.id")
+	class(res) <- "polylist"
+	res
 }
 

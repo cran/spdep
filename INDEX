@@ -2,7 +2,6 @@ afcon                   Spatial patterns of conflict in Africa 1966-78
 airdist                 Measure distance from plot
 auckland                Marshall's infant mortality in Auckland
                         dataset
-BH                      Belo Horizont 1994 homicide data
 boston                  Corrected Boston Housing Data
 card                    Cardinalities for neighbours lists
 cell2nb                 Generate neighbours list for grid cells
