@@ -1,9 +1,9 @@
-% Copyright 2001 by Roger S. Bivand
+% Copyright 2001-3 by Roger S. Bivand
 \name{moran.test}
 \alias{moran.test}
 \title{Moran's I test for spatial autocorrelation}
 \description{
- Moran's test for spatial autocorrelation using a spatial weights matrix in weights list form. The assumptions underlying the test are sensitive to the form of the graph of neighbour relationships and other factors, and results may be checked against those of \code{moran.mc} permutations.
+ Moran's test for spatial autocorrelation using a spatial weights matrix in weights list form. The assumptions underlying the test are sensitive to the form of the graph of neighbour relationships and other factors, and results may be checked against those of \code{moran.mc} permutations. 
 }
 \usage{
 moran.test(x, listw, randomisation=TRUE, zero.policy=FALSE,
@@ -32,12 +32,13 @@ A list with class \code{htest} containing the following components:
 \note{Var(I) is taken from Goodchild's CATMOG 47,
 see also Upton & Fingleton (1985) p. 171; it agrees with SpaceStat,
 see Tutorial workbook Chapter 22; VI is as given by Cliff and Ord minus the
-square of EI.}
+square of EI. The derivation of the test (Cliff and Ord, 1981, p. 18) assumes that the weights matrix is symmetric. For inherently non-symmetric matrices, such as k-nearest neighbour matrices, \code{listw2U()} can be used to make the matrix symmetric.
+}
 
 \references{Cliff, A. D., Ord, J. K. 1981 Spatial processes, Pion, p. 21.}
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 
-\seealso{\code{\link{moran}}, \code{\link{moran.mc}}}
+\seealso{\code{\link{moran}}, \code{\link{moran.mc}}, \code{\link{listw2U}}}
 
 \examples{
 data(oldcol)
@@ -52,6 +53,17 @@ moran.test(spNamedVec("CRIME", COL.OLD), nb2listw(colold.lags[[2]],
  style="W"))
 moran.test(spNamedVec("CRIME", COL.OLD), nb2listw(colold.lags[[3]],
  style="W"))
+print(is.symmetric.nb(COL.nb))
+COL.k4.nb <- knn2nb(knearneigh(coords.OLD, 4))
+print(is.symmetric.nb(COL.k4.nb))
+moran.test(spNamedVec("CRIME", COL.OLD), nb2listw(COL.k4.nb, style="W"))
+moran.test(spNamedVec("CRIME", COL.OLD), nb2listw(COL.k4.nb, style="W"),
+ randomisation=FALSE)
+cat("Note: non-symmetric weights matrix, use listw2U()")
+moran.test(spNamedVec("CRIME", COL.OLD), listw2U(nb2listw(COL.k4.nb,
+ style="W")))
+moran.test(spNamedVec("CRIME", COL.OLD), listw2U(nb2listw(COL.k4.nb,
+ style="W")), randomisation=FALSE)
 ranks <- rank(COL.OLD$CRIME)
 names(ranks) <- rownames(COL.OLD)
 moran.test(ranks, nb2listw(COL.nb, style="W"), rank=TRUE)

@@ -2,7 +2,7 @@
 #
 
 card <- function(nb) {
-    if (class(nb) != "nb") stop("not a neighbours list")
+    if (!inherits(nb, "nb")) stop("not a neighbours list")
     z <- .Call("card", nb, PACKAGE="spdep")
     invisible(z)
 }

@@ -1,4 +1,4 @@
-# Copyright 1998-2002 by Roger Bivand and Andrew Bernat
+# Copyright 1998-2003 by Roger Bivand and Andrew Bernat
 #
 
 lagsarlm <- function(formula, data = list(), listw, type="lag",
@@ -48,7 +48,8 @@ lagsarlm <- function(formula, data = list(), listw, type="lag",
 		if (!quiet) cat("Computing eigenvalues ...\n")
 		eig <- eigenw(listw)
 		cat("\n")
-		eig.range <- range(eig)
+		if (is.complex(eig)) eig.range <- range(Re(eig))
+		else eig.range <- range(eig)
 		lm.null <- lm(y ~ x - 1)
 		lm.w <- lm.fit(x, wy)
 		e.null <- lm.null$residuals
@@ -111,7 +112,7 @@ lagsarlm <- function(formula, data = list(), listw, type="lag",
 	call <- match.call()
 	ret <- structure(list(type=type, rho=rho, 
 		coefficients=coef.rho, rest.se=rest.se, 
-		LL=LL, s2=s2, SSE=SSE, parameters=(m+1), lm.model=lm.null,
+		LL=LL, s2=s2, SSE=SSE, parameters=(m+2), lm.model=lm.null,
 		method=method, call=call, residuals=r, 
 		lm.target=lm.lag, fitted.values=fit,
 		se.fit=NULL, formula=formula,
@@ -130,7 +131,9 @@ sar.lag.mixed.f <- function(rho, eig, e.a, e.b, e.c, n, quiet)
 {
 	SSE <- e.a - 2*rho*e.b + rho*rho*e.c
 	s2 <- SSE/n
-	ret <- (log(prod(1 - rho*eig)) - ((n/2)*log(2*pi)) - (n/2)*log(s2)
+	if (is.complex(eig)) det <- Re(prod(1 - rho*eig)) 
+	else det <- prod(1 - rho*eig)
+	ret <- (log(det) - ((n/2)*log(2*pi)) - (n/2)*log(s2)
 		- (1/(2*s2))*SSE)
 	if (!quiet) cat("Rho:\t", rho, "\tfunction value:\t", ret, "\n")
 	ret
@@ -168,7 +171,7 @@ dosparse <- function (listw, y, x, wy, K, quiet, tol.opt, sparsedebug) {
 		sparsedebug=sparsedebug)$objective
 		attr(LLs[[j]], "nall") <- n
 		attr(LLs[[j]], "nobs") <- n
-		attr(LLs[[j]], "df") <- m-1
+		attr(LLs[[j]], "df") <- (m+2)-1
 		attr(LLs[[j]], "name") <- colnames(x)[i]
 		class(LLs[[j]]) <- "logLik"
 		j <- j + 1

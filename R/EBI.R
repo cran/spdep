@@ -30,6 +30,8 @@ EBImoran.mc <- function (n, x, listw, nsim, zero.policy = FALSE,
         stop("Check of data and weights ID integrity failed")
     if (nsim > gamma(m + 1)) 
         stop("nsim too large for this number of observations")
+    if (!(alternative %in% c("greater", "less", "two.sided")))
+	stop("alternative must be one of: \"greater\", \"less\", or \"two.sided\"")
     S0 <- Szero(listw)
     EB <- EBest(n, x)
     p <- EB$raw
@@ -118,7 +120,8 @@ EBest <- function(n, x) {
     res
 }
 
-EBlocal <- function(ri, ni, nb, zero.policy = FALSE, spChk = NULL) {
+EBlocal <- function(ri, ni, nb, zero.policy = FALSE,
+    spChk = NULL, geoda = FALSE) {
     if (class(nb) != "nb") 
         stop(paste(deparse(substitute(nb)), "is not an nb object"))
     lnb <- length(nb)
@@ -152,7 +155,19 @@ EBlocal <- function(ri, ni, nb, zero.policy = FALSE, spChk = NULL) {
         zero.policy=zero.policy), ni, zero.policy = zero.policy)
 
     m.i <- r.i/n.i
-    C.i <- lag.listw(lw, (ni * (xi - m.i)^2), zero.policy = zero.policy)
+    if (geoda) {
+	work <- vector(mode="list", length=lnb)
+	cnb <- card(lw$neighbours)
+	for (i in 1:lnb) {
+		work[[i]] <- rep(m.i[i], cnb[i])
+		work[[i]] <- xi[lw$neighbours[[i]]] - work[[i]]
+		work[[i]] <- work[[i]]^2
+		work[[i]] <- ni[lw$neighbours[[i]]] * work[[i]]
+	}
+	C.i <- sapply(work, sum)
+    } else {
+        C.i <- lag.listw(lw, (ni * (xi - m.i)^2), zero.policy = zero.policy)
+    }
     a.i <- (C.i/n.i) - (m.i/nbar.i)
     a.i[a.i < 0] <- 0
     est <- m.i + (xi - m.i) * (a.i / (a.i + (m.i/ni)))

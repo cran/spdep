@@ -39,9 +39,10 @@ A list with class \code{jclist} of lists with class \code{htest} for each of the
 }
 \references{Cliff, A. D., Ord, J. K. 1981 Spatial processes, Pion, p. 20.}
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
-\note{Probability values one-tailed, as the hypothesis most often used is no autocorrelation against positive autocorrelation.}
+\note{The derivation of the test (Cliff and Ord, 1981, p. 18) assumes that the weights matrix is symmetric. For inherently non-symmetric matrices, such as k-nearest neighbour matrices, \code{listw2U()} can be used to make the matrix symmetric. In non-symmetric weights matrix cases, the variance of the test statistic may be negative.
+}
 
-\seealso{\code{\link{joincount}}, \code{\link{joincount.mc}}}
+\seealso{\code{\link{joincount}}, \code{\link{joincount.mc}}, \code{\link{listw2U}}}
 
 \examples{
 data(oldcol)
@@ -52,5 +53,11 @@ joincount.test(HICRIME, nb2listw(COL.nb, style="C"))
 joincount.test(HICRIME, nb2listw(COL.nb, style="S"))
 joincount.test(HICRIME, nb2listw(COL.nb, style="W"))
 by(card(COL.nb), HICRIME, summary)
+print(is.symmetric.nb(COL.nb))
+COL.k4.nb <- knn2nb(knearneigh(coords.OLD, 4))
+print(is.symmetric.nb(COL.k4.nb))
+joincount.test(HICRIME, nb2listw(COL.k4.nb, style="B"))
+cat("Note non-symmetric weights matrix - use listw2U()\n")
+joincount.test(HICRIME, listw2U(nb2listw(COL.k4.nb, style="B")))
 }
 \keyword{spatial}

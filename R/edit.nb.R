@@ -3,6 +3,7 @@
 
 edit.nb <- function(name, coords, polys=NULL, bbs=NULL, ...) {
   nb <- name
+  cnb <- card(nb)
   if (class(nb) != "nb") stop("Not a neighbours list")
   x <- coords[,1]
   y <- coords[,2]
@@ -18,7 +19,7 @@ edit.nb <- function(name, coords, polys=NULL, bbs=NULL, ...) {
   for (i in 1:n) {
     #arrows(x[i],y[i],x[nb[[i]]],y[nb[[i]]],lenght=.08, angle=.15)
 ###
-    segments(x[i],y[i],x[nb[[i]]],y[nb[[i]]])
+    if (cnb[i] > 0) segments(x[i],y[i],x[nb[[i]]],y[nb[[i]]])
 ###
     #inb <- nb[[i]]
     #for (j in inb)

@@ -1,8 +1,8 @@
-# Copyright 2001-2003 by Roger Bivand
+# Copyright 2001-2003 by Roger Bivand with contributions by Stéphane Dray
 #
 	
 plotpolys <- function(pl, bb, col=NA, border=par("fg"), add=FALSE, 
-	xlim=NULL, ylim=NULL) {
+	xlim=NULL, ylim=NULL, ...) {
 	if (!inherits(pl, "polylist")) stop("Not a polygon list")
 	if (!add) {
 		if (is.null(xlim)) xlim <- c(min(bb[,1]), max(bb[,3]))
@@ -13,7 +13,7 @@ plotpolys <- function(pl, bb, col=NA, border=par("fg"), add=FALSE,
 	if (length(col) != length(pl)) {
 		col <- rep(col, length(pl), length(pl))
 	}
-	for (j in 1:length(pl)) polygon(pl[[j]], col=col[j], border=border)
+	for (j in 1:length(pl)) polygon(pl[[j]], col=col[j], border=border, ...)
 }
 
 poly2nb <- function(pl, bb, row.names=NULL, snap=sqrt(.Machine$double.eps),
@@ -91,7 +91,42 @@ poly2nb <- function(pl, bb, row.names=NULL, snap=sqrt(.Machine$double.eps),
 	invisible(ans)
 }
 
-get.polylist <- function(Map, region.id=NULL) {
+shape2poly <- function(shape, region.id=NULL) {
+    if (is.null(shape$shp)) stop("No shp component in this list")
+    if (shape$shp$header$shape.type != 5) stop("Not a polygon shapefile")
+    nrecord <- length(shape$shp$shp)
+    res <- vector(mode="list", length=nrecord)
+    if (!is.null(region.id)) {
+	if (length(unique(region.id)) == nrecord) id <- region.id
+	else region.id <- NULL
+    }
+    if (is.null(region.id)) id <- vector(mode="character", length=nrecord)
+    for (i in 1:nrecord) {
+	res[[i]] <- as.matrix(shape$shp$shp[[i]]$points)
+	if (is.null(region.id)) id[i]<- as.character(shape$dbf$dbf[i,1])
+    }
+
+    attr(res, "region.id") <- id
+    class(res) <- "polylist"
+    return(res)
+
+}
+
+shape2bbs <- function(shape) {
+    if (is.null(shape$shp)) stop("No shp component in this list")
+    if (shape$shp$header$shape.type != 5) stop("Not a polygon shapefile")
+    n <- length(shape$shp$shp)
+    res <- matrix(0, ncol=4, nrow=n)
+    for (i in 1:n) res[i,] <- as.vector(shape$shp$shp[[i]]$box)
+    res
+}
+
+Map2poly <- function(Map, region.id=NULL) {
+	res <- .get.polylist(Map=Map, region.id=region.id)
+	res
+}
+
+.get.polylist <- function(Map, region.id=NULL) {
 	if (class(Map) != "Map") stop("not a Map")
 	n <- length(Map$Shapes)
 	res <- vector(mode="list", length=n)
@@ -147,5 +182,42 @@ convert.pl <- function(pl) {
 		attr(res, "region.id") <- attr(pl, "region.id")
 	class(res) <- "polylist"
 	res
+}
+
+.get.polybbs <- function(Map) {
+	if (class(Map) != "Map") stop("not a Map")
+	n <- length(Map$Shapes)
+	res <- matrix(0, ncol=4, nrow=n)
+	for (i in 1:n) res[i,] <- attr(Map$Shapes[[i]], "bbox")
+	res
+}
+
+Map2bbs <- function(Map) {
+	res <- .get.polybbs(Map)
+	res
+}
+
+leglabs <- function(vec, under="under", over="over", between="-") {
+	x <- vec
+	res <- character(length(x)-1)
+	res[1] <- paste(under, x[2])
+	for (i in 2:(length(x)-2)) res[i] <- paste(x[i], between, x[i+1])
+	res[length(x)-1] <- paste(over, x[length(x)-1])
+	res
+}
+
+findInterval2 <- function (x, vec, rightmost.closed = FALSE, all.inside = TRUE) 
+{
+    nx <- length(x)
+    if (any(is.na(vec) | is.nan(vec))) stop ("NAs found in vec")
+    if (is.unsorted(vec)) 
+        stop("`vec' must be sorted non-decreasingly")
+    if (vec[1] == -Inf) vec[1] <- -(.Machine$double.xmax)
+    if (vec[length(vec)] == Inf) 
+	vec[length(vec)] <- .Machine$double.xmax
+    .C("find_interv_vec", xt = as.double(vec), n = length(vec), 
+        x = as.double(x), nx = nx, as.logical(rightmost.closed), 
+        as.logical(all.inside), index = integer(nx), DUP = FALSE,
+	PACKAGE = "base")$index
 }
 

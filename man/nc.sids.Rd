@@ -31,19 +31,18 @@ seats approximately reprojected to UTM zone 18.
   }
 }
 \source{
- Cressie, N (1991), Statistics for spatial data. New York: Wiley, pp. 386-389.
- \url{http://www.spacestat.com/data4.htm}.
+ Cressie, N (1991), Statistics for spatial data. New York: Wiley, pp. 386-389,
+\url{http://sal.agecon.uiuc.edu/datasets/sids.zip}.
 }
 
 \examples{
 data(nc.sids)
 stem(floor(sort(1000*(nc.sids$SID74 + 1)/nc.sids$BIR74)*10)/10, scale=2)
 pm <- probmap(nc.sids$SID74, nc.sids$BIR74)$pmap
-pm.f <- as.ordered(cut(pm, breaks=c(0.0, 0.01, 0.05, 0.1, 0.9, 0.95, 0.99, 1),
-  include.lowest=TRUE))
+brks <- c(0.0, 0.01, 0.05, 0.1, 0.9, 0.95, 0.99, 1)
 cols <- cm.colors(7)
-plotpolys(nc.utm.polys, nc.utmbbs, col=cols[codes(pm.f)])
-legend(c(-280, -70), c(3700, 3900), legend=paste("prob.", levels(pm.f)),
+plotpolys(nc.utm.polys, nc.utmbbs, col=cols[findInterval2(pm, brks)])
+legend(c(-280, -70), c(3700, 3900), legend=paste("prob.", leglabs(brks)),
   fill=cols, bty="n")
 ft.SID74 <- sqrt(1000)*(sqrt(nc.sids$SID74/nc.sids$BIR74) +
   sqrt((nc.sids$SID74+1)/nc.sids$BIR74))

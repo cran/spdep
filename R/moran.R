@@ -1,4 +1,4 @@
-# Copyright 2001-2 by Roger Bivand 
+# Copyright 2001-3 by Roger Bivand 
 #
 
 moran <- function(x, listw, n, S0, zero.policy=FALSE) {
@@ -23,6 +23,8 @@ moran.test <- function(x, listw, randomisation=TRUE, zero.policy=FALSE,
 	if (is.null(spChk)) spChk <- get.spChkOption()
 	if (spChk && !chkIDs(x, listw))
 		stop("Check of data and weights ID integrity failed")
+	if (!(alternative %in% c("greater", "less", "two.sided")))
+		stop("alternative must be one of: \"greater\", \"less\", or \"two.sided\"")
 	wc <- spweights.constants(listw, zero.policy=zero.policy)
 	S02 <- wc$S0*wc$S0
 	res <- moran(x, listw, wc$n, wc$S0, zero.policy=zero.policy)
@@ -42,7 +44,8 @@ moran.test <- function(x, listw, randomisation=TRUE, zero.policy=FALSE,
 	ZI <- (I - EI) / sqrt(VI)
 	statistic <- ZI
 	names(statistic) <- "Moran I statistic standard deviate"
-        if (alternative == "two.sided") PrI <- 2 * pnorm(ZI, lower.tail=FALSE)
+        if (alternative == "two.sided") 
+		PrI <- 2 * pnorm(-abs(ZI), lower.tail=FALSE)
         else if (alternative == "greater")
             PrI <- pnorm(ZI, lower.tail=FALSE)
         else PrI <- pnorm(ZI)
@@ -73,6 +76,8 @@ moran.mc <- function(x, listw, nsim, zero.policy=FALSE,
 	if (spChk && !chkIDs(x, listw))
 		stop("Check of data and weights ID integrity failed")
 	if(nsim > gamma(n+1)) stop("nsim too large for this n")
+	if (!(alternative %in% c("greater", "less", "two.sided")))
+		stop("alternative must be one of: \"greater\", \"less\", or \"two.sided\"")
 	S0 <- Szero(listw)
 	res <- numeric(length=nsim+1)
 	for (i in 1:nsim) res[i] <- moran(sample(x), listw, n, S0,

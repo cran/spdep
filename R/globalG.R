@@ -1,4 +1,4 @@
-# Copyright 2002 by Hisaji ONO and Roger Bivand 
+# Copyright 2002-3 by Hisaji ONO and Roger Bivand 
 #
 # General G Statistics
 #
@@ -18,6 +18,8 @@ globalG.test <- function(x, listw, zero.policy=FALSE,
 	if (is.null(spChk)) spChk <- get.spChkOption()
 	if (spChk && !chkIDs(x, listw))
 		stop("Check of data and weights ID integrity failed")
+	if (!(alternative %in% c("greater", "less", "two.sided")))
+		stop("alternative must be one of: \"greater\", \"less\", or \"two.sided\"")
 
 	wc <- spweights.constants(listw, zero.policy=zero.policy)
 	n1 <- n - 1
@@ -48,7 +50,7 @@ globalG.test <- function(x, listw, zero.policy=FALSE,
 
 	statistic <- (G - E.G) / sqrt(var.G)
 	names(statistic) <- "Getis-Ord global G statistic"
-	if (alternative == "two.sided") PrG <- 2 * pnorm(statistic, 
+	if (alternative == "two.sided") PrG <- 2 * pnorm(-abs(statistic), 
 		lower.tail=FALSE)
         else if (alternative == "greater")
             PrG <- pnorm(statistic, lower.tail=FALSE)

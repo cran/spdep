@@ -1,4 +1,4 @@
-% Copyright 2002 by Roger S. Bivand
+% Copyright 2002-3 by Roger S. Bivand
 \name{LR.sarlm}
 \alias{LR.sarlm}
 \alias{logLik.sarlm}
@@ -28,15 +28,18 @@ logLik.sarlm(object, ...)
 
   \code{logLik.sarlm()} returns an object of class \code{logLik}
 }
+
+\note{The numbers of degrees of freedom returned by \code{logLik.sarlm()}} include nuisance parameters, that is the number of regression coefficients, plus sigma, plus spatial parameter esitmate(s).}
+
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 
-\seealso{\code{\link{logLik.lm}}}
+\seealso{\code{\link{logLik.lm}}, \code{\link{anova.sarlm}}}
 
 \examples{
-data(oldcol)
-mixed <- lagsarlm(CRIME ~ HOVAL + INC, data=COL.OLD, nb2listw(COL.nb),
+data(columbus)
+mixed <- lagsarlm(CRIME ~ HOVAL + INC, data=columbus, nb2listw(col.gal.nb),
   type="mixed")
-error <- errorsarlm(CRIME ~ HOVAL + INC, data=COL.OLD, nb2listw(COL.nb))
+error <- errorsarlm(CRIME ~ HOVAL + INC, data=columbus, nb2listw(col.gal.nb))
 LR.sarlm(mixed, error)
 }
 \keyword{spatial}

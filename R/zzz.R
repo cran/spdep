@@ -3,7 +3,13 @@
 
 .spChkOption <- new.env(FALSE, globalenv())
 assign("spChkID", FALSE, env = .spChkOption)
-cat("Spatial object identity integrity check: FALSE\n")
+.DESC <- read.dcf(system.file("DESCRIPTION", package="spdep"))
+.spdep.Version <- paste(.DESC[1,1], ", version ", .DESC[1,2], ", ", .DESC[1,3], 
+	sep="")
+.spdep.Build <- paste("build:", .DESC[1, 11])
+cat(paste(.spdep.Version, ":\n a package for analysing spatial dependence,\n",
+	" use help(get.spChkOption) for help on integrity checking\n",
+	sep=""))
 
 .First.lib <- function(lib, pkg) {
 	library.dynam("spdep", pkg, lib)

@@ -1,9 +1,9 @@
-% Copyright 2001 by Roger S. Bivand
+% Copyright 2001-3 by Roger S. Bivand
 \name{geary.test}
 \alias{geary.test}
 \title{Geary's C test for spatial autocorrelation}
 \description{
-   Geary's test for spatial autocorrelation using a spatial weights matrix in weights list form. The assumptions underlying the test are sensitive to the form of the graph of neighbour relationships and other factors, and results may be checked against those of \code{geary.mc} permutations.
+   Geary's test for spatial autocorrelation using a spatial weights matrix in weights list form. The assumptions underlying the test are sensitive to the form of the graph of neighbour relationships and other factors, and results may be checked against those of \code{geary.mc} permutations. 
 }
 \usage{
 geary.test(x, listw, randomisation=TRUE, zero.policy=FALSE,
@@ -31,11 +31,13 @@ A list with class \code{htest} containing the following components:
   \item{data.name}{a character string giving the name(s) of the data.}
 }
 \references{Cliff, A. D., Ord, J. K. 1981 Spatial processes, Pion, p. 21.}
-\author{Roger Bivand \email{Roger.Bivand@nhh.no}}
-\note{Probability values one-tailed, as the hypothesis most often used is no 
-autocorrelation against positive autocorrelation.}
 
-\seealso{\code{\link{geary}}, \code{\link{geary.mc}}}
+\author{Roger Bivand \email{Roger.Bivand@nhh.no}}
+
+\note{The derivation of the test (Cliff and Ord, 1981, p. 18) assumes that the weights matrix is symmetric. For inherently non-symmetric matrices, such as k-nearest neighbour matrices, \code{listw2U()} can be used to make the matrix symmetric. In non-symmetric weights matrix cases, the variance of the test statistic may be negative (thanks to Franz Munoz I for a well documented bug report). Geary's C is affected by non-symmetric weights under normality much more than Moran's I.
+}
+
+\seealso{\code{\link{geary}}, \code{\link{geary.mc}}, \code{\link{listw2U}}}
 
 \examples{
 data(oldcol)
@@ -47,5 +49,16 @@ geary.test(spNamedVec("CRIME", COL.OLD), nb2listw(colold.lags[[2]],
  style="W"))
 geary.test(spNamedVec("CRIME", COL.OLD), nb2listw(colold.lags[[3]],
  style="W"), alternative="greater")
+print(is.symmetric.nb(COL.nb))
+COL.k4.nb <- knn2nb(knearneigh(coords.OLD, 4))
+print(is.symmetric.nb(COL.k4.nb))
+geary.test(spNamedVec("CRIME", COL.OLD), nb2listw(COL.k4.nb, style="W"))
+geary.test(spNamedVec("CRIME", COL.OLD), nb2listw(COL.k4.nb, style="W"),
+ randomisation=FALSE)
+cat("Note non-symmetric weights matrix - use listw2U()\n")
+geary.test(spNamedVec("CRIME", COL.OLD), listw2U(nb2listw(COL.k4.nb,
+ style="W")))
+geary.test(spNamedVec("CRIME", COL.OLD), listw2U(nb2listw(COL.k4.nb,
+ style="W")), randomisation=FALSE)
 }
 \keyword{spatial}

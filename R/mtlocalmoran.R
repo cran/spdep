@@ -15,6 +15,8 @@ localmoran.sad <- function (model, select, nb, glist = NULL, style = "W",
 	if (is.null(spChk)) spChk <- get.spChkOption()
 	if (spChk && !chkIDs(u, nb2listw(nb, zero.policy=zero.policy)))
 		stop("Check of data and weights ID integrity failed")
+    if (!(alternative %in% c("greater", "less", "two.sided")))
+	stop("alternative must be one of: \"greater\", \"less\", or \"two.sided\"")
     u <- as.vector(u)
     select <- unique(as.integer(select))
     if (any(select < 1 || select > n))
@@ -74,7 +76,7 @@ localmoran.sad <- function (model, select, nb, glist = NULL, style = "W",
             sad.u <- omega * sqrt(2*sum(taumi^2 / (1 - (2*omega*taumi))^2))
             sad.p <- sad.r - ((1/sad.r)*log(sad.r/sad.u))
 	}
-        if (alternative == "two.sided") p.sad <- 2 * (1 - pnorm(sad.p))
+        if (alternative == "two.sided") p.sad <- 2 * pnorm(-abs(sad.p))
         else if (alternative == "greater")
             p.sad <- pnorm(sad.p, lower.tail=FALSE)
         else p.sad <- pnorm(sad.p)

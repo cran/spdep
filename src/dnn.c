@@ -1,22 +1,27 @@
 /*
  *  based on code taken from:
  *  class/class.c by W. N. Venables and B. D. Ripley  Copyright (C) 1994-9
- *  and written by Roger Bivand (C) 2001
+ *  and written by Roger Bivand (C) 2001-3
  */
 
 #include <R.h>
 #include <Rdefines.h>
+#include <Rmath.h>
 #include <R_ext/Applic.h>
 #define ROFFSET 1
 
 #define MAX_TIES 1000
 
+void gcdist(double *lon1, double *lon2, double *lat1, double *lat2, 
+		double *dist);
+
 SEXP
-dnearneigh(SEXP din1, SEXP din2, SEXP pnte, SEXP p, SEXP test)
+dnearneigh(SEXP din1, SEXP din2, SEXP pnte, SEXP p, SEXP test, SEXP lonlat)
 {
-    int   j, k, kn, npat, nte, pdim, pc=0;
+    int   j, k, kn, npat, nte, pdim, pc=0, ll;
     int   pos[MAX_TIES];
-    double dist, tmp, dn, dn0;
+    double dist, /*tmp,*/ dn, dn0;
+    double lon1[1], lon2[1], lat1[1], lat2[1], gc[1];
     SEXP ans;
     SEXP class;
     SEXP nbtype;
@@ -26,6 +31,7 @@ dnearneigh(SEXP din1, SEXP din2, SEXP pnte, SEXP p, SEXP test)
     dn = NUMERIC_POINTER(din2)[0];
     nte = INTEGER_POINTER(pnte)[0];
     pdim = INTEGER_POINTER(p)[0];
+    ll = INTEGER_POINTER(lonlat)[0];
     PROTECT(ans = NEW_LIST(1)); pc++;
     PROTECT(dists = NEW_NUMERIC(2)); pc++;
     NUMERIC_POINTER(dists)[0] = dn0;
@@ -38,17 +44,26 @@ dnearneigh(SEXP din1, SEXP din2, SEXP pnte, SEXP p, SEXP test)
     setAttrib(VECTOR_ELT(ans, 0), R_ClassSymbol, class);
     setAttrib(VECTOR_ELT(ans, 0), install("nbtype"), nbtype);
     setAttrib(VECTOR_ELT(ans, 0), install("distances"), dists);
-    dn0 = dn0*dn0;
-    dn = dn*dn;
+    dn0 = dn0;
+    dn = dn;
     for (npat = 0; npat < nte; npat++) {
 	kn = 0;
 	for (j = 0; j < nte; j++) {
 	    if (j == npat) continue;
-	    dist = 0.0;
+/*	    dist = 0.0;
 	    for (k = 0; k < pdim; k++) {
 		tmp = NUMERIC_POINTER(test)[npat + k * nte]
 			- NUMERIC_POINTER(test)[j + k * nte];
 		dist += tmp * tmp;
+	    } */
+	    lon1[0] = NUMERIC_POINTER(test)[npat];
+	    lat1[0] = NUMERIC_POINTER(test)[npat + nte];
+	    lon2[0] = NUMERIC_POINTER(test)[j];
+	    lat2[0] = NUMERIC_POINTER(test)[j + nte];
+	    if (ll == 0) dist = pythag((lon1[0]-lon2[0]), (lat1[0]-lat2[0]));
+	    else {
+		    gcdist(lon1, lon2, lat1, lat2, gc);
+		    dist = gc[0];
 	    }
 	    if (dist > dn0 && dist <= dn) {
 		pos[kn] = j;
@@ -71,4 +86,46 @@ dnearneigh(SEXP din1, SEXP din2, SEXP pnte, SEXP p, SEXP test)
     return(ans);
 }
 
+/* http://home.att.net/~srschmitt/greatcircle.html */
+
+void gcdist(double *lon1, double *lon2, double *lat1, double *lat2, 
+		double *dist) {
+	
+    double F, G, L, sinG2, cosG2, sinF2, cosF2, sinL2, cosL2, S, C;
+    double w, R, a, f, D, H1, H2;
+    double lat1R, lat2R, lon1R, lon2R, DE2RA;
+    
+    DE2RA = M_PI/180;
+    a = 6378.137;              /* WGS-84 equatorial radius in km */
+    f = 1.0/298.257223563;     /* WGS-84 ellipsoid flattening factor */
+    
+    lat1R = lat1[0]*DE2RA;
+    lat2R = lat2[0]*DE2RA;
+    lon1R = lon1[0]*DE2RA;
+    lon2R = lon2[0]*DE2RA;
+    
+    F = ( lat1R + lat2R )/2.0;
+    G = ( lat1R - lat2R )/2.0;
+    L = ( lon1R - lon2R )/2.0;
+
+    sinG2 = R_pow_di( sin( G ), 2 );
+    cosG2 = R_pow_di( cos( G ), 2 );
+    sinF2 = R_pow_di( sin( F ), 2 );
+    cosF2 = R_pow_di( cos( F ), 2 );
+    sinL2 = R_pow_di( sin( L ), 2 );
+    cosL2 = R_pow_di( cos( L ), 2 );
+
+    S = sinG2*cosL2 + cosF2*sinL2;
+    C = cosG2*cosL2 + sinF2*sinL2;
+
+    w = atan( sqrt( S/C ) );
+    R = sqrt( S*C )/w;
+
+    D = 2*w*a;
+    H1 = ( 3*R - 1 )/( 2*C );
+    H2 = ( 3*R + 2 )/( 2*S );
+
+    dist[0] = D*( 1 + f*H1*sinF2*cosG2 - f*H2*cosF2*sinG2 ); 
+
+}
 

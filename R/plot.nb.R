@@ -2,8 +2,10 @@
 #
 
 
-plot.nb <- function(x, coords, col="black", points=TRUE, add=FALSE, ...) {
+plot.nb <- function(x, coords, col="black", points=TRUE, add=FALSE, 
+	arrows=FALSE, length=0.1, ...) {
 	nb <- x
+	sym <- is.symmetric.nb(nb, verbose = FALSE, force = FALSE)
 	x <- coords[,1]
 	y <- coords[,2]
 	n <- length(nb)
@@ -13,11 +15,24 @@ plot.nb <- function(x, coords, col="black", points=TRUE, add=FALSE, ...) {
 		plot.new()
         	plot.window(xlim = xlim, ylim = ylim, log="", asp=1)
 	}
+	cardnb <- card(nb)
 	for (i in 1:n) {
-        	inb <- nb[[i]]
-        	for (j in inb)
-			lines(c(x[i], x[j]), c(y[i], y[j]),
-				col=col, ...)
+		if (cardnb[i] > 0) {
+        		inb <- nb[[i]]
+        		for (j in inb) {
+				if (sym) {
+					lines(c(x[i], x[j]), c(y[i], y[j]),
+						col=col, ...)
+				} else {
+					if (arrows) 
+						arrows(x[i], y[i], x[j], y[j], 
+						col=col, length=length, ...)
+					else lines(c(x[i], x[j]), c(y[i], y[j]),
+						col=col, ...)
+				}
+
+			}
+		}
 	}
 	if (points) points(x, y, ...)
 }

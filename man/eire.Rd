@@ -42,12 +42,12 @@ Tiefelsdorf's SPSS Saddlepoint bundle:
 data(eire)
 % Eire physical anthropology blood group data
 summary(eire.df$A)
-A.f <- as.ordered(cut(eire.df$A, breaks=fivenum(eire.df$A),
-  include.lowest=TRUE))
-plotpolys(eire.polys.utm, eire.bbs.utm, col=rev(heat.colors(4))[codes(A.f)])
+brks <- round(fivenum(eire.df$A), digits=2)
+cols <- rev(heat.colors(4))
+plotpolys(eire.polys.utm, eire.bbs.utm,
+ col=cols[findInterval2(eire.df$A, brks)])
 title(main="Percentage with blood group A in Eire")
-legend(x=c(-50, 70), y=c(6120, 6050), legend=levels(A.f),
-  fill=rev(heat.colors(4)), bty="n")
+legend(x=c(-50, 70), y=c(6120, 6050), leglabs(brks), fill=cols, bty="n")
 plotpolys(eire.polys.utm, eire.bbs.utm)
 plot(eire.nb, eire.coords.utm, add=TRUE)
 lA <- lag.listw(nb2listw(eire.nb), eire.df$A)
@@ -60,31 +60,32 @@ moran.plot(spNamedVec("A", eire.df), nb2listw(eire.nb),
 A.lm <- lm(A ~ towns + pale, data=eire.df)
 summary(A.lm)
 res <- residuals(A.lm)
-res.f <- as.ordered(cut(res, breaks=c(min(res),-2,-1,0,1,2,max(res)),
-  include.lowest=TRUE))
-plotpolys(eire.polys.utm, eire.bbs.utm, col=rev(cm.colors(6))[codes(res.f)])
+brks <- c(min(res),-2,-1,0,1,2,max(res))
+cols <- rev(cm.colors(6))
+plotpolys(eire.polys.utm, eire.bbs.utm, col=cols[findInterval2(res, brks)])
 title(main="Regression residuals")
-legend(x=c(-50, 70), y=c(6120, 6050), legend=levels(res.f), fill=cm.colors(6),
+legend(x=c(-50, 70), y=c(6120, 6050), legend=leglabs(brks), fill=cols,
   bty="n")
 lm.morantest(A.lm, nb2listw(eire.nb))
 lm.morantest.sad(A.lm, nb2listw(eire.nb))
 lm.LMtests(A.lm, nb2listw(eire.nb), test="LMerr")
 % Eire agricultural data
-owncons.f <- as.ordered(cut(eire.df$OWNCONS, breaks=fivenum(eire.df$OWNCONS),
- include.lowest=TRUE))
-plotpolys(eire.polys.utm, eire.bbs.utm, col=grey(4:1/5)[codes(owncons.f)])
+brks <- round(fivenum(eire.df$OWNCONS), digits=2)
+cols <- grey(4:1/5)
+plotpolys(eire.polys.utm, eire.bbs.utm,
+ col=cols[findInterval2(eire.df$OWNCONS, brks)])
 title(main="Percentage own consumption of agricultural produce")
-legend(x=c(-50, 70), y=c(6120, 6050), legend=levels(owncons.f),
-  fill=grey(4:1/5), bty="n")
+legend(x=c(-50, 70), y=c(6120, 6050), legend=leglabs(brks),
+  fill=cols, bty="n")
 moran.plot(spNamedVec("OWNCONS", eire.df), nb2listw(eire.nb))
 moran.test(spNamedVec("OWNCONS", eire.df), nb2listw(eire.nb))
 e.lm <- lm(OWNCONS ~ ROADACC, data=eire.df)
 res <- residuals(e.lm)
-res.f <- as.ordered(cut(res, breaks=c(min(res),-2,-1,0,1,2,max(res)),
-  include.lowest=TRUE))
-plotpolys(eire.polys.utm, eire.bbs.utm, col=rev(cm.colors(6))[codes(res.f)])
+brks <- c(min(res),-2,-1,0,1,2,max(res))
+cols <- rev(cm.colors(6))
+plotpolys(eire.polys.utm, eire.bbs.utm, col=cols[findInterval2(res, brks)])
 title(main="Regression residuals")
-legend(x=c(-50, 70), y=c(6120, 6050), legend=levels(res.f), fill=cm.colors(6),
+legend(x=c(-50, 70), y=c(6120, 6050), legend=leglabs(brks), fill=cm.colors(6),
   bty="n")
 lm.morantest(e.lm, nb2listw(eire.nb))
 lm.morantest.sad(e.lm, nb2listw(eire.nb))

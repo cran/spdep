@@ -15,6 +15,8 @@ sp.mantel.mc <- function(var, listw, nsim, type="moran", zero.policy=FALSE,
 	if (is.null(spChk)) spChk <- get.spChkOption()
 	if (spChk && !chkIDs(var, listw))
 		stop("Check of data and weights ID integrity failed")
+	if (!(alternative %in% c("greater", "less", "two.sided")))
+		stop("alternative must be one of: \"greater\", \"less\", or \"two.sided\"")
 	listw.U <- listw2U(listw)
 	mantel.moran <- function(x, listwU, zero.policy) {
 		res <- x * lag.listw(listw.U, x, zero.policy=zero.policy)

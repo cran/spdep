@@ -1,4 +1,4 @@
-# Copyright 1998-2002 by Roger Bivand
+# Copyright 1998-2003 by Roger Bivand
 #
 
 errorsarlm <- function(formula, data = list(), listw, method="eigen",
@@ -46,7 +46,8 @@ errorsarlm <- function(formula, data = list(), listw, method="eigen",
 		if (!quiet) cat("Computing eigenvalues ...\n")
 		eig <- eigenw(listw)
 		cat("\n")
-		eig.range <- range(eig)
+		if (is.complex(eig)) eig.range <- range(Re(eig))
+		else eig.range <- range(eig)
 		opt <- optimize(sar.error.f, interval=eig.range, maximum=TRUE,
 			tol=tol.opt, eig=eig,
 			y=y, wy=wy, x=x, WX=WX, n=n, quiet=quiet)
@@ -88,7 +89,7 @@ errorsarlm <- function(formula, data = list(), listw, method="eigen",
 	call <- match.call()
 	ret <- structure(list(type="error", lambda=lambda, 
 		coefficients=coef.lambda, rest.se=rest.se, 
-		LL=LL, s2=s2, SSE=SSE, parameters=(m+1), lm.model=lm.model, 
+		LL=LL, s2=s2, SSE=SSE, parameters=(m+2), lm.model=lm.model, 
 		method=method, call=call, residuals=r, lm.target=lm.target,
 		fitted.values=fit, ase=ase, formula=formula,
 		se.fit=NULL,
@@ -111,8 +112,9 @@ sar.error.f <- function(lambda, eig, y, wy, x, WX, n, quiet)
 	xl.q.yl <- t(xl.q) %*% yl
 	SSE <- t(yl) %*% yl - t(xl.q.yl) %*% xl.q.yl
 	s2 <- SSE/n
-	ret <- (log(prod(1 - lambda*eig)) - ((n/2)*log(2*pi)) - 
-		(n/2)*log(s2) - (1/(2*(s2)))*SSE)
+	if (is.complex(eig)) det <- Re(prod(1 - lambda*eig)) 
+	else det <- prod(1 - lambda*eig)
+	ret <- (log(det) - ((n/2)*log(2*pi)) - (n/2)*log(s2) - (1/(2*(s2)))*SSE)
 	if (!quiet) cat("Lambda:\t", lambda, "\tfunction value:\t", ret, "\n")
 	ret
 }

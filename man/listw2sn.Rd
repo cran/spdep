@@ -1,24 +1,27 @@
-% Copyright 2001-2 by Roger S. Bivand
+% Copyright 2001-3 by Roger S. Bivand
 \name{listw2sn}
 \alias{listw2sn}
+\alias{sn2listw}
 \alias{spwdet}
 \alias{log.spwdet}
 \title{Spatial neighbour sparse representation}
 \description{
-The function makes a \code{spatial neighbour} object representation
+The function makes a \code{"spatial neighbour"} object representation
 (similar to the S-PLUS spatial statististics module representation of a
-\code{listw} spatial weights object. The object is used in calculating the
+\code{"listw"} spatial weights object. The object is used in calculating the
 Jacobian of the likelihood functions of spatial autoregressive models when
-the "sparse" method is chosen in \code{errorsarlm} and \code{lagsarlm}.
+the "sparse" method is chosen in \code{errorsarlm()} and \code{lagsarlm()}. \code{sn2listw()} is the inverse function to \code{listw2sn()}, creating a \code{"listw"} object from a \code{"spatial neighbour"} object
 }
 \usage{
 listw2sn(listw)
+sn2listw(sn)
 spwdet(sparseweights, rho, debug=FALSE)
 log.spwdet(sparseweights, rho, debug=FALSE)
 
 }
 \arguments{
   \item{listw}{a \code{listw} object from for example \code{nb2listw}}
+  \item{sn}{a \code{spatial.neighbour} object}
   \item{sparseweights}{a \code{spatial.neighbour} object}
   \item{rho}{spatial autoregressive parameter value}
   \item{debug}{if TRUE, writes a log file on sparse matrix operations

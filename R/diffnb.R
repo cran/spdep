@@ -1,12 +1,15 @@
-# Copyright 2001 by Roger Bivand 
+# Copyright 2001-3 by Roger Bivand 
 #
 
 
 diffnb <- function(x, y, verbose=TRUE) {
-	if (class(x) != "nb") stop("not a neighbours list")
-	if (class(y) != "nb") stop("not a neighbours list")
+	if (!inherits(x, "nb")) stop("not a neighbours list")
+	if (!inherits(y, "nb")) stop("not a neighbours list")
 	n <- length(x)
 	if(n != length(y)) stop("lengths differ")
+	if (any(attr(x, "region.id") != attr(y, "region.id")))
+		warning("region.id differ")
+	ids <- attr(x, "region.id")
 	res <- vector(mode="list", length=n)
 	for (i in 1:n) {
 		xi <- x[[i]]
@@ -17,8 +20,8 @@ diffnb <- function(x, y, verbose=TRUE) {
 			res[[i]] <- sort(unique(c(xi[which(!xt)],
 				yi[which(!yt)])))
 			if(verbose && (res[[i]] != 0))
-				cat("Neighbour difference for region:",
-				i, "in relation to:", res[[i]], "\n")
+				cat("Neighbour difference for region id:",
+				ids[i], "in relation to id:", ids[res[[i]]], "\n")
 		}
 	}
 	class(res) <- "nb"

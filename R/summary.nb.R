@@ -1,14 +1,15 @@
-# Copyright 2001 by Roger Bivand
+# Copyright 2001-3 by Roger Bivand
 #
 
 
-summary.nb <- function(object, coords=NULL, ...) {
+summary.nb <- function(object, coords=NULL, lonlat=FALSE, scale=1, ...) {
     nb <- object
-    if (class(nb) != "nb") stop("Not a neighbours list")
+    if (!inherits(nb, "nb")) stop("Not a neighbours list")
     c.nb <- card(nb)
     n.nb <- length(nb)
     regids <- attr(nb, "region.id")
     if(is.null(regids)) regids <- as.character(1:n.nb)
+    cat("Neighbour list object:\n")
     cat("Connectivity of", deparse(substitute(object)),
     	"with the following attributes:\n")
     print(str(attributes(nb)))
@@ -40,9 +41,54 @@ summary.nb <- function(object, coords=NULL, ...) {
 	if(np != n.nb) stop("Number of coords not equal to number of regions")
         dimension <- ncol(coords)
 	dlist <- .Call("nbdists", nb, as.matrix(coords), as.integer(np), 
-	    as.integer(dimension), PACKAGE="spdep")[[1]]
+	    as.integer(dimension), as.integer(lonlat), PACKAGE="spdep")[[1]]
 	cat("Summary of link distances:\n")
 	print(summary(unlist(dlist)))
-	stem(unlist(dlist))
+	stem(unlist(dlist), scale=scale)
     }
 }
+
+
+print.nb <- function(x, ...) {
+    nb <- x
+    if (!inherits(nb, "nb")) stop("Not a neighbours list")
+    c.nb <- card(nb)
+    n.nb <- length(nb)
+    regids <- attr(nb, "region.id")
+    if(is.null(regids)) regids <- as.character(1:n.nb)
+    cat("Neighbour list object:\n")
+    cat("Number of regions:", n.nb, "\n")
+    cat("Number of nonzero links:", sum(c.nb), "\n")
+    cat("Percentage nonzero weights:", (100*sum(c.nb))/(n.nb*n.nb), "\n")
+    cat("Average number of links:", mean(c.nb), "\n")
+    if(any(c.nb == 0)) cat(length(c.nb[c.nb == 0]), " region", 
+        ifelse(length(c.nb[c.nb == 0]) < 2, "", "s"), " with no links:\n",
+	paste(regids[which(c.nb == 0)], collapse=" "), "\n", sep="")
+    invisible(x)
+}
+
+summary.listw <- function(object, coords=NULL, lonlat=FALSE, 
+	zero.policy=FALSE, scale=1, ...) {
+	cat("Characteristics of weights list object:\n")
+	summary(object$neighbours, coords=coords, lonlat=lonlat, 
+		scale=scale, ...)
+	style <- object$style
+	cat(paste("\nWeights style:", style, "\n"))
+	cat("Weights constants summary:\n")
+	print(data.frame(rbind(unlist(spweights.constants(object,
+		zero.policy=zero.policy))), row.names=style))
+
+}
+
+print.listw <- function(x, zero.policy=FALSE, ...) {
+	cat("Characteristics of weights list object:\n")
+	print.nb(x$neighbours, ...)
+	style <- x$style
+	cat(paste("\nWeights style:", style, "\n"))
+	cat("Weights constants summary:\n")
+	print(data.frame(rbind(unlist(spweights.constants(x,
+		zero.policy=zero.policy))), row.names=style))
+	invisible(x)
+
+}
+

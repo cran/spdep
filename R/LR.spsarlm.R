@@ -1,15 +1,17 @@
-# Copyright 2002 by Roger Bivand 
+# Copyright 2002-2003 by Roger Bivand 
 #
 
 LR.sarlm <- function(x, y)
 {
 	if (!inherits(x, "logLik")) LLx <- logLik(x)
-	else LLx <- c(x)
+	else LLx <- x
 	if (!inherits(y, "logLik")) LLy <- logLik(y)
-	else LLy <- c(y)
+	else LLy <- y
 	statistic <- 2*(LLx - LLy)
 	attr(statistic, "names") <- "Likelihood ratio"
-	parameter <- 1
+	parameter <- abs(attr(LLx, "df") - attr(LLy, "df"))
+	if (parameter < 1) 
+		stop("non-positive degrees of freedom: no test possible")
 	attr(parameter, "names") <- "df"
 	p.value <- 1 - pchisq(abs(statistic), parameter)
 	estimate <- c(LLx, LLy)
@@ -32,4 +34,6 @@ logLik.sarlm <- function(object, ...) {
 	attr(LL, "df") <- object$parameters
 	LL
 }
+
+residuals.sarlm <- function(object, ...) return(object$residuals)
 

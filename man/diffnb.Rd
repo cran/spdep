@@ -1,4 +1,4 @@
-% Copyright 2001 by Roger S. Bivand
+% Copyright 2001-3 by Roger S. Bivand
 \name{diffnb}
 \alias{diffnb}
 \title{Differences between neighbours lists}
@@ -11,7 +11,7 @@ diffnb(x, y, verbose=TRUE)
 \arguments{
   \item{x}{an object of class \code{nb}}
   \item{y}{an object of class \code{nb}}
-  \item{verbose}{report regions with differences}
+  \item{verbose}{report regions ids taken from object attribute "region.id" with differences}
 }
 
 }
