@@ -12,12 +12,13 @@ a Bonferroni-type test is suggested in the references, where tables of
 critical values may be found (see also details below).
 }
 \usage{
-localG(x, listw, zero.policy=FALSE)
+localG(x, listw, zero.policy=FALSE, spChk=NULL)
 }
 \arguments{
   \item{x}{a numeric vector the same length as the neighbours list in listw}
   \item{listw}{a \code{listw} object created for example by \code{nb2listw}}
   \item{zero.policy}{if TRUE assign zero to the lagged value of zones without neighbours, if FALSE assign NA}
+  \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
 }
 \details{
 If the neighbours member of listw has a "self.included" attribute set
@@ -50,19 +51,19 @@ International), 261--277.}
 data(getisord)
 xycoords <- cbind(xyz$x, xyz$y)
 nb30 <- dnearneigh(xycoords, 0, 30)
-G30 <- localG(xyz$val, nb2listw(nb30, style="B"))
+G30 <- localG(spNamedVec("val", xyz), nb2listw(nb30, style="B"))
 G30[length(xyz$val)-136]
 nb60 <- dnearneigh(xycoords, 0, 60)
-G60 <- localG(xyz$val, nb2listw(nb60, style="B"))
+G60 <- localG(spNamedVec("val", xyz), nb2listw(nb60, style="B"))
 G60[length(xyz$val)-136]
 nb90 <- dnearneigh(xycoords, 0, 90)
-G90 <- localG(xyz$val, nb2listw(nb90, style="B"))
+G90 <- localG(spNamedVec("val", xyz), nb2listw(nb90, style="B"))
 G90[length(xyz$val)-136]
 nb120 <- dnearneigh(xycoords, 0, 120)
-G120 <- localG(xyz$val, nb2listw(nb120, style="B"))
+G120 <- localG(spNamedVec("val", xyz), nb2listw(nb120, style="B"))
 G120[length(xyz$val)-136]
 nb150 <- dnearneigh(xycoords, 0, 150)
-G150 <- localG(xyz$val, nb2listw(nb150, style="B"))
+G150 <- localG(spNamedVec("val", xyz), nb2listw(nb150, style="B"))
 G150[length(xyz$val)-136]
 brks <- seq(-5,5,1)
 cm.col <- cm.colors(length(brks)-1)
@@ -71,7 +72,8 @@ image(x, y, t(matrix(G30, nrow=16, ncol=16, byrow=TRUE)),
 text(xyz$x, xyz$y, round(G30, digits=1), cex=0.7)
 polygon(c(195,225,225,195), c(195,195,225,225), lwd=2)
 title(main=expression(paste("Values of the ", G[i], " statistic")))
-G30s <- localG(xyz$val, nb2listw(include.self(nb30), style="B"))
+G30s <- localG(spNamedVec("val", xyz), nb2listw(include.self(nb30),
+ style="B"))
 cat("value according to Getis and Ord's eq. 14.2, p. 263 (1996)\n")
 G30s[length(xyz$val)-136]
 cat(paste("value given by Getis and Ord (1996), p. 267",

@@ -14,7 +14,7 @@ dependent variable, RLMlag the other way round), and a portmanteau test
 (SARMA, in fact LMerr + RLMlag).
 }
 \usage{
-lm.LMtests(model, listw, zero.policy=FALSE, test="LMerr")
+lm.LMtests(model, listw, zero.policy=FALSE, test="LMerr", spChk=NULL)
 print.LMtestlist(x, ...)
 }
 
@@ -27,6 +27,7 @@ expected to be row-standardised (W-style)}
 neighbours, if FALSE assign NA}
   \item{test}{a character vector of tests requested chosen from LMerr, LMlag,
 RLMerr, RLMlag, SARMA}
+  \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
   \item{x}{object to be printed}
   \item{...}{printing arguments to be passed through}
 }

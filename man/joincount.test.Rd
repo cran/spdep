@@ -13,7 +13,8 @@ factors, and results may be checked against those of \code{geary.mc}
 permutations.
 }
 \usage{
-joincount.test(fx, listw, zero.policy=FALSE, alternative="greater")
+joincount.test(fx, listw, zero.policy=FALSE, alternative="greater",
+ spChk=NULL)
 print.jclist(x, ...)
 }
 \arguments{
@@ -21,6 +22,7 @@ print.jclist(x, ...)
   \item{listw}{a \code{listw} object created for example by \code{nb2listw}}
   \item{zero.policy}{if TRUE assign zero to the lagged value of zones without neighbours, if FALSE assign NA}
   \item{alternative}{a character string specifying the alternative hypothesis, must be one of greater (default), less or two.sided.}
+  \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
   \item{x}{object to be printed}
   \item{...}{arguments to be passed through for printing}
 }
@@ -44,6 +46,7 @@ A list with class \code{jclist} of lists with class \code{htest} for each of the
 \examples{
 data(oldcol)
 HICRIME <- cut(COL.OLD$CRIME, breaks=c(0,35,80), labels=c("low","high"))
+names(HICRIME) <- rownames(COL.OLD)
 joincount.test(HICRIME, nb2listw(COL.nb, style="B"))
 joincount.test(HICRIME, nb2listw(COL.nb, style="C"))
 joincount.test(HICRIME, nb2listw(COL.nb, style="S"))

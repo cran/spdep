@@ -7,10 +7,11 @@ errorsarlm <- function(formula, data = list(), listw, method="eigen",
 	mt <- terms(formula, data = data)
 	mf <- lm(formula, data, method="model.frame")
 	if (class(listw) != "listw") stop("No neighbourhood list")
-	cat("\nSpatial autoregressive error model\nJacobian calculated using ")
+	if (!quiet) cat(paste("\nSpatial autoregressive error model\n", 
+		"Jacobian calculated using "))
 	switch(method,
-		eigen = cat("neighbourhood matrix eigenvalues\n"),
-		sparse = cat("sparse matrix techniques\n"),
+		eigen = if (!quiet) cat("neighbourhood matrix eigenvalues\n"),
+		sparse = if (!quiet) cat("sparse matrix techniques\n"),
 		stop("...\n\nUnknown method\n"))
 	y <- model.response(mf, "numeric")
 	if (any(is.na(y))) stop("NAs in dependent variable")
@@ -42,7 +43,7 @@ errorsarlm <- function(formula, data = list(), listw, method="eigen",
 	colnames(WX) <- xcolnames
 	rm(wx)
 	if (method == "eigen") {
-		cat("Computing eigenvalues ...\n")
+		if (!quiet) cat("Computing eigenvalues ...\n")
 		eig <- eigenw(listw)
 		cat("\n")
 		eig.range <- range(eig)

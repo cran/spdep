@@ -23,8 +23,8 @@ Hepple, L. W. 1976 A maximum likelihood model for econometric estimation with sp
 }
 \examples{
 data(used.cars)
-moran.test(used.cars$price.1960, nb2listw(usa48.nb))
-moran.plot(used.cars$price.1960, nb2listw(usa48.nb),
+moran.test(spNamedVec("price.1960", used.cars), nb2listw(usa48.nb))
+moran.plot(spNamedVec("price.1960", used.cars), nb2listw(usa48.nb),
   labels=rownames(used.cars))
 uc.lm <- lm(price.1960 ~ tax.charges, data=used.cars)
 summary(uc.lm)

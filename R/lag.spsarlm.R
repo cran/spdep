@@ -7,12 +7,13 @@ lagsarlm <- function(formula, data = list(), listw, type="lag",
 	mt <- terms(formula, data = data)
 	mf <- lm(formula, data, method="model.frame")
 	if (missing(listw)) stop("No neighbourhood list")
-	switch(type, lag = cat("\nSpatial lag model\n"),
-		mixed = cat("\nSpatial mixed autoregressive model\n"),
-		stop("\nUnknown model type\n"))
-	cat("\nJacobian calculated using ")
-	switch(method, eigen = cat("neighbourhood matrix eigenvalues\n"),
-		sparse = cat("sparse matrix techniques\n"),
+	switch(type, lag = if (!quiet) cat("\nSpatial lag model\n"),
+	    mixed = if (!quiet) cat("\nSpatial mixed autoregressive model\n"),
+	    stop("\nUnknown model type\n"))
+	if (!quiet) cat("Jacobian calculated using ")
+	switch(method, 
+		eigen = if (!quiet) cat("neighbourhood matrix eigenvalues\n"),
+		sparse = if (!quiet) cat("sparse matrix techniques\n"),
 		stop("...\nUnknown method\n"))
 	y <- model.response(mf, "numeric")
 	if (any(is.na(y))) stop("NAs in dependent variable")
@@ -44,7 +45,7 @@ lagsarlm <- function(formula, data = list(), listw, type="lag",
 		rm(wx, WX)
 	}
 	if (method == "eigen") {
-		cat("Computing eigenvalues ...\n")
+		if (!quiet) cat("Computing eigenvalues ...\n")
 		eig <- eigenw(listw)
 		cat("\n")
 		eig.range <- range(eig)

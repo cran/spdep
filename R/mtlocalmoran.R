@@ -2,15 +2,20 @@
 #
 
 localmoran.sad <- function (model, select, nb, glist = NULL, style = "W",
-    zero.policy = FALSE, alternative = "greater", save.Vi = FALSE) {
+    zero.policy = FALSE, alternative = "greater", spChk=NULL,
+    save.Vi = FALSE) {
     if (class(nb) != "nb") 
         stop(paste(deparse(substitute(nb)), "not an nb object"))
     if (class(model) != "lm") 
         stop(paste(deparse(substitute(model)), "not an lm object"))
     n <- length(nb)
-    u <- as.vector(residuals(model))
+    u <- residuals(model)
     if (n != length(u)) 
         stop("objects of different length")
+	if (is.null(spChk)) spChk <- get.spChkOption()
+	if (spChk && !chkIDs(u, nb2listw(nb, zero.policy=zero.policy)))
+		stop("Check of data and weights ID integrity failed")
+    u <- as.vector(u)
     select <- unique(as.integer(select))
     if (any(select < 1 || select > n))
         stop("select out of range")

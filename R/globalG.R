@@ -4,7 +4,7 @@
 #
 #
 globalG.test <- function(x, listw, zero.policy=FALSE,
-	alternative="greater") {
+	alternative="greater", spChk=NULL) {
 	if (class(listw) != "listw")
 	stop(paste(deparse(substitute(listw)), "is not a listw object"))
 	if (listw$style != "B") stop("Only binary weights allowed")
@@ -15,6 +15,9 @@ globalG.test <- function(x, listw, zero.policy=FALSE,
 		stop(paste("Negative value in ", deparse(substitute(x))))
 	n <- length(listw$neighbours)
 	if (n != length(x))stop("Different numbers of observations")
+	if (is.null(spChk)) spChk <- get.spChkOption()
+	if (spChk && !chkIDs(x, listw))
+		stop("Check of data and weights ID integrity failed")
 
 	wc <- spweights.constants(listw, zero.policy=zero.policy)
 	n1 <- n - 1

@@ -6,7 +6,10 @@ eigenw <- function(listw, quiet=TRUE)
 	if(class(listw) != "listw") stop("not a listw object")
 	w <- listw2mat(listw)
 	e <- eigen(w, only.values=TRUE)$values
-	if (is.complex(e)) e <- Re(e)
+	if (is.complex(e)) {
+		e <- Re(e)
+		warning("complex eigenvalues - using real part")
+	}
 	if (!quiet) {
 		cat("Largest eigenvalue:", max(e),
 		"Sum of eigenvalues:", sum(e), "\n")

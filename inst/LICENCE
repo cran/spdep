@@ -81,6 +81,9 @@ Tiefelsdorf based on sources named in man/eire.Rd, and downloaded from:
 
 http://geog-www.sbs.ohio-state.edu/faculty/tiefelsdorf/GeoStat.htm
 
+File: data/BH.rda is derived from data sets made available by Renato
+M. Assuncao and Edna A. Reis.
+
 Other files in the data directory are derived from sources given on
 their help pages.
 

@@ -1,14 +1,20 @@
 # Copyright 2001-2 by Roger Bivand 
 #
 
-lm.LMtests <- function(model, listw, zero.policy=FALSE, test="LMerr") {
+lm.LMtests <- function(model, listw, zero.policy=FALSE, test="LMerr",
+	spChk=NULL) {
 	if (class(listw) != "listw") stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
 	if(class(model) != "lm") stop(paste(deparse(substitute(model)),
 		"not an lm object"))
 	N <- length(listw$neighbours)
-	u <- as.vector(resid(model))
+	u <- resid(model)
 	if (N != length(u)) stop("objects of different length")
+	if (is.null(spChk)) spChk <- get.spChkOption()
+	if (spChk && !chkIDs(u, listw))
+		stop("Check of data and weights ID integrity failed")
+	u <- as.vector(u)
+
 	if (is.null(attr(listw$weights, "W")) || !attr(listw$weights, "W"))
 		warning("Spatial weights matrix not row standardized")
 

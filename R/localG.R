@@ -1,7 +1,7 @@
-# Copyright 2001 by Roger Bivand 
+# Copyright 2001-3 by Roger Bivand 
 #
 
-localG <- function(x, listw, zero.policy=FALSE) {
+localG <- function(x, listw, zero.policy=FALSE, spChk=NULL) {
 	if (class(listw) != "listw")
 		stop(paste(deparse(substitute(listw)), "is not a listw object"))
 	if (!is.numeric(x))
@@ -9,6 +9,9 @@ localG <- function(x, listw, zero.policy=FALSE) {
 	if (any(is.na(x))) stop(paste("NA in ", deparse(substitute(x))))
 	n <- length(listw$neighbours)
 	if (n != length(x))stop("Different numbers of observations")
+	if (is.null(spChk)) spChk <- get.spChkOption()
+	if (spChk && !chkIDs(x, listw))
+		stop("Check of data and weights ID integrity failed")
 	gstari <- FALSE
 	if (!is.null(attr(listw$neighbours, "self.included")) &&
 		attr(listw$neighbours, "self.included")) gstari <- TRUE

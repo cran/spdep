@@ -13,7 +13,8 @@ Moran (\eqn{C_{ij} = z_i z_j}{C(i,j) = z(i)*z(j)}), Geary
 permutation test.
 }
 \usage{
-sp.mantel.mc(var, listw, nsim, type = "moran", zero.policy = FALSE, alternative = "greater")
+sp.mantel.mc(var, listw, nsim, type = "moran", zero.policy = FALSE,
+ alternative = "greater", spChk=NULL)
 plot.mc.sim(x, ...)
 }
 %- maybe also `usage' for other objects documented here.
@@ -26,6 +27,7 @@ plot.mc.sim(x, ...)
   neighbours, if FALSE assign NA}
   \item{alternative}{a character string specifying the alternative hypothesis, 
   must be one of greater (default), less or two.sided.}
+  \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
   \item{x}{the object to be plotted}
   \item{...}{further arguments passed through}
 }
@@ -57,12 +59,13 @@ is in the vegan package.}
 
 \examples{
 data(oldcol)
-sim1 <- sp.mantel.mc(COL.OLD$CRIME, nb2listw(COL.nb), nsim=99, type="geary",
-  alternative="less")
+sim1 <- sp.mantel.mc(spNamedVec("CRIME", COL.OLD), nb2listw(COL.nb),
+ nsim=99, type="geary", alternative="less")
 sim1
 plot(sim1)
-sp.mantel.mc(COL.OLD$CRIME, nb2listw(COL.nb), nsim=99, type="sokal",
-  alternative="less")
-sp.mantel.mc(COL.OLD$CRIME, nb2listw(COL.nb), nsim=99, type="moran")
+sp.mantel.mc(spNamedVec("CRIME", COL.OLD), nb2listw(COL.nb), nsim=99,
+ type="sokal", alternative="less")
+sp.mantel.mc(spNamedVec("CRIME", COL.OLD), nb2listw(COL.nb), nsim=99,
+ type="moran")
 }
 \keyword{spatial}

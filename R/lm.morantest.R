@@ -2,15 +2,19 @@
 #
 
 lm.morantest <- function(model, listw, zero.policy=FALSE, 
-	    alternative = "greater") {
+	    alternative = "greater", spChk=NULL) {
 	if (class(listw) != "listw") stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
 	if(class(model) != "lm") stop(paste(deparse(substitute(model)),
 		"not an lm object"))
  	N <- length(listw$neighbours)
-	u <- as.vector(residuals(model))
+	u <- residuals(model)
 	if (N != length(u)) 
             stop("objects of different length")
+	if (is.null(spChk)) spChk <- get.spChkOption()
+	if (spChk && !chkIDs(u, listw))
+		stop("Check of data and weights ID integrity failed")
+	u <- as.vector(u)
 	listw.U <- listw2U(listw)
 
 	S0 <- sum(unlist(listw.U$weights))

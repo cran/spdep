@@ -1,4 +1,4 @@
-# Copyright 2001-2 by Roger Bivand 
+# Copyright 2001-3 by Roger Bivand 
 #
 
 spweights.constants <- function(listw, zero.policy=FALSE) {
@@ -165,4 +165,5 @@ listw2star <- function(listw, ireg, style, n, D, a, zero.policy) {
     attr(res, "region.id") <- attr(listw, "region.id")
     res
 }
+
 

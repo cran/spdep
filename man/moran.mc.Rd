@@ -6,7 +6,7 @@
  A permutation test for Moran's I statistic calculated by using nsim random permutations of x for the given spatial weighting scheme, to establish the rank of the observed statistic in relation to the nsim simulated values.
 }
 \usage{
-moran.mc(x, listw, nsim, zero.policy=FALSE, alternative="greater")
+moran.mc(x, listw, nsim, zero.policy=FALSE, alternative="greater", spChk=NULL)
 }
 \arguments{
   \item{x}{a numeric vector the same length as the neighbours list in listw}
@@ -14,6 +14,7 @@ moran.mc(x, listw, nsim, zero.policy=FALSE, alternative="greater")
   \item{nsim}{number of permutations}
   \item{zero.policy}{if TRUE assign zero to the lagged value of zones without neighbours, if FALSE assign NA}
   \item{alternative}{a character string specifying the alternative hypothesis, must be one of greater (default), less or two.sided.}
+  \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}}
 }
 
 \value{
@@ -33,16 +34,17 @@ A list with class \code{htest} and \code{mc.sim} containing the following compon
 
 \examples{
 data(oldcol)
-sim1 <- moran.mc(COL.OLD$CRIME, nb2listw(COL.nb, style="W"), nsim=99)
+sim1 <- moran.mc(spNamedVec("CRIME", COL.OLD), nb2listw(COL.nb, style="W"),
+ nsim=99)
 mean(sim1$res)
 var(sim1$res)
 summary(sim1$res)
 colold.lags <- nblag(COL.nb, 3)
-sim2 <- moran.mc(COL.OLD$CRIME, nb2listw(colold.lags[[2]], style="W"),
- nsim=99)
+sim2 <- moran.mc(spNamedVec("CRIME", COL.OLD), nb2listw(colold.lags[[2]],
+ style="W"), nsim=99)
 summary(sim2$res)
-sim3 <- moran.mc(COL.OLD$CRIME, nb2listw(colold.lags[[3]], style="W"),
- nsim=99)
+sim3 <- moran.mc(spNamedVec("CRIME", COL.OLD), nb2listw(colold.lags[[3]],
+ style="W"), nsim=99)
 summary(sim3$res)
 }
 \keyword{spatial}

@@ -48,6 +48,7 @@ legend(c(-280, -70), c(3700, 3900), legend=paste("prob.", levels(pm.f)),
   fill=cols, bty="n")
 ft.SID74 <- sqrt(1000)*(sqrt(nc.sids$SID74/nc.sids$BIR74) +
   sqrt((nc.sids$SID74+1)/nc.sids$BIR74))
+names(ft.SID74) <- rownames(nc.sids)
 stem(ft.SID74, scale=2)
 plotpolys(nc.utm.polys, nc.utmbbs, border="grey")
 plot(sidsorig.nb, utm18.countyseats, add=TRUE, col="blue")
@@ -60,9 +61,11 @@ sub.sidsorig.nb <- subset(sidsorig.nb, drop.no.neighs)
 sub.ft.SID74 <- subset(ft.SID74, drop.no.neighs)
 moran.plot(sub.ft.SID74, nb2listw(sub.sidsorig.nb),
   labels=attr(sub.sidsorig.nb, "region.id"))
-moran.test(ft.SID74*sqrt(nc.sids$BIR74), nb2listw(sidsorig.nb,
-  zero.policy=TRUE), zero.policy=TRUE, alternative="two.sided")
-geary.test(ft.SID74*sqrt(nc.sids$BIR74), nb2listw(sidsorig.nb,
-  zero.policy=TRUE), zero.policy=TRUE, alternative="two.sided")
+tr.SID74 <- ft.SID74*sqrt(nc.sids$BIR74)
+names(tr.SID74) <- names(ft.SID74)
+moran.test(tr.SID74, nb2listw(sidsorig.nb, zero.policy=TRUE),
+ zero.policy=TRUE, alternative="two.sided")
+geary.test(tr.SID74, nb2listw(sidsorig.nb, zero.policy=TRUE),
+ zero.policy=TRUE, alternative="two.sided")
 }
 \keyword{datasets}

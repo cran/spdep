@@ -1,5 +1,7 @@
+BH                      Belo Horizont 1994 homicide data
 oldcol                  Columbus OH spatial analysis data set - old
                         numbering
+EBImoran.mc             Permutation test for empirical Bayes index
 LR.sarlm                Likelihood ratio test
 afcon                   Spatial patterns of conflict in Africa 1966-78
 airdist                 Measure distance from plot
@@ -62,6 +64,7 @@ predict.sarlm           Prediction for spatial simultaneous
 read.gal                Read a GAL lattice file into a neighbours list
 residuals.sarlm         Access functions for spatial simultaneous
                         autoregressive linear model objects
+set.spChkOption         Control checking of spatial object IDs
 sp.correlogram          Spatial correlogram
 sp.mantel.mc            Mantel-Hubert spatial general cross product
                         statistic
