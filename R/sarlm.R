@@ -40,7 +40,7 @@ predict.sarlm <- function(object, newdata=NULL, listw=NULL,
 		}
 	}
 	else {
-		if (is.null(listw) || class(listw) != "listw") 
+		if (is.null(listw) || !inherits(listw, "listw")) 
 			stop ("spatial weights list required")
 		if (nrow(newdata) != length(listw$neighbours))
 			stop("mismatch between newdata and spatial weights")

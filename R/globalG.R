@@ -5,7 +5,7 @@
 #
 globalG.test <- function(x, listw, zero.policy=FALSE,
 	alternative="greater", spChk=NULL) {
-	if (class(listw) != "listw")
+	if (!inherits(listw, "listw"))
 	stop(paste(deparse(substitute(listw)), "is not a listw object"))
 	if (listw$style != "B") stop("Only binary weights allowed")
 	if (!is.numeric(x))

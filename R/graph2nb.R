@@ -3,7 +3,7 @@
 
 
 graph2nb <- function(gob, row.names=NULL,sym=FALSE) {
-	if (class(gob) != "Graph") stop("Not a Graph object")
+	if (!inherits(gob, "Graph")) stop("Not a Graph object")
 	res <- vector(mode="list", length=gob$np)
     	if (!is.null(row.names)) if(length(row.names) != gob$np)
         	stop("row.names wrong length")

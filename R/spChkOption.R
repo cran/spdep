@@ -11,21 +11,24 @@ get.spChkOption <- function() {
 	get("spChkID", env = .spChkOption)
 }
 
-chkIDs <- function(x, listw) {
-	if (!is.array(x) & !is.data.frame(x)) {
-	    if (is.null(xn <- names(x)))
-	    	stop(paste(deparse(substitute(x)), "has no names"))
-	} else {
-	    if (is.null(xn <- rownames(x)))
-		stop(paste(deparse(substitute(x)), "has no row names"))
-	}
-	if(class(listw) != "listw") stop(paste(deparse(substitute(listw)),
-		"is not a listw object"))
-	if (is.null(ln <- attr(listw, "region.id")))
-		stop(paste(deparse(substitute(listw)), "has no region IDs"))
-	if (length(ln) != length(xn)) stop("objects of different length")
-	res <- all(ln == xn)
-	res
+chkIDs <- function (x, listw) 
+{
+    if (!is.array(x) & !is.data.frame(x)) {
+        if (is.null(xn <- names(x))) 
+            stop(paste(deparse(substitute(x)), "has no names"))
+    }
+    else {
+        if (is.null(xn <- rownames(x))) 
+            stop(paste(deparse(substitute(x)), "has no row names"))
+    }
+    if (!inherits(listw, "nb")) 
+        stop(paste(deparse(substitute(listw)), "is not an listw  or nb object"))
+    if (is.null(ln <- attr(listw, "region.id"))) 
+        stop(paste(deparse(substitute(listw)), "has no region IDs"))
+    if (length(ln) != length(xn)) 
+        stop("objects of different length")
+    res <- all(ln == xn)
+    res
 }
 
 spNamedVec <- function(var, data) {

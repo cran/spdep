@@ -1,10 +1,9 @@
 Package: spdep
-Version: 0.1-8
-Date: 2003-01-20
+Version: 0.1-9
+Date: 2003-04-23
 Title: Spatial dependence: weighting schemes, statistics and models
 Author: Roger Bivand <Roger.Bivand@nhh.no>, with contributions by Nicholas
-  Lewin-Koh <kohnicho@comp.nus.edu.sg>, Michael Tiefelsdorf
-  <tiefelsdorf.1@osu.edu> and Hisaji ONO <hi-ono@mn.xdsl.ne.jp>
+  Lewin-Koh, Michael Tiefelsdorf, Marilia Carvalho, and Hisaji Ono
 Maintainer: Roger Bivand <Roger.Bivand@nhh.no>
 Depends: R (>= 1.5.0), stepfun, tripack
 Description: A collection of functions to create spatial weights matrix
@@ -12,9 +11,9 @@ Description: A collection of functions to create spatial weights matrix
   tesselations, for summarising these objects, and for permitting their
   use in spatial data analysis; a collection of tests for spatial
   autocorrelation, including global Moran's I, Geary's C, Hubert/Mantel
-  general cross product statistic, Empirical Bayes Index, and Getis/Ord G,
-  local Moran's I and Getis/Ord G, saddlepoint approximations for global
-  and local Moran's I; and functions for estimating spatial simultaneous
-  autoregressive (SAR) models.
+  general cross product statistic, Empirical Bayes estimates and spatial
+  Index, and Getis/Ord G, local Moran's I and Getis/Ord G, saddlepoint
+  approximations for global and local Moran's I; and functions for
+  estimating spatial simultaneous autoregressive (SAR) models.
 License: GPL version 2 or newer
 URL: http://www.r-project.org

@@ -1,12 +1,14 @@
 Spatial dependence: weighting schemes, statistics and models
 
-A collection of functions to create spatial weights matrix
-objects from polygon contiguities, from point patterns by distance and
-tesselations, for summarising these objects, and for permitting their
-use in spatial data analysis; a collection of tests for spatial
-autocorrelation, including global Moran's I and Geary's C, local Moran's I,
-saddlepoint approximations for global and local Moran's I; and functions for
-estimating spatial simultaneous autoregressive (SAR) models. 
+A collection of functions to create spatial weights matrix objects from
+polygon contiguities, from point patterns by distance and tesselations,
+for summarising these objects, and for permitting their use in spatial
+data analysis; a collection of tests for spatial autocorrelation,
+including global Moran's I, Geary's C, Hubert/Mantel general cross product
+statistic, Empirical Bayes estimates and spatial Index, and Getis/Ord G,
+local Moran's I and Getis/Ord G, saddlepoint approximations for global
+and local Moran's I; and functions for estimating spatial simultaneous
+autoregressive (SAR) models.
 
 This file is intended to clarify ownership and copyright: where
 possible individual files also carry brief copyright notices. 
@@ -65,6 +67,9 @@ Files: R/mtlocalmoran.R and R/mtmoran.R are copyright (c) 2002 by Roger
 Bivand and Michael Tiefelsdorf, and are subject to the licence at the
 foot of this file.
 
+File: R/EBI.R is copyright (c) 2003 by Roger Bivand and Marilio Carvalho, 
+and is subject to the licence at the foot of this file.
+
 Files: data/afcon.rda, data/columbus.rda, data/oldcon.rda,
 data/nc.sids.rda are derived by permission from SpaceStat data files
 prepared by Luc Anselin; they were downloaded from:
@@ -84,10 +89,14 @@ http://geog-www.sbs.ohio-state.edu/faculty/tiefelsdorf/GeoStat.htm
 File: data/BH.rda is derived from data sets made available by Renato
 M. Assuncao and Edna A. Reis.
 
+File: data/auckland.rda is derived from data sets included with INFOMAP 
+in Bailey T, Gatrell A (1995) Interactive Spatial Data Analysis, Harlow: 
+Longman, and is used with permission of the authors.
+
 Other files in the data directory are derived from sources given on
 their help pages.
 
-All other files are copyright (c) 1998-2002 Roger S. Bivand and
+All other files are copyright (c) 1998-2003 Roger S. Bivand and
 are subject to the licence at the foot of this file.
 
 Licence

@@ -16,7 +16,7 @@ joincount <- function(dums, listw) {
 
 joincount.test <- function(fx, listw, zero.policy=FALSE,
 	alternative="greater", spChk=NULL) {
-	if (class(listw) != "listw") stop(paste(deparse(substitute(listw)),
+	if (!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
 	if (!is.factor(fx)) stop(paste(deparse(substitute(x)),
 		"is not a factor"))
@@ -76,7 +76,7 @@ print.jclist <- function(x, ...) {
 
 joincount.mc <- function(fx, listw, nsim, zero.policy=FALSE,
 	alternative="greater", spChk=NULL) {
-	if(class(listw) != "listw") stop(paste(deparse(substitute(listw)),
+	if(!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
 	if(!is.factor(fx)) stop(paste(deparse(substitute(fx)),
 		"is not a factor"))

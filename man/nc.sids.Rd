@@ -38,8 +38,7 @@ seats approximately reprojected to UTM zone 18.
 \examples{
 data(nc.sids)
 stem(floor(sort(1000*(nc.sids$SID74 + 1)/nc.sids$BIR74)*10)/10, scale=2)
-sids.phat <- sum(nc.sids$SID74) / sum(nc.sids$BIR74)
-pm <- ppois(nc.sids$SID74, sids.phat*nc.sids$BIR74)
+pm <- probmap(nc.sids$SID74, nc.sids$BIR74)$pmap
 pm.f <- as.ordered(cut(pm, breaks=c(0.0, 0.01, 0.05, 0.1, 0.9, 0.95, 0.99, 1),
   include.lowest=TRUE))
 cols <- cm.colors(7)

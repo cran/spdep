@@ -6,7 +6,7 @@ errorsarlm <- function(formula, data = list(), listw, method="eigen",
         tol.opt=.Machine$double.eps^0.5, sparsedebug=FALSE) {
 	mt <- terms(formula, data = data)
 	mf <- lm(formula, data, method="model.frame")
-	if (class(listw) != "listw") stop("No neighbourhood list")
+	if (!inherits(listw, "listw")) stop("No neighbourhood list")
 	if (!quiet) cat(paste("\nSpatial autoregressive error model\n", 
 		"Jacobian calculated using "))
 	switch(method,

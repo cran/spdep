@@ -56,7 +56,7 @@ following components:
 \references{Assunção RM, Reis EA 1999 A new proposal to adjust Moran's I for population density. Statistics in Medicine 18, pp. 2147--2162}
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 
-\seealso{\code{\link{moran}}, \code{\link{moran.mc}}, \code{\link{BH}}}
+\seealso{\code{\link{moran}}, \code{\link{moran.mc}}, \code{\link{BH}}, \code{\link{EBest}}}
 
 \examples{
 data(nc.sids)

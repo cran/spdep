@@ -1,34 +1,37 @@
-BH                      Belo Horizont 1994 homicide data
-oldcol                  Columbus OH spatial analysis data set - old
-                        numbering
-EBImoran.mc             Permutation test for empirical Bayes index
-LR.sarlm                Likelihood ratio test
 afcon                   Spatial patterns of conflict in Africa 1966-78
 airdist                 Measure distance from plot
+auckland                Marshall's infant mortality in Auckland
+                        dataset
+BH                      Belo Horizont 1994 homicide data
 boston                  Corrected Boston Housing Data
 card                    Cardinalities for neighbours lists
 cell2nb                 Generate neighbours list for grid cells
+oldcol                  Columbus OH spatial analysis data set - old
+                        numbering
 columbus                Columbus OH spatial analysis data set
 Graph Components        Depth First Search on Neighbor Lists
 diffnb                  Differences between neighbours lists
 dnearneigh              Neighbourhood contiguity by distance
 droplinks               Drop links in a neighbours list
+EBest                   Global Empirical Bayes estimator
+EBImoran.mc             Permutation test for empirical Bayes index
+EBlocal                 Local Empirical Bayes estimator
 edit.nb                 Interactive editing of neighbours lists
 eigenw                  Spatial weights matrix eigenvalues
 eire                    Eire data sets
-errorsarlm              Spatial simultaneous autoregressive error model
-                        estimation
-geary                   Compute Geary's C
+errorsarlm              Spatial simultaneous autoregressive error
+                        model estimation
 geary.mc                Permutation test for Geary's C statistic
+geary                   Compute Geary's C
 geary.test              Geary's C test for spatial autocorrelation
 getisord                Getis-Ord remote sensing example data
 globalG.test            test for spatial autocorrelation
 graphneigh              Graph based spatial weights
 include.self            Include self in neighbours list
 invIrM                  Compute SAR generating operator
-joincount               Count joins between same colours
 joincount.mc            Permutation test for same colour join count
                         statistics
+joincount               Count joins between same colours
 joincount.test          BB join count statistic for k-coloured factors
 knearneigh              K nearest neighbours for spatial weights
 knn2nb                  Neighbours list from knn object
@@ -46,9 +49,10 @@ localG                  G and Gstar local spatial statistics
 localmoran              Local Moran's I statistic
 localmoran.sad          Saddlepoint approximation of local Moran's Ii
                         tests
-moran                   Compute Moran's I
+LR.sarlm                Likelihood ratio test
 moran.mc                Permutation test for Moran's I statistic
 moran.plot              Moran scatterplot
+moran                   Compute Moran's I
 moran.test              Moran's I test for spatial autocorrelation
 nb2listw                Spatial weights for neighbours lists
 nb2mat                  Spatial weights matrices for neighbours lists
@@ -61,6 +65,7 @@ plotpolys               Plot polygons
 poly2nb                 Construct neighbours list from polygon list
 predict.sarlm           Prediction for spatial simultaneous
                         autoregressive linear model objects
+probmap                 Probability mapping for rates
 read.gal                Read a GAL lattice file into a neighbours list
 residuals.sarlm         Access functions for spatial simultaneous
                         autoregressive linear model objects
@@ -68,7 +73,8 @@ set.spChkOption         Control checking of spatial object IDs
 sp.correlogram          Spatial correlogram
 sp.mantel.mc            Mantel-Hubert spatial general cross product
                         statistic
-spweights.constants     Provides constants for spatial weights matrices
+spweights.constants     Provides constants for spatial weights
+                        matrices
 subset.nb               Subset a neighbours list
 summary.nb              Summary function for neighbours lists
 summary.sarlm           summary method for class sarlm

@@ -26,7 +26,7 @@ geary.intern <- function(x, listw, n, zero.policy, type="geary") {
 
 geary.test <- function(x, listw, randomisation=TRUE, zero.policy=FALSE,
     alternative="less", spChk=NULL) {
-	if(class(listw) != "listw") stop(paste(deparse(substitute(listw)),
+	if(!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
 	if(!is.numeric(x)) stop(paste(deparse(substitute(x)),
 		"is not a numeric vector"))
@@ -73,7 +73,7 @@ geary.test <- function(x, listw, randomisation=TRUE, zero.policy=FALSE,
 
 geary.mc <- function(x, listw, nsim, zero.policy=FALSE,
 	alternative="less", spChk=NULL) {
-	if(class(listw) != "listw") stop(paste(deparse(substitute(listw)),
+	if(!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
 	if(!is.numeric(x)) stop(paste(deparse(substitute(x)),
 		"is not a numeric vector"))

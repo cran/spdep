@@ -2,7 +2,7 @@
 #
 
 localG <- function(x, listw, zero.policy=FALSE, spChk=NULL) {
-	if (class(listw) != "listw")
+	if (!inherits(listw, "listw"))
 		stop(paste(deparse(substitute(listw)), "is not a listw object"))
 	if (!is.numeric(x))
 		stop(paste(deparse(substitute(x)), "is not a numeric vector"))

@@ -3,9 +3,9 @@
 
 LR.sarlm <- function(x, y)
 {
-	if (class(x) != "logLik") LLx <- logLik(x)
+	if (!inherits(x, "logLik")) LLx <- logLik(x)
 	else LLx <- c(x)
-	if (class(y) != "logLik") LLy <- logLik(y)
+	if (!inherits(y, "logLik")) LLy <- logLik(y)
 	else LLy <- c(y)
 	statistic <- 2*(LLx - LLy)
 	attr(statistic, "names") <- "Likelihood ratio"

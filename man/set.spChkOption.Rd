@@ -18,7 +18,7 @@ spNamedVec(var, data)
 \arguments{
   \item{check}{a logical value, TRUE or FALSE}
   \item{x}{a vector the same length, or a two-dimensional array, or data frame with the same number of rows as the neighbours list in listw}
-  \item{listw}{a \code{listw} object created for example by \code{nb2listw}}
+  \item{listw}{a \code{listw} object or \code{nb} object inheriting from "nb"}
   \item{var}{a character string or integer value for the column to be selected}
   \item{data}{a two-dimensional array or data frame containing var}
 }
