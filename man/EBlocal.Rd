@@ -32,7 +32,7 @@ and a \code{parameters} attribute list with components:
   \item{m}{a numerical vector of local gamma values}
 }
 \references{Marshall R M (1991) Mapping disease and mortality rates using Empirical Bayes Estimators, Applied Statistics, 40, 283--294; Bailey T, Gatrell A (1995) Interactive Spatial Data Analysis, Harlow: Longman, pp. 303--306.}
-\author{Roger Bivand \email{Roger.Bivand@nhh.no}, based on contributions by Marilio Carvalho}
+\author{Roger Bivand \email{Roger.Bivand@nhh.no}, based on contributions by Marilia Carvalho}
 
 \seealso{\code{\link{EBest}}, \code{\link{probmap}}}
 
