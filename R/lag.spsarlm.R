@@ -100,16 +100,16 @@ lagsarlm <- function(formula, data = list(), listw,
 		else eig.range <- 1/range(eig)
 		lm.null <- lm(y ~ x - 1)
 		lm.w <- lm.fit(x, wy)
-		lm.rho <- lm.fit(cbind(x, wy), y)
-		rho <- coef(lm.rho)[length(coef(lm.rho))]
-		if (rho < eig.range[1]+.Machine$double.eps) rho <- 0.0
-		if (rho > eig.range[2]-.Machine$double.eps) rho <- 0.0
 		e.null <- lm.null$residuals
 		e.w <- lm.w$residuals
 		e.a <- t(e.null) %*% e.null
 		e.b <- t(e.w) %*% e.null
 		e.c <- t(e.w) %*% e.w
 		if (optim) {
+		    lm.rho <- lm.fit(cbind(x, wy), y)
+		    rho <- coef(lm.rho)[length(coef(lm.rho))]
+		    if (rho < eig.range[1]+.Machine$double.eps) rho <- 0.0
+		    if (rho > eig.range[2]-.Machine$double.eps) rho <- 0.0
 		    opt <- optim(par=c(rho), sar.lag.mixed.f, 
 			method="L-BFGS-B", 
 			lower=eig.range[1]+.Machine$double.eps, 
@@ -236,11 +236,13 @@ sar.lag.mixed.f.s <- function(rho, sn, e.a, e.b, e.c, n, quiet, sparsedebug)
 }
 
 
-sar.lag.mix.f.sM <- function(rho, W, I, e.a, e.b, e.c, n, quiet)
+sar.lag.mix.f.sM <- function(rho, W, I, e.a, e.b, e.c, n, tmpmax, quiet)
 {
 	SSE <- e.a - 2*rho*e.b + rho*rho*e.c
 	s2 <- SSE/n
-	ret <- (log(det(I - rho * W))
+	Jacobian <- log(det(chol((I - rho * W), tmpmax=tmpmax))^2)
+	gc(FALSE)
+	ret <- (Jacobian
 		- ((n/2)*log(2*pi)) - (n/2)*log(s2) - (1/(2*s2))*SSE)
 	if (!quiet) 
 	    cat("(SparseM) rho:\t", rho, "\tfunction value:\t", ret, "\n")
@@ -259,6 +261,9 @@ dosparse <- function (listw, y, x, wy, K, quiet, tol.opt, sparsedebug,
 			similar <- TRUE
 		} else W <- asMatrixCsrListw(listw)
 		I <- asMatrixCsrI(n)
+		tmpmax <- sum(card(listw$neighbours)) + n
+		# tmpmax and gc() calls: Danlin Yu 20041213
+		gc(FALSE)
 	}
 	m <- ncol(x)
 	n <- nrow(x)
@@ -268,10 +273,6 @@ dosparse <- function (listw, y, x, wy, K, quiet, tol.opt, sparsedebug,
 		thisx <- x[,-i]
 		lm.null <- lm.fit(thisx, y)
 		lm.w <- lm.fit(thisx, wy)
-		lm.rho <- lm.fit(cbind(x, wy), y)
-		rho <- coef(lm.rho)[length(coef(lm.rho))]
-		if (rho <= interval[1]) rho <- 0.0
-		if (rho >= interval[2]) rho <- 0.0
 		e.null <- lm.null$residuals
 		e.w <- lm.w$residuals
 		e.a <- t(e.null) %*% e.null
@@ -282,13 +283,18 @@ dosparse <- function (listw, y, x, wy, K, quiet, tol.opt, sparsedebug,
 			e.a=e.a, e.b=e.b, e.c=e.c, n=n, quiet=quiet,
 			sparsedebug=sparsedebug)$objective
 		else if (method == "SparseM") {
-		    if (optim) { opt <- optim(par=c(rho), 
-			sar.lag.mix.f.sM, method="L-BFGS-B", 
-			lower=interval[1],
-			upper=interval[2],
-			control=control, 
-			W=W, I=I, e.a=e.a, e.b=e.b, e.c=e.c, n=n, 
-			quiet=quiet)
+		    if (optim) { 
+			lm.rho <- lm.fit(cbind(thisx, wy), y)
+			rho <- coef(lm.rho)[length(coef(lm.rho))]
+			if (rho <= interval[1]) rho <- 0.0
+			if (rho >= interval[2]) rho <- 0.0
+			opt <- optim(par=c(rho), 
+			    sar.lag.mix.f.sM, method="L-BFGS-B", 
+			    lower=interval[1],
+			    upper=interval[2],
+			    control=control, 
+			    W=W, I=I, e.a=e.a, e.b=e.b, e.c=e.c, n=n, 
+			    tmpmax=tmpmax, quiet=quiet)
 			if (opt$convergence == 1) 
 				warning("iteration limit reached")
 			if (opt$convergence == 51) warning(opt$message)
@@ -297,8 +303,10 @@ dosparse <- function (listw, y, x, wy, K, quiet, tol.opt, sparsedebug,
 		    } else {
 			LLs[[j]] <- optimize(sar.lag.mix.f.sM,
 			interval=interval, maximum=TRUE, tol=tol.opt, W=W, I=I,
-			e.a=e.a, e.b=e.b, e.c=e.c, n=n, quiet=quiet)$objective
+			e.a=e.a, e.b=e.b, e.c=e.c, n=n, tmpmax=tmpmax, 
+			quiet=quiet)$objective
 		    }
+		    gc(FALSE)
 		}
 		attr(LLs[[j]], "nall") <- n
 		attr(LLs[[j]], "nobs") <- n
@@ -309,10 +317,6 @@ dosparse <- function (listw, y, x, wy, K, quiet, tol.opt, sparsedebug,
 	}
 	lm.null <- lm(y ~ x - 1)
 	lm.w <- lm.fit(x, wy)
-	lm.rho <- lm.fit(cbind(x, wy), y)
-	rho <- coef(lm.rho)[length(coef(lm.rho))]
-	if (rho <= interval[1]) rho <- 0.0
-	if (rho >= interval[2]) rho <- 0.0
 	e.null <- lm.null$residuals
 	e.w <- lm.w$residuals
 	e.a <- t(e.null) %*% e.null
@@ -325,13 +329,17 @@ dosparse <- function (listw, y, x, wy, K, quiet, tol.opt, sparsedebug,
 		sparsedebug=sparsedebug)
 	if (method == "SparseM") {
 	    if (optim) {
+		lm.rho <- lm.fit(cbind(x, wy), y)
+		rho <- coef(lm.rho)[length(coef(lm.rho))]
+		if (rho <= interval[1]) rho <- 0.0
+		if (rho >= interval[2]) rho <- 0.0
 		opt <- optim(par=c(rho), 
 		    sar.lag.mix.f.sM, method="L-BFGS-B", 
 		    lower=interval[1],
 		    upper=interval[2],
 		    control=control, 
 		    W=W, I=I, e.a=e.a, e.b=e.b, e.c=e.c, n=n, 
-		    quiet=quiet)	
+		    tmpmax=tmpmax, quiet=quiet)	
 		if (opt$convergence == 1) warning("iteration limit reached")
 		if (opt$convergence == 51) warning(opt$message)
 		if (opt$convergence == 52) warning(opt$message)
@@ -340,10 +348,11 @@ dosparse <- function (listw, y, x, wy, K, quiet, tol.opt, sparsedebug,
 	    } else {
 		opt <- optimize(sar.lag.mix.f.sM,
 		    interval=interval, maximum=TRUE, tol=tol.opt, W=W, I=I,
-		    e.a=e.a, e.b=e.b, e.c=e.c, n=n, quiet=quiet)
+		    e.a=e.a, e.b=e.b, e.c=e.c, n=n, tmpmax=tmpmax, quiet=quiet)
 		maximum <- opt$maximum
 		objective <- opt$objective
 	    }
+	    gc(FALSE)
 	}
 	res <- list(maximum=maximum, objective=objective, LLs=LLs,
 		lm.null=lm.null, similar=similar, opt=opt)
