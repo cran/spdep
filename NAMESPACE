@@ -5,6 +5,7 @@ export(EBImoran.mc, probmap, choynowski, EBest, EBlocal, LR.sarlm,
 	queencell, mrc2vi, vi2mrc, cell2nb, n.comp.nb, diffnb,
 	dnearneigh, droplinks, eigenw, errorsarlm, gabrielneigh, geary.test,
 	geary, geary.mc, globalG.test, graph2nb, joincount.test, joincount.mc,
+	joincount.multi, print.jcmulti,
 	knearneigh, knn2nb, lagsarlm, listw2sn, sn2listw, read.gwt2nb,
 	write.sn2gwt, lm.LMtests, lm.morantest, localG, localmoran, moran,
 	moran.test, moran.mc, moran.plot, localmoran.sad, lm.morantest.sad,
@@ -40,6 +41,7 @@ S3method(plot, Gabriel)
 S3method(plot, relative)
 
 S3method(print, jclist)
+S3method(print, jcmulti)
 S3method(print, LMtestlist)
 S3method(plot, mc.sim)
 

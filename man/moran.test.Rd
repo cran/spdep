@@ -7,7 +7,7 @@
 }
 \usage{
 moran.test(x, listw, randomisation=TRUE, zero.policy=FALSE,
-	alternative="greater", rank = FALSE, spChk=NULL)
+	alternative="greater", rank = FALSE, na.action=na.fail, spChk=NULL)
 }
 \arguments{
   \item{x}{a numeric vector the same length as the neighbours list in listw}
@@ -16,6 +16,7 @@ moran.test(x, listw, randomisation=TRUE, zero.policy=FALSE,
   \item{zero.policy}{if TRUE assign zero to the lagged value of zones without neighbours, if FALSE assign NA}
   \item{alternative}{a character string specifying the alternative hypothesis, must be one of greater (default), less or two.sided.}
   \item{rank}{logical value - default FALSE for continuous variables, if TRUE, uses the adaptation of Moran's I for ranks suggested by Cliff and Ord (1981, p. 46)}
+  \item{na.action}{a function (default \code{na.fail}), can also be \code{na.omit} or \code{na.exclude} - in these cases the weights list will be subsetted to remove NAs in the data. It may be necessary to set zero.policy to TRUE because this subsetting may create no-neighbour observations. Note that only weights lists created without using the glist argument to \code{nb2listw} may be subsetted. If \code{na.pass} is used, zero is substituted for NA values in calculating the spatial lag}
   \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
 }
 
@@ -67,5 +68,14 @@ moran.test(spNamedVec("CRIME", COL.OLD), listw2U(nb2listw(COL.k4.nb,
 ranks <- rank(COL.OLD$CRIME)
 names(ranks) <- rownames(COL.OLD)
 moran.test(ranks, nb2listw(COL.nb, style="W"), rank=TRUE)
+crime <- spNamedVec("CRIME", COL.OLD)
+is.na(crime) <- sample(1:length(crime), 10)
+res <- try(moran.test(crime, nb2listw(COL.nb, style="W"), na.action=na.fail))
+res
+moran.test(crime, nb2listw(COL.nb, style="W"), zero.policy=TRUE,
+ na.action=na.omit)
+moran.test(crime, nb2listw(COL.nb, style="W"), zero.policy=TRUE,
+ na.action=na.exclude)
+moran.test(crime, nb2listw(COL.nb, style="W"), na.action=na.pass)
 }
 \keyword{spatial}

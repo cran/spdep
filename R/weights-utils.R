@@ -1,4 +1,4 @@
-# Copyright 2001-3 by Roger Bivand 
+# Copyright 2001-4 by Roger Bivand 
 #
 
 
@@ -29,7 +29,15 @@ include.self <- function(nb) {
 		(as.logical(attributes(nb)$self.included)))
 		stop("Self already included")
 	n <- length(nb)
-	for (i in 1:n) nb[[i]] <- sort(c(i, nb[[i]]))
+	nc <- card(nb)
+	for (i in 1:n) {
+		if (nc[i] > 0) {
+			nb[[i]] <- sort(c(i, nb[[i]]))
+		} else {
+			nb[[i]] <- i
+		}
+	}
+		
 	attr(nb, "self.included") <- TRUE
 	invisible(nb)
 }

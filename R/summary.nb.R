@@ -49,7 +49,7 @@ print.nb <- function(x, ...) {
     cat("Neighbour list object:\n")
     cat("Number of regions:", n.nb, "\n")
     cat("Number of nonzero links:", sum(c.nb), "\n")
-    cat("Percentage nonzero weights:", (100*sum(c.nb))/(n.nb*n.nb), "\n")
+    cat("Percentage nonzero weights:", (100*sum(c.nb))/(n.nb^2), "\n")
     cat("Average number of links:", mean(c.nb), "\n")
     if(any(c.nb == 0)) cat(length(c.nb[c.nb == 0]), " region", 
         ifelse(length(c.nb[c.nb == 0]) < 2, "", "s"), " with no links:\n",

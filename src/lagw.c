@@ -7,7 +7,7 @@
 
 SEXP lagw(SEXP nb, SEXP weights, SEXP x, SEXP card, SEXP zeropolicy) {
 	int i, j, k, n=length(card), pc=0;
-	double sum, wt;
+	double sum, wt, tmp;
 	SEXP ans;
 	PROTECT(ans = NEW_NUMERIC(n)); pc++;
 
@@ -23,7 +23,8 @@ SEXP lagw(SEXP nb, SEXP weights, SEXP x, SEXP card, SEXP zeropolicy) {
 		for (j=0; j<INTEGER_POINTER(card)[i]; j++) {
 		    k = INTEGER_POINTER(VECTOR_ELT(nb, i))[j];
 		    wt = NUMERIC_POINTER(VECTOR_ELT(weights, i))[j];
-		    sum += NUMERIC_POINTER(x)[k-ROFFSET] * wt;
+		    tmp = NUMERIC_POINTER(x)[k-ROFFSET];
+		    if (R_FINITE(tmp)) sum += tmp * wt;
 		}
 		NUMERIC_POINTER(ans)[i] = sum;
 	    }

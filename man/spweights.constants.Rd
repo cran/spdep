@@ -29,7 +29,7 @@ Szero(listw)
 \references{Haining, R. 1990 Spatial data analysis in the social and environmental sciences, Cambridge University Press, p. 233; Cliff, A. D., Ord, J. K. 1981 Spatial processes, Pion, p. 19, 21.}
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 
-\seealso{\code{\link[spweights]{nb2listw}}}
+\seealso{\code{\link{nb2listw}}}
 
 \examples{
 data(oldcol)

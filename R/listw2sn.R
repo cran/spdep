@@ -3,8 +3,10 @@
 
 listw2sn <- function(listw) {
 	if(!inherits(listw, "listw")) stop("not a listw object")
+	cardw <- card(listw$neighbours)
+	scard <- sum(cardw)
 	z <- .Call("listw2sn", listw$neighbours, listw$weights,
-		PACKAGE="spdep")
+		as.integer(cardw), as.integer(scard), PACKAGE="spdep")
 	res <- as.data.frame(list(from=z[[1]], to=z[[2]], weights=z[[3]]))
 	class(res) <- c(class(res), "spatial.neighbour")
 	attr(res, "n") <- length(attr(listw, "region.id"))

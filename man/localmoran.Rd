@@ -10,12 +10,13 @@ used as a diagnostic tool. The statistic is:
 and its expectation and variance are given in Anselin (1995).
 }
 \usage{
-localmoran(x, listw, zero.policy=FALSE, spChk=NULL)
+localmoran(x, listw, zero.policy=FALSE, na.action=na.fail, spChk=NULL)
 }
 \arguments{
   \item{x}{a numeric vector the same length as the neighbours list in listw}
   \item{listw}{a \code{listw} object created for example by \code{nb2listw}}
   \item{zero.policy}{if TRUE assign zero to the lagged value of zones without neighbours, if FALSE assign NA}
+  \item{na.action}{a function (default \code{na.fail}), can also be \code{na.omit} or \code{na.exclude} - in these cases the weights list will be subsetted to remove NAs in the data. It may be necessary to set zero.policy to TRUE because this subsetting may create no-neighbour observations. Note that only weights lists created without using the glist argument to \code{nb2listw} may be subsetted. If \code{na.pass} is used, zero is substituted for NA values in calculating the spatial lag. (Note that na.exclude will only work properly starting from R 1.9.0, na.omit and na.exclude assign the wrong classes in 1.8.*)}
   \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
 }
 \value{
@@ -40,6 +41,14 @@ data(afcon)
 oid <- order(afcon$id)
 resI <- localmoran(spNamedVec("totcon", afcon), nb2listw(paper.nb))
 print(data.frame(resI[oid,], row.names=afcon$name[oid]), digits=2)
+totcon <- spNamedVec("totcon", afcon)
+is.na(totcon) <- sample(1:length(totcon), 5)
+totcon
+resI.na <- localmoran(totcon, nb2listw(paper.nb), na.action=na.exclude,
+ zero.policy=TRUE)
+if (class(attr(resI.na, "na.action")) == "exclude") {
+ print(data.frame(resI.na[oid,], row.names=afcon$name[oid]), digits=2)
+} else print(resI.na, digits=2)
 resG <- localG(spNamedVec("totcon", afcon), nb2listw(include.self(paper.nb)))
 print(data.frame(resG[oid], row.names=afcon$name[oid]), digits=2)
 
