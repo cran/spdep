@@ -12,7 +12,7 @@ moran <- function(x, listw, n, S0, zero.policy=FALSE) {
 }
 
 moran.test <- function(x, listw, randomisation=TRUE, zero.policy=FALSE,
-	alternative="greater") {
+	alternative="greater", rank = FALSE, spChk=NULL) {
 	if (class(listw) != "listw") stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
 	if (!is.numeric(x)) stop(paste(deparse(substitute(x)),
@@ -20,11 +20,15 @@ moran.test <- function(x, listw, randomisation=TRUE, zero.policy=FALSE,
 	if (any(is.na(x))) stop("NA in X")
 	n <- length(listw$neighbours)
 	if (n != length(x)) stop("objects of different length")
+	if (is.null(spChk)) spChk <- get.spChkOption()
+	if (spChk && !chkIDs(x, listw))
+		stop("Check of data and weights ID integrity failed")
 	wc <- spweights.constants(listw, zero.policy=zero.policy)
 	S02 <- wc$S0*wc$S0
 	res <- moran(x, listw, wc$n, wc$S0, zero.policy=zero.policy)
 	I <- res$I
 	K <- res$K
+	if (rank) K <- (3*(3*wc$n^2 -7))/(5*(wc$n^2 - 1))
 	EI <- (-1) / wc$n1
 	if(randomisation) {
 		VI <- wc$n*(wc$S1*(wc$nn - 3*wc$n + 3) - wc$n*wc$S2 + 3*S02)
@@ -46,8 +50,9 @@ moran.test <- function(x, listw, randomisation=TRUE, zero.policy=FALSE,
 	names(vec) <- c("Moran I statistic", "Expectation", "Variance")
 	method <- paste("Moran's I test under", ifelse(randomisation,
 	    "randomisation", "normality"))
-	data.name <- paste(deparse(substitute(x)), "\nweights:",
-	    deparse(substitute(listw)), "\n")
+	data.name <- paste(deparse(substitute(x)), ifelse(rank,
+		"using rank correction",""), "\nweights:",
+		deparse(substitute(listw)), "\n")
 	res <- list(statistic=statistic, p.value=PrI, estimate=vec, 
 	    alternative=alternative, method=method, data.name=data.name)
 	class(res) <- "htest"
@@ -55,7 +60,7 @@ moran.test <- function(x, listw, randomisation=TRUE, zero.policy=FALSE,
 }
 
 moran.mc <- function(x, listw, nsim, zero.policy=FALSE,
-	alternative="greater") {
+	alternative="greater", spChk=NULL) {
 	if(class(listw) != "listw") stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
 	if(!is.numeric(x)) stop(paste(deparse(substitute(x)),
@@ -64,6 +69,9 @@ moran.mc <- function(x, listw, nsim, zero.policy=FALSE,
 	if (any(is.na(x))) stop("NA in X")
 	n <- length(listw$neighbours)
 	if (n != length(x)) stop("objects of different length")
+	if (is.null(spChk)) spChk <- get.spChkOption()
+	if (spChk && !chkIDs(x, listw))
+		stop("Check of data and weights ID integrity failed")
 	if(nsim > gamma(n+1)) stop("nsim too large for this n")
 	S0 <- Szero(listw)
 	res <- numeric(length=nsim+1)

@@ -8,7 +8,7 @@
 }
 \usage{
 lm.morantest(model, listw, zero.policy=FALSE, 
-	    alternative = "greater")
+	    alternative = "greater", spChk=NULL)
 listw2U(listw)
 }
 \arguments{
@@ -19,6 +19,7 @@ and offsets should not be used}
 neighbours, if FALSE assign NA}
   \item{alternative}{a character string specifying the alternative hypothesis,
 must be one of greater (default), less or two.sided.}
+  \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
 }
 \value{
 A list with class \code{htest} containing the following components:
@@ -43,6 +44,7 @@ lm.morantest(oldcrime.lm, nb2listw(COL.nb, style="W"))
 lm.LMtests(oldcrime.lm, nb2listw(COL.nb, style="W"))
 lm.morantest(oldcrime.lm, nb2listw(COL.nb, style="S"))
 lm.morantest(oldcrime1.lm, nb2listw(COL.nb, style="W"))
-moran.test(COL.OLD$CRIME, nb2listw(COL.nb, style="W"), randomisation=FALSE)
+moran.test(spNamedVec("CRIME", COL.OLD), nb2listw(COL.nb, style="W"),
+ randomisation=FALSE)
 }
 \keyword{spatial}

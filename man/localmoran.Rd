@@ -10,12 +10,13 @@ used as a diagnostic tool. The statistic is:
 and its expectation and variance are given in Anselin (1995).
 }
 \usage{
-localmoran(x, listw, zero.policy=FALSE)
+localmoran(x, listw, zero.policy=FALSE, spChk=NULL)
 }
 \arguments{
   \item{x}{a numeric vector the same length as the neighbours list in listw}
   \item{listw}{a \code{listw} object created for example by \code{nb2listw}}
   \item{zero.policy}{if TRUE assign zero to the lagged value of zones without neighbours, if FALSE assign NA}
+  \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
 }
 \value{
 
@@ -37,10 +38,10 @@ International), 261--277.}
 \examples{
 data(afcon)
 oid <- order(afcon$id)
-resG <- localG(afcon$totcon, nb2listw(include.self(paper.nb)))
-print(data.frame(resG[oid], row.names=afcon$name[oid]), digits=2)
-resI <- localmoran(afcon$totcon, nb2listw(paper.nb))
+resI <- localmoran(spNamedVec("totcon", afcon), nb2listw(paper.nb))
 print(data.frame(resI[oid,], row.names=afcon$name[oid]), digits=2)
+resG <- localG(spNamedVec("totcon", afcon), nb2listw(include.self(paper.nb)))
+print(data.frame(resG[oid], row.names=afcon$name[oid]), digits=2)
 
 }
 \keyword{spatial}

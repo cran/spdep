@@ -2,7 +2,7 @@
 #
 
 sp.mantel.mc <- function(var, listw, nsim, type="moran", zero.policy=FALSE,
-	alternative="greater") {
+	alternative="greater", spChk=NULL) {
 	if(class(listw) != "listw") stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
 	if(!is.numeric(var)) stop(paste(deparse(substitute(var)),
@@ -10,8 +10,11 @@ sp.mantel.mc <- function(var, listw, nsim, type="moran", zero.policy=FALSE,
 	if(missing(nsim)) stop("nsim must be given")
 	n <- length(listw$neighbours)
 	if(nsim > gamma(n+1)) stop("nsim too large for this n")
-	if (any(is.na(var))) stop("NA in X")
+	if (any(is.na(var))) stop("NA in var")
 	if (n != length(var)) stop("objects of different length")
+	if (is.null(spChk)) spChk <- get.spChkOption()
+	if (spChk && !chkIDs(var, listw))
+		stop("Check of data and weights ID integrity failed")
 	listw.U <- listw2U(listw)
 	mantel.moran <- function(x, listwU, zero.policy) {
 		res <- x * lag.listw(listw.U, x, zero.policy=zero.policy)

@@ -1,7 +1,8 @@
 # Copyright 2001 by Roger Bivand 
 #
 
-moran.plot <- function(x, listw, zero.policy=FALSE, labels=NULL, xlab=NULL, ylab=NULL, ...)
+moran.plot <- function(x, listw, zero.policy=FALSE, spChk=NULL,
+ labels=NULL, xlab=NULL, ylab=NULL, ...)
 {
 	if (class(listw) != "listw") stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
@@ -10,6 +11,9 @@ moran.plot <- function(x, listw, zero.policy=FALSE, labels=NULL, xlab=NULL, ylab
 	if (any(is.na(x))) stop("NA in X")
 	n <- length(listw$neighbours)
 	if (n != length(x)) stop("objects of different length")
+	if (is.null(spChk)) spChk <- get.spChkOption()
+	if (spChk && !chkIDs(x, listw))
+		stop("Check of data and weights ID integrity failed")
 	labs <- TRUE
 	if (is.logical(labels) && !labels) labs <- FALSE
 	if (is.null(labels) || length(labels) != n)

@@ -6,13 +6,15 @@
  .
 }
 \usage{
-globalG.test(x, listw, zero.policy=FALSE, alternative="greater")
+globalG.test(x, listw, zero.policy=FALSE, alternative="greater",
+ spChk=NULL)
 }
 \arguments{
   \item{x}{a numeric vector the same length as the neighbours list in listw}
   \item{listw}{a \code{listw} object created for example by \code{nb2listw}}
   \item{zero.policy}{if TRUE assign zero to the lagged value of zones without neighbours, if FALSE assign NA}
   \item{alternative}{a character string specifying the alternative hypothesis, must be one of greater (default), less or two.sided.}
+  \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
 }
 
 \value{
@@ -34,12 +36,13 @@ use of distance statistics, \emph{Geographical Analysis}, 24, p. 195.}
 \examples{
 data(nc.sids)
 sidsrate79 <- (1000*nc.sids$SID79)/nc.sids$BIR79
+names(sidsrate79) <- rownames(nc.sids)
 dists <- c(10, 20, 30, 33, 40, 50, 60, 70, 80, 90, 100)
 ndists <- length(dists)
 ZG <- numeric(length=ndists)
 milesxy <- cbind(nc.sids$east, nc.sids$north)
 for (i in 1:ndists) {
-  thisnb <- dnearneigh(milesxy, 0, dists[i])
+  thisnb <- dnearneigh(milesxy, 0, dists[i], row.names=rownames(nc.sids))
   thislw <- nb2listw(thisnb, style="B", zero.policy=TRUE)
   ZG[i] <- globalG.test(sidsrate79, thislw, zero.policy=TRUE)$statistic
 }

@@ -12,24 +12,6 @@ geary <- function(x, listw, n, n1, S0, zero.policy=FALSE) {
 	res
 }
 
-#geary.intern <- function(x, listw, n, zero.policy, type="geary") {
-#	res <- as.numeric(rep(0, n))
-#	cardnb <- card(listw$neighbours)
-#	if (type == "geary") f <- function(diff) (diff^2)
-#	else if (type == "sokal") f <- function(diff) (abs(diff))
-#	else stop("type unknown")
-#	for (i in 1:n) {
-#		if (cardnb[i] == 0) {
-#			if (zero.policy) res[i] <- 0
-#			else res[i] <- NA
-#		} else {
-#			res[i] <- sum(listw$weights[[i]] * 
-#				f(x[i] - x[listw$neighbours[[i]]]))
-#		}
-#	}
-#	res
-#}
-
 geary.intern <- function(x, listw, n, zero.policy, type="geary") {
 	cardnb <- card(listw$neighbours)
 	if (type == "geary") ft <- TRUE
@@ -43,7 +25,7 @@ geary.intern <- function(x, listw, n, zero.policy, type="geary") {
 }
 
 geary.test <- function(x, listw, randomisation=TRUE, zero.policy=FALSE,
-    alternative="less") {
+    alternative="less", spChk=NULL) {
 	if(class(listw) != "listw") stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
 	if(!is.numeric(x)) stop(paste(deparse(substitute(x)),
@@ -51,6 +33,9 @@ geary.test <- function(x, listw, randomisation=TRUE, zero.policy=FALSE,
 	if (any(is.na(x))) stop("NA in X")
 	n <- length(listw$neighbours)
 	if (n != length(x)) stop("objects of different length")
+	if (is.null(spChk)) spChk <- get.spChkOption()
+	if (spChk && !chkIDs(x, listw))
+		stop("Check of data and weights ID integrity failed")
 	wc <- spweights.constants(listw, zero.policy)
 	S02 <- wc$S0*wc$S0
 	res <- geary(x, listw, wc$n, wc$n1, wc$S0, zero.policy)
@@ -87,7 +72,7 @@ geary.test <- function(x, listw, randomisation=TRUE, zero.policy=FALSE,
 }
 
 geary.mc <- function(x, listw, nsim, zero.policy=FALSE,
-	alternative="less") {
+	alternative="less", spChk=NULL) {
 	if(class(listw) != "listw") stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
 	if(!is.numeric(x)) stop(paste(deparse(substitute(x)),
@@ -96,6 +81,9 @@ geary.mc <- function(x, listw, nsim, zero.policy=FALSE,
 	if (any(is.na(x))) stop("NA in X")
 	n <- length(listw$neighbours)
 	if (n != length(x)) stop("objects of different length")
+	if (is.null(spChk)) spChk <- get.spChkOption()
+	if (spChk && !chkIDs(x, listw))
+		stop("Check of data and weights ID integrity failed")
 	if(nsim > gamma(n+1)) stop("nsim too large for this n")
 	wc <- spweights.constants(listw, zero.policy)
 	res <- numeric(length=nsim+1)

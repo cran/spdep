@@ -1,7 +1,7 @@
 # Copyright 2001 by Roger Bivand 
 #
 
-localmoran <- function(x, listw, zero.policy=FALSE)
+localmoran <- function(x, listw, zero.policy=FALSE, spChk=NULL)
 {
 	if (class(listw) != "listw")
 		stop(paste(deparse(substitute(listw)), "is not a listw object"))
@@ -13,6 +13,9 @@ localmoran <- function(x, listw, zero.policy=FALSE)
 		stop(paste(deparse(substitute(x)), "is not a numeric vector"))
 	if (any(is.na(x))) stop(paste("NA in ", deparse(substitute(x))))
 	if (n != length(x))stop("Different numbers of observations")
+	if (is.null(spChk)) spChk <- get.spChkOption()
+	if (spChk && !chkIDs(x, listw))
+		stop("Check of data and weights ID integrity failed")
 	res <- data.frame(matrix(nrow=n,ncol=4))
 	colnames(res) <- c("Ii", "E.Ii", "Var.Ii", "Z.Ii")
 	z <- scale(x, scale=FALSE)

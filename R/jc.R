@@ -1,25 +1,21 @@
-# Copyright 2001-2 by Roger Bivand 
+# Copyright 2001-3 by Roger Bivand 
 #
 
 joincount <- function(dums, listw) {
-	nc <- ncol(dums)
+	nc <- which(colSums(dums) > 1)
 	n <- length(listw$neighbours)
 	cardnb <- card(listw$neighbours)
-	res <- as.numeric(rep(0, nc))
-	for (lev in 1:nc) {
-		for (i in 1:n) {
-			xi <- dums[i, lev]
-			if (cardnb[i] > 0)
-				res[lev] <- res[lev] + (dums[i, lev] *
-				sum(dums[listw$neighbours[[i]], lev] *
-				listw$weights[[i]]))
-		}
+	res <- as.numeric(rep(0, ncol(dums)))
+	for (lev in nc) {
+		res[lev] <- .Call("jcintern", listw$neighbours,
+			listw$weights, as.integer(dums[,lev]),
+			as.integer(cardnb), PACKAGE="spdep")
 	}
 	res
 }
 
 joincount.test <- function(fx, listw, zero.policy=FALSE,
-	alternative="greater") {
+	alternative="greater", spChk=NULL) {
 	if (class(listw) != "listw") stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
 	if (!is.factor(fx)) stop(paste(deparse(substitute(x)),
@@ -27,10 +23,17 @@ joincount.test <- function(fx, listw, zero.policy=FALSE,
 	if (any(is.na(fx))) stop("NA in factor")
 	n <- length(listw$neighbours)
 	if (n != length(fx)) stop("objects of different length")
-	wc <- spweights.constants(listw, zero.policy)
+	cards <- card(listw$neighbours)
+	if (!zero.policy && any(cards == 0))
+		stop("regions with no neighbours found")
+	if (is.null(spChk)) spChk <- get.spChkOption()
+	if (spChk && !chkIDs(fx, listw))
+		stop("Check of data and weights ID integrity failed")
+	wc <- spweights.constants(listw, zero.policy=zero.policy)
 	S02 <- wc$S0*wc$S0
 
-	dums <- lm(codes(fx) ~ fx - 1, x=TRUE)$x
+	ff <- ~ fx - 1
+	dums <- model.matrix(ff, model.frame(ff))
 	BB <- joincount(dums, listw)
 	nBB <- length(BB)
 	res <- vector(mode="list", length=nBB)
@@ -71,8 +74,8 @@ print.jclist <- function(x, ...) {
 	invisible(x)
 }
 
-joincount.mc <- function(fx, listw, nsim,
-	alternative="greater") {
+joincount.mc <- function(fx, listw, nsim, zero.policy=FALSE,
+	alternative="greater", spChk=NULL) {
 	if(class(listw) != "listw") stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
 	if(!is.factor(fx)) stop(paste(deparse(substitute(fx)),
@@ -81,15 +84,25 @@ joincount.mc <- function(fx, listw, nsim,
 	if (any(is.na(fx))) stop("NA in factor")
 	n <- length(listw$neighbours)
 	if (n != length(fx)) stop("objects of different length")
+	cards <- card(listw$neighbours)
+	if (!zero.policy && any(cards == 0))
+		stop("regions with no neighbours found")
+	if (is.null(spChk)) spChk <- get.spChkOption()
+	if (spChk && !chkIDs(fx, listw))
+		stop("Check of data and weights ID integrity failed")
 	if(nsim > gamma(n+1)) stop("nsim too large for this n")
-	dums <- lm(codes(fx) ~ fx - 1, x=TRUE)$x
+	ff <- ~ fx - 1
+	dums <- model.matrix(ff, model.frame(ff))
+#	dums <- lm(codes(fx) ~ fx - 1, x=TRUE)$x
 	nc <- ncol(dums)
 	res <- matrix(0, nrow=nsim+1, ncol=nc)
 	res[nsim+1,] <- 0.5 * joincount(dums, listw)
 	tab <- table(fx)
 	for (i in 1:nsim) {
 		fxi <- sample(fx)
-		dums <- lm(codes(fxi) ~ fxi - 1, x=TRUE)$x
+		ff <- ~ fxi - 1
+		dums <- model.matrix(ff, model.frame(ff))
+#		dums <- lm(codes(fxi) ~ fxi - 1, x=TRUE)$x
 		res[i,] <- 0.5 * joincount(dums, listw)
 	}
 	rankres <- apply(res, 2, rank)

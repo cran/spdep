@@ -10,7 +10,7 @@ print and plot helper functions.
 }
 \usage{
 sp.correlogram(neighbours, var, order = 1, method = "corr", style = "W", 
-  zero.policy = FALSE)
+  zero.policy = FALSE, spChk=NULL)
 plot.spcor(x, main, ylab, ylim, ...)
 print.spcor(x, ...)
 }
@@ -23,6 +23,7 @@ print.spcor(x, ...)
   \item{style}{\code{style} can take values W, B, C, and S}
   \item{zero.policy}{If FALSE stop with error for any empty neighbour sets, 
 if TRUE permit the weights list to be formed with zero-length weights vectors}
+  \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
   \item{x}{an object from \code{sp.correlogram()} of class \code{spcor}}
   \item{main}{an overall title for the plot}
   \item{ylab}{a title for the y axis}
@@ -47,15 +48,17 @@ of the Institute of British Geographers}, 66, 95--118.}
 data(nc.sids)
 ft.SID74 <- sqrt(1000)*(sqrt(nc.sids$SID74/nc.sids$BIR74) +
   sqrt((nc.sids$SID74+1)/nc.sids$BIR74))
-print(sp.correlogram(sidsorig.nb, ft.SID74*sqrt(nc.sids$BIR74), order=8,
-  method="corr", zero.policy=TRUE))
-print(sp.correlogram(sidsorig.nb, ft.SID74*sqrt(nc.sids$BIR74), order=8,
-  method="I", zero.policy=TRUE))
-plot(sp.correlogram(sidsorig.nb, ft.SID74*sqrt(nc.sids$BIR74), order=8,
-  method="corr", zero.policy=TRUE))
+tr.SIDS74 <- ft.SID74*sqrt(nc.sids$BIR74)
+names(tr.SIDS74) <- rownames(nc.sids)
+print(sp.correlogram(sidsorig.nb, tr.SIDS74, order=8, method="corr",
+ zero.policy=TRUE))
+print(sp.correlogram(sidsorig.nb, tr.SIDS74, order=8, method="I",
+ zero.policy=TRUE))
+plot(sp.correlogram(sidsorig.nb, tr.SIDS74, order=8, method="corr",
+ zero.policy=TRUE))
 drop.no.neighs <- !(1:length(sidsorig.nb) \%in\% which(card(sidsorig.nb) == 0))
 sub.sidsorig.nb <- subset(sidsorig.nb, drop.no.neighs)
-plot(sp.correlogram(sub.sidsorig.nb, subset(ft.SID74*sqrt(nc.sids$BIR74), 
-  drop.no.neighs), order=8, method="corr"))
+plot(sp.correlogram(sub.sidsorig.nb, subset(tr.SIDS74,  drop.no.neighs),
+ order=8, method="corr"))
 }
 \keyword{spatial}

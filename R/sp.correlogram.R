@@ -2,9 +2,13 @@
 #
 
 sp.correlogram <- function(neighbours, var, order=1, method="corr",
-	style="W", zero.policy=FALSE) {
+	style="W", zero.policy=FALSE, spChk=NULL) {
 	if (class(neighbours) != "nb") stop("not a neighbours list")
 	if (any(is.na(var))) stop("no NAs permitted in variable")
+	if (is.null(spChk)) spChk <- get.spChkOption()
+	if (spChk && !chkIDs(var, nb2listw(neighbours, 
+		zero.policy=zero.policy)))
+		stop("Check of data and weights ID integrity failed")
 	nblags <- nblag(neighbours, maxlag=order)
 	cardnos <- vector(mode="list", length=order)
 	for (i in 1:order) cardnos[[i]] <- table(card(nblags[[i]]))

@@ -28,7 +28,9 @@ invIrM <- function(neighbours, rho, glist=NULL, style="W") {
 	if(class(neighbours) != "nb") stop("Not a neighbours list")
 	n <- length(neighbours)
 	V <- nb2mat(neighbours, glist, style)
-	feasible <- 1/(range(eigen(V, only.values=TRUE)$values))
+	e <- eigen(V, only.values = TRUE)$values
+	if (is.complex(e)) feasible <- 1/(range(Re(e)))
+	else feasible <- 1/(range(e))
 	if (rho <= feasible[1] || rho >= feasible[2])
 		stop(paste("Rho outside feasible range:", feasible))
 	mat <- diag(n) - rho * V
@@ -41,7 +43,9 @@ invIrW <- function(listw, rho) {
 	if(class(listw) != "listw") stop("Not a weights list")
 	n <- length(listw$neighbours)
 	V <- listw2mat(listw)
-	feasible <- 1/(range(eigen(V, only.values=TRUE)$values))
+	e <- eigen(V, only.values = TRUE)$values
+	if (is.complex(e)) feasible <- 1/(range(Re(e)))
+	else feasible <- 1/(range(e))
 	if (rho <= feasible[1] || rho >= feasible[2])
 		stop(paste("Rho outside feasible range:", feasible))
 	mat <- diag(n) - rho * V

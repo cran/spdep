@@ -19,7 +19,7 @@ randomisation assumption.
 }
 \usage{
 localmoran.sad(model, select, nb, glist=NULL, style="W", zero.policy=FALSE,
-  alternative="greater", save.Vi=FALSE)
+  alternative="greater", spChk=NULL, save.Vi=FALSE)
 as.data.frame.localmoransad(x, row.names=NULL, optional=FALSE) 
 print.localmoransad(x, ...)
 summary.localmoransad(object, ...)
@@ -38,6 +38,7 @@ and offsets should not be used}
 neighbours, if FALSE assign NA}
   \item{alternative}{a character string specifying the alternative hypothesis,
 must be one of greater (default), less or two.sided.}
+  \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
   \item{save.Vi}{if TRUE, return the star-shaped weights lists for each zone 
 tested}
   \item{x}{object to be printed}
@@ -78,7 +79,7 @@ A list with class \code{localmoransad} containing "select" lists, each with
 }
 \references{Tiefelsdorf, M. 2002 The Saddlepoint approximation of Moran's I 
 and local Moran's Ii reference distributions and their numerical evaluation. 
-Geographical Analysis, forthcoming; see also Tiefelsdorf's SPSS code:
+Geographical Analysis, 34, pp. 187--206; see also Tiefelsdorf's SPSS code:
 \url{http://geog-www.sbs.ohio-state.edu/faculty/tiefelsdorf/GeoStat.htm}.}
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 
