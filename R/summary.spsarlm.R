@@ -7,13 +7,8 @@ print.sarlm <- function(x, ...)
 	print(x$call)
 	cat("Type:", x$type, "\n")
 	cat("\nCoefficients:\n")
-	print(x$coefficients)
-	if (x$type == "error") {
-		cat("\nLambda:", x$lambda, "\n")
-	} else {
-		cat("\nRho:", x$rho, "\n")
-	}
-	cat("\nLog likelihood:", x$LL, "\n")
+	print(coef(x))
+	cat("\nLog likelihood:", logLik(x), "\n")
 	invisible(x)
 }
 
@@ -64,7 +59,7 @@ print.summary.sarlm <- function(x, digits = max(5, .Options$digits - 3),
 	cat("\nCall:", paste(deparse(x$call), sep = "", collapse = ""), 
 		sep = "", fill=TRUE)
 	cat("\nResiduals:\n")
-	resid <- x$residuals
+	resid <- residuals(x)
 	nam <- c("Min", "1Q", "Median", "3Q", "Max")
 	rq <- if (length(dim(resid)) == 2) 
 		structure(apply(t(resid), 1, quantile), dimnames = list(nam, 
@@ -73,7 +68,7 @@ print.summary.sarlm <- function(x, digits = max(5, .Options$digits - 3),
 	print(rq, digits = digits, ...)
 	cat("\nType:", x$type, "\n")
 	if (x$zero.policy) {
-		zero.regs <- attr(ret, "zero.regs")
+		zero.regs <- attr(x, "zero.regs")
 		if (!is.null(zero.regs))
 			cat("Regions with no neighbours included:\n",
 			zero.regs, "\n")
@@ -102,7 +97,7 @@ print.summary.sarlm <- function(x, digits = max(5, .Options$digits - 3),
 			"p-value:", format.pval(2 * (1 - pnorm(abs(x$rho/
 				x$rho.se))), digits), "\n")
 	}
-	cat("\nLog likelihood:", x$LL, "for", x$type, "model\n")
+	cat("\nLog likelihood:", logLik(x), "for", x$type, "model\n")
 	cat("ML residual variance (sigma squared): ", 
 		format(signif(x$s2, digits)), ", (sigma: ", 
 		format(signif(sqrt(x$s2), digits)), ")\n", sep="")

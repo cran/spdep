@@ -1,6 +1,7 @@
 % Copyright 2001 by Roger S. Bivand
 \name{invIrM}
 \alias{invIrM}
+\alias{invIrW}
 
 \title{Compute SAR generating operator}
 \description{
@@ -8,6 +9,7 @@
 }
 \usage{
 invIrM(neighbours, rho, glist=NULL, style="W")
+invIrW(listw, rho)
 }
 
 \arguments{
@@ -15,6 +17,7 @@ invIrM(neighbours, rho, glist=NULL, style="W")
   \item{rho}{autoregressive parameter}
   \item{glist}{list of general weights corresponding to neighbours}
   \item{style}{\code{style} can take values W, B, C, and S}
+  \item{listw}{a \code{listw} object from for example \code{nb2listw}}
 }
 \details{
 The function generates the full weights matrix V, checks that rho lies in its feasible range between 1/min(eigen(V)) and 1/max(eigen(V)), and returns the nxn inverted matrix \deqn{(I - \rho V)^{-1}}

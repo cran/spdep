@@ -59,12 +59,15 @@ lagsarlm <- function(formula, data = list(), listw, type="lag",
 			maximum=TRUE, tol=tol.opt, eig=eig,
 			e.a=e.a, e.b=e.b, e.c=e.c, n=n, quiet=quiet)
 	} else {
-		opt <- dosparse(listw, y, x, wy, K, quiet, tol.opt, sparsedebug)
+		opt <- dosparse(listw, y, x, wy, K, quiet, tol.opt, 
+			sparsedebug)
 	}
 	rho <- c(opt$maximum)
+	names(rho) <- "rho"
 	LL <- c(opt$objective)
 	lm.lag <- lm((y - rho*wy) ~ x - 1)
 	r <- residuals(lm.lag)
+	fit <- y - r
 	coef.rho <- coefficients(lm.lag)
 	names(coef.rho) <- colnames(x)
 	SSE <- deviance(lm.lag)
@@ -109,8 +112,8 @@ lagsarlm <- function(formula, data = list(), listw, type="lag",
 		coefficients=coef.rho, rest.se=rest.se, 
 		LL=LL, s2=s2, SSE=SSE, parameters=(m+1), lm.model=lm.null,
 		method=method, call=call, residuals=r, 
-		lm.target=lm.lag, fitted.values=predict(lm.lag),
-		se.fit=predict(lm.lag, se.fit=TRUE)$se.fit,
+		lm.target=lm.lag, fitted.values=fit,
+		se.fit=NULL, formula=formula,
 		ase=ase, LLs=LLs, rho.se=rho.se, LMtest=LMtest, 
 		zero.policy=zero.policy), class=c("sarlm"))
 	if (zero.policy) {

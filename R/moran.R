@@ -54,7 +54,8 @@ moran.test <- function(x, listw, randomisation=TRUE, zero.policy=FALSE,
 	res
 }
 
-moran.mc <- function(x, listw, nsim, zero.policy=FALSE) {
+moran.mc <- function(x, listw, nsim, zero.policy=FALSE,
+	alternative="greater") {
 	if(class(listw) != "listw") stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
 	if(!is.numeric(x)) stop(paste(deparse(substitute(x)),
@@ -63,6 +64,7 @@ moran.mc <- function(x, listw, nsim, zero.policy=FALSE) {
 	if (any(is.na(x))) stop("NA in X")
 	n <- length(listw$neighbours)
 	if (n != length(x)) stop("objects of different length")
+	if(nsim > gamma(n+1)) stop("nsim too large for this n")
 	S0 <- Szero(listw)
 	res <- numeric(length=nsim+1)
 	for (i in 1:nsim) res[i] <- moran(sample(x), listw, n, S0,
@@ -70,17 +72,23 @@ moran.mc <- function(x, listw, nsim, zero.policy=FALSE) {
 	res[nsim+1] <- moran(x, listw, n, S0, zero.policy)$I
 	rankres <- rank(res)
 	xrank <- rankres[length(res)]
+	diff <- nsim - xrank
+	diff <- ifelse(diff > 0, diff, 0)
+        pval <- (diff + 1)/(nsim+1)
+	if (alternative == "less") pval <- 1 - pval
+	else if (alternative == "two.sided") pval <- 2 * pval
 	statistic <- res[nsim+1]
-	names(statistic) <- "Moran's I statistic"
+	names(statistic) <- "statistic"
 	parameter <- xrank
-	names(parameter) <- "rank of observed I"
+	names(parameter) <- "observed rank"
 	method <- "Monte-Carlo simulation of Moran's I"
 	data.name <- paste(deparse(substitute(x)), "\nweights:",
 	    deparse(substitute(listw)), "\nnumber of simulations + 1:",
 	    nsim+1, "\n")
 	lres <- list(statistic=statistic, parameter=parameter,
-	    method=method, data.name=data.name, res=res)
-	class(lres) <- "htest"
+	    p.value=pval, alternative=alternative, method=method, 
+	    data.name=data.name, res=res)
+	class(lres) <- c("htest", "mc.sim")
 	lres
 }
 

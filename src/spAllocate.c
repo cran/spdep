@@ -50,7 +50,7 @@
 static char copyright[] =
     "Sparse1.3: Copyright (c) 1985,86,87,88 by Kenneth S. Kundert";
 static char RCSid[] =
-    "@(#)$Header: /home/rsb/cvsroot/rsb/spdep/src/spAllocate.c,v 1.1 2002/03/19 12:05:59 rsb Exp $";
+    "@(#)$Header: /home/rsb/cvsroot/rsb/spdep/src/spAllocate.c,v 1.2 2002/08/06 11:35:41 rsb Exp $";
 #endif */
 
 

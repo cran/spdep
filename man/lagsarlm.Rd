@@ -9,7 +9,7 @@
   Maximum likelihood estimation of spatial simultaneous autoregressive
 lag and mixed models of the form:
 
-\deqn{y = \rho W y + X \beta + \varepsilon}
+\deqn{y = \rho W y + X \beta + \varepsilon}{y = rho W y + X beta + e}
 
 where $\rho$ is found by \code{optimize()} first and $\beta$ and other
 parameters by generalized least squares subsequently. In the mixed model,
@@ -60,7 +60,7 @@ fails!}
 When using the sparse method, the user takes (unfortunately) full
 responsibility for possible failures, including R terminating with
 a core dump! Safeguards have been put in place to try to trap errant
-behaviour in the sparse functions' memmory allocation, but they may
+behaviour in the sparse functions' memory allocation, but they may
 not always help. When sparsedebug is TRUE, a log file (sparsestats)
 is written in the working directory - the figure of interest is the
 number of allocated blocks. At present, \code{spwdet} will fail when
@@ -86,9 +86,9 @@ and then provoke a segmentation fault trying to free unallocated memory.
   \item{call}{the call used to create this object}
   \item{residuals}{GLS residuals}
   \item{lm.target}{the \code{lm} object returned for the GLS fit}
-  \item{fitted.values}{GLS fitted values}
-  \item{se.fit}{The GLS standard errors of the fitted values (not taking into
-account the standard error of $\lambda$)}
+  \item{fitted.values}{Difference between residuals and response variable}
+  \item{se.fit}{Not used yet}
+  \item{formula}{model formula}
   \item{ase}{TRUE if method=eigen}
   \item{LLs}{if ase=FALSE (for method="sparse"), the log likelihood values of
 models estimated dropping each of the independent variables in turn, used
@@ -118,7 +118,8 @@ pp. 237-289.}
 Bernat for contributions to the asymptotic standard error code.}
 
 \seealso{\code{\link{lm}}, \code{\link{errorsarlm}}, 
-\code{\link{eigenw}}, \code{\link{log.spwdet}}
+\code{\link{eigenw}}, \code{\link{log.spwdet}}, \code{\link{predict.sarlm}},
+\code{\link{residuals.sarlm}}
 }
 
 \examples{

@@ -14,7 +14,7 @@ and Pace also point out that MEDV is censored, in that median values
 at or over USD 50,000 are set to USD 50,000. The original data set
 without the corrections is also included in package \code{mlbench} as
 \code{BostonHousing}. In addition, a matrix of tract point coordinates
-projected to UTM zone 20 is included as \code{boston.utm}, and a sphere
+projected to UTM zone 19 is included as \code{boston.utm}, and a sphere
 of influence neighbours list as \code{boston.soi}.
 }
 \format{

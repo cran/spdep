@@ -36,3 +36,16 @@ invIrM <- function(neighbours, rho, glist=NULL, style="W") {
 	attr(res, "call") <- match.call()
 	invisible(res)
 }
+
+invIrW <- function(listw, rho) {
+	if(class(listw) != "listw") stop("Not a weights list")
+	n <- length(listw$neighbours)
+	V <- listw2mat(listw)
+	feasible <- 1/(range(eigen(V, only.values=TRUE)$values))
+	if (rho <= feasible[1] || rho >= feasible[2])
+		stop(paste("Rho outside feasible range:", feasible))
+	mat <- diag(n) - rho * V
+	res <- solve(mat)
+	attr(res, "call") <- match.call()
+	invisible(res)
+}
