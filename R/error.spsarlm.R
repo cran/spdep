@@ -62,8 +62,6 @@ errorsarlm <- function(formula, data = list(), listw, na.action=na.fail,
 	colnames(WX) <- xcolnames
 	rm(wx)
 	similar <- FALSE
-	lm.rho <- lm.fit(cbind(x, wy), y)
-	rho <- coef(lm.rho)[length(coef(lm.rho))]
 	if ((optim) && missing(control)) {
 		control<- list(trace=0, fnscale=-1, factr=tol.opt,
 			pgtol=tol.opt)
@@ -78,9 +76,11 @@ errorsarlm <- function(formula, data = list(), listw, na.action=na.fail,
 # range inverted 031031, email from Salvati Nicola (and Rein Halbersma)
 		if (is.complex(eig)) eig.range <- 1/range(Re(eig))
 		else eig.range <- 1/range(eig)
-		if (rho < eig.range[1]+.Machine$double.eps) rho <- 0.0
-		if (rho > eig.range[2]-.Machine$double.eps) rho <- 0.0
 		if (optim) {
+		    lm.rho <- lm.fit(cbind(x, wy), y)
+		    rho <- coef(lm.rho)[length(coef(lm.rho))]
+		    if (rho < eig.range[1]+.Machine$double.eps) rho <- 0.0
+		    if (rho > eig.range[2]-.Machine$double.eps) rho <- 0.0
 		    opt <- optim(par=c(rho), sar.error.f, method="L-BFGS-B", 
 			lower=eig.range[1]+.Machine$double.eps, 
 			upper=eig.range[2]-.Machine$double.eps, 
@@ -116,16 +116,21 @@ errorsarlm <- function(formula, data = list(), listw, na.action=na.fail,
 			csrw <- asMatrixCsrListw(similar.listw(listw))
 			similar <- TRUE
 		} else csrw <- asMatrixCsrListw(listw)
+		gc(FALSE)
 		I <- asMatrixCsrI(n)
-		if (rho <= interval[1]) rho <- 0.0
-		if (rho >= interval[2]) rho <- 0.0
+		tmpmax <- sum(card(listw$neighbours)) + n
+		# tmpmax and gc() calls: Danlin Yu 20041213
 		if (optim) {
+		    lm.rho <- lm.fit(cbind(x, wy), y)
+		    rho <- coef(lm.rho)[length(coef(lm.rho))]
+		    if (rho <= interval[1]) rho <- 0.0
+		    if (rho >= interval[2]) rho <- 0.0
 		    opt <- optim(par=c(rho), sar.error.f.sM, method="L-BFGS-B", 
 			lower=interval[1],
 			upper=interval[2],
 			control=control, 
 			csrw=csrw, I=I, y=y, wy=wy, x=x, WX=WX, 
-			n=n, quiet=quiet)
+			n=n, tmpmax=tmpmax, quiet=quiet)
 		    if (opt$convergence == 1) warning("iteration limit reached")
 		    if (opt$convergence == 51) warning(opt$message)
 		    if (opt$convergence == 52) warning(opt$message)
@@ -135,11 +140,12 @@ errorsarlm <- function(formula, data = list(), listw, na.action=na.fail,
 		} else {
 		    opt <- optimize(sar.error.f.sM, interval=interval, 
 			maximum=TRUE, tol=tol.opt, csrw=csrw, I=I, y=y, wy=wy, 
-			x=x, WX=WX, n=n, quiet=quiet)
+			x=x, WX=WX, n=n, tmpmax=tmpmax, quiet=quiet)
 		    lambda <- opt$maximum
 		    names(lambda) <- "lambda"
 		    LL <- opt$objective
 		}
+		gc(FALSE)
 	}
 	lm.target <- lm(I(y - lambda*wy) ~ I(x - lambda*WX) - 1)
 	r <- as.vector(residuals(lm.target))
@@ -224,14 +230,16 @@ sar.error.f.s <- function(lambda, sn, y, wy, x, WX, n, quiet, sparsedebug)
 	ret
 }
 
-sar.error.f.sM <- function(lambda, csrw, I, y, wy, x, WX, n, quiet) {
+sar.error.f.sM <- function(lambda, csrw, I, y, wy, x, WX, n, tmpmax, quiet) {
 	yl <- y - lambda*wy
 	xl <- x - lambda*WX
 	xl.q <- qr.Q(qr(xl))
 	xl.q.yl <- t(xl.q) %*% yl
 	SSE <- t(yl) %*% yl - t(xl.q.yl) %*% xl.q.yl
 	s2 <- SSE/n
-	ret <- (log(det(I - lambda * csrw)) -
+	Jacobian <- log(det(chol((I - lambda * csrw), tmpmax=tmpmax))^2)
+	gc(FALSE)
+	ret <- (Jacobian -
 		((n/2)*log(2*pi)) - (n/2)*log(s2) - (1/(2*(s2)))*SSE)
 	if (!quiet) cat("(SparseM) lambda:\t", lambda, "\tfunction value:\t", ret, "\n")
 	ret

@@ -2,6 +2,7 @@ useDynLib(spdep)
 
 importFrom(SparseM, as.matrix.csr)
 importMethodsFrom(SparseM, det)
+importMethodsFrom(SparseM, chol)
 importClassesFrom(SparseM, matrix.csr)
 importFrom(stats, model.matrix, model.response)
 
