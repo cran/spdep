@@ -11,15 +11,13 @@ lag and mixed models of the form:
 
 \deqn{y = \rho W y + X \beta + \varepsilon}{y = rho W y + X beta + e}
 
-where $\rho$ is found by \code{optimize()} first and $\beta$ and other
-parameters by generalized least squares subsequently. In the mixed model,
-the spatially lagged independent variables are added to X.
+where $\rho$ is found by \code{optim()} using method "L-BFGS-B" first and $\beta$ and other parameters by generalized least squares subsequently. In the mixed model, the spatially lagged independent variables are added to X.
 }
 \usage{
 lagsarlm(formula, data=list(), listw, na.action=na.fail,
   type="lag", method="eigen", quiet=TRUE,
-  zero.policy=FALSE, tol.solve=1.0e-7, tol.opt=.Machine$double.eps^0.5,
-  sparsedebug=FALSE)
+  zero.policy=FALSE, interval = c(-1, 0.999), tol.solve=1.0e-10, 
+  tol.opt=.Machine$double.eps^0.5, control, optim=FALSE, sparsedebug=FALSE)
 %sar.lag.mixed.f.s(rho, sn, e.a, e.b, e.c, n, quiet, sparsedebug)
 %sar.lag.mixed.f(rho, eig, e.a, e.b, e.c, n, quiet)
 %dosparse(listw, y, x, wy, K, quiet, tol.opt, sparsedebug)
@@ -35,14 +33,16 @@ is called.}
   \item{na.action}{a function (default \code{na.fail}), can also be \code{na.omit} or \code{na.exclude} with consequences for residuals and fitted values - in these cases the weights list will be subsetted to remove NAs in the data. It may be necessary to set zero.policy to TRUE because this subsetting may create no-neighbour observations. Note that only weights lists created without using the glist argument to \code{nb2listw} may be subsetted.}
   \item{type}{default "lag", may be set to "mixed"; when "mixed", the lagged intercept is dropped for spatial weights style "W", that is row-standardised weights, but otherwise included}
   \item{method}{"eigen" (default) - the Jacobian is computed as the product 
-of (1 - rho*eigenvalue) using \code{eigenw} , and "sparse" - computes the 
-determinant of the sparse matrix (I - rho*W) directly using \code{logSpwdet}.
+of (1 - rho*eigenvalue) using \code{eigenw}, "SparseM" for strictly symmetric weights lists of styles "B", "C" and "U", or made symmetric by similarity (Ord, 1975, Appendix C) if possible for styles "W" and "S", using code from the SparseM package to calculate the determinant, and "sparse" - (deprecated from this release) computes the determinant of the sparse matrix (I - rho*W) directly using \code{logSpwdet}.
 }
   \item{quiet}{default=TRUE; if FALSE, reports function values during optimization.}
   \item{zero.policy}{if TRUE assign zero to the lagged value of zones without 
 neighbours, if FALSE (default) assign NA - causing \code{lagsarlm()} to terminate with an error}
-  \item{tol.solve}{the tolerance for detecting linear dependencies in the columns of matrices to be inverted - passed to \code{solve()} (default=1.0e-7). This may be used if necessary to extract coefficient standard errors (for instance lowering to 1e-10), but errors in \code{solve()} may constitute indications of misspecification}
+  \item{interval}{search interval for autoregressive parameter when not using method="eigen"; default is c(-1,1)}
+  \item{tol.solve}{the tolerance for detecting linear dependencies in the columns of matrices to be inverted - passed to \code{solve()} (default=1.0e-10). This may be used if necessary to extract coefficient standard errors (for instance lowering to 1e-12), but errors in \code{solve()} may constitute indications of poorly scaled variables: if the variables have scales differing much from the autoregressive coefficient, the values in this matrix may be very different in scale, and inverting such a matrix is analytically possible by definition, but numerically unstable; rescaling the RHS variables alleviates this better than setting tol.solve to a very small value}
   \item{tol.opt}{the desired accuracy of the optimization - passed to \code{optimize()} (default=square root of double precision machine tolerance)}
+  \item{control}{A list of control parameters passed to \code{optim}, se details in \code{\link[stats]{optim}}}
+  \item{optim}{If TRUE use experimental \code{optim} branch and control argument}
   \item{sparsedebug}{if TRUE, writes a log file on sparse matrix operations
 (name sparsestats) in the current directory. To be used if sparse estimation
 fails!}
@@ -92,7 +92,7 @@ and then provoke a segmentation fault trying to free unallocated memory.
   \item{se.fit}{Not used yet}
   \item{formula}{model formula}
   \item{ase}{TRUE if method=eigen}
-  \item{LLs}{if ase=FALSE (for method="sparse"), the log likelihood values of
+  \item{LLs}{if ase=FALSE (for method="SparseM" and method="sparse"), the log likelihood values of
 models estimated dropping each of the independent variables in turn, used
 in the summary function as a substitute for variable coefficient
 significance tests}
@@ -128,10 +128,13 @@ Bernat for contributions to the asymptotic standard error code.}
 data(oldcol)
 COL.lag.eig <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb), method="eigen", quiet=FALSE)
-COL.lag.sp <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb), method="sparse", quiet=FALSE)
+COL.lag.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
+ nb2listw(COL.nb, style="W"), method="eigen", control=list(trace=3, fnscale=-1,
+ factr=.Machine$double.eps^0.5, pgtol=.Machine$double.eps^0.5))
+COL.lag.SM <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
+ nb2listw(COL.nb), method="SparseM", quiet=FALSE)
 summary(COL.lag.eig, correlation=TRUE)
-summary(COL.lag.sp, correlation=TRUE)
+summary(COL.lag.SM, correlation=TRUE)
 COL.lag.B <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb, style="B"))
 summary(COL.lag.B, correlation=TRUE)
@@ -144,7 +147,7 @@ summary(COL.mixed.W, correlation=TRUE)
 NA.COL.OLD <- COL.OLD
 NA.COL.OLD$CRIME[20:25] <- NA
 COL.lag.NA <- lagsarlm(CRIME ~ INC + HOVAL, data=NA.COL.OLD,
- nb2listw(COL.nb), na.action=na.exclude)
+ nb2listw(COL.nb), na.action=na.exclude, tol.opt=.Machine$double.eps^0.4)
 COL.lag.NA$na.action
 COL.lag.NA
 resid(COL.lag.NA)

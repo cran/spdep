@@ -2,6 +2,8 @@ afcon                   Spatial patterns of conflict in Africa 1966-78
 airdist                 Measure distance from plot
 anova.sarlm             Comparison of simultaneous autoregressive
                         models
+asMatrixCsrListw        Convert spatial weights list to CSR matrix
+                        form
 auckland                Marshall's infant mortality in Auckland
                         dataset
 baltimore               House sales prices, Baltimore, MD 1978
@@ -82,6 +84,7 @@ read.gwt2nb             Read and write spatial neighbour files
 residuals.sarlm         Access functions for spatial simultaneous
                         autoregressive linear model objects
 set.spChkOption         Control checking of spatial object IDs
+similar.listw           Create symmetric similar weights lists
 sp.correlogram          Spatial correlogram
 spdep                   Return package version number
 sp.mantel.mc            Mantel-Hubert spatial general cross product

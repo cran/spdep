@@ -4,7 +4,7 @@
 \alias{read.geoda}
 \title{Read a GAL lattice file into a neighbours list}
 \description{
-The function reads a GAL lattice file into a neighbours list for spatial analysis. It will read old and new style (GeoDa) GAL files. \code{read.geoda} is a helper file calling \code{read.csv()}.
+The function \code{read.gal()} reads a GAL lattice file into a neighbours list for spatial analysis. It will read old and new style (GeoDa) GAL files. The function \code{read.geoda} is a helper file for reading comma separated value data files, calling \code{read.csv()}.
 }
 \usage{
 read.gal(file, region.id=NULL, override.id=FALSE)
@@ -22,10 +22,10 @@ read.geoda(file, row.names=NULL, skip=0)
 Luc Anselin (2003): Spatial Analysis Laboratory, Department of Agricultural and Consumer Economics, University of Illinois, Urbana-Champaign, \url{http://sal.agecon.uiuc.edu/weights/howto.html}; Luc Anselin (2003) \emph{GeoDa 0.9 User's Guide}, pp. 80--81, Spatial Analysis Laboratory, Department of Agricultural and Consumer Economics, University of Illinois, Urbana-Champaign, \url{http://agec221.agecon.uiuc.edu/csiss/pdf/geoda093.pdf}; GAL - Geographical Algorithms Library, University of Newcastle}
 
 \value{
-The function returns an object of class \code{nb} with a list of integer vectors containing neighbour region number ids.
+The function \code{read.gal()} returns an object of class \code{nb} with a list of integer vectors containing neighbour region number ids. The function \code{read.geoda} returns a data frame, and issues a warning if the returned object has only one column.
 }
 
-\warning{The column names read by read.geoda() change between R releases 1.8.x and 1.9.0, because the underscore character becomes a valid character from that release.}
+\warning{The column names read by \code{read.geoda()} change between R releases 1.8.x and 1.9.0, because the underscore character becomes a valid character from that release.}
 
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 

@@ -54,7 +54,7 @@ print.nb <- function(x, ...) {
     if(any(c.nb == 0)) cat(length(c.nb[c.nb == 0]), " region", 
         ifelse(length(c.nb[c.nb == 0]) < 2, "", "s"), " with no links:\n",
 	paste(regids[which(c.nb == 0)], collapse=" "), "\n", sep="")
-    res <- is.symmetric.nb(x, verbose=FALSE)
+    res <- is.symmetric.nb(nb, verbose=FALSE)
     if (!res) cat("Non-symmetric neighbours list\n")
     invisible(x)
 }

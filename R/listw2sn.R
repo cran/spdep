@@ -38,7 +38,7 @@ sn2listw <- function(sn) {
 	cs0.sn <- c(1, cs1.sn[1:(n-1)]+1)
 	ii <- 1
 	for (i in 1:n) {
-		if (rle.sn$value[ii] == i) {
+		if (!is.na(rle.sn$value[ii]) && rle.sn$value[ii] == i) {
 			nlist[[i]] <- as.integer(sn[cs0.sn[ii]:cs1.sn[ii],2])
 			vlist[[i]] <- as.double(sn[cs0.sn[ii]:cs1.sn[ii],3])
 			ii <- ii+1
