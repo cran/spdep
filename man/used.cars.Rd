@@ -16,7 +16,7 @@ includes a neighbours list for the 48 states excluding DC from poly2nb().
   }
 }
 \source{
-Hanna, F. A. 1966 Effects of regioanl differences in taxes and transport charges on automobile consumption, in Ostry, S., Rhymes, J. K. (eds) Papers on regional statistical studies, Toronto: Toronto University Press, pp. 199-223.
+Hanna, F. A. 1966 Effects of regional differences in taxes and transport charges on automobile consumption, in Ostry, S., Rhymes, J. K. (eds) Papers on regional statistical studies, Toronto: Toronto University Press, pp. 199-223.
 }
 \references{
 Hepple, L. W. 1976 A maximum likelihood model for econometric estimation with spatial series, in Masser, I (ed) Theory and practice in regional science, London: Pion, pp. 90-104.
@@ -32,16 +32,16 @@ lm.morantest(uc.lm, nb2listw(usa48.nb))
 lm.morantest.sad(uc.lm, nb2listw(usa48.nb))
 lm.LMtests(uc.lm, nb2listw(usa48.nb))
 uc.err <- errorsarlm(price.1960 ~ tax.charges, data=used.cars,
-  nb2listw(usa48.nb), tol.solve=1.0e-13)
+  nb2listw(usa48.nb), tol.solve=1.0e-13, tol.opt=.Machine$double.eps^0.3)
 summary(uc.err)
 uc.lag <- lagsarlm(price.1960 ~ tax.charges, data=used.cars,
-  nb2listw(usa48.nb), tol.solve=1.0e-13)
+  nb2listw(usa48.nb), tol.solve=1.0e-13, tol.opt=.Machine$double.eps^0.3)
 summary(uc.lag)
 uc.lag1 <- lagsarlm(price.1960 ~ 1, data=used.cars,
-  nb2listw(usa48.nb), tol.solve=1.0e-13)
+  nb2listw(usa48.nb), tol.solve=1.0e-13, tol.opt=.Machine$double.eps^0.3)
 summary(uc.lag1)
 uc.err1 <- errorsarlm(price.1960 ~ 1, data=used.cars,
-  nb2listw(usa48.nb), tol.solve=1.0e-13)
+  nb2listw(usa48.nb), tol.solve=1.0e-13, tol.opt=.Machine$double.eps^0.3)
 summary(uc.err1)
 }
 \keyword{datasets}

@@ -1,3 +1,5 @@
+0.2-23 Added machine fuzz to max distance in dnearneigh()
+
 0.2-18 Removed read.shape() from example(nc.sids) because of odd problems 
 	building Windows binary for CRAN, polylist object and centroids 
 	added to nc.sids.rda.

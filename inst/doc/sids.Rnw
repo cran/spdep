@@ -3,7 +3,7 @@
 %\VignetteKeywords{spatial}
 %\VignettePackage{spdep}
 \documentclass[a4paper,10pt]{article} 
-\usepackage{/usr/local/lib/R/share/texmf/Sweave}
+\usepackage{Sweave}
 \usepackage{times}
 \usepackage{mathptm}
 \usepackage{hyperref}
@@ -96,18 +96,15 @@ two components, \code{"Shapes"}, which is a list of shapes, and
 \code{"att.data"}, which is a data frame with tabular data, one row
 for each shape in \code{"Shapes"}. Here we will be using data previously read from the shapefile, and stored in the \code{nc.sids} data set:
 
-<<label=plotNC1,echo=FALSE,eval=FALSE>>= 
-plot(sidspolys, forcefill=FALSE)
-points(sidscents)
-@
 
 \begin{footnotesize}
 <<echo=TRUE>>= 
 data(nc.sids)
 @ 
-<<fig=FALSE,echo=TRUE, eval=FALSE>>= 
-<<plotNC1>>
-@ 
+<<label=plotNC1,fig=FALSE,echo=TRUE,eval=FALSE>>= 
+plot(sidspolys, forcefill=FALSE)
+points(sidscents)
+@
 \end{footnotesize}
 We can examine the names of the columns of the data frame to see what it
 contains --- in fact some of the same columns that we will be examining
@@ -131,9 +128,6 @@ centroids, shown in Figure \ref{plotNC1}.
 \label{plotNC1}
 \end{figure}
 
-<<label=poly6,echo=FALSE,eval=FALSE>>=
-plot(sidspolys[[56]], type="l", asp=1, axes=FALSE, xlab="", ylab="")
-@
 
 It may be of interest to look at the structure of a polygon
 list member. This is made up of a two-column matrix with polygon
@@ -156,6 +150,9 @@ box of this object. Its appearance is shown in Figure \ref{poly6}.
 \setkeys{Gin}{width=0.4\textwidth}
 \begin{figure}[htbp]
 \begin{center} 
+<<label=poly6,echo=FALSE,eval=FALSE>>=
+plot(sidspolys[[56]], type="l", asp=1, axes=FALSE, xlab="", ylab="")
+@
 <<fig=TRUE,echo=FALSE,width=2,height=2>>= 
 opar <- par(mar=c(3,3,1,1)+0.1)
 <<poly6>>
@@ -178,18 +175,15 @@ sidscents[56,]
 \end{footnotesize}
 
 
-<<label=plot-CC89.nb,echo=FALSE,eval=FALSE>>= 
-plot(sidspolys, border="grey", forcefill=FALSE)
-plot(ncCC89.nb, sidscents, add=TRUE, col="blue")
-@ 
 
 We will now examine the data set reproduced from Cressie and collaborators,
 included in \pkg{spdep}, and add the neighbour relationships used in
 \citet{cressie+chan:1989} to the background map as a graph shown in Figure \ref{plot-CC89.nb}:
 
 \begin{footnotesize}
-<<fig=FALSE,echo=TRUE, eval=FALSE>>= 
-<<plot-CC89.nb>>
+<<label=plot-CC89.nb,fig=FALSE,echo=TRUE,eval=FALSE>>= 
+plot(sidspolys, border="grey", forcefill=FALSE)
+plot(ncCC89.nb, sidscents, add=TRUE, col="blue")
 @ 
 \end{footnotesize}
 
@@ -246,15 +240,6 @@ with those from the literature.
 
 \subsection{Probability mapping}
 
-<<label=choymap,echo=FALSE,eval=FALSE>>= 
-plot(sidspolys, forcefill=FALSE)
-legend(c(-84,-81), c(33.9,34.5), fill=grey(c(2,5)/7),
- legend=c("high", "low"), bty="n", ncol=2)
-plot(subset(sidspolys, ((ch$pmap < 0.05) & (ch$type))),
- col=grey(5/7), add=TRUE, forcefill=FALSE)
-plot(subset(sidspolys, ((ch$pmap < 0.05) & (!ch$type))),
- col=grey(2/7), add=TRUE, forcefill=FALSE)
-@
 
 Rather than review functions for measuring and modelling spatial
 dependence in the \pkg{spdep} package, we will focus on probability
@@ -279,8 +264,14 @@ separately in Figure \ref{choymap}.
 <<echo=TRUE>>= 
 ch <- choynowski(nc.sids$SID74, nc.sids$BIR74)
 @ 
-<<fig=FALSE,echo=TRUE, eval=FALSE>>= 
-<<choymap>>
+<<label=choymap,fig=FALSE,echo=TRUE,eval=FALSE>>= 
+plot(sidspolys, forcefill=FALSE)
+legend(c(-84,-81), c(33.9,34.5), fill=grey(c(2,5)/7),
+ legend=c("high", "low"), bty="n", ncol=2)
+plot(subset(sidspolys, ((ch$pmap < 0.05) & (ch$type))),
+ col=grey(5/7), add=TRUE, forcefill=FALSE)
+plot(subset(sidspolys, ((ch$pmap < 0.05) & (!ch$type))),
+ col=grey(2/7), add=TRUE, forcefill=FALSE)
 @
 \end{footnotesize}
 
@@ -296,11 +287,6 @@ ch <- choynowski(nc.sids$SID74, nc.sids$BIR74)
 \label{choymap}
 \end{figure}
 
-<<label=poismap,echo=FALSE,eval=FALSE>>= 
-plot(sidspolys, col=cols[findInterval(pmap$pmap, brks)], forcefill=FALSE)
-legend(c(-84,-81), c(33.9,34.5), fill=cols, legend=leglabs(brks),
- bty="n", ncol=2)
-@
 
 For more complicated thematic maps, it may be helpful to use ColorBrewer
 (\url{http://colorbrewer.org}) colour palettes. Here we will only use
@@ -324,8 +310,10 @@ brks <- c(0,0.001,0.01,0.025,0.05,0.95,0.975,0.99,0.999,1)
 cols <- c("#FFFFFF", "#F0F0F0", "#D9D9D9", "#BDBDBD", "#969696",
  "#737373", "#525252", "#252525", "#000000")
 @ 
-<<fig=FALSE,echo=TRUE, eval=FALSE>>= 
-<<poismap>>
+<<label=poismap,fig=FALSE,echo=TRUE,eval=FALSE>>= 
+plot(sidspolys, col=cols[findInterval(pmap$pmap, brks)], forcefill=FALSE)
+legend(c(-84,-81), c(33.9,34.5), fill=cols, legend=leglabs(brks),
+ bty="n", ncol=2)
 @
 \end{footnotesize}
 
@@ -351,13 +339,10 @@ from the constant rate assumption''. There are many more high values
 than one would have expected, suggesting perhaps overdispersion, that
 is that the ratio of the mean and variance is larger than unity.
 
-<<label=poishist,echo=FALSE,eval=FALSE>>= 
-hist(pmap$pmap, main="")
-@
 
 \begin{footnotesize}
-<<fig=FALSE,echo=TRUE, eval=FALSE>>= 
-<<poishist>>
+<<label=poishist,fig=FALSE,echo=TRUE,eval=FALSE>>= 
+hist(pmap$pmap, main="")
 @
 \end{footnotesize}
 
@@ -374,11 +359,6 @@ hist(pmap$pmap, main="")
 \label{poishist}
 \end{figure}
 
-<<label=poismap2,echo=FALSE,eval=FALSE>>= 
-plot(sidspolys, col=cols[findInterval(stdres, brks)], forcefill=FALSE)
-legend(c(-84,-81), c(33.9,34.5), fill=cols, legend=leglabs(brks),
- bty="n", ncol=2)
-@
 
 One ad-hoc way to assess the impact of the possible failure of our
 assumption that the counts follow the Poisson distribution is to estimate
@@ -395,8 +375,10 @@ brks <- c(-Inf, -2, -1.5, -1, 1, 1.5, 2, +Inf)
 cols <- c("#F7F7F7", "#D9D9D9", "#BDBDBD", "#969696", "#737373",
  "#525252", "#252525")
 @
-<<fig=FALSE,echo=TRUE, eval=FALSE>>= 
-<<poismap2>>
+<<label=poismap2,fig=FALSE,echo=TRUE,eval=FALSE>>= 
+plot(sidspolys, col=cols[findInterval(stdres, brks)], forcefill=FALSE)
+legend(c(-84,-81), c(33.9,34.5), fill=cols, legend=leglabs(brks),
+ bty="n", ncol=2)
 @
 \end{footnotesize}
 
@@ -426,13 +408,6 @@ from a Negative Binomial.
 @ 
 
 
-<<label=EBlocal,echo=FALSE,eval=FALSE>>= 
-plot(sidspolys, forcefill=FALSE)
-legend(c(-84,-81), c(33.9,34.5), fill=cols, legend=leglabs(brks),
- bty="n", ncol=2)
-plot(subset(sidspolys, sub), col=cols[findInterval(res$est[sub]*1000, brks)], add=TRUE, forcefill=FALSE)
-points(sidscents[!sub,], pch=8)
-@
 
 So far, none of the maps presented have made use of the spatial
 dependence possibly present in the data. A further elementary step that
@@ -459,8 +434,12 @@ brks <- c(-Inf,2,2.5,3,3.5,Inf)
 cols <- c("#F7F7F7", "#CCCCCC", "#969696", "#636363", "#252525")
 sub <- is.finite(res$est)
 @
-<<fig=FALSE,echo=TRUE, eval=FALSE>>= 
-<<EBlocal>>
+<<label=EBlocal,fig=FALSE,echo=TRUE,eval=FALSE>>= 
+plot(sidspolys, forcefill=FALSE)
+legend(c(-84,-81), c(33.9,34.5), fill=cols, legend=leglabs(brks),
+ bty="n", ncol=2)
+plot(subset(sidspolys, sub), col=cols[findInterval(res$est[sub]*1000, brks)], add=TRUE, forcefill=FALSE)
+points(sidscents[!sub,], pch=8)
 @
 \end{footnotesize}
 
@@ -493,20 +472,17 @@ rectangles before proceeding further (see Figure \ref{LMmap}). We need
 to recall that the \code{nc.sids} data frame is not in the same order
 as the polygons.
 
-<<label=LMmap,echo=FALSE,eval=FALSE>>= 
-plot(sidspolys, col=cols[both[order(nc.sids$CNTY.ID)]], forcefill=FALSE)
-legend(c(-84, -81), c(33.5, 34.6), legend=levels(both), fill=cols,
- bty="n", cex=0.9, y.intersp=0.9, ncol=2)
-@
 
 \begin{footnotesize}
 <<echo=TRUE>>= 
 both <- factor(paste(nc.sids$L.id, nc.sids$M.id, sep=":"))
 cols <- sample(rainbow(length(table(unclass(both)))))
 @ 
-<<fig=FALSE,echo=TRUE,eval=FALSE>>= 
-<<LMmap>>
-@ 
+<<label=LMmap,fig=FALSE,echo=TRUE,eval=FALSE>>= 
+plot(sidspolys, col=cols[both[order(nc.sids$CNTY.ID)]], forcefill=FALSE)
+legend(c(-84, -81), c(33.5, 34.6), legend=levels(both), fill=cols,
+ bty="n", cex=0.9, y.intersp=0.9, ncol=2)
+@
 \end{footnotesize}
 
 \begin{figure}[htbp]

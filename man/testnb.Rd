@@ -3,6 +3,7 @@
 \alias{is.symmetric.nb}
 \alias{sym.attr.nb}
 \alias{make.sym.nb}
+\alias{is.symmetric.glist}
 
 \title{Test a neighbours list for symmetry}
 \description{
@@ -10,18 +11,20 @@ Checks a neighbours list for symmetry/transitivity (if i is a neighbour of j,
 then j is a neighbour of i). This holds for distance and contiguity based
 neighbours, but not for k-nearest neighbours. The helper function
 \code{sym.attr.nb()} calls \code{is.symmetric.nb()} to set the \code{sym}
-attribute if needed, and \code{make.sym.nb} makes a non-symmetric list symmetric by adding neighbors.
+attribute if needed, and \code{make.sym.nb} makes a non-symmetric list symmetric by adding neighbors. \code{is.symmetric.glist} checks a list of general weights corresponding to neighbours for symmetry for symmetric neighbours.
 }
 \usage{
 is.symmetric.nb(nb, verbose = TRUE, force = FALSE)
 sym.attr.nb(nb)
 make.sym.nb(nb)
+is.symmetric.glist(nb, glist)
 }
 
 \arguments{
   \item{nb}{an object of class \code{nb} with a list of integer vectors containing neighbour region number ids.}
   \item{verbose}{if TRUE prints non-matching pairs}
   \item{force}{do not respect a neighbours list \code{sym} attribute and test anyway}
+  \item{glist}{list of general weights corresponding to neighbours}
 }
 \value{
 TRUE if symmetric, FALSE if not

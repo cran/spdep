@@ -103,7 +103,8 @@ write.nb.gal <- function(nb, file, oldstyle=TRUE, shpfile=NULL, ind=NULL) {
 
 read.geoda <- function(file, row.names=NULL, skip=0)
 {
-	read.csv(file=file, header=TRUE, skip=skip, row.names=row.names)
-	
+	res <- read.csv(file=file, header=TRUE, skip=skip, row.names=row.names)
+	if (ncol(res) < 2) warning("data frame possibly malformed") 
+	res
 }
 

@@ -1,4 +1,4 @@
-# Copyright 2000-3 by Roger S. Bivand. 
+# Copyright 2000-4 by Roger S. Bivand. 
 #
 
 dnearneigh <- function(x, d1, d2, row.names=NULL, lonlat=FALSE) {
@@ -20,6 +20,7 @@ dnearneigh <- function(x, d1, d2, row.names=NULL, lonlat=FALSE) {
     if (d1 < 0) d1 <- 0.0
     if (!lonlat) {
 	for (i in 1:dimension) md <- sum(md, (diff(range(x[,i]))^2))
+	md <- md + (.Machine$double.eps)^(1/4)
     	if (d2 > sqrt(md)) d2 <- sqrt(md)
     }
     z <- .Call("dnearneigh", as.double(d1), as.double(d2), as.integer(np),

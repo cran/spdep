@@ -7,7 +7,7 @@ spweights.constants <- function(listw, zero.policy=FALSE) {
 	cards <- card(listw$neighbours)
 	if (!zero.policy && any(cards == 0))
 		stop("regions with no neighbours found")
-	n <- length(which(cards > 0))
+	n <- as.double(length(which(cards > 0)))
 	n1 <- n - 1
 	n2 <- n - 2
 	n3 <- n - 3

@@ -15,6 +15,26 @@ is.symmetric.nb <- function(nb, verbose=TRUE, force=FALSE)
 	invisible(res)
 }
 
+is.symmetric.glist <- function(nb, glist)
+{
+	if(!inherits(nb, "nb")) stop("Not neighbours list")
+	nbsym <- attr(nb, "sym")
+	if(is.null(nbsym)) nbsym <- is.symmetric.nb(nb)
+	if (!nbsym) {
+		res <- FALSE
+	} else {
+		if (length(nb) != length(glist)) stop("list lengths differ")
+		cnb <- as.integer(card(nb))
+		gnb <- as.integer(sapply(glist, length))
+		if (!(identical(cnb, gnb))) 
+			stop("different vector lengths in lists")
+		res <- .Call("gsymtest", nb=nb, glist=glist, card=cnb, 
+			PACKAGE="spdep")
+	}
+	res
+}
+
+
 sym.attr.nb <- function(nb) {
 	if(!inherits(nb, "nb")) stop("Not neighbours list")
 	nbsym <- attr(nb, "sym")

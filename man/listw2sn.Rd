@@ -10,7 +10,7 @@ The function makes a \code{"spatial neighbour"} object representation
 (similar to the S-PLUS spatial statististics module representation of a
 \code{"listw"} spatial weights object. The object is used in calculating the
 Jacobian of the likelihood functions of spatial autoregressive models when
-the "sparse" method is chosen in \code{errorsarlm()} and \code{lagsarlm()}. \code{sn2listw()} is the inverse function to \code{listw2sn()}, creating a \code{"listw"} object from a \code{"spatial neighbour"} object
+the "sparse" method is chosen in \code{errorsarlm()} and \code{lagsarlm()}; this method is deprecated and will be removed shortly, and replaced by the use of functions from the SparseM package as shown in the example. \code{sn2listw()} is the inverse function to \code{listw2sn()}, creating a \code{"listw"} object from a \code{"spatial neighbour"} object
 }
 \usage{
 listw2sn(listw)
@@ -97,9 +97,10 @@ col.listw <- nb2listw(col.gal.nb)
 col.listw$neighbours[[1]]
 col.listw$weights[[1]]
 col.sn <- listw2sn(col.listw)
+W <- asMatrixCsrListw(similar.listw(col.listw))
 col.sn[col.sn[,1] == 1,]
 rho <- seq(-0.8, 0.9, 0.1)
 for (i in rho) print(paste("rho:", i, "log(det(I - rho*W))",
-  logSpwdet(col.sn, i)), quote=TRUE)
+  logSpwdet(col.sn, i), log(det(asMatrixCsrIrW(W, i)))), quote=TRUE)
 }
 \keyword{spatial}

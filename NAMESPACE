@@ -1,5 +1,10 @@
 useDynLib(spdep)
 
+importFrom(SparseM, as.matrix.csr)
+importMethodsFrom(SparseM, det)
+importClassesFrom(SparseM, matrix.csr)
+importFrom(stats, model.matrix, model.response)
+
 export(EBImoran.mc, probmap, choynowski, EBest, EBlocal, LR.sarlm, 
 	LR1.sarlm, Wald1.sarlm, airdist, card, rookcell, 
 	queencell, mrc2vi, vi2mrc, cell2nb, n.comp.nb, diffnb,
@@ -24,7 +29,9 @@ export(EBImoran.mc, probmap, choynowski, EBest, EBlocal, LR.sarlm,
 	print.sarlm, summary.sarlm, residuals.sarlm, deviance.sarlm, 
 	coef.sarlm, fitted.sarlm, logLik.sarlm, anova.sarlm, 
 	predict.sarlm, print.summary.sarlm, print.sarlm.pred, bptest.sarlm,
-	write.sn2dat, read.dat2listw, nb2blocknb, p.adjustSP)
+	write.sn2dat, read.dat2listw, nb2blocknb, p.adjustSP,
+	asMatrixCsrListw, asMatrixCsrI, asMatrixCsrIrW, asListwMatrixCsr, 
+	is.symmetric.glist, similar.listw)
 
 import(maptools)
 

@@ -38,7 +38,7 @@ subset.listw <- function(x, subset, zero.policy=FALSE, ...) {
     if (!is.logical(subset)) stop("subset not a logical vector")
     nb <- x$neighbours
     vlist <- x$weights
-    if (is.null(attr(vlist, "binary"))) 
+    if (attr(vlist, "mode") != "binary") 
 	stop("Not yet able to subset general weights lists")
     style <- x$style
     n <- length(nb)
