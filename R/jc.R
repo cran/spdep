@@ -55,11 +55,16 @@ joincount.test <- function(fx, listw, zero.policy=FALSE,
 			"Expectation", "Variance")
 		statistic <- (BB5[i] - Ejc[i]) / sqrt(Vjc[i])
 		names(statistic) <- paste("Std. deviate for", names(tab)[i])
-		if (alternative == "two.sided") 
+		p.value <- NA
+		if (is.finite(statistic)) {
+		    if (alternative == "two.sided") 
 			p.value <- 2 * pnorm(abs(statistic), lower.tail=FALSE)
-		else if (alternative == "greater")
+		    else if (alternative == "greater")
 			p.value <- pnorm(statistic, lower.tail=FALSE)
-		else p.value <- pnorm(statistic)
+		    else p.value <- pnorm(statistic)
+		    if (p.value < 0 || p.value > 1) 
+		      warning("Out-of-range p-value: reconsider test arguments")
+		}
 		method <- "Join count test under nonfree sampling"
 		data.name <- paste(deparse(substitute(fx)), "\nweights:",
 			deparse(substitute(listw)), "\n")
@@ -123,6 +128,8 @@ joincount.mc <- function(fx, listw, nsim, zero.policy=FALSE,
         		pval <- punif((diff + 1)/(nsim + 1), lower.tail=FALSE)
     		else if (alternative == "greater") 
         		pval <- punif((diff + 1)/(nsim + 1))
+		if (pval < 0 || pval > 1) 
+		    warning("Out-of-range p-value: reconsider test arguments")
 
 		method <- "Monte-Carlo simulation of join-count statistic"
 		data.name <- paste(deparse(substitute(fx)), "\nweights:",

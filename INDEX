@@ -80,6 +80,7 @@ sp.mantel.mc            Mantel-Hubert spatial general cross product
                         statistic
 spweights.constants     Provides constants for spatial weights
                         matrices
+subset.listw            Subset a spatial weights list
 subset.nb               Subset a neighbours list
 summary.nb              Print and summary function for neighbours and
                         weights lists

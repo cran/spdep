@@ -1,4 +1,4 @@
-% Copyright 2002 by Roger S. Bivand
+% Copyright 2002-4 by Roger S. Bivand
 \name{lagsarlm}
 \alias{lagsarlm}
 %\alias{sar.lag.mixed.f}
@@ -16,7 +16,8 @@ parameters by generalized least squares subsequently. In the mixed model,
 the spatially lagged independent variables are added to X.
 }
 \usage{
-lagsarlm(formula, data=list(), listw, type="lag", method="eigen", quiet=TRUE,
+lagsarlm(formula, data=list(), listw, na.action=na.fail,
+  type="lag", method="eigen", quiet=TRUE,
   zero.policy=FALSE, tol.solve=1.0e-7, tol.opt=.Machine$double.eps^0.5,
   sparsedebug=FALSE)
 %sar.lag.mixed.f.s(rho, sn, e.a, e.b, e.c, n, quiet, sparsedebug)
@@ -31,6 +32,7 @@ of model specification are given for \code{lm()}}
 By default the variables are taken from the environment which the function 
 is called.}
   \item{listw}{a \code{listw} object created for example by \code{nb2listw}}
+  \item{na.action}{a function (default \code{na.fail}), can also be \code{na.omit} or \code{na.exclude} with consequences for residuals and fitted values - in these cases the weights list will be subsetted to remove NAs in the data. It may be necessary to set zero.policy to TRUE because this subsetting may create no-neighbour observations. Note that only weights lists created without using the glist argument to \code{nb2listw} may be subsetted.}
   \item{type}{default "lag", may be set to "mixed"; when "mixed", the lagged intercept is dropped for spatial weights style "W", that is row-standardised weights, but otherwise included}
   \item{method}{"eigen" (default) - the Jacobian is computed as the product 
 of (1 - rho*eigenvalue) using \code{eigenw} , and "sparse" - computes the 
@@ -39,7 +41,7 @@ determinant of the sparse matrix (I - rho*W) directly using \code{logSpwdet}.
   \item{quiet}{default=TRUE; if FALSE, reports function values during optimization.}
   \item{zero.policy}{if TRUE assign zero to the lagged value of zones without 
 neighbours, if FALSE (default) assign NA - causing \code{lagsarlm()} to terminate with an error}
-  \item{tol.solve}{the tolerance for detecting linear dependencies in the columns of matrices to be inverted - passed to \code{solve()} (default=1.0e-7). This may be used if necessary to extract coefficient standard errors, but errors in \code{solve()} do constitute indicatations of model misspecification}
+  \item{tol.solve}{the tolerance for detecting linear dependencies in the columns of matrices to be inverted - passed to \code{solve()} (default=1.0e-7). This may be used if necessary to extract coefficient standard errors (for instance lowering to 1e-10), but errors in \code{solve()} may constitute indications of misspecification}
   \item{tol.opt}{the desired accuracy of the optimization - passed to \code{optimize()} (default=square root of double precision machine tolerance)}
   \item{sparsedebug}{if TRUE, writes a log file on sparse matrix operations
 (name sparsestats) in the current directory. To be used if sparse estimation
@@ -98,6 +100,7 @@ significance tests}
   \item{LMtest}{if ase=TRUE, the Lagrange Multiplier test for the absence
 of spatial autocorrelation in the lag model residuals}
   \item{zero.policy}{zero.policy for this model}
+  \item{na.action}{(possibly) named vector of excluded or omitted observations if non-default na.action argument used}
 
 The internal sar.lag.mixed.* functions return the value of the log likelihood function at $\rho$.
 
@@ -138,5 +141,12 @@ summary(COL.mixed.B)
 COL.mixed.W <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb, style="W"), type="mixed")
 summary(COL.mixed.W)
+NA.COL.OLD <- COL.OLD
+NA.COL.OLD$CRIME[20:25] <- NA
+COL.lag.NA <- lagsarlm(CRIME ~ INC + HOVAL, data=NA.COL.OLD,
+ nb2listw(COL.nb), na.action=na.exclude)
+COL.lag.NA$na.action
+COL.lag.NA
+resid(COL.lag.NA)
 }
 \keyword{spatial}

@@ -1,8 +1,10 @@
-# Copyright 2002 by Roger Bivand
+# Copyright 2002-4 by Roger Bivand
 #
 
 residuals.sarlm <- function(object, ...) {
-	object$residuals
+	if (is.null(object$na.action))
+		object$residuals
+	else napredict(object$na.action, object$residuals)
 }
 
 deviance.sarlm <- function(object, ...) {
@@ -16,8 +18,10 @@ coef.sarlm <- function(object, ...) {
 	ret
 }
 
-fitted.values.sarlm <- function(object, ...) {
-	object$fitted.values
+fitted.sarlm <- function(object, ...) {
+	if (is.null(object$na.action))
+		object$fitted.values
+	else napredict(object$na.action, object$fitted.values)
 }
 
 predict.sarlm <- function(object, newdata=NULL, listw=NULL, 

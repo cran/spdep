@@ -52,7 +52,7 @@ anova.sarlm <- function(object, ...) {
             lratio <- 2 * abs(diff(logLik))
             lratio[!ldf] <- NA
             pval[ldf] <- 1 - pchisq(lratio[ldf], abs(ddf[ldf]))
-            aod <- data.frame(aod, Test = effects, L.Ratio = c(NA, 
+	    aod <- data.frame(aod, Test = effects, L.Ratio = c(NA, 
                 lratio), "p-value" = c(NA, pval), check.names = FALSE)
     	}
     	row.names(aod) <- unlist(lapply(as.list(ancall[-1]), 

@@ -46,6 +46,8 @@ lm.morantest <- function(model, listw, zero.policy=FALSE,
     	else if (alternative == "greater")
 	        pv <- pnorm(ZI, lower.tail=FALSE)
     	else pv <- pnorm(ZI)
+	if (pv < 0 || pv > 1) 
+		warning("Out-of-range p-value: reconsider test arguments")
     	statistic <- ZI
     	attr(statistic, "names") <- "Moran I statistic standard deviate"
     	p.value <- pv

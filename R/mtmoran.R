@@ -53,6 +53,8 @@ lm.morantest.sad <- function (model, listw, zero.policy = FALSE,
     else if (alternative == "greater")
         p.sad <- pnorm(sad.p, lower.tail=FALSE)
     else p.sad <- pnorm(sad.p)
+    if (p.sad < 0 || p.sad > 1) 
+	warning("Out-of-range p-value: reconsider test arguments")
     statistic <- sad.p
     attr(statistic, "names") <- "Saddlepoint approximation"
     p.value <- p.sad

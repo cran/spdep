@@ -57,11 +57,16 @@ geary.test <- function(x, listw, randomisation=TRUE, zero.policy=FALSE,
 	ZC <- (C - EC) / sqrt(VC)
 	statistic <- ZC
 	names(statistic) <- "Geary C statistic standard deviate"
-        if (alternative == "two.sided") PrC <- 2 * pnorm(abs(ZC), 
-		lower.tail=FALSE)
-        else if (alternative == "greater")
-            PrC <- pnorm(ZC, lower.tail=FALSE)
-        else PrC <- pnorm(ZC)
+	PrC <- NA
+	if (is.finite(ZC)) {
+        	if (alternative == "two.sided") PrC <- 2 * pnorm(abs(ZC), 
+			lower.tail=FALSE)
+        	else if (alternative == "greater")
+            	PrC <- pnorm(ZC, lower.tail=FALSE)
+        	else PrC <- pnorm(ZC)
+		if (PrC < 0 || PrC > 1) 
+		    warning("Out-of-range p-value: reconsider test arguments")
+	}
 	vec <- c(C, EC, VC)
 	names(vec) <- c("Geary C statistic", "Expectation", "Variance")
 	method <- paste("Geary's C test under", ifelse(randomisation,
@@ -102,6 +107,8 @@ geary.mc <- function(x, listw, nsim, zero.policy=FALSE,
         	pval <- punif((diff + 1)/(nsim + 1), lower.tail=FALSE)
     	else if (alternative == "greater") 
         	pval <- punif((diff + 1)/(nsim + 1))
+	if (pval < 0 || pval > 1) 
+		warning("Out-of-range p-value: reconsider test arguments")
 	statistic <- res[nsim+1]
 	names(statistic) <- "statistic"
 	parameter <- xrank
