@@ -16,7 +16,7 @@
 #	for (j in 1:length(pl)) polygon(pl[[j]], col=col[j], border=border, ...)
 #}
 
-poly2nb <- function(pl, bb, row.names=NULL, snap=sqrt(.Machine$double.eps),
+poly2nb <- function(pl, row.names=NULL, snap=sqrt(.Machine$double.eps),
 	queen=TRUE) {
 	if (!inherits(pl, "polylist")) stop("Not a polygon list")
 	if (inherits(pl, "multiparts")) stop("Convert to newer polylist format")
@@ -38,9 +38,8 @@ poly2nb <- function(pl, bb, row.names=NULL, snap=sqrt(.Machine$double.eps),
 		for (i in 1:n) res[i,] <- attr(pl[[i]], "bbox")
 		res
 	}
-	if (missing(bb)) bb <- poly2bbs(pl)
-	if (nrow(bb) != n)
-		stop("Number of polygons not equal to number of bounding boxes")
+	bb <- poly2bbs(pl)
+	
 
 	between <- function(x, low, up) {return(x >= low && x <= up)}
 

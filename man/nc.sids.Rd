@@ -7,7 +7,7 @@
 \usage{data(nc.sids)}
 \description{
 The \code{nc.sids} data frame has 100 rows and 9 columns. It contains data
-given in Cressie (1991, pp. 386-9), Cressie and Read (1985) and Cressie and Chan (1989) on sudden infant deaths in North Carolina for 1974-78 and 1979-84. The data set also contains the neighbour list given by Cressie and Chan (1989) omitting self-neighbours (ncCC89.nb), and the neighbour list given by Cressie and Read (1985) for contiguities (ncCR85.nb).
+given in Cressie (1991, pp. 386-9), Cressie and Read (1985) and Cressie and Chan (1989) on sudden infant deaths in North Carolina for 1974-78 and 1979-84. The data set also contains the neighbour list given by Cressie and Chan (1989) omitting self-neighbours (ncCC89.nb), and the neighbour list given by Cressie and Read (1985) for contiguities (ncCR85.nb). The data are ordered by county ID number, not alphabetically as in the source tables.
 
 }
 \format{
@@ -42,23 +42,10 @@ sids <- sids.shp$att.data
 sidspolys <- Map2poly(sids.shp)
 sidscents <- get.Pcent(sids.shp)
 data(nc.sids)
-sids[1:5, c(4, 5, 9)]
-nc.sids[1:5, c("CNTY.ID", "BIR74")]
-attr(ncCC89.nb, "region.id")[1:5]
-tmpGAL <- tempfile(pattern="GAL")
-write.nb.gal(ncCC89.nb, file=tmpGAL, oldstyle=FALSE, 
- shpfile="sids", ind="CNTY.ID")
-CNTY.ID <- sids[, 4]
-ncCC89.2.nb <- read.gal(file=tmpGAL, region.id=CNTY.ID)
-tmpGAL <- tempfile(pattern="GAL")
-write.nb.gal(ncCR85.nb, file=tmpGAL, oldstyle=FALSE, 
- shpfile="sids", ind="CNTY.ID")
-CNTY.ID <- sids[, 4]
-ncCR85.2.nb <- read.gal(file=tmpGAL, region.id=CNTY.ID)
 plotpolys(sidspolys, border="grey")
-plot(ncCR85.2.nb, sidscents, add=TRUE, col="blue")
+plot(ncCR85.nb, sidscents, add=TRUE, col="blue")
 plotpolys(sidspolys, border="grey")
-plot(ncCC89.2.nb, cbind(nc.sids$lon, nc.sids$lat)[order(nc.sids$CNTY.ID),],
+plot(ncCC89.nb, cbind(nc.sids$lon, nc.sids$lat),
  add=TRUE, col="blue")
 }
 \keyword{datasets}

@@ -2,12 +2,11 @@
 \alias{auckland}
 \alias{auckland.nb}
 \alias{auckpolys}
-\alias{auckbbs}
 \non_function{}
 \title{Marshall's infant mortality in Auckland dataset}
 \usage{data(auckland)}
 \description{
-The \code{auckland} data frame has 167 rows (census area units --- CAU) and 4 columns. The dataset also includes the "nb" object \code{auckland.nb} of neighbour relations based on contiguity, the "polylist" object \code{auckpolys} of polygon boundaries for the CAU, and a matrix of CAU bounding boxes \code{auckbbs}. The \code{auckland} data frame includes the following columns:
+The \code{auckland} data frame has 167 rows (census area units --- CAU) and 4 columns. The dataset also includes the "nb" object \code{auckland.nb} of neighbour relations based on contiguity, and the "polylist" object \code{auckpolys} of polygon boundaries for the CAU. The \code{auckland} data frame includes the following columns:
 }
 \format{
   This data frame contains the following columns:

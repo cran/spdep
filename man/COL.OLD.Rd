@@ -2,7 +2,6 @@
 \name{oldcol}
 \alias{oldcol}
 \alias{COL.OLD}
-\alias{bbs.OLD}
 \alias{COL.nb}
 \alias{coords.OLD}
 \alias{polys.OLD}
@@ -16,8 +15,7 @@ SpaceStat documentation and in Anselin, L. 1988 Spatial econometrics: methods an
 Unit of analysis: 49 neighbourhoods in Columbus, OH, 1980 data.
 In addition the data set includes a \code{polylist} object \code{polys.OLD}
 with the boundaries of the neighbourhoods, a matrix of polygon centroids
-\code{coords.OLD}, a matrix \code{bbs.OLD} with
-the bounding boxes of the polygons, and \code{COL.nb}, the neighbours list
+\code{coords.OLD}, and \code{COL.nb}, the neighbours list
 as used in Anselin (1988).
 }
 \format{

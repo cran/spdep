@@ -1,6 +1,6 @@
 useDynLib(spdep)
 
-export(EBImoran.mc, probmap, EBest, EBlocal, LR.sarlm, 
+export(EBImoran.mc, probmap, choynowski, EBest, EBlocal, LR.sarlm, 
 	LR1.sarlm, Wald1.sarlm, airdist, card, rookcell, 
 	queencell, mrc2vi, vi2mrc, cell2nb, n.comp.nb, diffnb,
 	dnearneigh, droplinks, eigenw, errorsarlm, gabrielneigh, geary.test,
