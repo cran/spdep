@@ -74,7 +74,7 @@ plot.mc.sim <- function(x, ...) {
 	n <- length(res)
 	obs <- res[n]
 	res <- res[-n]
-	plot(density(res), xlim=xlim, xlab=strsplit(x$data.name, " ")[[1]][1], 
+	plot(density(res), xlim=xlim, xlab=strsplit(x$data.name, "\n")[[1]][1], 
 		main="Density plot of permutation outcomes", sub=x$method)
 	abline(v=obs)
 }

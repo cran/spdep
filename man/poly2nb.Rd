@@ -10,7 +10,7 @@ poly2nb(pl, bb, row.names = NULL, snap=sqrt(.Machine$double.eps), queen=TRUE)
 }
 
 \arguments{
-  \item{pl}{list of polygons og class \code{polylist}}
+  \item{pl}{list of polygons of class \code{polylist}}
   \item{bb}{matrix of polygon bounding boxes - columns are LL(x), LL(y), UR(x), UR(y)}
   \item{row.names}{character vector of region ids to be added to the neighbours list as attribute \code{region.id}, default \code{seq(1, nrow(x))}; if \code{polys} has a \code{region.id} attribute, it is copied to the neighbours list.}
   \item{snap}{boundary points less than \code{snap} distance apart are considered to indicate contiguity}
