@@ -15,7 +15,7 @@ In addition the data set includes a \code{polylist} object \code{polys}
 with the boundaries of the neighbourhoods, a matrix of polygon centroids
 \code{coords}, a matrix \code{bbs} with
 the bounding boxes of the polygons, and \code{col.gal.nb}, the neighbours list
-from read.gal("spweights/data/col-queen.gal").
+from an original GAL-format file.
 }
 \format{
   This data frame contains the following columns:
@@ -53,31 +53,13 @@ The row names of \code{columbus} and the \code{region.id} attribute of
 \source{
 Anselin, Luc.  1988.  Spatial econometrics: methods and
 models.  Dordrecht: Kluwer Academic, Table 12.1 p. 189.
-\url{http://www.spacestat.com},
-\url{ftp://cho.pol.uiuc.edu/pub/spacestat/data/columbus.ZIP}
 }
 \note{
 All source data files prepared by
-Luc Anselin, Bruton Center for Development Studies
-University of Texas at Dallas
-P.O. Box 830688 - GR 31
-Richardson, TX 75083-0688
-e-mail: lanselin@utdallas.edu
+Luc Anselin, Spatial Analysis Laboratory, Department of Agricultural and Consumer Economics, University of Illinois, Urbana-Champaign, \url{http://sal.agecon.uiuc.edu/datasets/columbus.zip}.
 }
 
 \examples{
-data(columbus)
-crime.f <- as.ordered(cut(columbus$CRIME,
-  breaks=quantile(columbus$CRIME, probs=seq(0,1,0.2)),
-  include.lowest=TRUE))
-colours <- c("salmon1", "salmon2", "red3", "brown", "black")
-plot(bbs[,1], bbs[,4], xlab="", ylab="", asp=1, type="n",
-  xlim=range(c(bbs[,1],bbs[,3])), ylim=range(c(bbs[,2],bbs[,4])))
-for (i in 1:length(polys)) 
-  polygon(polys[[i]], col=colours[codes(crime.f[i])])
-legend(x=c(5.8, 7.1), y=c(13, 14.5), legend=levels(crime.f),
-  fill=colours, bty="n")
-title(main=paste("Columbus OH: residential burglaries and vehicle\nthefts",
-  "per thousand households, 1980"))
+example(plotpolys)
 }
 \keyword{datasets}

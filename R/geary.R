@@ -1,4 +1,4 @@
-# Copyright 2001-2 by Roger Bivand 
+# Copyright 2001-3 by Roger Bivand 
 #
 
 
@@ -36,6 +36,8 @@ geary.test <- function(x, listw, randomisation=TRUE, zero.policy=FALSE,
 	if (is.null(spChk)) spChk <- get.spChkOption()
 	if (spChk && !chkIDs(x, listw))
 		stop("Check of data and weights ID integrity failed")
+	if (!(alternative %in% c("greater", "less", "two.sided")))
+		stop("alternative must be one of: \"greater\", \"less\", or \"two.sided\"")
 	wc <- spweights.constants(listw, zero.policy)
 	S02 <- wc$S0*wc$S0
 	res <- geary(x, listw, wc$n, wc$n1, wc$S0, zero.policy)
@@ -55,7 +57,7 @@ geary.test <- function(x, listw, randomisation=TRUE, zero.policy=FALSE,
 	ZC <- (C - EC) / sqrt(VC)
 	statistic <- ZC
 	names(statistic) <- "Geary C statistic standard deviate"
-        if (alternative == "two.sided") PrC <- 2 * pnorm(ZC)
+        if (alternative == "two.sided") PrC <- 2 * pnorm(-abs(ZC))
         else if (alternative == "greater")
             PrC <- pnorm(ZC, lower.tail=FALSE)
         else PrC <- pnorm(ZC)
@@ -85,6 +87,8 @@ geary.mc <- function(x, listw, nsim, zero.policy=FALSE,
 	if (spChk && !chkIDs(x, listw))
 		stop("Check of data and weights ID integrity failed")
 	if(nsim > gamma(n+1)) stop("nsim too large for this n")
+	if (!(alternative %in% c("greater", "less", "two.sided")))
+		stop("alternative must be one of: \"greater\", \"less\", or \"two.sided\"")
 	wc <- spweights.constants(listw, zero.policy)
 	res <- numeric(length=nsim+1)
 	for (i in 1:nsim) res[i] <- geary(sample(x), listw, n, wc$n1, wc$S0,

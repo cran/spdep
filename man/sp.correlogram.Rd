@@ -10,7 +10,7 @@ print and plot helper functions.
 }
 \usage{
 sp.correlogram(neighbours, var, order = 1, method = "corr", style = "W", 
-  zero.policy = FALSE, spChk=NULL)
+  randomisation = TRUE, zero.policy = FALSE, spChk=NULL)
 plot.spcor(x, main, ylab, ylim, ...)
 print.spcor(x, ...)
 }
@@ -21,6 +21,7 @@ print.spcor(x, ...)
   \item{order}{maximum lag order}
   \item{method}{"corr" for correlation, "I" for Moran's I}
   \item{style}{\code{style} can take values W, B, C, and S}
+  \item{randomisation}{variance of I calculated under the assumption of randomisation, if FALSE normality}
   \item{zero.policy}{If FALSE stop with error for any empty neighbour sets, 
 if TRUE permit the weights list to be formed with zero-length weights vectors}
   \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
@@ -33,8 +34,11 @@ if TRUE permit the weights list to be formed with zero-length weights vectors}
 
 
 \value{
-  returns a vector of coefficient values, with an attribute (\code{cardnos})
-of tables of neighbour cardinalities for the lag orders used. 
+  returns a list of class \code{spcor}:
+  \item{res}{for "corr" a vector of values; for "I", a matrix of estimates of "I", expectations, and variances}
+  \item{method}{"I" or "corr"}
+  \item{cardnos}{list of tables of neighbour cardinalities for the lag orders used}
+  \item{var}{variable name}
 }
 \references{Cliff, A. D., Ord, J. K. 1981 \emph{Spatial processes}, Pion, pp. 
 118--122, Martin, R. L., Oeppen, J. E. 1975 The identification of regional
@@ -53,6 +57,8 @@ names(tr.SIDS74) <- rownames(nc.sids)
 print(sp.correlogram(sidsorig.nb, tr.SIDS74, order=8, method="corr",
  zero.policy=TRUE))
 print(sp.correlogram(sidsorig.nb, tr.SIDS74, order=8, method="I",
+ zero.policy=TRUE))
+plot(sp.correlogram(sidsorig.nb, tr.SIDS74, order=8, method="I",
  zero.policy=TRUE))
 plot(sp.correlogram(sidsorig.nb, tr.SIDS74, order=8, method="corr",
  zero.policy=TRUE))

@@ -114,15 +114,15 @@ listw2U <- function(listw) {
 		for (i in 1:n) {
 			inb <- nb[[i]]
 			inl <- nlist[[i]]
-			if (inl > 0) {
+			if (inl[1] > 0) {
 			    iwt <- wts[[i]]
 			    vlist[[i]] <- numeric(length=length(inl))
 			    for (j in 1:length(inl)) {
-				if (inl[j] %in% inb) a <-
-					iwt[which(inb == inl[j])]
+				if (inl[j] %in% inb) 
+				    a <- iwt[which(inb == inl[j])]
 				else a <- 0
-				if (i %in% nb[[inl[j]]]) b <-
-					wts[[inl[j]]][which(nb[[inl[j]]] == i)]
+				if (i %in% nb[[inl[j]]]) 
+				    b <- wts[[inl[j]]][which(nb[[inl[j]]] == i)]
 				else b <- 0
 				vlist[[i]][j] <- 0.5 * (a + b)
 			    }

@@ -1,4 +1,4 @@
-# Copyright 2001-2 by Roger Bivand 
+# Copyright 2001-3 by Roger Bivand 
 #
 
 lm.morantest <- function(model, listw, zero.policy=FALSE, 
@@ -14,6 +14,8 @@ lm.morantest <- function(model, listw, zero.policy=FALSE,
 	if (is.null(spChk)) spChk <- get.spChkOption()
 	if (spChk && !chkIDs(u, listw))
 		stop("Check of data and weights ID integrity failed")
+	if (!(alternative %in% c("greater", "less", "two.sided")))
+		stop("alternative must be one of: \"greater\", \"less\", or \"two.sided\"")
 	u <- as.vector(u)
 	listw.U <- listw2U(listw)
 
@@ -38,7 +40,7 @@ lm.morantest <- function(model, listw, zero.policy=FALSE,
 	VI <- (((N*N)/((S0*S0)*(N-p)*(N-p+2))) *
 		(S1 + 2*trA2 - trB - ((2*(trA^2))/(N-p))))
 	ZI <- (I - EI) / sqrt(VI)
-    	if (alternative == "two.sided") pv <- 2 * (1 - pnorm(ZI))
+    	if (alternative == "two.sided") pv <- 2 * pnorm(-abs(ZI))
     	else if (alternative == "greater")
 	        pv <- pnorm(ZI, lower.tail=FALSE)
     	else pv <- pnorm(ZI)

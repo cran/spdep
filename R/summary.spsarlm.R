@@ -1,4 +1,4 @@
-# Copyright 1998-2002 by Roger Bivand
+# Copyright 1998-2003 by Roger Bivand
 #
 
 print.sarlm <- function(x, ...)
@@ -56,6 +56,7 @@ summary.sarlm <- function(object, ...)
 print.summary.sarlm <- function(x, digits = max(5, .Options$digits - 3),
 	signif.stars = FALSE, ...)
 {
+	if (version$minor < 8) printCoefmat <- print.coefmat
 	cat("\nCall:", paste(deparse(x$call), sep = "", collapse = ""), 
 		sep = "", fill=TRUE)
 	cat("\nResiduals:\n")
@@ -74,7 +75,7 @@ print.summary.sarlm <- function(x, digits = max(5, .Options$digits - 3),
 			zero.regs, "\n")
 	}
 	cat("Coefficients:", x$coeftitle, "\n")
-	print.coefmat(x$Coef, signif.stars=signif.stars, digits=digits,
+	printCoefmat(x$Coef, signif.stars=signif.stars, digits=digits,
 		na.print="")
 	res <- LR.sarlm(x, x$lm.model)
 	if (x$type == "error") {

@@ -1,9 +1,11 @@
-# Copyright 2001 by Roger S. Bivand. 
+# Copyright 2001-3 by Roger S. Bivand. 
 #
 
 nb2listw <- function(neighbours, glist=NULL, style="W", zero.policy=FALSE)
 {
-	if(class(neighbours) != "nb") stop("Not a neighbours list")
+	if(!inherits(neighbours, "nb")) stop("Not a neighbours list")
+	if (!(style %in% c("W", "B", "C", "S", "U")))
+		stop(paste("Style", style, "invalid"))
 	n <- length(neighbours)
 	cardnb <- card(neighbours)
 	if (!zero.policy)
@@ -33,10 +35,10 @@ nb2listw <- function(neighbours, glist=NULL, style="W", zero.policy=FALSE)
 	}
 	if (style == "B") {
 		for (i in 1:n) {
-			if (cardnb[i] > 0) vlist[[i]] <- rep(1, cardnb[i])
+			if (cardnb[i] > 0) vlist[[i]] <- glist[[i]]
 		}
 	}
-	if (style == "C") {
+	if (style == "C" || style == "U") {
 		D <- sum(unlist(glist))
 		if (is.na(D) || !(D > 0))
 			stop(paste("Failure in sum of weights:", D))
@@ -45,8 +47,11 @@ nb2listw <- function(neighbours, glist=NULL, style="W", zero.policy=FALSE)
 			if (eff.n < 1) stop("No valid observations")
 		} else eff.n <- n
 		for (i in 1:n) {
-			if (cardnb[i] > 0)
-				vlist[[i]] <- (eff.n/D) * glist[[i]]
+			if (cardnb[i] > 0) {
+				if (style == "C")
+					vlist[[i]] <- (eff.n/D) * glist[[i]]
+				else vlist[[i]] <- (1/D) * glist[[i]]
+			}
 		}
 	}
 	if (style == "S") {
@@ -76,6 +81,10 @@ nb2listw <- function(neighbours, glist=NULL, style="W", zero.policy=FALSE)
 	class(res) <- c("listw", "nb")
 	attr(res, "region.id") <- attr(neighbours, "region.id")
 	attr(res, "call") <- match.call()
+	if (!is.null(attr(neighbours, "GeoDa")))
+		attr(res, "GeoDa") <- attr(neighbours, "GeoDa")
+	if (!is.null(attr(res, "GeoDa")$dist)) 
+		attr(res, "GeoDa")$dist <- NULL
 	invisible(res)
 }
 

@@ -29,6 +29,8 @@ joincount.test <- function(fx, listw, zero.policy=FALSE,
 	if (is.null(spChk)) spChk <- get.spChkOption()
 	if (spChk && !chkIDs(fx, listw))
 		stop("Check of data and weights ID integrity failed")
+	if (!(alternative %in% c("greater", "less", "two.sided")))
+		stop("alternative must be one of: \"greater\", \"less\", or \"two.sided\"")
 	wc <- spweights.constants(listw, zero.policy=zero.policy)
 	S02 <- wc$S0*wc$S0
 
@@ -53,7 +55,8 @@ joincount.test <- function(fx, listw, zero.policy=FALSE,
 			"Expectation", "Variance")
 		statistic <- (BB5[i] - Ejc[i]) / sqrt(Vjc[i])
 		names(statistic) <- paste("Std. deviate for", names(tab)[i])
-		if (alternative == "two.sided") p.value <- 2 * pnorm(statistic)
+		if (alternative == "two.sided") 
+			p.value <- 2 * pnorm(-abs(statistic))
 		else if (alternative == "greater")
 			p.value <- pnorm(statistic, lower.tail=FALSE)
 		else p.value <- pnorm(statistic)
@@ -91,9 +94,10 @@ joincount.mc <- function(fx, listw, nsim, zero.policy=FALSE,
 	if (spChk && !chkIDs(fx, listw))
 		stop("Check of data and weights ID integrity failed")
 	if(nsim > gamma(n+1)) stop("nsim too large for this n")
+	if (!(alternative %in% c("greater", "less", "two.sided")))
+		stop("alternative must be one of: \"greater\", \"less\", or \"two.sided\"")
 	ff <- ~ fx - 1
 	dums <- model.matrix(ff, model.frame(ff))
-#	dums <- lm(codes(fx) ~ fx - 1, x=TRUE)$x
 	nc <- ncol(dums)
 	res <- matrix(0, nrow=nsim+1, ncol=nc)
 	res[nsim+1,] <- 0.5 * joincount(dums, listw)
@@ -102,7 +106,6 @@ joincount.mc <- function(fx, listw, nsim, zero.policy=FALSE,
 		fxi <- sample(fx)
 		ff <- ~ fxi - 1
 		dums <- model.matrix(ff, model.frame(ff))
-#		dums <- lm(codes(fxi) ~ fxi - 1, x=TRUE)$x
 		res[i,] <- 0.5 * joincount(dums, listw)
 	}
 	rankres <- apply(res, 2, rank)

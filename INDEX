@@ -1,7 +1,10 @@
 afcon                   Spatial patterns of conflict in Africa 1966-78
 airdist                 Measure distance from plot
+anova.sarlm             Comparison of simultaneous autoregressive
+                        models
 auckland                Marshall's infant mortality in Auckland
                         dataset
+baltimore               House sales prices, Baltimore, MD 1978
 boston                  Corrected Boston Housing Data
 card                    Cardinalities for neighbours lists
 cell2nb                 Generate neighbours list for grid cells
@@ -49,6 +52,8 @@ localmoran              Local Moran's I statistic
 localmoran.sad          Saddlepoint approximation of local Moran's Ii
                         tests
 LR.sarlm                Likelihood ratio test
+Map2poly                Create polygon lists and bounding boxes from
+                        imported shapefiles
 moran.mc                Permutation test for Moran's I statistic
 moran.plot              Moran scatterplot
 moran                   Compute Moran's I
@@ -66,6 +71,8 @@ predict.sarlm           Prediction for spatial simultaneous
                         autoregressive linear model objects
 probmap                 Probability mapping for rates
 read.gal                Read a GAL lattice file into a neighbours list
+read.gwt2nb             Read and write GeoDa GWT spatial neighbour
+                        files
 residuals.sarlm         Access functions for spatial simultaneous
                         autoregressive linear model objects
 set.spChkOption         Control checking of spatial object IDs
@@ -75,7 +82,8 @@ sp.mantel.mc            Mantel-Hubert spatial general cross product
 spweights.constants     Provides constants for spatial weights
                         matrices
 subset.nb               Subset a neighbours list
-summary.nb              Summary function for neighbours lists
+summary.nb              Print and summary function for neighbours and
+                        weights lists
 summary.sarlm           summary method for class sarlm
 is.symmetric.nb         Test a neighbours list for symmetry
 tri2nb                  Neighbours list from tri object

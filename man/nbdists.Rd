@@ -5,14 +5,16 @@
 \description{
   Given a list of spatial neighbour links (a neighbours list of object type
   \code{nb}), the function returns the Euclidean distances along the links
-  in a list of the same form as the neighbours list.
+  in a list of the same form as the neighbours list. If lonlat = TRUE, Great
+  Circle distances are used.
 }
 \usage{
-nbdists(nb, coords)
+nbdists(nb, coords, lonlat = FALSE)
 }
 \arguments{
   \item{nb}{an object of class \code{nb}}
   \item{coords}{matrix of point coordinates}
+  \item{lonlat}{TRUE if point coordinates are longitude-latitude decimal degrees, in which case distances are measured in kilometers}
 }
 \value{
 A list with class \code{nbdist}

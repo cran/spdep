@@ -1,17 +1,6 @@
 # Copyright 2001 by Roger Bivand 
 #
 
-write.nb.gal <- function(nb, file) {
-	if(class(nb) != "nb") stop("not an nb object")
-	n <- length(nb)
-	con <- file(file, open="w")
-	writeLines(paste(n), con)
-	for (i in 1:n) {
-		writeLines(paste(i, length(nb[[i]]), collapse=" "), con)
-		writeLines(paste(nb[[i]], collapse=" "), con)
-	}
-	close(con)
-}
 
 is.symmetric.nb <- function(nb, verbose=TRUE, force=FALSE)
 {

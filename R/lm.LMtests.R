@@ -1,4 +1,4 @@
-# Copyright 2001-2 by Roger Bivand 
+# Copyright 2001-3 by Roger Bivand 
 #
 
 lm.LMtests <- function(model, listw, zero.policy=FALSE, test="LMerr",
@@ -17,29 +17,10 @@ lm.LMtests <- function(model, listw, zero.policy=FALSE, test="LMerr",
 
 	if (is.null(attr(listw$weights, "W")) || !attr(listw$weights, "W"))
 		warning("Spatial weights matrix not row standardized")
-
-	tracew <- function (listw) {
-		dlmtr <- 0
-		n <- length(listw$neighbours)
-		for (i in 1:n) {
-			dij <- listw$neighbours[[i]]
-			ndij <- length(dij)
-			wdij <- listw$weights[[i]]
-			for (j in 1:ndij) {
-				k <- dij[j]
-				if (k > i) {
-				    dk <- which(listw$neighbours[[k]] == i)
-				    if (dk > 0 &&
-					dk <= length(listw$neighbours[[k]]))
-					wdk <- listw$weights[[k]][dk]
-					else wdk <- 0
-					dlmtr <- dlmtr + (wdk * wdk) + 2 *
-					(wdij[j] * wdk) + (wdij[j] * wdij[j])
-				}
-			}
-		}
-		dlmtr
-	}
+	all.tests <- c("LMerr", "LMlag", "RLMerr", "RLMlag", "SARMA")
+	if (test[1] == "all") test <- all.tests
+	if (!all(test %in% all.tests))
+		stop("Invalid test selected - must be either \"all\" or a vector of tests")		
 
 	y <- model.response(model.frame(model))
 	X <- model.matrix(terms(model), model.frame(model))
@@ -98,3 +79,27 @@ print.LMtestlist <- function(x, ...) {
 	for (i in 1:length(x)) print(x[[i]])
 	invisible(x)
 }
+
+tracew <- function (listw) {
+	dlmtr <- 0
+	n <- length(listw$neighbours)
+	for (i in 1:n) {
+		dij <- listw$neighbours[[i]]
+		ndij <- length(dij)
+		wdij <- listw$weights[[i]]
+		for (j in 1:ndij) {
+			k <- dij[j]
+			if (k > i) {
+			    dk <- which(listw$neighbours[[k]] == i)
+			    if (length(dk) > 0 && dk > 0 &&
+				dk <= length(listw$neighbours[[k]]))
+				wdk <- listw$weights[[k]][dk]
+				else wdk <- 0
+				dlmtr <- dlmtr + (wdk * wdk) + 2 *
+				(wdij[j] * wdk) + (wdij[j] * wdij[j])
+			}
+		}
+	}
+	dlmtr
+}
+

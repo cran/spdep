@@ -2,6 +2,7 @@
 \name{lm.LMtests}
 \alias{lm.LMtests}
 \alias{print.LMtestlist}
+\alias{tracew}
 \title{Lagrange Multiplier diagnostics for spatial dependence in linear models}
 \description{
 The function reports the estimates of tests chosen among five statistics for
@@ -16,6 +17,7 @@ dependent variable, RLMlag the other way round), and a portmanteau test
 \usage{
 lm.LMtests(model, listw, zero.policy=FALSE, test="LMerr", spChk=NULL)
 print.LMtestlist(x, ...)
+tracew(listw)
 }
 
 \arguments{
@@ -26,7 +28,7 @@ expected to be row-standardised (W-style)}
   \item{zero.policy}{if TRUE assign zero to the lagged value of zones without
 neighbours, if FALSE assign NA}
   \item{test}{a character vector of tests requested chosen from LMerr, LMlag,
-RLMerr, RLMlag, SARMA}
+RLMerr, RLMlag, SARMA; test="all" computes all the tests.}
   \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
   \item{x}{object to be printed}
   \item{...}{printing arguments to be passed through}

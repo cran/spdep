@@ -12,14 +12,13 @@
 \description{
 The \code{COL.OLD} data frame has 49 rows and 22 columns. The observations are
 ordered and numbered as in the original analyses of the data set in the
-SpaceStat documentation and in Anselin, L. 1988 Spatial econometrics: methods and models, Dordrecht: Kluwer. In the spweights package, the \code{columbus}is
-ordered as in the current version of the data set on the SpaceStat website.
+SpaceStat documentation and in Anselin, L. 1988 Spatial econometrics: methods and models, Dordrecht: Kluwer.
 Unit of analysis: 49 neighbourhoods in Columbus, OH, 1980 data.
 In addition the data set includes a \code{polylist} object \code{polys.OLD}
 with the boundaries of the neighbourhoods, a matrix of polygon centroids
 \code{coords.OLD}, a matrix \code{bbs.OLD} with
 the bounding boxes of the polygons, and \code{COL.nb}, the neighbours list
-as used in the SpaceStat Tutorial workbook (1992)
+as used in Anselin (1988).
 }
 \format{
   This data frame contains the following columns:
@@ -57,16 +56,9 @@ The row names of \code{COL.OLD} and the \code{region.id} attribute of
 \source{
 Anselin, Luc.  1988.  Spatial econometrics: methods and
 models.  Dordrecht: Kluwer Academic, Table 12.1 p. 189.
-\url{http://www.spacestat.com},
-\url{ftp://cho.pol.uiuc.edu/pub/spacestat/data/columbus.ZIP},
-and the SpaceStat Tutorial workbook (1992) appendices D and E.
 }
 \note{
 All source data files prepared by
-Luc Anselin, Bruton Center for Development Studies
-University of Texas at Dallas
-P.O. Box 830688 - GR 31
-Richardson, TX 75083-0688
-e-mail: lanselin@utdallas.edu
+Luc Anselin, Spatial Analysis Laboratory, Department of Agricultural and Consumer Economics, University of Illinois, Urbana-Champaign, \url{http://sal.agecon.uiuc.edu/datasets/columbus.zip}.
 }
 \keyword{datasets}

@@ -34,11 +34,10 @@ and a \code{parameters} attribute list with components:
 data(auckland)
 res <- EBest(auckland$Deaths.1977.85, 9*auckland$Under.5.1981)
 attr(res, "parameters")
-res.f <- as.ordered(cut(res$estmm*1000, breaks=c(-Inf,2,2.5,3,3.5,Inf),
- include.lowest=TRUE))
 cols <- grey(6:2/7)
-plotpolys(auckpolys, auckbbs, col=cols[codes(res.f)])
-legend(c(70,90), c(70,95), fill=cols, legend=levels(res.f), bty="n")
+brks <- c(-Inf,2,2.5,3,3.5,Inf)
+plotpolys(auckpolys, auckbbs, col=cols[findInterval2(res$estmm*1000, brks)])
+legend(c(70,90), c(70,95), fill=cols, legend=leglabs(brks), bty="n")
 title(main="Global moment estimator of infant mortality per 1000 per year")
 }
 \keyword{spatial}

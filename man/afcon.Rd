@@ -38,17 +38,12 @@ M. Ward, pp. 39-75.  Philadelphia, PA: Gordon and Breach.
 also:
 Anselin, L. 1995. Local indicators of spatial association,
 Geographical Analysis, 27, Table 1, p. 103.
-\url{http://www.spacestat.com},
-\url{ftp://cho.pol.uiuc.edu/pub/spacestat/data/africa.ZIP}.
 }
 \note{
 All source data files prepared by
-Luc Anselin, Bruton Center for Development Studies
-University of Texas at Dallas
-P.O. Box 830688 - GR 31
-Richardson, TX 75083-0688
-e-mail: lanselin@utdallas.edu
+Luc Anselin, Spatial Analysis Laboratory, Department of Agricultural and Consumer Economics, University of Illinois, Urbana-Champaign.
 }
+
 
 \examples{
 data(afcon)
