@@ -21,7 +21,7 @@ approximation - is based on the randomisation assumption.
 }
 \usage{
 localmoran.sad(model, select, nb, glist=NULL, style="W", zero.policy=FALSE,
-  alternative="greater", spChk=NULL, save.Vi=FALSE, 
+  alternative="greater", spChk=NULL, resfun=weighted.residuals, save.Vi=FALSE, 
   tol = .Machine$double.eps^0.5, maxiter = 1000, tol.bounds=0.0001)
 as.data.frame.localmoransad(x, row.names=NULL, optional=FALSE) 
 print.localmoransad(x, ...)
@@ -31,7 +31,7 @@ listw2star(listw, ireg, style, n, D, a, zero.policy=FALSE)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
-  \item{model}{an object of class \code{lm} returned by \code{lm} (assuming no global spatial autocorrelation), or an object of class \code{sarlm} returned by a spatial simultaneous autoregressive model fit (assuming global spatial autocorrelation represented by the model spatial coefficient); weights and offsets should not be used}
+  \item{model}{an object of class \code{lm} returned by \code{lm} (assuming no global spatial autocorrelation), or an object of class \code{sarlm} returned by a spatial simultaneous autoregressive model fit (assuming global spatial autocorrelation represented by the model spatial coefficient); weights may be specified in the \code{lm} fit, but offsets should not be used}
   \item{select}{an integer vector of the id. numbers of zones to be tested}
   \item{nb}{a list of neighbours of class \code{nb}}
   \item{glist}{a list of general weights corresponding to neighbours}
@@ -41,6 +41,7 @@ neighbours, if FALSE assign NA}
   \item{alternative}{a character string specifying the alternative hypothesis,
 must be one of greater (default), less or two.sided.}
   \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
+  \item{resfun}{default: weighted.residuals; the function to be used to extract residuals from the \code{lm} object, may be \code{residuals}, \code{weighted.residuals}, \code{rstandard}, or \code{rstudent}}
   \item{save.Vi}{if TRUE, return the star-shaped weights lists for each zone 
 tested}
   \item{tol}{the desired accuracy (convergence tolerance) for \code{uniroot}}
@@ -108,6 +109,11 @@ e.locmor
 mean(e.locmor[,1])
 lm.morantest(e.lm, nb2listw(eire.nb))
 hist(e.locmor[,"Pr. (Sad)"])
+e.wlm <- lm(OWNCONS ~ ROADACC, data=eire.df, weights=RETSALE)
+e.locmorw1 <- summary(localmoran.sad(e.wlm, eire.nb, select=1:nrow(eire.df), resfun=weighted.residuals))
+e.locmorw1
+e.locmorw2 <- summary(localmoran.sad(e.wlm, eire.nb, select=1:nrow(eire.df), resfun=rstudent))
+e.locmorw2
 e.errorsar <- errorsarlm(OWNCONS ~ ROADACC, data=eire.df,
  listw=nb2listw(eire.nb))
 e.errorsar

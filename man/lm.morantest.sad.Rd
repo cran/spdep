@@ -11,7 +11,7 @@ approximation to global Moran's I's reference distribution.
 }
 \usage{
 lm.morantest.sad(model, listw, zero.policy=FALSE, alternative="greater", 
-  spChk=NULL, tol=.Machine$double.eps^0.5, maxiter=1000, tol.bounds=0.0001)
+  spChk=NULL, resfun=weighted.residuals, tol=.Machine$double.eps^0.5, maxiter=1000, tol.bounds=0.0001)
 print.moransad(x, ...)
 summary.moransad(object, ...)
 print.summary.moransad(x, ...) 
@@ -19,13 +19,14 @@ print.summary.moransad(x, ...)
 %- maybe also `usage' for other objects documented here.
 \arguments{
   \item{model}{an object of class \code{lm} returned by \code{lm}; weights
-and offsets should not be used}
+may be specified in the \code{lm} fit, but offsets should not be used}
   \item{listw}{a \code{listw} object created for example by \code{nb2listw}}
   \item{zero.policy}{if TRUE assign zero to the lagged value of zones without
 neighbours, if FALSE assign NA}
   \item{alternative}{a character string specifying the alternative hypothesis,
 must be one of greater (default), less or two.sided.}
   \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
+  \item{resfun}{default: weighted.residuals; the function to be used to extract residuals from the \code{lm} object, may be \code{residuals}, \code{weighted.residuals}, \code{rstandard}, or \code{rstudent}}
   \item{tol}{the desired accuracy (convergence tolerance) for \code{uniroot}}
   \item{maxiter}{the maximum number of iterations for \code{uniroot}}
   \item{tol.bounds}{offset from bounds for \code{uniroot}}
@@ -66,5 +67,8 @@ e.lm <- lm(OWNCONS ~ ROADACC, data=eire.df)
 lm.morantest(e.lm, nb2listw(eire.nb))
 lm.morantest.sad(e.lm, nb2listw(eire.nb))
 summary(lm.morantest.sad(e.lm, nb2listw(eire.nb)))
+e.wlm <- lm(OWNCONS ~ ROADACC, data=eire.df, weights=RETSALE)
+lm.morantest(e.wlm, nb2listw(eire.nb), resfun=rstudent)
+lm.morantest.sad(e.wlm, nb2listw(eire.nb), resfun=rstudent)
 }
 \keyword{spatial}

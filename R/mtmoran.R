@@ -2,15 +2,15 @@
 #
 
 lm.morantest.sad <- function (model, listw, zero.policy = FALSE, 
-    alternative = "greater", spChk=NULL, tol = .Machine$double.eps^0.5,
-    maxiter = 1000, tol.bounds=0.0001) 
+    alternative = "greater", spChk=NULL, resfun=weighted.residuals, 
+    tol = .Machine$double.eps^0.5, maxiter = 1000, tol.bounds=0.0001) 
 {
     if (!inherits(listw, "listw")) 
         stop(paste(deparse(substitute(listw)), "is not a listw object"))
     if (class(model) != "lm") 
         stop(paste(deparse(substitute(model)), "not an lm object"))
     N <- length(listw$neighbours)
-    u <- residuals(model)
+    u <- resfun(model)
     if (N != length(u)) 
         stop("objects of different length")
     if (is.null(spChk)) spChk <- get.spChkOption()
@@ -29,6 +29,9 @@ lm.morantest.sad <- function (model, listw, zero.policy = FALSE,
     p1 <- 1:p
     XtXinv <- chol2inv(model$qr$qr[p1, p1, drop = FALSE])
     X <- model.matrix(terms(model), model.frame(model))
+    if (!is.null(wts <- weights(model))) {
+	X <- sqrt(diag(wts)) %*% X
+    }
     M <- diag(N) - X %*% XtXinv %*% t(X)
     U <- listw2mat(listw.U)
     MVM <- M %*% U %*% M

@@ -1,4 +1,4 @@
-% Copyright 2001 by Roger S. Bivand
+% Copyright 2001-4 by Roger S. Bivand
 \name{lm.morantest}
 \alias{lm.morantest}
 \alias{listw2U}
@@ -8,18 +8,19 @@
 }
 \usage{
 lm.morantest(model, listw, zero.policy=FALSE, 
-	    alternative = "greater", spChk=NULL)
+	    alternative = "greater", spChk=NULL, resfun=weighted.residuals)
 listw2U(listw)
 }
 \arguments{
   \item{model}{an object of class \code{lm} returned by \code{lm}; weights
-and offsets should not be used}
+may be specified in the \code{lm} fit, but offsets should not be used}
   \item{listw}{a \code{listw} object created for example by \code{nb2listw}}
   \item{zero.policy}{if TRUE assign zero to the lagged value of zones without
 neighbours, if FALSE assign NA}
   \item{alternative}{a character string specifying the alternative hypothesis,
 must be one of "greater" (default), "less" or "two.sided".}
   \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
+  \item{resfun}{default: weighted.residuals; the function to be used to extract residuals from the \code{lm} object, may be \code{residuals}, \code{weighted.residuals}, \code{rstandard}, or \code{rstudent}}
 }
 \value{
 A list with class \code{htest} containing the following components:
@@ -46,5 +47,8 @@ lm.morantest(oldcrime.lm, nb2listw(COL.nb, style="S"))
 lm.morantest(oldcrime1.lm, nb2listw(COL.nb, style="W"))
 moran.test(spNamedVec("CRIME", COL.OLD), nb2listw(COL.nb, style="W"),
  randomisation=FALSE)
+oldcrime.wlm <- lm(CRIME ~ HOVAL + INC, data = COL.OLD, weights = I(1/AREA))
+lm.morantest(oldcrime.wlm, nb2listw(COL.nb, style="W"), resfun=weighted.residuals)
+lm.morantest(oldcrime.wlm, nb2listw(COL.nb, style="W"), resfun=rstudent)
 }
 \keyword{spatial}

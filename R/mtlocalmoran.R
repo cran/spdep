@@ -3,7 +3,8 @@
 #
 
 localmoran.sad <- function (model, select, nb, glist = NULL, style = "W",
-    zero.policy = FALSE, alternative = "greater", spChk=NULL,
+    zero.policy = FALSE, alternative = "greater", spChk=NULL, 
+    resfun=weighted.residuals,
     save.Vi = FALSE, tol = .Machine$double.eps^0.5,
     maxiter = 1000, tol.bounds=0.0001) {
 # need to impose check on weights TODO!!
@@ -24,7 +25,7 @@ localmoran.sad <- function (model, select, nb, glist = NULL, style = "W",
 	cond.sad <- TRUE
      } else if (clobj != "lm")
      	stop(paste(deparse(substitute(model)), "not an lm object"))
-    u <- residuals(model)
+    u <- resfun(model)
     if (n != length(u)) 
         stop("objects of different length")
     if (is.null(spChk)) spChk <- get.spChkOption()
@@ -42,6 +43,9 @@ localmoran.sad <- function (model, select, nb, glist = NULL, style = "W",
     m <- n - p - 2
     XtXinv <- chol2inv(model$qr$qr[p1, p1, drop = FALSE])
     X <- model.matrix(terms(model), model.frame(model))
+    if (!is.null(wts <- weights(model))) {
+	X <- sqrt(diag(wts)) %*% X
+    }
     B <- listw2U(nb2listw(nb, glist=glist, style="B",
 	zero.policy=zero.policy))
     D <- NULL
