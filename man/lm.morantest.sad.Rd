@@ -1,0 +1,68 @@
+\name{lm.morantest.sad}
+\alias{lm.morantest.sad}
+\alias{print.moransad}
+\alias{summary.moransad}
+\alias{print.summary.moransad}
+%- Also NEED an `\alias' for EACH other topic documented here.
+\title{Saddlepoint approximation of global Moran's I test}
+\description{
+  The function implements Tiefelsdorf's application of the Saddlepoint
+approximation to global Moran's I's reference distribution. 
+}
+\usage{
+lm.morantest.sad(model, listw, zero.policy=FALSE, alternative="greater", 
+  tol=.Machine$double.eps^0.5, maxiter=1000)
+print.moransad(x, ...)
+summary.moransad(object, ...)
+print.summary.moransad(x, ...) 
+}
+%- maybe also `usage' for other objects documented here.
+\arguments{
+  \item{model}{an object of class \code{lm} returned by \code{lm}; weights
+and offsets should not be used}
+  \item{listw}{a \code{listw} object created for example by \code{nb2listw}}
+  \item{zero.policy}{if TRUE assign zero to the lagged value of zones without
+neighbours, if FALSE assign NA}
+  \item{alternative}{a character string specifying the alternative hypothesis,
+must be one of greater (default), less or two.sided.}
+  \item{tol}{the desired accuracy (convergence tolerance) for \code{uniroot}}
+  \item{maxiter}{the maximum number of iterations for \code{uniroot}}
+  \item{x}{object to be printed}
+  \item{object}{object to be summarised}
+  \item{...}{arguments to be passed through}
+}
+\details{
+  The function involves finding the eigenvalues of an n by n matrix, and
+numerically finding the root for the Saddlepoint approximation, and should
+therefore only be used with care when n is large.
+}
+\value{
+  A list of class \code{moransad} with the following components:
+  \item{statistic}{the value of the saddlepoint approximation of the
+ standard deviate of global Moran's I.}
+  \item{p.value}{the p-value of the test.}
+  \item{estimate}{the value of the observed global Moran's I.}
+  \item{alternative}{a character string describing the alternative hypothesis.}
+  \item{method}{a character string giving the method used.}
+  \item{data.name}{a character string giving the name(s) of the data.}
+  \item{internal1}{Saddlepoint omega, r and u}
+  \item{internal2}{f.root, iter and estim.prec from \code{uniroot}}
+  \item{df}{degrees of freedom}
+  \item{tau}{eigenvalues (excluding zero values)}
+}
+\references{Tiefelsdorf, M. 2002 The Saddlepoint approximation of Moran's I 
+and local Moran's Ii reference distributions and their numerical evaluation. 
+Geographical Analysis, forthcoming; see also Tiefelsdorf's SPSS code:
+\url{http://geog-www.sbs.ohio-state.edu/faculty/tiefelsdorf/GeoStat.htm}.}
+\author{Roger Bivand \email{Roger.Bivand@nhh.no}}
+
+\seealso{\code{\link{lm.morantest}}}
+
+\examples{
+data(eire)
+e.lm <- lm(OWNCONS ~ ROADACC, data=eire.df)
+lm.morantest(e.lm, nb2listw(eire.nb))
+lm.morantest.sad(e.lm, nb2listw(eire.nb))
+summary(lm.morantest.sad(e.lm, nb2listw(eire.nb)))
+}
+\keyword{spatial}

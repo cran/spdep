@@ -1,0 +1,65 @@
+oldcol                   Columbus OH spatial analysis data set - old
+                         numbering
+LR.sarlm                 Likelihood ratio test
+afcon                    Spatial patterns of conflict in Africa 1966-78
+airdist                  Measure distance from plot
+card                     Cardinalities for neighbours lists
+cell2nb                  Generate neighbours list for grid cells
+columbus                 Columbus OH spatial analysis data set
+Graph Components         Depth First Search on Neighbor Lists
+diffnb                   Differences between neighbours lists
+dnearneigh               Neighbourhood contiguity by distance
+droplinks                Drop links in a neighbours list
+edit.nb                  Interactive editing of neighbours lists
+eigenw                   Spatial weights matrix eigenvalues
+eire                     Eire data sets
+errorsarlm               Spatial simultaneous autoregressive error model
+                         estimation
+geary                    Compute Geary's C
+geary.mc                 Permutation test for Geary's C statistic
+geary.test               Geary's C test for spatial autocorrelation
+getisord                 Getis-Ord remote sensing example data
+graphneigh               Graph based spatial weights
+include.self             Include self in neighbours list
+invIrM                   Compute SAR generating operator
+joincount                Count joins between same colours
+joincount.mc             Permutation test for same colour join count
+                         statistics
+joincount.test           BB join count statistic for k-coloured factors
+knearneigh               K nearest neighbours for spatial weights
+knn2nb                   Neighbours list from knn object
+lag.listw                Spatial lag of a numeric vector
+lagsarlm                 Spatial simultaneous autoregressive lag model
+                         estimation
+listw2sn                 Spatial neighbour sparse representation
+lm.LMtests               Lagrange Multiplier diagnostics for spatial
+                         dependence in linear models
+lm.morantest             Moran's I test for residual spatial
+                         autocorrelation
+lm.morantest.sad         Saddlepoint approximation of global Moran's I
+                         test
+localG                   G and Gstar local spatial statistics
+localmoran               Local Moran's I statistic
+localmoran.sad           Saddlepoint approximation of local Moran's Ii
+                         tests
+moran                    Compute Moran's I
+moran.mc                 Permutation test for Moran's I statistic
+moran.plot               Moran scatterplot
+moran.test               Moran's I test for spatial autocorrelation
+nb2listw                 Spatial weights for neighbours lists
+nb2mat                   Spatial weights matrices for neighbours lists
+nbdists                  Spatial link distance measures
+nblag                    Higher order neighbours lists
+nb.set.operations        Set operations on neighborhood objects
+plot.nb                  Plot a neighbours list
+plotpolys                Plot polygons
+poly2nb                  Construct neighbours list from polygon list
+read.gal                 Read a GAL lattice file into a neighbours list
+spweights.constants      Provides constants for spatial weights matrices
+subset.nb                Subset a neighbours list
+summary.nb               Summary function for neighbours lists
+summary.sarlm            summary method for class sarlm
+is.symmetric.nb          Test a neighbours list for symmetry
+tri2nb                   Neighbours list from tri object
+used.cars                US 1960 used car prices
+write.nb.gal             Write a neighbours list as a GAL lattice file
