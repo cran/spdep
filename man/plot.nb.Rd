@@ -1,16 +1,18 @@
-% Copyright 2001-3 by Roger S. Bivand
+% Copyright 2001-5 by Roger S. Bivand
 \name{plot.nb}
 \alias{plot.nb}
+\alias{plot.listw}
 \title{Plot a neighbours list}
 \description{
-A function to plot a neighbours list given point coordinates to represent the region in two dimensions.
+A function to plot a neighbours list given point coordinates to represent the region in two dimensions; \code{plot.listw} is a wrapper that passes its neighbours component to \code{plot.nb}.
 }
 \usage{
 plot.nb(x, coords, col="black", points=TRUE, add=FALSE, arrows=FALSE, length=0.1, ...)
+plot.listw(x, coords, col="black", points=TRUE, add=FALSE, arrows=FALSE, length=0.1, ...)
 }
 
 \arguments{
-  \item{x}{an object of class \code{nb}}
+  \item{x}{an object of class \code{nb} or (for \code{plot.listw}) class \code{listw}}
   \item{coords}{matrix of region point coordinates}
   \item{col}{plotting colour}
   \item{points}{(logical) add points to plot}

@@ -9,10 +9,9 @@ knearneigh <- function(x, k=1, lonlat=FALSE)
     if (!is.double(x)) storage.mode(x) <- "double"
     np <- nrow(x)
     dimension <- ncol(x)
-    if (dimension > 2) stop("Only 2D data accepted")
+    if (dimension != 2) stop("Only 2D data accepted")
     if (k >= np) stop("Fewer data points than k")
-    xx <- x[,1]
-    if (dimension > 1) for (i in 2:dimension) xx <- c(xx, x[,i])
+    xx <- c(x[,1], x[,2])
     nn <- integer(np*k)
     dnn <- double(np*k)
     z <- .C("knearneigh", k=as.integer(k), np=as.integer(np),

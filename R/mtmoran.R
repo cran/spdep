@@ -27,8 +27,11 @@ lm.morantest.sad <- function (model, listw, zero.policy = FALSE,
     I <- (Nnn/S0) * ((t(u) %*% lu)/(t(u) %*% u))
     p <- model$rank
     p1 <- 1:p
+    nacoefs <- which(is.na(coefficients(model)))
     XtXinv <- chol2inv(model$qr$qr[p1, p1, drop = FALSE])
     X <- model.matrix(terms(model), model.frame(model))
+# fixed after looking at TOWN dummy in Boston data
+    if (length(nacoefs > 0)) X <- X[,-nacoefs]
     if (!is.null(wts <- weights(model))) {
 	X <- sqrt(diag(wts)) %*% X
     }
@@ -38,6 +41,7 @@ lm.morantest.sad <- function (model, listw, zero.policy = FALSE,
     MVM <- 0.5 * (t(MVM) + MVM)
     evalue <- eigen(MVM, only.values=TRUE)$values
     idxpos <- (which(abs(evalue) < 1.0e-7)[1]) - 1
+    if (idxpos < 1) stop("invalid first zero eigenvalue index")
     tau <- evalue[1:idxpos]
     tau <- c(tau, evalue[(idxpos+1+p):N])
     taumi <- tau - I

@@ -16,31 +16,6 @@ possible individual files also carry brief copyright notices.
 Copyrights
 ==========
 
-Files: src/spAllocate.c, src/spBuild.c, src/spConfig.h, src/spDefs.h,
-src/spFactor.c, src/spMatrix.h, src/spUtils.c are by Kenneth Kundert
-and Alberto Sangiovanni-Vincentelli, University of California, Berkeley,
-and are from:
-
-http://www.netlib.org/sparse/index.html
-
-(Kenneth Kundert, Sparse Matrix Techniques, in Circuit Analysis,
-Simulation and Design, Albert Ruehli (Ed.), North-Holland, 1986)
-
-They are copyright (c) 1985,86,87,88 by Kenneth S. Kundert and the
-University of California, with the following licence:
-
-Permission to use, copy, modify, and distribute this software and
-its documentation for any purpose and without fee is hereby granted,
-provided that the copyright notices appear in all copies and
-supporting documentation and that the authors and the University of
-California are properly credited.  The authors and the University of
-California make no representations as to the suitability of this
-software for any purpose.  It is provided "as is", without express
-or implied warranty.
-
-These files have been modified in a number of places marked RSB; the
-changes are subject to the same licence.
-
 Files: src/dnn.c and src/knearneigh.c are based on code taken from:
 class/class.c by W. N. Venables and B. D. Ripley  Copyright (C) 1994-9
 
@@ -86,9 +61,6 @@ Tiefelsdorf based on sources named in man/eire.Rd, and downloaded from:
 
 http://geog-www.sbs.ohio-state.edu/faculty/tiefelsdorf/GeoStat.htm
 
-File: data/BH.rda is derived from data sets made available by Renato
-M. Assuncao and Edna A. Reis.
-
 File: data/auckland.rda is derived from data sets included with INFOMAP 
 in Bailey T, Gatrell A (1995) Interactive Spatial Data Analysis, Harlow: 
 Longman, and is used with permission of the authors.
@@ -96,7 +68,7 @@ Longman, and is used with permission of the authors.
 Other files in the data directory are derived from sources given on
 their help pages.
 
-All other files are copyright (c) 1998-2003 Roger S. Bivand and
+All other files are copyright (c) 1998-2005 Roger S. Bivand and
 are subject to the licence at the foot of this file.
 
 Licence

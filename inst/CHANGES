@@ -1,3 +1,10 @@
+0.3-9 Removal of the Berkeley sparse code; correction of a bug found by
+	Yong Cai inn subset.nb() which was wrong when the neighbour
+	list had no-neighbour entities.
+
+0.3-* Introduction of dependence on the SparseM package, and use of the 
+	determinant function there for the Jacobian
+
 0.2-23 Added machine fuzz to max distance in dnearneigh()
 
 0.2-18 Removed read.shape() from example(nc.sids) because of odd problems 

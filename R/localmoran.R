@@ -1,4 +1,4 @@
-# Copyright 2001-4 by Roger Bivand 
+# Copyright 2001-5 by Roger Bivand
 #
 
 localmoran <- function(x, listw, zero.policy=FALSE, na.action=na.fail, 
@@ -13,7 +13,6 @@ localmoran <- function(x, listw, zero.policy=FALSE, na.action=na.fail,
 		stop("Check of data and weights ID integrity failed")
 	if (!is.numeric(x))
 		stop(paste(deparse(substitute(x)), "is not a numeric vector"))
-#	if (any(is.na(x))) stop(paste("NA in ", deparse(substitute(x))))
 	NAOK <- deparse(substitute(na.action)) == "na.pass"
 	x <- na.action(x)
 	na.act <- attr(x, "na.action")
@@ -31,7 +30,6 @@ localmoran <- function(x, listw, zero.policy=FALSE, na.action=na.fail,
 	colnames(res) <- c("Ii", "E.Ii", "Var.Ii", "Z.Ii", Prname)
 	xx <- mean(x, na.rm=NAOK)
 	z <- x - xx
-#	z <- scale(x, scale=FALSE)
 	lz <- lag.listw(listw, z, zero.policy=zero.policy, NAOK=NAOK)
 	s2 <- sum(z^2, na.rm=NAOK)/n
 	res[,1] <- (z/s2) * lz
@@ -61,5 +59,6 @@ localmoran <- function(x, listw, zero.policy=FALSE, na.action=na.fail,
 	class(res) <- c("localmoran", class(res))
 	invisible(res)
 }
+
 
 

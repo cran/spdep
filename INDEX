@@ -65,6 +65,8 @@ moran.plot              Moran scatterplot
 moran.test              Moran's I test for spatial autocorrelation
 nb2blocknb              Block up neighbour list for location-less
                         observations
+nb2lines                Use arc-type shapefiles for import and export
+                        of weights
 nb2listw                Spatial weights for neighbours lists
 nb2mat                  Spatial weights matrices for neighbours lists
 nbdists                 Spatial link distance measures

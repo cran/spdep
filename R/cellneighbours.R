@@ -82,6 +82,7 @@ cell2nb <- function(nrow, ncol, type="rook", torus=FALSE) {
 	if (is.null(xcell))
 		stop(paste(type, ": no such cell function", sep=""))
 	n <- nrow * ncol
+	if (n < 0) stop("non-positive number of cells")
 	res <- vector(mode="list", length=n)
 	rownames <- character(n)
 	for (i in 1:n) {

@@ -11,6 +11,7 @@ graph2nb <- function(gob, row.names=NULL,sym=FALSE) {
 		if (length(unique(row.names)) != length(row.names))
 	    		stop("non-unique row.names given")
     	}
+	if (gob$np < 1) stop("non-positive gob$np")
     	if (is.null(row.names)) row.names <- as.character(1:gob$np)
         if(sym){
           for (i in 1:gob$np) {

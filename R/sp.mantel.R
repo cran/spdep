@@ -10,7 +10,10 @@ sp.mantel.mc <- function(var, listw, nsim, type="moran", zero.policy=FALSE,
 		"is not a numeric vector"))
 	if(missing(nsim)) stop("nsim must be given")
 	n <- length(listw$neighbours)
+	if (n < 1) stop("non-positive n")
 	if(nsim > gamma(n+1)) stop("nsim too large for this n")
+	if (nsim < 1) stop("non-positive nsim")
+
 	if (any(is.na(var))) stop("NA in var")
 	if (n != length(var)) stop("objects of different length")
 	if (is.null(spChk)) spChk <- get.spChkOption()

@@ -7,6 +7,7 @@ dnearneigh <- function(x, d1, d2, row.names=NULL, lonlat=FALSE) {
     if (any(is.na(x))) stop("Data include NAs")
     if (!is.double(x)) storage.mode(x) <- "double"
     np <- nrow(x)
+    if (np < 1) stop("non-positive number of rows in x")
     if (!is.null(row.names)) {
 	if(length(row.names) != np)
             stop("row.names wrong length")

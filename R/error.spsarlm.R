@@ -1,10 +1,10 @@
-# Copyright 1998-2004 by Roger Bivand (non-W styles Rein Halbersma)
+# Copyright 1998-2005 by Roger Bivand (non-W styles Rein Halbersma)
 #
 
 errorsarlm <- function(formula, data = list(), listw, na.action=na.fail, 
 	method="eigen", quiet=TRUE, zero.policy=FALSE, interval=c(-1,0.999), 
 	tol.solve=1.0e-10, tol.opt=.Machine$double.eps^0.5, control, 
-	optim=FALSE, sparsedebug=FALSE) {
+	optim=FALSE) {
 	mt <- terms(formula, data = data)
 	mf <- lm(formula, data, na.action=na.action, method="model.frame")
 	na.act <- attr(mf, "na.action")
@@ -20,7 +20,6 @@ errorsarlm <- function(formula, data = list(), listw, na.action=na.fail,
 		"Jacobian calculated using "))
 	switch(method,
 		eigen = if (!quiet) cat("neighbourhood matrix eigenvalues\n"),
-		sparse = {if (!quiet) cat("sparse matrix techniques\n")},
 	        SparseM = {
 		    if (listw$style %in% c("W", "S") && !can.sim)
 		    stop("SparseM method requires symmetric weights")
@@ -36,11 +35,21 @@ errorsarlm <- function(formula, data = list(), listw, na.action=na.fail,
 	if (any(is.na(x))) stop("NAs in independent variable")
 	if (NROW(x) != length(listw$neighbours))
 	    stop("Input data and neighbourhood list have different dimensions")
+	wy <- lag.listw(listw, y, zero.policy=zero.policy)
 	n <- NROW(x)
+	m <- NCOL(x)
+# added aliased after trying boston with TOWN dummy
+	lm.base <- lm(y ~ x - 1)
+	aliased <- is.na(coefficients(lm.base))
+	cn <- names(aliased)
+	names(aliased) <- substr(cn, 2, nchar(cn))
+	if (any(aliased)) {
+		nacoef <- which(aliased)
+		x <- x[,-nacoef]
+	}
 	m <- NCOL(x)
 	xcolnames <- colnames(x)
 	K <- ifelse(xcolnames[1] == "(Intercept)", 2, 1)
-	wy <- lag.listw(listw, y, zero.policy=zero.policy)
 	if (any(is.na(wy)))
 	    stop("NAs in lagged dependent variable")
 	if (m > 1) {
@@ -102,15 +111,6 @@ errorsarlm <- function(formula, data = list(), listw, na.action=na.fail,
 		    names(lambda) <- "lambda"
 		    LL <- opt$objective
 		}
-	} else if (method == "sparse") {
-		sn <- listw2sn(listw)
-		opt <- optimize(sar.error.f.s, interval=interval, maximum=TRUE,
-			tol=tol.opt, sn=sn, y=y, wy=wy, x=x, WX=WX, 
-			n=n, quiet=quiet, sparsedebug=sparsedebug)
-			warning("The sparse method will be withdrawn shortly")
-		lambda <- opt$maximum
-		names(lambda) <- "lambda"
-		LL <- opt$objective
 	} else if (method == "SparseM") {
 		if (listw$style %in% c("W", "S") & can.sim) {
 			csrw <- asMatrixCsrListw(similar.listw(listw))
@@ -188,8 +188,8 @@ errorsarlm <- function(formula, data = list(), listw, na.action=na.fail,
 		method=method, call=call, residuals=r, lm.target=lm.target,
 		opt=opt, fitted.values=fit, ase=ase, formula=formula,
 		se.fit=NULL, resvar=asyvar1, similar=similar,
-		lambda.se=lambda.se, LMtest=LMtest, zero.policy=zero.policy), 
-		class=c("sarlm"))
+		lambda.se=lambda.se, LMtest=LMtest, zero.policy=zero.policy, 
+		aliased=aliased), class=c("sarlm"))
 	if (zero.policy) {
 		zero.regs <- attr(listw$neighbours, 
 			"region.id")[which(card(listw$neighbours) == 0)]
@@ -216,19 +216,6 @@ sar.error.f <- function(lambda, eig, y, wy, x, WX, n, quiet)
 	ret
 }
 
-sar.error.f.s <- function(lambda, sn, y, wy, x, WX, n, quiet, sparsedebug)
-{
-	yl <- y - lambda*wy
-	xl <- x - lambda*WX
-	xl.q <- qr.Q(qr(xl))
-	xl.q.yl <- t(xl.q) %*% yl
-	SSE <- t(yl) %*% yl - t(xl.q.yl) %*% xl.q.yl
-	s2 <- SSE/n
-	ret <- (logSpwdet(sparseweights=sn, rho=lambda, debug=sparsedebug) - 
-		((n/2)*log(2*pi)) - (n/2)*log(s2) - (1/(2*(s2)))*SSE)
-	if (!quiet) cat("(sparse) lambda:\t", lambda, "\tfunction value:\t", ret, "\n")
-	ret
-}
 
 sar.error.f.sM <- function(lambda, csrw, I, y, wy, x, WX, n, tmpmax, quiet) {
 	yl <- y - lambda*wy

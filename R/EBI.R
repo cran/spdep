@@ -31,6 +31,7 @@ EBImoran.mc <- function (n, x, listw, nsim, zero.policy = FALSE,
         stop("Check of data and weights ID integrity failed")
     if (nsim > gamma(m + 1)) 
         stop("nsim too large for this number of observations")
+    if (nsim < 1) stop ("nsim too small")
     S0 <- Szero(listw)
     EB <- EBest(n, x)
     p <- EB$raw
@@ -130,6 +131,7 @@ EBlocal <- function(ri, ni, nb, zero.policy = FALSE,
     if (class(nb) != "nb") 
         stop(paste(deparse(substitute(nb)), "is not an nb object"))
     lnb <- length(nb)
+    if (lnb < 1) stop("zero length neighbour list")
     if (lnb != length(ri)) 
         stop("objects of different length")
     if (lnb != length(ni)) 

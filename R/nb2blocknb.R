@@ -8,6 +8,7 @@ nb2blocknb <- function(nb, ID, row.names = NULL) {
 	if (!identical(sort(nbNames), sort(unique(entNames))))
 		stop("names do not match exactly")
 	n <- length(entNames)
+	if (n < 1) stop("non-positive number of entities")
 	if (!is.null(row.names)) {
 		if (length(row.names) != n) 
 			stop("row.names wrong length")

@@ -7,6 +7,7 @@ nb2listw <- function(neighbours, glist=NULL, style="W", zero.policy=FALSE)
 	if (!(style %in% c("W", "B", "C", "S", "U")))
 		stop(paste("Style", style, "invalid"))
 	n <- length(neighbours)
+	if (n < 1) stop("non-positive number of entities")
 	cardnb <- card(neighbours)
 	if (!zero.policy)
 		if (any(cardnb == 0)) stop("Empty neighbour sets found")
@@ -106,6 +107,7 @@ similar.listw <- function(listw) {
 		if (!attr(listw$weights, "glistsym"))
 			stop("General weights must be symmetric")
 	n <- length(listw$neighbours)
+	if (n < 1) stop("non-positive number of entities")
 	cardnb <- card(listw$neighbours)
 	if (listw$style == "W") {
 		d <- attr(listw$weights, "comp")$d

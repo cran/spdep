@@ -1,4 +1,5 @@
 % Copyright 2002 by Roger S. Bivand
+\encoding{latin1}
 \name{eire}
 \alias{eire}
 \alias{eire.df}
@@ -12,8 +13,7 @@
 The \code{eire.df} data frame has 26 rows and 9 columns. In addition,
 polygons of the 26 counties are provided as a multipart polylist in
 eire.polys.utm (coordinates in km, projection UTM zone 30). Their
-centroids are in eire.coords.utm. The original Cliff and Ord binary contiguities are in
-eire.nb.
+centroids are in eire.coords.utm. The original Cliff and Ord binary contiguities are in eire.nb.
 }
 \format{
   This data frame contains the following columns:

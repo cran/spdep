@@ -4,6 +4,8 @@
 droplinks <- function(nb, drop, sym=TRUE) {
 	if (class(nb) != "nb") stop("Not a neighbours list")
 	n <- length(nb)
+	cnb <- card(nb)
+	if (n < 1) stop("non-positive length of nb")
 	if (is.logical(drop)) {
 		if(length(drop) != n) stop("Argument lengths differ")
 		idrop <- which(drop == TRUE)
@@ -20,12 +22,13 @@ droplinks <- function(nb, drop, sym=TRUE) {
 		sym <- FALSE
 	}
 	for (i in idrop) {
-		if (sym) {
+		if (sym && cnb[i] > 0) {
 			for (j in nb[[i]])
 				nb[[j]] <- nb[[j]][nb[[j]] != i]
 		}
 		nb[[i]] <- 0
 	}
+	nb <- sym.attr.nb(nb)
 	invisible(nb)
 }
 

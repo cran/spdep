@@ -1,4 +1,5 @@
 % Copyright 2001-4 by Roger S. Bivand
+\encoding{latin1}
 \name{moran.mc}
 \alias{moran.mc}
 \title{Permutation test for Moran's I statistic}
