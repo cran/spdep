@@ -40,7 +40,8 @@ lm.morantest <- function(model, listw, zero.policy=FALSE,
 	VI <- (((N*N)/((S0*S0)*(N-p)*(N-p+2))) *
 		(S1 + 2*trA2 - trB - ((2*(trA^2))/(N-p))))
 	ZI <- (I - EI) / sqrt(VI)
-    	if (alternative == "two.sided") pv <- 2 * pnorm(-abs(ZI))
+    	if (alternative == "two.sided") pv <- 2 * pnorm(abs(ZI), 
+		lower.tail=FALSE)
     	else if (alternative == "greater")
 	        pv <- pnorm(ZI, lower.tail=FALSE)
     	else pv <- pnorm(ZI)

@@ -44,6 +44,7 @@ data(eire)
 summary(eire.df$A)
 brks <- round(fivenum(eire.df$A), digits=2)
 cols <- rev(heat.colors(4))
+library(maptools)
 plotpolys(eire.polys.utm, eire.bbs.utm,
  col=cols[findInterval2(eire.df$A, brks)])
 title(main="Percentage with blood group A in Eire")

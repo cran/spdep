@@ -1,12 +1,16 @@
-# Copyright 2001 by Nicholas Lewin-Koh
+# Copyright 2001-3 by Nicholas Lewin-Koh and Roger S. Bivand.
 #
 
 
 graph2nb <- function(gob, row.names=NULL,sym=FALSE) {
 	if (!inherits(gob, "Graph")) stop("Not a Graph object")
 	res <- vector(mode="list", length=gob$np)
-    	if (!is.null(row.names)) if(length(row.names) != gob$np)
-        	stop("row.names wrong length")
+    	if (!is.null(row.names)) {
+		if(length(row.names) != gob$np)
+            		stop("row.names wrong length")
+		if (length(unique(row.names)) != length(row.names))
+	    		stop("non-unique row.names given")
+    	}
     	if (is.null(row.names)) row.names <- as.character(1:gob$np)
         if(sym){
           for (i in 1:gob$np) {

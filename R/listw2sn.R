@@ -74,6 +74,8 @@ read.gwt2nb <- function(file, region.id=NULL) {
 	if (is.null(region.id)) region.id <- nseq
 	if (n != length(region.id))
 		stop("Mismatch in dimensions of GWT file and region.id")
+	if (length(unique(region.id)) != length(region.id))
+	    stop("non-unique region.id given")
 	odij <- read.table(file, skip=1)
 	qorder <- order(odij[,1],odij[,2])
 	odij <- odij[qorder,]

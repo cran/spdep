@@ -1,12 +1,16 @@
-# Copyright 2001 by Roger Bivand
+# Copyright 2001-3 by Roger Bivand
 #
 
 
 tri2nb <- function(coords, row.names = NULL) {
 	require(tripack)
 	n <- nrow(coords)
-    	if (!is.null(row.names)) if(length(row.names) != n)
-        	stop("row.names wrong length")
+    	if (!is.null(row.names)) {
+		if(length(row.names) != n)
+            		stop("row.names wrong length")
+		if (length(unique(row.names)) != length(row.names))
+	    		stop("non-unique row.names given")
+    	}
     	if (is.null(row.names)) row.names <- as.character(1:n)
 	tri <- tri.mesh(x=coords[,1], y=coords[,2])
 	nb <- neighbours(tri)

@@ -60,6 +60,7 @@ Luc Anselin, Spatial Analysis Laboratory, Department of Agricultural and Consume
 }
 
 \examples{
-example(plotpolys)
+data(columbus)
+summary(columbus)
 }
 \keyword{datasets}

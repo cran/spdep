@@ -76,7 +76,8 @@ localmoran.sad <- function (model, select, nb, glist = NULL, style = "W",
             sad.u <- omega * sqrt(2*sum(taumi^2 / (1 - (2*omega*taumi))^2))
             sad.p <- sad.r - ((1/sad.r)*log(sad.r/sad.u))
 	}
-        if (alternative == "two.sided") p.sad <- 2 * pnorm(-abs(sad.p))
+        if (alternative == "two.sided") p.sad <- 2 * pnorm(abs(sad.p), 
+	    lower.tail=FALSE)
         else if (alternative == "greater")
             p.sad <- pnorm(sad.p, lower.tail=FALSE)
         else p.sad <- pnorm(sad.p)
@@ -125,8 +126,10 @@ as.data.frame.localmoransad <- function(x, row.names=NULL, optional=FALSE) {
     n <- length(x)
     res <- matrix(0, nrow=n, ncol=14)
     regnames <- NULL
+    if (!is.null(row.names)) 
+	if (length(row.names) == n) regnames <- row.names
+    if (is.null(regnames))for (i in 1:n) regnames <- c(regnames, x[[i]]$i)
     for (i in 1:n) {
-        regnames <- c(regnames, x[[i]]$i)
         tau <- x[[i]]$tau
 	df <- x[[i]]$df
         tau <- c(tau[1], rep(0, df-2), tau[2])

@@ -16,19 +16,20 @@ plot.nb <- function(x, coords, col="black", points=TRUE, add=FALSE,
         	plot.window(xlim = xlim, ylim = ylim, log="", asp=1)
 	}
 	cardnb <- card(nb)
+	if (length(col) < n) col <- rep(col[1], n)
 	for (i in 1:n) {
 		if (cardnb[i] > 0) {
         		inb <- nb[[i]]
         		for (j in inb) {
 				if (sym) {
 					lines(c(x[i], x[j]), c(y[i], y[j]),
-						col=col, ...)
+						col=col[i], ...)
 				} else {
 					if (arrows) 
 						arrows(x[i], y[i], x[j], y[j], 
-						col=col, length=length, ...)
+						col=col[i], length=length, ...)
 					else lines(c(x[i], x[j]), c(y[i], y[j]),
-						col=col, ...)
+						col=col[i], ...)
 				}
 
 			}

@@ -42,6 +42,7 @@ res <- EBlocal(spNamedVec("Deaths.1977.85", auckland),
  9*spNamedVec("Under.5.1981", auckland), auckland.nb)
 brks <- c(-Inf,2,2.5,3,3.5,Inf)
 cols <- grey(6:2/7)
+library(maptools)
 plotpolys(auckpolys, auckbbs, col=cols[findInterval2(res$est*1000, brks)])
 legend(c(70,90), c(70,95), fill=cols, legend=leglabs(brks), bty="n")
 title(main="Local moment estimator of infant mortality per 1000 per year")

@@ -61,11 +61,11 @@ following components:
 \examples{
 data(nc.sids)
 EBImoran.mc(spNamedVec("SID74", nc.sids), spNamedVec("BIR74", nc.sids),
- nb2listw(sidsorig.nb, style="B", zero.policy=TRUE), nsim=999,
+ nb2listw(ncCC89.nb, style="B", zero.policy=TRUE), nsim=999,
  zero.policy=TRUE)
 sids.p <- nc.sids$SID74 / nc.sids$BIR74
 names(sids.p) <- rownames(nc.sids)
-moran.mc(sids.p, nb2listw(sidsorig.nb, style="B", zero.policy=TRUE),
+moran.mc(sids.p, nb2listw(ncCC89.nb, style="B", zero.policy=TRUE),
  nsim=999, zero.policy=TRUE)
 }
 \keyword{spatial}% at least one, from doc/KEYWORDS

@@ -11,7 +11,7 @@ poly2nb(pl, bb, row.names = NULL, snap=sqrt(.Machine$double.eps), queen=TRUE)
 
 \arguments{
   \item{pl}{list of polygons of class \code{polylist}}
-  \item{bb}{matrix of polygon bounding boxes - columns are LL(x), LL(y), UR(x), UR(y)}
+  \item{bb}{matrix of polygon bounding boxes - columns are LL(x), LL(y), UR(x), UR(y) - if this argument is omitted and the polygon list is freshly generated from "maptools" functions, the bounding boxed will be retreived internally from polygon attributes.}
   \item{row.names}{character vector of region ids to be added to the neighbours list as attribute \code{region.id}, default \code{seq(1, nrow(x))}; if \code{polys} has a \code{region.id} attribute, it is copied to the neighbours list.}
   \item{snap}{boundary points less than \code{snap} distance apart are considered to indicate contiguity}
   \item{queen}{if TRUE, a single shared boundary point meets the contiguity condition, if FALSE, more than one shared point is required}
@@ -27,6 +27,7 @@ A neighbours list with class \code{nb}
 data(columbus)
 xx <- poly2nb(polys, bbs)
 dxx <- diffnb(xx, col.gal.nb)
+library(maptools)
 plotpolys(polys, bbs, border="grey")
 plot(col.gal.nb, coords, add=TRUE)
 plot(dxx, coords, add=TRUE, col="red")

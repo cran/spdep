@@ -110,9 +110,10 @@ plot.spcor <- function (x, main, ylab, ylim, ...)
         main <- x$var
     if (x$method == "I") {
         lags <- as.integer(rownames(x$res))
-        if (missing(ylim)) 
-            sd2 <- sqrt(x$res[,3])
+        sd2 <- sqrt(x$res[,3])
+        if (missing(ylim)) {
             ylim <- range(c(x$res[,1]+sd2, x$res[,1]-sd2))
+	}
         if (missing(ylab)) 
             ylab <- "Moran's I"
         plot(lags, x$res[,1], type="p", pch=18, ylim = ylim, main = main, ylab = ylab, xaxt = "n")

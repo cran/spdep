@@ -45,7 +45,7 @@ moran.test <- function(x, listw, randomisation=TRUE, zero.policy=FALSE,
 	statistic <- ZI
 	names(statistic) <- "Moran I statistic standard deviate"
         if (alternative == "two.sided") 
-		PrI <- 2 * pnorm(-abs(ZI), lower.tail=FALSE)
+		PrI <- 2 * pnorm(abs(ZI), lower.tail=FALSE)
         else if (alternative == "greater")
             PrI <- pnorm(ZI, lower.tail=FALSE)
         else PrI <- pnorm(ZI)

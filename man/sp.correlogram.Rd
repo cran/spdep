@@ -54,17 +54,17 @@ ft.SID74 <- sqrt(1000)*(sqrt(nc.sids$SID74/nc.sids$BIR74) +
   sqrt((nc.sids$SID74+1)/nc.sids$BIR74))
 tr.SIDS74 <- ft.SID74*sqrt(nc.sids$BIR74)
 names(tr.SIDS74) <- rownames(nc.sids)
-print(sp.correlogram(sidsorig.nb, tr.SIDS74, order=8, method="corr",
+print(sp.correlogram(ncCC89.nb, tr.SIDS74, order=8, method="corr",
  zero.policy=TRUE))
-print(sp.correlogram(sidsorig.nb, tr.SIDS74, order=8, method="I",
+print(sp.correlogram(ncCC89.nb, tr.SIDS74, order=8, method="I",
  zero.policy=TRUE))
-plot(sp.correlogram(sidsorig.nb, tr.SIDS74, order=8, method="I",
+plot(sp.correlogram(ncCC89.nb, tr.SIDS74, order=8, method="I",
  zero.policy=TRUE))
-plot(sp.correlogram(sidsorig.nb, tr.SIDS74, order=8, method="corr",
+plot(sp.correlogram(ncCC89.nb, tr.SIDS74, order=8, method="corr",
  zero.policy=TRUE))
-drop.no.neighs <- !(1:length(sidsorig.nb) \%in\% which(card(sidsorig.nb) == 0))
-sub.sidsorig.nb <- subset(sidsorig.nb, drop.no.neighs)
-plot(sp.correlogram(sub.sidsorig.nb, subset(tr.SIDS74,  drop.no.neighs),
+drop.no.neighs <- !(1:length(ncCC89.nb) \%in\% which(card(ncCC89.nb) == 0))
+sub.ncCC89.nb <- subset(ncCC89.nb, drop.no.neighs)
+plot(sp.correlogram(sub.ncCC89.nb, subset(tr.SIDS74,  drop.no.neighs),
  order=8, method="corr"))
 }
 \keyword{spatial}

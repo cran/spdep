@@ -48,7 +48,8 @@ lm.morantest.sad <- function (model, listw, zero.policy = FALSE,
     else sad.r <- sqrt(sum(log(1 - 2*omega*taumi)))
     sad.u <- omega * sqrt(2*sum(taumi^2 / (1 - (2*omega*taumi))^2))
     sad.p <- sad.r - ((1/sad.r)*log(sad.r/sad.u))
-    if (alternative == "two.sided") p.sad <- 2 * pnorm(-abs(sad.p))
+    if (alternative == "two.sided") p.sad <- 2 * pnorm(abs(sad.p), 
+	lower.tail=FALSE)
     else if (alternative == "greater")
         p.sad <- pnorm(sad.p, lower.tail=FALSE)
     else p.sad <- pnorm(sad.p)

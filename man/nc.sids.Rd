@@ -1,19 +1,13 @@
 \name{nc.sids}
 \alias{nc.sids}
-\alias{nc.utmbbs}
-\alias{nc.utm.polys}
-\alias{sidsorig.nb}
-\alias{utm18.countyseats}
+\alias{ncCR85.nb}
+\alias{ncCC89.nb}
 \non_function{}
 \title{North Carolina SIDS data}
 \usage{data(nc.sids)}
 \description{
 The \code{nc.sids} data frame has 100 rows and 9 columns. It contains data
-given in Cressie (1991, pp. 386-9) and elsewhere on sudden infant deaths in 
-North Carolina for 1974-78 and 1979-84. The data set also contains polygon
-boundaries for the counties reprojected to UTM zone 18, the neighbour list 
-given by Cressie omitting self-neighbours, and the coordinates of the county 
-seats approximately reprojected to UTM zone 18.
+given in Cressie (1991, pp. 386-9), Cressie and Read (1985) and Cressie and Chan (1989) on sudden infant deaths in North Carolina for 1974-78 and 1979-84. The data set also contains the neighbour list given by Cressie and Chan (1989) omitting self-neighbours (ncCC89.nb), and the neighbour list given by Cressie and Read (1985) for contiguities (ncCR85.nb).
 
 }
 \format{
@@ -28,42 +22,43 @@ seats approximately reprojected to UTM zone 18.
     \item{NWBIR79}{non-white births, 1979-84}
     \item{east}{eastings, county seat, miles, local projection}
     \item{north}{northings, county seat, miles, local projection}
+    \item{x}{easting, county seats approximately reprojected to UTM zone 18}
+    \item{y}{northings, county seats approximately reprojected to UTM zone 18}
+    \item{lon}{easting, county seats in long-lat}
+    \item{lat}{northings, county seats in long-lat}
+    \item{L.id}{Cressie and Read (1985) L index}
+    \item{M.id}{Cressie and Read (1985) M index}
   }
 }
 \source{
- Cressie, N (1991), Statistics for spatial data. New York: Wiley, pp. 386-389,
-\url{http://sal.agecon.uiuc.edu/datasets/sids.zip}.
+ Cressie, N (1991), \emph{Statistics for spatial data}. New York: Wiley, pp. 386--389; Cressie, N, Chan NH (1989) Spatial modelling of regional variables. \emph{Journal of the American Statistical Association}, 84, 393--401; Cressie, N, Read, TRC (1985) Do sudden infant deaths come in clusters? \emph{Statistics and Decisions} Supplement Issue 2, 333--349; \url{http://sal.agecon.uiuc.edu/datasets/sids.zip}.
 }
 
 \examples{
+library(maptools)
+sids.shp <- read.shape(system.file("shapes/sids.shp",
+ package="maptools"))
+sids <- sids.shp$att.data
+sidspolys <- Map2poly(sids.shp)
+sidscents <- get.Pcent(sids.shp)
 data(nc.sids)
-stem(floor(sort(1000*(nc.sids$SID74 + 1)/nc.sids$BIR74)*10)/10, scale=2)
-pm <- probmap(nc.sids$SID74, nc.sids$BIR74)$pmap
-brks <- c(0.0, 0.01, 0.05, 0.1, 0.9, 0.95, 0.99, 1)
-cols <- cm.colors(7)
-plotpolys(nc.utm.polys, nc.utmbbs, col=cols[findInterval2(pm, brks)])
-legend(c(-280, -70), c(3700, 3900), legend=paste("prob.", leglabs(brks)),
-  fill=cols, bty="n")
-ft.SID74 <- sqrt(1000)*(sqrt(nc.sids$SID74/nc.sids$BIR74) +
-  sqrt((nc.sids$SID74+1)/nc.sids$BIR74))
-names(ft.SID74) <- rownames(nc.sids)
-stem(ft.SID74, scale=2)
-plotpolys(nc.utm.polys, nc.utmbbs, border="grey")
-plot(sidsorig.nb, utm18.countyseats, add=TRUE, col="blue")
-text(utm18.countyseats[card(sidsorig.nb) == 0,],
-  rownames(nc.sids)[card(sidsorig.nb) == 0], pos=3)
-moran.plot(ft.SID74, nb2listw(sidsorig.nb, zero.policy=TRUE),
-  zero.policy=TRUE)
-drop.no.neighs <- !(1:length(sidsorig.nb) \%in\% which(card(sidsorig.nb) == 0))
-sub.sidsorig.nb <- subset(sidsorig.nb, drop.no.neighs)
-sub.ft.SID74 <- subset(ft.SID74, drop.no.neighs)
-moran.plot(sub.ft.SID74, nb2listw(sub.sidsorig.nb),
-  labels=attr(sub.sidsorig.nb, "region.id"))
-tr.SID74 <- ft.SID74*sqrt(nc.sids$BIR74)
-names(tr.SID74) <- names(ft.SID74)
-moran.test(tr.SID74, nb2listw(sidsorig.nb, zero.policy=TRUE),
- zero.policy=TRUE, alternative="two.sided")
-geary.test(tr.SID74, nb2listw(sidsorig.nb, zero.policy=TRUE),
- zero.policy=TRUE, alternative="two.sided")
+sids[1:5, c("CNTY.ID", "NAME", "BIR74")]
+nc.sids[1:5, c("CNTY.ID", "BIR74")]
+attr(ncCC89.nb, "region.id")[1:5]
+tmpGAL <- tempfile(pattern="GAL")
+write.nb.gal(ncCC89.nb, file=tmpGAL, oldstyle=FALSE, 
+ shpfile="sids", ind="CNTY.ID")
+CNTY.ID <- sids$CNTY.ID
+ncCC89.2.nb <- read.gal(file=tmpGAL, region.id=CNTY.ID)
+tmpGAL <- tempfile(pattern="GAL")
+write.nb.gal(ncCR85.nb, file=tmpGAL, oldstyle=FALSE, 
+ shpfile="sids", ind="CNTY.ID")
+CNTY.ID <- sids$CNTY.ID
+ncCR85.2.nb <- read.gal(file=tmpGAL, region.id=CNTY.ID)
+plotpolys(sidspolys, border="grey")
+plot(ncCR85.2.nb, sidscents, add=TRUE, col="blue")
+plotpolys(sidspolys, border="grey")
+plot(ncCC89.2.nb, cbind(nc.sids$lon, nc.sids$lat)[order(nc.sids$CNTY.ID),],
+ add=TRUE, col="blue")
 }
 \keyword{datasets}

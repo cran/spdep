@@ -9,19 +9,9 @@ summary.nb <- function(object, coords=NULL, lonlat=FALSE, scale=1, ...) {
     n.nb <- length(nb)
     regids <- attr(nb, "region.id")
     if(is.null(regids)) regids <- as.character(1:n.nb)
-    cat("Neighbour list object:\n")
-    cat("Connectivity of", deparse(substitute(object)),
-    	"with the following attributes:\n")
-    print(str(attributes(nb)))
-    cat("Number of regions:", n.nb, "\n")
-    cat("Number of nonzero links:", sum(c.nb), "\n")
-    cat("Percentage nonzero weights:", (100*sum(c.nb))/(n.nb*n.nb), "\n")
-    cat("Average number of links:", mean(c.nb), "\n")
+    print.nb(object)
     cat("Link number distribution:\n")
     print(table(c.nb, deparse.level=0))
-    if(any(c.nb == 0)) cat(length(c.nb[c.nb == 0]), " region", 
-        ifelse(length(c.nb[c.nb == 0]) < 2, "", "s"), " with no links:\n",
-	paste(regids[which(c.nb == 0)], collapse=" "), "\n", sep="")
     if(any(c.nb > 0)) {
         min.nb <- min(c.nb[c.nb > 0])
         cat(length(c.nb[c.nb == min.nb]), " least connected region",
@@ -64,6 +54,8 @@ print.nb <- function(x, ...) {
     if(any(c.nb == 0)) cat(length(c.nb[c.nb == 0]), " region", 
         ifelse(length(c.nb[c.nb == 0]) < 2, "", "s"), " with no links:\n",
 	paste(regids[which(c.nb == 0)], collapse=" "), "\n", sep="")
+    res <- is.symmetric.nb(x, verbose=FALSE)
+    if (!res) cat("Non-symmetric neighbours list\n")
     invisible(x)
 }
 
