@@ -441,6 +441,11 @@ extern void *malloc(), *calloc(), *realloc();
            ptr = (type *)realloc((char *)ptr,(unsigned)(sizeof(type)*(number)))
 #define FREE(ptr) { if ((ptr) != NULL) free((char *)(ptr)); (ptr) = NULL; }
 
+/*#define ALLOC(type,number)  (type *)Calloc((size_t) number, type)
+#define REALLOC(ptr,type,number)  \
+           ptr = (type *)Realloc((char *)ptr, (size_t) number, type)
+#define FREE(ptr) Free(ptr)1704 */
+
 
 /* Calloc that properly handles allocating a cleared vector. */
 #define CALLOC(ptr,type,number)                         \
@@ -449,7 +454,11 @@ extern void *malloc(), *calloc(), *realloc();
         for(i=(number)-1;i>=0; i--) ptr[i] = (type) 0;  \
 }
 
-
+/* #define CALLOC(ptr,type,number)                         \
+{   int i; ptr = ALLOC(type, number);                   \
+    if (ptr != (type *)NULL)                            \
+        for(i=(number)-1;i>=0; i--) ptr[i] = (type) 0;  \
+}1704 */
 
 
 
@@ -872,5 +881,6 @@ struct  MatrixFrame
     int                          FillinsRemaining;
     struct FillinListNodeStruct *FirstFillinListNode;
     struct FillinListNodeStruct *LastFillinListNode;
+    int				AllocBlockHits;  /* 2002-04-18 RSB */
 };
 typedef  struct MatrixFrame  *MatrixPtr;

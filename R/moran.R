@@ -20,7 +20,7 @@ moran.test <- function(x, listw, randomisation=TRUE, zero.policy=FALSE,
 	if (any(is.na(x))) stop("NA in X")
 	n <- length(listw$neighbours)
 	if (n != length(x)) stop("objects of different length")
-	wc <- spweights.constants(listw)
+	wc <- spweights.constants(listw, zero.policy)
 	S02 <- wc$S0*wc$S0
 	res <- moran(x, listw, wc$n, wc$S0, zero.policy)
 	I <- res$I
@@ -38,7 +38,7 @@ moran.test <- function(x, listw, randomisation=TRUE, zero.policy=FALSE,
 	ZI <- (I - EI) / sqrt(VI)
 	statistic <- ZI
 	names(statistic) <- "Moran I statistic standard deviate"
-        if (alternative == "two.sided") PrI <- 2 * pnorm(ZI)
+        if (alternative == "two.sided") PrI <- 2 * pnorm(ZI, lower.tail=FALSE)
         else if (alternative == "greater")
             PrI <- pnorm(ZI, lower.tail=FALSE)
         else PrI <- pnorm(ZI)

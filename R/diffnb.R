@@ -16,7 +16,7 @@ diffnb <- function(x, y, verbose=TRUE) {
 		if (!(all(xt) && all(yt))) {
 			res[[i]] <- sort(unique(c(xi[which(!xt)],
 				yi[which(!yt)])))
-			if(verbose)
+			if(verbose && (res[[i]] != 0))
 				cat("Neighbour difference for region:",
 				i, "in relation to:", res[[i]], "\n")
 		}

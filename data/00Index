@@ -1,7 +1,9 @@
-oldcol                   Columbus OH spatial analysis data set - old
-                         numbering
-afcon                    Spatial patterns of conflict in Africa 1966-78
-columbus                 Columbus OH spatial analysis data set
-eire                     Eire data sets
-getisord                 Getis-Ord remote sensing example data
-used.cars                US 1960 used car prices
+oldcol                  Columbus OH spatial analysis data set - old
+                        numbering
+afcon                   Spatial patterns of conflict in Africa 1966-78
+boston                  Corrected Boston Housing Data
+columbus                Columbus OH spatial analysis data set
+eire                    Eire data sets
+getisord                Getis-Ord remote sensing example data
+nc.sids                 North Carolina SIDS data
+used.cars               US 1960 used car prices

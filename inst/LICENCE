@@ -62,9 +62,9 @@ Files: R/mtlocalmoran.R and R/mtmoran.R are copyright (c) 2002 by Roger
 Bivand and Michael Tiefelsdorf, and are subject to the licence at the
 foot of this file.
 
-Files: data/afcon.rda, data/columbus.rda, data/oldcon.rda are derived
-by permission from SpaceStat data files prepared by Luc Anselin; they
-were downloaded from:
+Files: data/afcon.rda, data/columbus.rda, data/oldcon.rda,
+data/nc.sids.rda are derived by permission from SpaceStat data files
+prepared by Luc Anselin; they were downloaded from:
 
 http://www.spacestat.com/data.htm#data
 

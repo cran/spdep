@@ -242,12 +242,12 @@
  */
 
 /* Begin options. */
-#define  SP_REAL                           YES
+#define  SP_REAL                        YES
 #define  EXPANDABLE                     YES
 #define  TRANSLATE                      YES
 #define  INITIALIZE                     YES
 #define  DIAGONAL_PIVOTING              YES
-#define  ARRAY_OFFSET                   NOT FORTRAN
+#define  ARRAY_OFFSET                   NO    /*T FORTRAN */
 #define  MODIFIED_MARKOWITZ             NO
 #define  DELETE                         YES
 #define  STRIP                          YES
@@ -262,7 +262,7 @@
 #define  CONDITION                      YES
 #define  PSEUDOCONDITION                YES
 #define  FORTRAN                        NO
-#define  SP_DEBUG                          NO
+#define  SP_DEBUG                       NO
 
 /*
  *  The following options affect Sparse exports and so are exported as a
@@ -493,7 +493,7 @@
  */
 
 /* Begin annotation definitions. */
-#define  ANNOTATE		NONE
+#define  ANNOTATE		ON_STRANGE_BEHAVIOR
 
 #define  NONE			0
 #define  ON_STRANGE_BEHAVIOR	1

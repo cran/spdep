@@ -13,12 +13,13 @@ factors, and results may be checked against those of \code{geary.mc}
 permutations.
 }
 \usage{
-joincount.test(fx, listw, alternative="greater")
+joincount.test(fx, listw, zero.policy=FALSE, alternative="greater")
 print.jclist(x, ...)
 }
 \arguments{
   \item{fx}{a factor of the same length as the neighbours and weights objects in listw}
   \item{listw}{a \code{listw} object created for example by \code{nb2listw}}
+  \item{zero.policy}{if TRUE assign zero to the lagged value of zones without neighbours, if FALSE assign NA}
   \item{alternative}{a character string specifying the alternative hypothesis, must be one of greater (default), less or two.sided.}
   \item{x}{object to be printed}
   \item{...}{arguments to be passed through for printing}

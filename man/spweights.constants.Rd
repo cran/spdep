@@ -7,11 +7,12 @@
  The function calculates the constants needed for tests of spatial autocorrelation for general weights matrices represented as \code{listw} objects
 }
 \usage{
-spweights.constants(listw)
+spweights.constants(listw, zero.policy=FALSE)
 Szero(listw)
 }
 \arguments{
   \item{listw}{a \code{listw} object from for example \code{nb2listw}}
+  \item{zero.policy}{if TRUE ignore zones without neighbours, if FALSE fail when encountered}
 }
 
 \value{

@@ -33,7 +33,7 @@ geary.test <- function(x, listw, randomisation=TRUE, zero.policy=FALSE,
 	if (any(is.na(x))) stop("NA in X")
 	n <- length(listw$neighbours)
 	if (n != length(x)) stop("objects of different length")
-	wc <- spweights.constants(listw)
+	wc <- spweights.constants(listw, zero.policy)
 	S02 <- wc$S0*wc$S0
 	res <- geary(x, listw, wc$n, wc$n1, wc$S0, zero.policy)
 	C <- res$C
@@ -76,7 +76,7 @@ geary.mc <- function(x, listw, nsim, zero.policy=FALSE) {
 	if (any(is.na(x))) stop("NA in X")
 	n <- length(listw$neighbours)
 	if (n != length(x)) stop("objects of different length")
-	wc <- spweights.constants(listw)
+	wc <- spweights.constants(listw, zero.policy)
 	res <- numeric(length=nsim+1)
 	for (i in 1:nsim) res[i] <- geary(sample(x), listw, n, wc$n1, wc$S0,
 	    zero.policy)$C
