@@ -101,7 +101,9 @@ can.be.simmed <- function(listw) {
 }
 
 similar.listw <- function(listw) {
-	if (!attr(listw$neighbours, "sym")) 
+	nbsym <- attr(listw$neighbours, "sym")
+	if(is.null(nbsym)) nbsym <- is.symmetric.nb(listw$neighbours, FALSE)
+	if (!nbsym) 
 		stop("Only symmetric nb can yield similar to symmetric weights")
 	if (attr(listw$weights, "mode") == "general")
 		if (!attr(listw$weights, "glistsym"))

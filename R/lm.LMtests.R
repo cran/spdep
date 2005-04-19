@@ -69,9 +69,8 @@ lm.LMtests <- function(model, listw, zero.policy=FALSE, test="LMerr",
 		names(p.value) <- ""
 		method <- "Lagrange multiplier diagnostics for spatial dependence"
 		data.name <- paste("\n", paste(strwrap(paste("model: ",
-		    gsub(" *", " ", 
-	            paste(deparse(model$call), sep="", collapse="")))),
-		    collapse="\n"),
+		    gsub("[ ]+", " ", paste(deparse(model$call), 
+		    sep="", collapse="")))), collapse="\n"),
     	            "\nweights: ", deparse(substitute(listw)), "\n", sep="")
 		tres[[i]] <- list(statistic=statistic, parameter=parameter,
 			p.value=p.value, method=method, data.name=data.name)

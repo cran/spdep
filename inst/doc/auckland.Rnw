@@ -35,7 +35,7 @@ options("warn"=-1)
 
 <<label=afig,echo=FALSE,eval=FALSE>>= 
 .PngNo <- .PngNo + 1; file <- paste("Fig-bitmap-", .PngNo, ".png", sep="")
-png(file=file, width = 700, height = 700, pointsize = 12, bg = "white")
+png(file=file, width = 700, height = 700, pointsize = 12, bg = "white", colortype="pseudo.cube")
 opar <- par(mar=c(3,3,1,1)+0.1)
 @
 
