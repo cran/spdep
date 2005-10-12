@@ -1,4 +1,4 @@
-# Copyright 2001-3 by Roger Bivand 
+# Copyright 2001-5 by Roger Bivand 
 #
 
 spweights.constants <- function(listw, zero.policy=FALSE) {
@@ -167,6 +167,11 @@ listw2star <- function(listw, ireg, style, n, D, a, zero.policy=FALSE) {
 }
 
 spdep <- function(build=FALSE) {
+	require("utils")
+	.DESC <- packageDescription("spdep")
+	.spdep.Version <- paste(.DESC[["Package"]], ", version ", 
+		.DESC[["Version"]], ", ", .DESC[["Date"]], sep="")
+	.spdep.Build <- paste("build:", .DESC[["Built"]])
 	if (build) return(c(.spdep.Version, .spdep.Build))
 	else return(.spdep.Version)
 }

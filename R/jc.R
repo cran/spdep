@@ -3,7 +3,7 @@
 
 joincount <- function(dums, listw) {
 	nc <- which(colSums(dums) > 1)
-	n <- length(listw$neighbours)
+#	n <- length(listw$neighbours)
 	cardnb <- card(listw$neighbours)
 	res <- as.numeric(rep(0, ncol(dums)))
 	for (lev in nc) {

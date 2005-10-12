@@ -314,7 +314,7 @@ dosparse <- function (listw, y, x, wy, K, quiet, tol.opt,
 	e.a <- t(e.null) %*% e.null
 	e.b <- t(e.w) %*% e.null
 	e.c <- t(e.w) %*% e.w
-	sn <- listw2sn(listw)
+#	sn <- listw2sn(listw)
 	if (optim) {
 		lm.rho <- lm.fit(cbind(x, wy), y)
 		rho <- coef(lm.rho)[length(coef(lm.rho))]
@@ -342,5 +342,6 @@ dosparse <- function (listw, y, x, wy, K, quiet, tol.opt,
 	gc(FALSE)
 	res <- list(maximum=maximum, objective=objective, LLs=LLs,
 		lm.null=lm.null, similar=similar, opt=opt)
+	res
 }
 

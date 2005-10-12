@@ -2,10 +2,8 @@ afcon                   Spatial patterns of conflict in Africa 1966-78
 airdist                 Measure distance from plot
 anova.sarlm             Comparison of simultaneous autoregressive
                         models
-asMatrixCsrListw        Convert spatial weights list to CSR matrix
-                        form
-auckland                Marshall's infant mortality in Auckland
-                        dataset
+asMatrixCsrListw        Convert spatial weights list to CSR matrix form
+auckland                Marshall's infant mortality in Auckland dataset
 baltimore               House sales prices, Baltimore, MD 1978
 boston                  Corrected Boston Housing Data
 bptest.sarlm            Breusch-Pagan test for spatial models
@@ -22,8 +20,8 @@ EBlocal                 Local Empirical Bayes estimator
 edit.nb                 Interactive editing of neighbours lists
 eigenw                  Spatial weights matrix eigenvalues
 eire                    Eire data sets
-errorsarlm              Spatial simultaneous autoregressive error
-                        model estimation
+errorsarlm              Spatial simultaneous autoregressive error model
+                        estimation
 gabrielneigh            Graph based spatial weights
 geary                   Compute Geary's C
 geary.mc                Permutation test for Geary's C statistic
@@ -91,8 +89,7 @@ sp.correlogram          Spatial correlogram
 spdep                   Return package version number
 sp.mantel.mc            Mantel-Hubert spatial general cross product
                         statistic
-spweights.constants     Provides constants for spatial weights
-                        matrices
+spweights.constants     Provides constants for spatial weights matrices
 subset.listw            Subset a spatial weights list
 subset.nb               Subset a neighbours list
 summary.nb              Print and summary function for neighbours and

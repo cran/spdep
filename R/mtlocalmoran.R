@@ -76,7 +76,7 @@ localmoran.sad <- function (model, select, nb, glist = NULL, style = "W",
 #	    is.na(evalue) <- abs(evalue) < 1.0e-7
 #	    evalue <- na.omit(evalue)
 #	    saveNaAction <- attr(evalue, "na.action")
-	    saveNaAction <- NA
+#	    saveNaAction <- NA
 	    tau <- c(evalue)
 	    e1 <- tau[1]
 	    en <- tau[length(tau)]

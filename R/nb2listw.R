@@ -26,6 +26,9 @@ nb2listw <- function(neighbours, glist=NULL, style="W", zero.policy=FALSE)
 			stop("neighbours and glist do not conform")
 		if (any(is.na(unlist(glist))))
 			stop ("NAs in general weights list")
+		if (any(sapply(glist, function(x) 
+			isTRUE(all.equal(sum(x), 0)))))
+			warning("zero sum general weights") 
 		glist <- lapply(glist, function(x) {mode(x) <- "numeric"; x})
 		attr(vlist, "mode") <- "general"
 		attr(vlist, "glist") <- deparse(substitute(glist))
@@ -39,7 +42,10 @@ nb2listw <- function(neighbours, glist=NULL, style="W", zero.policy=FALSE)
 	if (style == "W") {
 		d <- unlist(lapply(glist, sum))
 		for (i in 1:n) {
-			if (cardnb[i] > 0) vlist[[i]] <- (1/d[i]) * glist[[i]]
+			if (cardnb[i] > 0) {
+			    if (d[i] > 0) vlist[[i]] <- (1/d[i]) * glist[[i]]
+			    else vlist[[i]] <- 0 * glist[[i]]
+			}
 		}
 		attr(vlist, "comp") <- list(d=d)
 	}
@@ -64,8 +70,10 @@ nb2listw <- function(neighbours, glist=NULL, style="W", zero.policy=FALSE)
 		glist2 <- lapply(glist, function(x) x^2)
 		q <- sqrt(unlist(lapply(glist2, sum)))
 		for (i in 1:n) {
-			if (cardnb[i] > 0)
-				glist[[i]] <- (1/q[i]) * glist[[i]]
+			if (cardnb[i] > 0) {
+			    if (q[i] > 0) glist[[i]] <- (1/q[i]) * glist[[i]]
+			    else glist[[i]] <- 0 * glist[[i]]
+			}
 		}
 		Q <- sum(unlist(glist))
 		if (is.na(Q) || !(Q > 0))

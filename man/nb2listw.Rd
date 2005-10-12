@@ -18,6 +18,8 @@ nb2listw(neighbours, glist=NULL, style="W", zero.policy=FALSE)
 Starting from a binary neighbours list, in which regions are either listed as neighbours or are absent (thus not in the set of neighbours for some definition), the function adds a weights list with values given by the coding scheme style chosen. B is the basic binary coding, W is row standardised (sums over all links to n), C is globally standardised (sums over all links to n), U is equal to C divided by the number of neighbours (sums over all links to unity), while S is the variance-stabilizing coding scheme proposed by Tiefelsdorf et al. 1999, p. 167-168 (sums over all links to n).
 
 If zero policy is set to TRUE, weights vectors of zero length are inserted for regions without neighbour in the neighbours list. These will in turn generate lag values of zero, equivalent to the sum of products of the zero row \code{t(rep(0, length=length(neighbours))) \%*\% x}, for arbitraty numerical vector \code{x} of length \code{length(neighbours)}. The spatially lagged value of x for the zero-neighbour region will then be zero, which may (or may not) be a sensible choice.
+
+If the sum of the glist vector for one or more observations is zero, a warning message is issued. The consequence for later operations will be the same as if no-neighbour observations were present and the zero.policy argument set to true.
 }
 \value{
 A \code{listw} object with the following members:
@@ -51,6 +53,21 @@ dlist <- lapply(dlist, function(x) 1/x)
 col.w.d <- nb2listw(col.gal.nb, glist=dlist)
 summary(unlist(col.w$weights))
 summary(unlist(col.w.d$weights))
+# introducing other conditions into weights - only earlier sales count
+# see http://sal.uiuc.edu/pipermail/openspace/2005-October/000610.html
+data(baltimore)
+set.seed(211)
+dates <- sample(1:500, nrow(baltimore), replace=TRUE)
+nb_15nn <- knn2nb(knearneigh(cbind(baltimore$X, baltimore$Y), k=15))
+glist <- vector(mode="list", length=length(nb_15nn))
+for (i in seq(along=nb_15nn))
+  glist[[i]] <- ifelse(dates[i] > dates[nb_15nn[[i]]], 1, 0)
+listw_15nn_dates <- nb2listw(nb_15nn, glist=glist, style="B")
+which(lag(listw_15nn_dates, baltimore$PRICE) == 0.0)
+which(sapply(glist, sum) == 0)
+ex <- which(sapply(glist, sum) == 0)[1]
+dates[ex]
+dates[nb_15nn[[ex]]]
 }
 
 \keyword{spatial}

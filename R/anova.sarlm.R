@@ -68,6 +68,7 @@ anova.sarlm <- function(object, ...) {
         AIC <- AIC(LL)
         res <- data.frame("AIC"=AIC, "Log likelihood"=LL, "df"=attr(LL, "df"),
 	    row.names=deparse(substitute(object)))
+	class(res) <- c("anova", "data.frame")
         return(res)
     }
 }
