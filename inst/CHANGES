@@ -1,3 +1,11 @@
+0.3-13 Addition of an example for nb2listw to show how the glist= argument
+	can be used to exclude neighbour links based on observation pair 
+	criteria (houses neighbours with reference to sales price if sold
+	after neighbour - by definition asymmetric); poly2nb(queen=FALSE)
+	was falsely reporting rook neighbours where the only shared point
+	was the first (and last) coordinate of one of the polygons - the first
+	coordinate is now omitted.
+
 0.3-12 Small fixes to suit 2.1.0 (gsub patterns, colortype= in vignette)
 
 0.3-9 Removal of the Berkeley sparse code; correction of a bug found by

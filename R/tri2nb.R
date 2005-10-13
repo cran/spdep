@@ -3,7 +3,7 @@
 
 
 tri2nb <- function(coords, row.names = NULL) {
-	require(tripack)
+	require("tripack")
 	n <- nrow(coords)
 	if (n < 3) stop("too few coordinates")
 #	left <- function(x) {

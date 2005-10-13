@@ -34,6 +34,7 @@ poly2nb <- function(pl, row.names=NULL, snap=sqrt(.Machine$double.eps),
 	polypoly2 <- function(poly1, poly2, snap) {
 		n1 <- nrow(poly1)
 		n2 <- nrow(poly2)
+		if (any(n1 == 0 || n2 == 0)) return(as.integer(0))
 		res <- .Call("polypoly", as.double(poly1), 
 			as.integer(n1), as.double(poly2), 
 			as.integer(n2), as.double(snap), PACKAGE="spdep")
@@ -49,8 +50,8 @@ poly2nb <- function(pl, row.names=NULL, snap=sqrt(.Machine$double.eps),
 				as.double(bb[j,]), PACKAGE="spdep")
 			if (jhit > 0) {
 			    khit <- 0
-			    khit <- polypoly2(na.omit(pl[[i]]), 
-				na.omit(pl[[j]]), snap)
+			    khit <- polypoly2(na.omit(pl[[i]][-1,]), 
+				na.omit(pl[[j]][-1,]), snap)
 
 			    if (khit > criterion) {
 				ans[[i]] <- c(ans[[i]], j)

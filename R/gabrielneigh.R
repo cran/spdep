@@ -22,9 +22,9 @@ gabrielneigh <- function(coords) {
 plot.Gabriel<-function(x, show.points=FALSE, add=FALSE,
                        linecol=par(col), ...)
 {
-  if(!add) plot(gab$x,gab$y,type='n',...)
-  segments(gab$x[gab$from], gab$y[gab$from],
-           gab$x[gab$to], gab$y[gab$to], col=linecol)
-  if(show.points) points(gab$x,gab$y)
+  if(!add) plot(x$x,x$y,type='n',...)
+  segments(x$x[x$from], x$y[x$from],
+           x$x[x$to], x$y[x$to], col=linecol)
+  if(show.points) points(x$x,x$y)
 }
 

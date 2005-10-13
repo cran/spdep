@@ -20,8 +20,8 @@ relativeneigh <- function(coords) {
 }
 
 plot.relative<-function(x, show.points=FALSE, add=FALSE, linecol=par(col),...){
-  if(!add) plot(rel$x,rel$y,type='n')
-  segments(rel$x[rel$from],rel$y[rel$from],
-           rel$x[rel$to],rel$y[rel$to],col=linecol)
-  if(show.points) points(rel$x,rel$y,...)
+  if(!add) plot(x$x,x$y,type='n')
+  segments(x$x[x$from],x$y[x$from],
+           x$x[x$to],x$y[x$to],col=linecol)
+  if(show.points) points(x$x,x$y,...)
 }

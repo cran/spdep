@@ -25,7 +25,7 @@ of the data to match the new order of the neighbour list - if this fix
 is used, remember to re-order the row.names argument as well as the
 coordinates! Please also note that triangulation of grid points will
 give arbitrary diagonal neighbours, which may not be a sensible outcome,
-and \code{dnearneigh()} may serve better where \code{cell2nb()} cannot
+and \code{dnearneigh()} may serve better where \code{tri2nb()} cannot
 be used.
 }
 
