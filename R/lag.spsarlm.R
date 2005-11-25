@@ -144,7 +144,8 @@ lagsarlm <- function(formula, data = list(), listw,
 	} else {
 		opt <- dosparse(listw=listw, y=y, x=x, wy=wy, K=K, quiet=quiet,
 			tol.opt=tol.opt, control=control, method=method, 
-			interval=interval, can.sim=can.sim, optim=optim)
+			interval=interval, can.sim=can.sim, optim=optim,
+			zero.policy=zero.policy)
 		rho <- c(opt$maximum)
 		names(rho) <- "rho"
 		LL <- c(opt$objective)
@@ -248,15 +249,18 @@ sar.lag.mix.f.sM <- function(rho, W, I, e.a, e.b, e.c, n, tmpmax, quiet)
 }
 
 dosparse <- function (listw, y, x, wy, K, quiet, tol.opt, 
-	control, method, interval, can.sim, optim) {
+	control, method, interval, can.sim, optim, zero.policy=FALSE) {
 	similar <- FALSE
 	m <- ncol(x)
 	n <- nrow(x)
 	if (method == "SparseM") {
 		if (listw$style %in% c("W", "S") && can.sim) {
-			W <- asMatrixCsrListw(similar.listw(listw))
+#			W <- asMatrixCsrListw(similar.listw(listw))
+			W <- asMatrixCsrListw(similar.listw(listw),
+        			zero.policy=zero.policy)
 			similar <- TRUE
-		} else W <- asMatrixCsrListw(listw)
+		} else W <- asMatrixCsrListw(listw, zero.policy=zero.policy)
+#		} else W <- asMatrixCsrListw(listw)
 		I <- asMatrixCsrI(n)
 		tmpmax <- sum(card(listw$neighbours)) + n
 		# tmpmax and gc() calls: Danlin Yu 20041213

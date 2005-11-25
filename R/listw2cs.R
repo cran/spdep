@@ -1,11 +1,18 @@
 # Copyright 2004 Roger Bivand
 
 
-asMatrixCsrListw <- function(listw) {
+asMatrixCsrListw <- function(listw, zero.policy=FALSE) {
 	if(!inherits(listw, "listw")) stop("not a listw object")
 	n <- length(listw$neighbours)
 	ra <- unlist(listw$weights)
 	ja <- unlist(listw$neighbours)
+# omitted zero policy found at Kohren Sahlis 2005-11-24
+        if (zero.policy) {
+		zeros <- which(ja == 0)
+		if (length(zeros) > 0) ja <- ja[-zeros]
+	}
+        if (length(ja) != length(ra))
+	  stop("different numbers of weights and numbers - wrong zero policy?")
 	ia <- as.integer(cumsum(c(1, card(listw$neighbours))))
 	res <- new("matrix.csr", ra=ra, ja=ja, ia=ia, dimension=c(n,n))
 	res

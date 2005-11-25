@@ -113,9 +113,12 @@ errorsarlm <- function(formula, data = list(), listw, na.action=na.fail,
 		}
 	} else if (method == "SparseM") {
 		if (listw$style %in% c("W", "S") & can.sim) {
-			csrw <- asMatrixCsrListw(similar.listw(listw))
+#			csrw <- asMatrixCsrListw(similar.listw(listw))
+			csrw <- asMatrixCsrListw(similar.listw(listw),
+        			zero.policy=zero.policy)
 			similar <- TRUE
-		} else csrw <- asMatrixCsrListw(listw)
+		} else csrw <- asMatrixCsrListw(listw, zero.policy=zero.policy)
+#		} else csrw <- asMatrixCsrListw(listw)
 		gc(FALSE)
 		I <- asMatrixCsrI(n)
 		tmpmax <- sum(card(listw$neighbours)) + n
@@ -212,7 +215,8 @@ sar.error.f <- function(lambda, eig, y, wy, x, WX, n, quiet)
 	if (is.complex(eig)) det <- Re(prod(1 - lambda*eig)) 
 	else det <- prod(1 - lambda*eig)
 	ret <- (log(det) - ((n/2)*log(2*pi)) - (n/2)*log(s2) - (1/(2*(s2)))*SSE)
-	if (!quiet) cat("(eigen) lambda:\t", lambda, "\tfunction value:\t", ret, "\n")
+	if (!quiet) cat("lambda\t", lambda, " function\t", ret, " Jacobian\t", log(det), " SSE\t", SSE, "\n")
+#	cat("(eigen) lambda:\t", lambda, "\tfunction value:\t", ret, "\n")
 	ret
 }
 
@@ -228,7 +232,8 @@ sar.error.f.sM <- function(lambda, csrw, I, y, wy, x, WX, n, tmpmax, quiet) {
 	gc(FALSE)
 	ret <- (Jacobian -
 		((n/2)*log(2*pi)) - (n/2)*log(s2) - (1/(2*(s2)))*SSE)
-	if (!quiet) cat("(SparseM) lambda:\t", lambda, "\tfunction value:\t", ret, "\n")
+	if (!quiet) cat("lambda\t", lambda, " function\t", ret, " Jacobian\t", Jacobian, " SSE\t", SSE, "\n")
+#	cat("(SparseM) lambda:\t", lambda, "\tfunction value:\t", ret, "\n")
 	ret
 }
 
