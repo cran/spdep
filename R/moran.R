@@ -1,8 +1,9 @@
-# Copyright 2001-4 by Roger Bivand 
+# Copyright 2001-5 by Roger Bivand 
 #
 
 moran <- function(x, listw, n, S0, zero.policy=FALSE, NAOK=FALSE) {
 	n1 <- length(listw$neighbours)
+	x <- c(x)
 	if (n1 != length(x)) stop("objects of different length")
 	xx <- mean(x, na.rm=NAOK)
 	z <- x - xx

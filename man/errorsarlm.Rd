@@ -76,6 +76,7 @@ standard errors)}
   \item{LMtest}{NULL for this model}
   \item{zero.policy}{zero.policy for this model}
   \item{na.action}{(possibly) named vector of excluded or omitted observations if non-default na.action argument used}
+  \item{aliased}{if not NULL, details of aliased variables}
 
 The internal sar.error.* functions return the value of the log likelihood function at $\lambda$.
 }
