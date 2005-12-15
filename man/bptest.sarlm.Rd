@@ -8,13 +8,15 @@
   Performs the Breusch-Pagan test for heteroskedasticity on the least squares fit of the spatial models taking the spatial coefficients rho or lambda into account. This function is a copy of the \code{bptest} function in package "lmtest", modified to use objects returned by spatial simultaneous autoregressive models.
 }
 \usage{
-bptest.sarlm(object, studentize = TRUE)
+bptest.sarlm(object, varformula=NULL, studentize = TRUE, data=list())
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{object}{An object of class \code{"sarlm"} from \code{errorsarlm()} or \code{lagsarlm()}.}
+  \item{varformula}{a formula describing only the potential explanatory variables for the variance (no dependent variable needed). By default the same explanatory variables are taken as in the main regression model}
   \item{studentize}{logical. If set to \code{TRUE} Koenker's studentized
    version of the test statistic will be used.}
+  \item{data}{an optional data frame containing the variables in the varformula}
 }
 \details{
    Asymptotically this corresponds to the test given by Anselin (1988), but is not exactly the same. The studentized version is more conservative and perhaps to be prefered. The residuals, and for spatial error models the RHS variables, are adjusted for the spatial coefficient, as suggested bt Luc Anselin (personal communication).

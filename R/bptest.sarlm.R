@@ -1,15 +1,18 @@
-# Copyright 2004 by Roger Bivand (original taken from bptest() in the lmtest
+# Copyright 2004-5 by Roger Bivand (original taken from bptest() in the lmtest
 # package, Copyright (C) 2001 Torsten Hothorn and Achim Zeileis and released
 # under GNU General Public License, Version 2.
 #
 
-bptest.sarlm <- function (object, studentize = TRUE) 
+bptest.sarlm <- function (object, varformula=NULL, studentize = TRUE, data=list()) 
 {
     if(!inherits(object, "sarlm")) stop("not sarlm object")
     Z <- model.matrix(object$lm.target)
     k <- ncol(Z)
     n <- nrow(Z)
+    if (!is.null(varformula)) Z <- model.matrix(varformula, data = data)
     resi <- residuals(object$lm.target)
+    if (length(resi) != nrow(Z))
+        stop("number of residuals differs from varformula matrix rows")
     sigma2 <- sum(resi^2)/n
     if (studentize) {
         w <- resi^2 - sigma2

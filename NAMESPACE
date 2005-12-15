@@ -3,6 +3,9 @@ useDynLib(spdep)
 importFrom(SparseM, as.matrix.csr)
 importMethodsFrom(SparseM, det)
 importMethodsFrom(SparseM, chol)
+importMethodsFrom(SparseM, as.matrix)
+importMethodsFrom(SparseM, "%*%")
+importMethodsFrom(SparseM, t)
 importClassesFrom(SparseM, matrix.csr)
 importFrom(stats, model.matrix, model.response)
 
@@ -34,6 +37,13 @@ export(EBImoran.mc, probmap, choynowski, EBest, EBlocal, LR.sarlm,
 	asMatrixCsrListw, asMatrixCsrI, asMatrixCsrIrW, asListwMatrixCsr, 
 	is.symmetric.glist, similar.listw, nb2lines, listw2lines, df2sn, 
 	plot.listw)
+
+export(spautolm, residuals.spautolm, deviance.spautolm, coef.spautolm, 
+	fitted.spautolm, print.spautolm, summary.spautolm, LR1.spautolm, 
+	logLik.spautolm, print.summary.spautolm, autocov_dist, GMerrorsar, 
+	residuals.gmsar, deviance.gmsar, coef.gmsar, fitted.gmsar, 
+	print.gmsar, summary.gmsar, LR1.gmsar, logLik.gmsar, 
+	print.summary.gmsar, SpatialFiltering, print.SFResult, fitted.SFResult)
 
 import(maptools)
 
@@ -80,4 +90,27 @@ S3method(predict, sarlm)
 
 S3method(print, summary.sarlm)
 S3method(print, sarlm.pred)
+
+S3method(residuals, spautolm)
+S3method(deviance, spautolm)
+S3method(coef, spautolm)
+S3method(fitted, spautolm)
+S3method(print, spautolm)
+S3method(summary, spautolm)
+S3method(logLik, spautolm)
+
+S3method(print, summary.spautolm)
+
+S3method(residuals, gmsar)
+S3method(deviance, gmsar)
+S3method(coef, gmsar)
+S3method(fitted, gmsar)
+S3method(print, gmsar)
+S3method(summary, gmsar)
+S3method(logLik, gmsar)
+
+S3method(print, summary.gmsar)
+
+S3method(fitted, SFResult)
+S3method(print, SFResult)
 

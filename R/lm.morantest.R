@@ -32,7 +32,9 @@ lm.morantest <- function(model, listw, zero.policy=FALSE,
 # fixed after looking at TOWN dummy in Boston data
 	if (length(nacoefs > 0)) X <- X[,-nacoefs]
 	if (!is.null(wts <- weights(model))) {
-		X <- sqrt(diag(wts)) %*% X
+#		X <- sqrt(diag(wts)) %*% X
+		X <- drop(t(sapply(1:length(wts), 
+			function(i) sqrt(wts[i])*X[i,])))
 	}
 # Cliff/Ord 1981, p. 203
 	Z <- lag.listw(listw.U, X, zero.policy=zero.policy)
@@ -62,7 +64,7 @@ lm.morantest <- function(model, listw, zero.policy=FALSE,
 	    "Variance")
     	method <- "Global Moran's I for regression residuals"
     	data.name <- paste("\n", paste(strwrap(paste("model: ",
-	    gsub("[ ]+", " ", 
+	    gsub("[[:space:]]+", " ", 
 	    paste(deparse(model$call), sep="", collapse="")))), collapse="\n"),
     	    "\nweights: ", deparse(substitute(listw)), "\n", sep="")
     	res <- list(statistic = statistic, p.value = p.value,

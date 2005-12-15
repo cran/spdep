@@ -38,21 +38,24 @@ sp.correlogram <- function (neighbours, var, order = 1, method = "corr",
 }
 
 
-print.spcor <- function (x, ...) 
+print.spcor <- function (x, p.adj.method="none", ...) 
 {
+    cat("Spatial correlogram for", x$var, "\nmethod:", 
+        ifelse(x$method == "I", "Moran's I", "Spatial autocorrelation"), "\n")
     if (x$method == "I") {
-        meth <- "Moran's I"
         res <- as.matrix(x$res)
+	ZI <- (res[,1]-res[,2])/sqrt(res[,3])
+	pv <- p.adjust(2*pnorm(abs(ZI), lower.tail=FALSE), method=p.adj.method)
+	res <- cbind(res, ZI, pv)
         rownames(res) <- rownames(x$res)
-        colnames(res) <- c("estimate", "expectation", "variance")
+        colnames(res) <- c("estimate", "expectation", "variance", 
+	    "standard deviate", "Pr(I) two sided")
+        printCoefmat(res, ...)
     } else {
-        meth <- "Spatial autocorrelation"
         res <- as.vector(x$res)
         names(res) <- names(x$res)
+	print(res)
     }
-    cat("Spatial correlogram for", x$var, "\nmethod:", 
-        meth, "\n")
-    print(res)
     invisible(res)
 }
 
@@ -63,7 +66,7 @@ plot.spcor <- function (x, main, ylab, ylim, ...)
         main <- x$var
     if (x$method == "I") {
         lags <- as.integer(rownames(x$res))
-        sd2 <- sqrt(x$res[,3])
+        sd2 <- 2*sqrt(x$res[,3])
         if (missing(ylim)) {
             ylim <- range(c(x$res[,1]+sd2, x$res[,1]-sd2))
 	}

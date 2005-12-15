@@ -215,8 +215,7 @@ sar.error.f <- function(lambda, eig, y, wy, x, WX, n, quiet)
 	if (is.complex(eig)) det <- Re(prod(1 - lambda*eig)) 
 	else det <- prod(1 - lambda*eig)
 	ret <- (log(det) - ((n/2)*log(2*pi)) - (n/2)*log(s2) - (1/(2*(s2)))*SSE)
-	if (!quiet) cat("lambda\t", lambda, " function\t", ret, " Jacobian\t", log(det), " SSE\t", SSE, "\n")
-#	cat("(eigen) lambda:\t", lambda, "\tfunction value:\t", ret, "\n")
+	if (!quiet) cat("lambda:", lambda, " function:", ret, " Jacobian:", log(det), " SSE:", SSE, "\n")
 	ret
 }
 
@@ -232,8 +231,7 @@ sar.error.f.sM <- function(lambda, csrw, I, y, wy, x, WX, n, tmpmax, quiet) {
 	gc(FALSE)
 	ret <- (Jacobian -
 		((n/2)*log(2*pi)) - (n/2)*log(s2) - (1/(2*(s2)))*SSE)
-	if (!quiet) cat("lambda\t", lambda, " function\t", ret, " Jacobian\t", Jacobian, " SSE\t", SSE, "\n")
-#	cat("(SparseM) lambda:\t", lambda, "\tfunction value:\t", ret, "\n")
+	if (!quiet) cat("lambda:", lambda, " function:", ret, " Jacobian:", Jacobian, " SSE:", SSE, "\n")
 	ret
 }
 

@@ -12,7 +12,7 @@ print and plot helper functions.
 sp.correlogram(neighbours, var, order = 1, method = "corr", style = "W", 
   randomisation = TRUE, zero.policy = FALSE, spChk=NULL)
 plot.spcor(x, main, ylab, ylim, ...)
-print.spcor(x, ...)
+print.spcor(x, p.adj.method="none", ...)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
@@ -26,12 +26,15 @@ print.spcor(x, ...)
 if TRUE permit the weights list to be formed with zero-length weights vectors}
   \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
   \item{x}{an object from \code{sp.correlogram()} of class \code{spcor}}
+  \item{p.adj.method}{correction method as in \code{p.adjust}}
   \item{main}{an overall title for the plot}
   \item{ylab}{a title for the y axis}
   \item{ylim}{the y limits of the plot}
   \item{\dots}{further arguments passed through}
 }
-
+\details{
+  The print function also calculates the standard deviates of Moran's I and a two-sided probability value, optionally using \code{p.adjust} to correct by the nymber of lags. The plot function plots a bar from the estimated Moran's I value to +/- twice the square root of its variance (in previous releases only once, not twice).
+}
 
 \value{
   returns a list of class \code{spcor}:
@@ -46,7 +49,7 @@ forecasting models using space-time correlation functions, \emph{Transactions
 of the Institute of British Geographers}, 66, 95--118.}
 \author{Roger Bivand, \email{Roger.Bivand@nhh.no}}
 
-\seealso{\code{\link{nblag}}, \code{\link{moran}}}
+\seealso{\code{\link{nblag}}, \code{\link{moran}}, \code{\link[stats]{p.adjust}}}
 
 \examples{
 data(nc.sids)
@@ -54,14 +57,15 @@ ft.SID74 <- sqrt(1000)*(sqrt(nc.sids$SID74/nc.sids$BIR74) +
   sqrt((nc.sids$SID74+1)/nc.sids$BIR74))
 tr.SIDS74 <- ft.SID74*sqrt(nc.sids$BIR74)
 names(tr.SIDS74) <- rownames(nc.sids)
-print(sp.correlogram(ncCC89.nb, tr.SIDS74, order=8, method="corr",
- zero.policy=TRUE))
-print(sp.correlogram(ncCC89.nb, tr.SIDS74, order=8, method="I",
- zero.policy=TRUE))
-plot(sp.correlogram(ncCC89.nb, tr.SIDS74, order=8, method="I",
- zero.policy=TRUE))
-plot(sp.correlogram(ncCC89.nb, tr.SIDS74, order=8, method="corr",
- zero.policy=TRUE))
+cspc <- sp.correlogram(ncCC89.nb, tr.SIDS74, order=8, method="corr",
+ zero.policy=TRUE)
+print(cspc)
+plot(cspc)
+Ispc <- sp.correlogram(ncCC89.nb, tr.SIDS74, order=8, method="I",
+ zero.policy=TRUE)
+print(Ispc)
+print(Ispc, "bonferroni")
+plot(Ispc)
 drop.no.neighs <- !(1:length(ncCC89.nb) \%in\% which(card(ncCC89.nb) == 0))
 sub.ncCC89.nb <- subset(ncCC89.nb, drop.no.neighs)
 plot(sp.correlogram(sub.ncCC89.nb, subset(tr.SIDS74,  drop.no.neighs),

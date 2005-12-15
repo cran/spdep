@@ -73,7 +73,7 @@ lm.morantest.sad <- function (model, listw, zero.policy = FALSE,
     attr(internal2, "names") <- c("f.root", "iter", "estim.prec")
     method <- paste("Saddlepoint approximation for global Moran's I",
         "(Barndorff-Nielsen formula)")
-    data.name <- paste("\nmodel:", paste(strwrap(gsub("[ ]+", " ", 
+    data.name <- paste("\nmodel:", paste(strwrap(gsub("[[:space:]]+", " ", 
 	    paste(deparse(model$call), sep="", collapse=""))), collapse="\n"),
     	    "\nweights: ", deparse(substitute(listw)), "\n", sep="")
     res <- list(statistic = statistic, p.value = p.value,

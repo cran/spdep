@@ -4,6 +4,7 @@ anova.sarlm             Comparison of simultaneous autoregressive
                         models
 asMatrixCsrListw        Convert spatial weights list to CSR matrix form
 auckland                Marshall's infant mortality in Auckland dataset
+autocov_dist            Distance-weighted autocovariate
 baltimore               House sales prices, Baltimore, MD 1978
 boston                  Corrected Boston Housing Data
 bptest.sarlm            Breusch-Pagan test for spatial models
@@ -28,6 +29,8 @@ geary.mc                Permutation test for Geary's C statistic
 geary.test              Geary's C test for spatial autocorrelation
 getisord                Getis-Ord remote sensing example data
 globalG.test            test for spatial autocorrelation
+GMerrorsar              Spatial simultaneous autoregressive error model
+                        estimation by GMM
 hopkins                 Hopkins burnt savanna herb remains
 include.self            Include self in neighbours list
 intersect.nb            Set operations on neighborhood objects
@@ -71,6 +74,7 @@ nbdists                 Spatial link distance measures
 nblag                   Higher order neighbours lists
 n.comp.nb               Depth First Search on Neighbor Lists
 nc.sids                 North Carolina SIDS data
+NY_data                 New York leukemia data
 oldcol                  Columbus OH spatial analysis data set - old
                         numbering
 p.adjustSP              Adjust local association measures' p-values
@@ -85,6 +89,9 @@ residuals.sarlm         Access functions for spatial simultaneous
                         autoregressive linear model objects
 set.spChkOption         Control checking of spatial object IDs
 similar.listw           Create symmetric similar weights lists
+SpatialFiltering        Semi-parametric spatial filtering
+spautolm                Spatial conditional and simultaneous
+                        autoregression model estimation
 sp.correlogram          Spatial correlogram
 spdep                   Return package version number
 sp.mantel.mc            Mantel-Hubert spatial general cross product
