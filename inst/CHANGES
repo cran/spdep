@@ -1,3 +1,10 @@
+0.3-17 Added function spautolm for weighted and unweighted SAR and CAR spatial
+	regression, Luc Anselin's implementation of the Kelejian-Prucha
+	GM error SAR estimator, and a function with examples by Carsten Dormann
+	for generating autocovariates for adding to various models. Otherwise
+	a couple of small fixes, and a first attempt to let poly2nb() work 
+	with sp polygons. It also includes SpatialFiltering by Yongwan Chun 
+	and Michael Tiefelsdorf for semi-parametric spatial filtering.
 0.3-13 Addition of an example for nb2listw to show how the glist= argument
 	can be used to exclude neighbour links based on observation pair 
 	criteria (houses neighbours with reference to sales price if sold

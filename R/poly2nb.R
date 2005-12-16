@@ -5,7 +5,11 @@
 
 poly2nb <- function(pl, row.names=NULL, snap=sqrt(.Machine$double.eps),
 	queen=TRUE) {
-	if (!inherits(pl, "polylist")) stop("Not a polygon list")
+	if (!inherits(pl, "polylist")) {
+		if (inherits(pl, "SpatialPolygons"))
+			pl <- maptools:::.SpP2polylist(pl)
+		else stop("Not a polygon list")
+	}
 	if (inherits(pl, "multiparts")) stop("Convert to newer polylist format")
 	n <- length(pl)
 	if (n < 1) stop("non-positive number of entities")
