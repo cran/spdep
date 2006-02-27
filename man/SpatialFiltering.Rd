@@ -8,12 +8,12 @@
   The function selects eigenvectors in a semi-parametric spatial filtering approach to removing spatial dependence from linear models. Selection is by brute force by finding the single eigenvector reducing the standard variate of Moran's I for regression residuals most, and continuing until no candidate eigenvector reduces the value by more than \code{tol}. It returns a summary table from the selection process and a matrix of selected eigenvectors for the specified model.
 }
 \usage{
-SpatialFiltering(formula, lagformula, data, nb, glist = NULL, style = "C", zero.policy = FALSE, tol = 0.1, zerovalue = 1e-04, ExactEV = FALSE, symmetric = TRUE)
+SpatialFiltering(formula, lagformula, data, nb, glist = NULL, style = "C", zero.policy = FALSE, tol = 0.1, zerovalue = 1e-04, ExactEV = FALSE, symmetric = TRUE, alpha=NULL, alternative="two.sided", verbose=TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{formula}{a symbolic description of the model to be fit, assuming a spatial error representation; when lagformula is given, it should include only the response and the intercept term}
-  \item{lagformula}{An extra one-sided formula to be used when a spatial lag representation is desired; the intercept must be excluded because it is part of the formula}
+  \item{lagformula}{An extra one-sided formula to be used when a spatial lag representation is desired; the intercept is excluded within the function if present because it is part of the formula argument, but excluding it explicitly in the lagformula argument in the presence of factors generates a collinear model matrix}
   \item{data}{an optional data frame containing the variables in the model}
   \item{nb}{an object of class \code{nb}}
   \item{glist}{list of general weights corresponding to neighbours}
@@ -23,6 +23,9 @@ SpatialFiltering(formula, lagformula, data, nb, glist = NULL, style = "C", zero.
   \item{zerovalue}{eigenvectors with eigenvalues of an absolute value smaller than zerovalue will be excluded in eigenvector search}
   \item{ExactEV}{Set ExactEV=TRUE to use exact expectations and variances rather than the expectation and variance of Moran's I from the previous iteration, default FALSE}
   \item{symmetric}{Should the spatial weights matrix be forced to symmetry, default TRUE}
+  \item{alpha}{if not NULL, used instead of the tol= argument as a stopping rule to choose all eigenvectors up to and including the one with a probability value exceeding alpha.}
+  \item{alternative}{a character string specifying the alternative hypothesis, must be one of greater, less or two.sided (default).}
+  \item{verbose}{if TRUE report eigenvectors selected}
 }
 \details{
   
@@ -36,6 +39,7 @@ SpatialFiltering(formula, lagformula, data, nb, glist = NULL, style = "C", zero.
       \item{Eval}{its associated eigenvalue}
       \item{MinMi}{value Moran's I for residual autocorrelation}
       \item{ZMinMi}{standardized value of Moran's I assuming a normal approximation}
+      \item{pr(ZI)}{probability value of the permutation-based standardized deviate for the given value of the alternative argument}
       \item{R2}{R\^2 of the model including exogenous variables and eigenvectors}
       \item{gamma}{regression coefficient of selected eigenvector in fit}
     }

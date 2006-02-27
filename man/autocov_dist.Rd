@@ -22,7 +22,7 @@ autocov_dist(z, xy, nbs = 1, type = "inverse", zero.policy = FALSE, style = "W",
 \value{
   A numeric vector of autocovariate values
 }
-
+\references{Augustin N.H., Mugglestone M.A. and Buckland S.T. (1996) An autologistic model for the spatial distribution of wildlife. \emph{Journal of Applied Ecology}, 33, 339-347; Gumpertz M.L., Graham J.M. and Ristaino J.B. (1997) Autologistic model of spatial pattern of Phytophthora epidemic in bell pepper: effects of soil variables on disease presence. \emph{Journal of Agricultural, Biological and Environmental Statistics}, 2, 131-156.}
 \author{Carsten F. Dormann and Roger Bivand}
 
 \seealso{\code{\link{nb2listw}}}

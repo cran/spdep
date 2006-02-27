@@ -59,8 +59,10 @@ predict.sarlm <- function(object, newdata=NULL, listw=NULL,
 			if (nrow(newdata) != length(listw$neighbours))
 				stop("mismatch between newdata and spatial weights")
 			B <- coefficients(object$lm.target)
-			mt <- terms(object$formula, data = newdata)
-			mf <- lm(object$formula, newdata, method="model.frame")
+#			mt <- terms(object$formula, data = newdata)
+			mt <- delete.response(terms(object$formula))
+#			mf <- lm(object$formula, newdata, method="model.frame")
+			mf <- model.frame(mt, newdata)
 			X <- model.matrix(mt, mf)
 			K <- ifelse(colnames(X)[1] == "(Intercept)", 2, 1)
 			m <- ncol(X)
@@ -87,8 +89,12 @@ predict.sarlm <- function(object, newdata=NULL, listw=NULL,
 			if (nrow(newdata) != length(listw$neighbours))
 				stop("mismatch between newdata and spatial weights")
 			B <- coefficients(object$lm.target)
-			mt <- terms(object$formula, data = newdata)
-			mf <- lm(object$formula, newdata, method="model.frame")
+#			mt <- terms(object$formula, data = newdata)
+			mt <- delete.response(terms(object$formula))
+#			mf <- lm(object$formula, newdata, method="model.frame")
+# resolved problem of missing response column in newdata reported by
+# Christine N. Meynard, 060201
+			mf <- model.frame(mt, newdata)
 			X <- model.matrix(mt, mf)
 			trend <- X %*% B
 			raw.sig <- invIrW(listw, object$rho) %*% trend

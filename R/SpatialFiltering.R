@@ -1,4 +1,4 @@
-SpatialFiltering <- function (formula, lagformula, data, nb, glist=NULL, style="C", zero.policy=FALSE, tol=0.1, zerovalue = 0.0001, ExactEV=FALSE, symmetric=TRUE) {
+SpatialFiltering <- function (formula, lagformula, data=list(), nb, glist=NULL, style="C", zero.policy=FALSE, tol=0.1, zerovalue = 0.0001, ExactEV=FALSE, symmetric=TRUE, alpha=NULL, alternative="two.sided", verbose=TRUE) {
     #tol      : tolerance value for convergence of spatial filtering (Moran's I). 
     #           The search for eigenvector terminates, once the residual autocorrelation falls below
     #           abs(Moran’s I) < tol
@@ -13,11 +13,13 @@ SpatialFiltering <- function (formula, lagformula, data, nb, glist=NULL, style="
     #ExactEV   : In some incidences the approximation of using the expectation and variance of Moran's I
     #            from the previous iteration will lead to inversions. Set ExactEV=TRUE in this situation
     #            to use exact expectations and variances
+    #alpha:      Added for Pedro Peres-Neto to explore its consequences as compared to tol= as a stopping rule.
     #
     #           Authors: Yongwan Chun and Michael Tiefelsdorf
     #                    Dept. of Geography - The Ohio State University
     #                    Columbus, Ohio 43210
     #                    emails: chun.49@osu.edu and tiefelsdorf.1@osu.edu
+    #		Modified by Roger Bivand
     #
     # Reference: Tiefelsdorf M, Griffith DA. Semiparametric Filtering of Spatial 
     #            Autocorrelation: The Eigenvector Approach. Environment and Planning A 
@@ -59,7 +61,9 @@ SpatialFiltering <- function (formula, lagformula, data, nb, glist=NULL, style="
     if (missing(lagformula)) X <- xsar
     else {
 	xlag <- model.matrix(lagformula, data=data)
-	X <- cbind(xlag, xsar)
+	isIntercept <- match("(Intercept)", colnames(xlag))
+	if (!is.na(isIntercept)) xlag <- xlag[,-(isIntercept), drop=FALSE]
+	X <- cbind(xsar, xlag)
     }
     coll_test <- lm(y ~ X - 1)
     if (any(is.na(coefficients(coll_test)))) stop("Collinear RHS variable detected")
@@ -86,12 +90,34 @@ SpatialFiltering <- function (formula, lagformula, data, nb, glist=NULL, style="
     #   [3] its associated eigenvalue
     #   [4] value Moran's I for residual autocorrelation
     #   [5] standardized value of Moran's I assuming a normal approximation
-    #   [6] R^2 of the model including exogenous variables and eigenvectors
-    #
-    #Store the results at Step 0 (i.e., no eigevector selected yet)
-    out <- c(0,0,0,(crossprod(y, MSM) %*% y) / (crossprod(y, M) %*% y),
-            ((crossprod(y,MSM) %*% y) / (crossprod(y, M) %*% y) - E) / sqrt(V),
-            1 - ((crossprod(y, M) %*% y) / TSS))    
+    #   [6] p-value of [5] for given alternative
+    #   [7] R^2 of the model including exogenous variables and eigenvectors
+    #   c("Step","SelEvec","Eval","MinMi","ZMinMi","R2","gamma")
+    #Store the results at Step 0 (i.e., no eigenvector selected yet)
+    cyMy <- crossprod(y, M) %*% y
+    cyMSMy <- crossprod(y, MSM) %*% y
+    IthisTime <- (cyMSMy) / (cyMy)
+    zIthisTime <- (IthisTime - E) / sqrt(V)
+    altfunc <- function(ZI, alternative="two.sided") {
+        if (alternative == "two.sided") 
+	    PrI <- 2 * pnorm(abs(ZI), lower.tail=FALSE)
+        else if (alternative == "greater")
+            PrI <- pnorm(ZI, lower.tail=FALSE)
+        else PrI <- pnorm(ZI)
+        PrI
+    }
+
+    out <- c(	0,
+		0,
+		0,
+		IthisTime,
+            	zIthisTime,
+		altfunc(zIthisTime, alternative=alternative),
+            	1 - ((cyMy) / TSS)
+	    )
+    if (verbose) cat("Step", out[1], "SelEvec", out[2], "MinMi", out[4], 
+	"ZMinMi", out[5],"Pr(ZI)", out[6], "\n")
+    Aout <- out
     
     #Define search eigenvalue range
     #The search range is restricted into a sign range based on Moran's I
@@ -184,12 +210,21 @@ SpatialFiltering <- function (formula, lagformula, data, nb, glist=NULL, style="
         ZMinMi <- ((MinMi - E) / sqrt(V))
                 
         #Add results of i-th step
-        out <- rbind(out, c(i, idx, val[idx],MinMi,ZMinMi, (1 - (crossprod(y, M) %*% y / TSS))))
+	out <- c(i, idx, val[idx],MinMi,ZMinMi, altfunc(ZMinMi, 
+	    alternative=alternative), (1 - (crossprod(y, M) %*% y / TSS)))
+	if (verbose) cat("Step", out[1], "SelEvec", out[2], "MinMi", 
+	    out[4], "ZMinMi", out[5],"Pr(ZI)", out[6], "\n")
+
+        Aout <- rbind(Aout, out)
 
         #To exclude the selected eigenvector in the next loop
         sel[idx,3] <- 0 
 
-        if (abs(ZMinMi) < tol) break
+        if (is.null(alpha)) {
+	    if (abs(ZMinMi) < tol) break
+	} else {
+	    if (altfunc(ZMinMi, alternative=alternative) >= alpha) break
+	}
         if (!ExactEV) {
            if (abs(ZMinMi) > abs(oldZMinMi)) {
            cat("   An inversion has been detected. The procedure will terminate now.\n")
@@ -207,8 +242,8 @@ SpatialFiltering <- function (formula, lagformula, data, nb, glist=NULL, style="
         
     #Formatting the output
     gammas <- rbind(0, gammas)                 # Add 0 for iteration zero
-    out <- cbind(out,gammas)    
-    colnames(out) <- c("Step","SelEvec","Eval","MinMi","ZMinMi","R2","gamma")
+    out <- cbind(Aout,gammas)    
+    colnames(out) <- c("Step","SelEvec","Eval","MinMi","ZMinMi","Pr(ZI)","R2","gamma")
     rownames(out) <- out[,1]
     
     selVec <- vec[,out[,2]]

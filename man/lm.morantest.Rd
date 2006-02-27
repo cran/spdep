@@ -1,4 +1,4 @@
-% Copyright 2001-4 by Roger S. Bivand
+% Copyright 2001-5 by Roger S. Bivand
 \name{lm.morantest}
 \alias{lm.morantest}
 \alias{listw2U}
@@ -37,6 +37,8 @@ variance under the method assumption.}
 
 \seealso{\code{\link{lm.LMtests}}, \code{\link{lm}}}
 
+\note{The examples also show how to use permutation bootstrap if desired.}
+
 \examples{
 data(oldcol)
 oldcrime1.lm <- lm(CRIME ~ 1, data = COL.OLD)
@@ -50,5 +52,21 @@ moran.test(spNamedVec("CRIME", COL.OLD), nb2listw(COL.nb, style="W"),
 oldcrime.wlm <- lm(CRIME ~ HOVAL + INC, data = COL.OLD, weights = I(1/AREA))
 lm.morantest(oldcrime.wlm, nb2listw(COL.nb, style="W"), resfun=weighted.residuals)
 lm.morantest(oldcrime.wlm, nb2listw(COL.nb, style="W"), resfun=rstudent)
+if (require(boot)) {
+  oldcrime.lmx <- lm(CRIME ~ HOVAL + INC, data = COL.OLD, x=TRUE)
+  listw <- nb2listw(COL.nb, style="W")
+  MoraneI.boot <- function(var, i, ...) {
+    var <- var[i]
+    lmres <- lm(var ~ oldcrime.lmx$x - 1)
+    return(moran(x=residuals(lmres), ...)$I)
+  }
+  boot1 <- boot(residuals(oldcrime.lmx), statistic=MoraneI.boot, R=499,
+    sim="permutation", listw=listw, n=length(listw$neighbours), S0=Szero(listw))
+  zi <- (boot1$t0 - mean(boot1$t))/sqrt(var(boot1$t))
+  boot1
+  plot(boot1)
+  cat("Bootstrap permutation standard deviate:", zi, "\n\n")
+  lm.morantest(oldcrime.lm, nb2listw(COL.nb, style="W"))
+}
 }
 \keyword{spatial}

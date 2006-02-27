@@ -1,10 +1,10 @@
-# Copyright 1998-2005 by Roger Bivand (non-W styles Rein Halbersma)
+# Copyright 1998-2006 by Roger Bivand (non-W styles Rein Halbersma)
 #
 
 errorsarlm <- function(formula, data = list(), listw, na.action=na.fail, 
 	method="eigen", quiet=TRUE, zero.policy=FALSE, interval=c(-1,0.999), 
 	tol.solve=1.0e-10, tol.opt=.Machine$double.eps^0.5, control, 
-	optim=FALSE) {
+	optim=FALSE, cholAlloc=NULL) {
 	mt <- terms(formula, data = data)
 	mf <- lm(formula, data, na.action=na.action, method="model.frame")
 	na.act <- attr(mf, "na.action")
@@ -121,7 +121,15 @@ errorsarlm <- function(formula, data = list(), listw, na.action=na.fail,
 #		} else csrw <- asMatrixCsrListw(listw)
 		gc(FALSE)
 		I <- asMatrixCsrI(n)
-		tmpmax <- sum(card(listw$neighbours)) + n
+		if (is.null(cholAlloc)) {
+		# Martin Reismann large sparse nnzlmax problem
+			nlink <- sum(card(listw$neighbours))
+			tmpmax <- 3 * (nlink + n)
+			nnzlmax <- max(10*nlink, floor(.2*nlink^1.4))
+			nsubmax <- tmpmax
+			cholAlloc <- list(nsubmax=nsubmax, nnzlmax=nnzlmax,
+				tmpmax=tmpmax)
+		}
 		# tmpmax and gc() calls: Danlin Yu 20041213
 		if (optim) {
 		    lm.rho <- lm.fit(cbind(x, wy), y)
@@ -133,7 +141,7 @@ errorsarlm <- function(formula, data = list(), listw, na.action=na.fail,
 			upper=interval[2],
 			control=control, 
 			csrw=csrw, I=I, y=y, wy=wy, x=x, WX=WX, 
-			n=n, tmpmax=tmpmax, quiet=quiet)
+			n=n, tmpmax=cholAlloc$tmpmax, quiet=quiet)
 		    if (opt$convergence == 1) warning("iteration limit reached")
 		    if (opt$convergence == 51) warning(opt$message)
 		    if (opt$convergence == 52) warning(opt$message)
@@ -143,7 +151,7 @@ errorsarlm <- function(formula, data = list(), listw, na.action=na.fail,
 		} else {
 		    opt <- optimize(sar.error.f.sM, interval=interval, 
 			maximum=TRUE, tol=tol.opt, csrw=csrw, I=I, y=y, wy=wy, 
-			x=x, WX=WX, n=n, tmpmax=tmpmax, quiet=quiet)
+			x=x, WX=WX, n=n, cholAlloc=cholAlloc, quiet=quiet)
 		    lambda <- opt$maximum
 		    names(lambda) <- "lambda"
 		    LL <- opt$objective
@@ -220,14 +228,16 @@ sar.error.f <- function(lambda, eig, y, wy, x, WX, n, quiet)
 }
 
 
-sar.error.f.sM <- function(lambda, csrw, I, y, wy, x, WX, n, tmpmax, quiet) {
+sar.error.f.sM <- function(lambda, csrw, I, y, wy, x, WX, n, cholAlloc, quiet) {
 	yl <- y - lambda*wy
 	xl <- x - lambda*WX
 	xl.q <- qr.Q(qr(xl))
 	xl.q.yl <- t(xl.q) %*% yl
 	SSE <- t(yl) %*% yl - t(xl.q.yl) %*% xl.q.yl
 	s2 <- SSE/n
-	Jacobian <- log(det(chol((I - lambda * csrw), tmpmax=tmpmax))^2)
+	Jacobian <- log(det(chol((I - lambda * csrw), 
+		nsubmax=cholAlloc$nsubmax, nnzlmax=cholAlloc$nnzlmax, 
+		tmpmax=cholAlloc$tmpmax))^2)
 	gc(FALSE)
 	ret <- (Jacobian -
 		((n/2)*log(2*pi)) - (n/2)*log(s2) - (1/(2*(s2)))*SSE)
