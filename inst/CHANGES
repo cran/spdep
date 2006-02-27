@@ -1,3 +1,4 @@
+0.3-20 Fix for method="SparseM" when memory allocation in chol() failed
 0.3-17 Added function spautolm for weighted and unweighted SAR and CAR spatial
 	regression, Luc Anselin's implementation of the Kelejian-Prucha
 	GM error SAR estimator, and a function with examples by Carsten Dormann

@@ -1,7 +1,8 @@
-# Copyright 2005 by Roger Bivand
+# Copyright 2005-6 by Roger Bivand
 spautolm <- function(formula, data = list(), listw, weights=NULL,
     na.action=na.fail, verbose=FALSE, tol.opt=.Machine$double.eps^(2/3),
-    family="SAR", method="full", interval=c(-1,0.999), zero.policy=FALSE) 
+    family="SAR", method="full", interval=c(-1,0.999), zero.policy=FALSE,
+    cholAlloc=NULL) 
 {
     if (!inherits(listw, "listw")) 
         stop("No neighbourhood list")
@@ -84,13 +85,22 @@ spautolm <- function(formula, data = list(), listw, weights=NULL,
 	gc(FALSE)
         weights <- new("matrix.csr", ra=weights, ja=1:n, ia=1:(n+1), 
 	    dimension=c(n,n))
-	tmpmax <- sum(card(listw$neighbours)) + n
+#	tmpmax <- sum(card(listw$neighbours)) + n
+	if (is.null(cholAlloc)) {
+	# Martin Reismann large sparse nnzlmax problem
+		nlink <- sum(card(listw$neighbours))
+		tmpmax <- 3 * (nlink + n)
+		nnzlmax <- max(10*nlink, floor(.2*nlink^1.4))
+		nsubmax <- tmpmax
+		cholAlloc <- list(nsubmax=nsubmax, nnzlmax=nnzlmax,
+			tmpmax=tmpmax)
+	}
 # do line search
         opt <- optimize(.opt.fit.SparseM, lower=interval[1],
             upper=interval[2], maximum=TRUE,
             tol = tol.opt, Y=Y, X=X, n=n, W=W, W_J=W_J, I=I,
             weights=weights, sum_lw=sum_lw, family=family,
-            verbose=verbose, tmpmax=tmpmax)
+            verbose=verbose, cholAlloc=cholAlloc)
         lambda <- opt$maximum
         names(lambda) <- "lambda"
         LL <- opt$objective
@@ -105,7 +115,7 @@ spautolm <- function(formula, data = list(), listw, weights=NULL,
 # get null LL
         LL0 <- .opt.fit.SparseM(lambda=0, Y=Y, X=X, n=n, W=W, W_J=W_J, I=I,
             weights=weights, sum_lw=sum_lw, family=family, verbose=FALSE,
-            tmpmax=tmpmax)
+            cholAlloc=cholAlloc)
         weights <- diag(weights)
     } else stop("unknown method")
     res <- list(fit=fit, lambda=lambda, LL=LL, LL0=LL0, call=match.call(),
@@ -140,12 +150,13 @@ spautolm <- function(formula, data = list(), listw, weights=NULL,
 }
 
 .opt.fit.SparseM <- function(lambda, Y, X, n, W, W_J, I, weights, sum_lw,
-    family="SAR", verbose=TRUE, tmpmax) {
+    family="SAR", verbose=TRUE, cholAlloc) {
 # fitting function called from optimize()
     SSE <- .SPAR.fit(lambda=lambda, Y=Y, X=X, n=n, W=W, weights=weights,
         I=I, family=family, out=FALSE)
     s2 <- SSE/n
-    Jacobian <- log(det(chol((I - lambda * W_J), tmpmax=tmpmax))^2)
+    Jacobian <- log(det(chol((I - lambda * W_J), nsubmax=cholAlloc$nsubmax, 
+	nnzlmax=cholAlloc$nnzlmax, tmpmax=cholAlloc$tmpmax))^2)
     gc(FALSE)
     ret <- ((1/ifelse((length(grep("CAR", family)) != 0), 2, 1))*Jacobian +
 	(1/2)*sum_lw - ((n/2)*log(2*pi)) - (n/2)*log(s2) - (1/(2*(s2)))*SSE)

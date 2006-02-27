@@ -25,7 +25,6 @@ Luc Anselin (2003): Spatial Analysis Laboratory, Department of Agricultural and 
 The function \code{read.gal()} returns an object of class \code{nb} with a list of integer vectors containing neighbour region number ids. The function \code{read.geoda} returns a data frame, and issues a warning if the returned object has only one column.
 }
 
-\warning{The column names read by \code{read.geoda()} change between R releases 1.8.x and 1.9.0, because the underscore character becomes a valid character from that release.}
 
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 

@@ -4,7 +4,8 @@
 lagsarlm <- function(formula, data = list(), listw, 
 	na.action=na.fail, type="lag", method="eigen", quiet=TRUE, 
 	zero.policy=FALSE, interval=c(-1,0.999), tol.solve=1.0e-10, 
-	tol.opt=.Machine$double.eps^0.5, control, optim=FALSE) {
+	tol.opt=.Machine$double.eps^0.5, control, optim=FALSE, 
+	cholAlloc=NULL) {
 	mt <- terms(formula, data = data)
 	mf <- lm(formula, data, na.action=na.action, 
 		method="model.frame")
@@ -145,7 +146,7 @@ lagsarlm <- function(formula, data = list(), listw,
 		opt <- dosparse(listw=listw, y=y, x=x, wy=wy, K=K, quiet=quiet,
 			tol.opt=tol.opt, control=control, method=method, 
 			interval=interval, can.sim=can.sim, optim=optim,
-			zero.policy=zero.policy)
+			cholAlloc=cholAlloc, zero.policy=zero.policy)
 		rho <- c(opt$maximum)
 		names(rho) <- "rho"
 		LL <- c(opt$objective)
@@ -235,11 +236,12 @@ sar.lag.mixed.f <- function(rho, eig, e.a, e.b, e.c, n, quiet)
 
 
 
-sar.lag.mix.f.sM <- function(rho, W, I, e.a, e.b, e.c, n, tmpmax, quiet)
+sar.lag.mix.f.sM <- function(rho, W, I, e.a, e.b, e.c, n, cholAlloc, quiet)
 {
 	SSE <- e.a - 2*rho*e.b + rho*rho*e.c
 	s2 <- SSE/n
-	Jacobian <- log(det(chol((I - rho * W), tmpmax=tmpmax))^2)
+	Jacobian <- log(det(chol((I - rho * W), nsubmax=cholAlloc$nsubmax, 
+	    nnzlmax=cholAlloc$nnzlmax, tmpmax=cholAlloc$tmpmax))^2)
 	gc(FALSE)
 	ret <- (Jacobian
 		- ((n/2)*log(2*pi)) - (n/2)*log(s2) - (1/(2*s2))*SSE)
@@ -249,7 +251,8 @@ sar.lag.mix.f.sM <- function(rho, W, I, e.a, e.b, e.c, n, tmpmax, quiet)
 }
 
 dosparse <- function (listw, y, x, wy, K, quiet, tol.opt, 
-	control, method, interval, can.sim, optim, zero.policy=FALSE) {
+	control, method, interval, can.sim, optim, cholAlloc=cholAlloc, 
+	zero.policy=FALSE) {
 	similar <- FALSE
 	m <- ncol(x)
 	n <- nrow(x)
@@ -262,7 +265,16 @@ dosparse <- function (listw, y, x, wy, K, quiet, tol.opt,
 		} else W <- asMatrixCsrListw(listw, zero.policy=zero.policy)
 #		} else W <- asMatrixCsrListw(listw)
 		I <- asMatrixCsrI(n)
-		tmpmax <- sum(card(listw$neighbours)) + n
+		if (is.null(cholAlloc)) {
+		# Martin Reismann large sparse nnzlmax problem
+			nlink <- sum(card(listw$neighbours))
+			tmpmax <- 3 * (nlink + n)
+			nnzlmax <- max(10*nlink, floor(.2*nlink^1.4))
+			nsubmax <- tmpmax
+			cholAlloc <- list(nsubmax=nsubmax, nnzlmax=nnzlmax,
+				tmpmax=tmpmax)
+		}
+#		tmpmax <- sum(card(listw$neighbours)) + n
 		# tmpmax and gc() calls: Danlin Yu 20041213
 		gc(FALSE)
 	}
@@ -291,7 +303,7 @@ dosparse <- function (listw, y, x, wy, K, quiet, tol.opt,
 			    upper=interval[2],
 			    control=control, 
 			    W=W, I=I, e.a=e.a, e.b=e.b, e.c=e.c, n=n, 
-			    tmpmax=tmpmax, quiet=quiet)
+			    tmpmax=cholAlloc$tmpmax, quiet=quiet)
 			if (opt$convergence == 1) 
 				warning("iteration limit reached")
 			if (opt$convergence == 51) warning(opt$message)
@@ -300,7 +312,7 @@ dosparse <- function (listw, y, x, wy, K, quiet, tol.opt,
 		} else {
 			LLs[[j]] <- optimize(sar.lag.mix.f.sM,
 			interval=interval, maximum=TRUE, tol=tol.opt, W=W, I=I,
-			e.a=e.a, e.b=e.b, e.c=e.c, n=n, tmpmax=tmpmax, 
+			e.a=e.a, e.b=e.b, e.c=e.c, n=n, cholAlloc=cholAlloc, 
 			quiet=quiet)$objective
 		}
 		gc(FALSE)
@@ -330,7 +342,7 @@ dosparse <- function (listw, y, x, wy, K, quiet, tol.opt,
 		    upper=interval[2],
 		    control=control, 
 		    W=W, I=I, e.a=e.a, e.b=e.b, e.c=e.c, n=n, 
-		    tmpmax=tmpmax, quiet=quiet)	
+		    tmpmax=cholAlloc$tmpmax, quiet=quiet)	
 		if (opt$convergence == 1) warning("iteration limit reached")
 		if (opt$convergence == 51) warning(opt$message)
 		if (opt$convergence == 52) warning(opt$message)
@@ -339,7 +351,8 @@ dosparse <- function (listw, y, x, wy, K, quiet, tol.opt,
 	} else {
 		opt <- optimize(sar.lag.mix.f.sM,
 		    interval=interval, maximum=TRUE, tol=tol.opt, W=W, I=I,
-		    e.a=e.a, e.b=e.b, e.c=e.c, n=n, tmpmax=tmpmax, quiet=quiet)
+		    e.a=e.a, e.b=e.b, e.c=e.c, n=n, cholAlloc=cholAlloc, 
+		    quiet=quiet)
 		maximum <- opt$maximum
 		objective <- opt$objective
 	}

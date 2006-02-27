@@ -10,12 +10,12 @@ error models of the form:
 
 \deqn{y = X \beta + u, u = \lambda W u + \varepsilon}{y = X beta + u, u = lambda W u + e}
 
-where $\lambda$ is found by \code{optimize()}, or by \code{optim()} using method "L-BFGS-B" if argument optim=TRUE, first, and $\beta$ and other parameters by generalized least squares subsequently.
+where $\lambda$ is found by \code{optimize()} (prefered), or by \code{optim()} using method "L-BFGS-B" if argument optim=TRUE, first, and $\beta$ and other parameters by generalized least squares subsequently (one-dimensional search using optim performs badly on some platforms).
 }
 \usage{
 errorsarlm(formula, data=list(), listw, na.action=na.fail, method="eigen",
   quiet=TRUE, zero.policy=FALSE, interval = c(-1, 0.999), tol.solve=1.0e-10, 
-  tol.opt=.Machine$double.eps^0.5, control, optim=FALSE)
+  tol.opt=.Machine$double.eps^0.5, control, optim=FALSE, cholAlloc=NULL)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
@@ -37,7 +37,7 @@ neighbours, if FALSE (default) assign NA - causing \code{errorsarlm()} to termin
   \item{tol.opt}{the desired accuracy of the optimization - passed to \code{optim()} (default=square root of double precision machine tolerance, a larger root may be used if the warning: ERROR: ABNORMAL\_TERMINATION\_IN\_LNSRCH is seen, see help(boston) for an example)}
   \item{control}{A list of control parameters passed to \code{optim}, se details in \code{\link[stats]{optim}}}
   \item{optim}{If TRUE use experimental \code{optim} branch and control argument}
-
+  \item{cholAlloc}{control arguments for memory allocation in \code{chol} for sparse matrices in method="SparseM": if NULL, default values are used (larger than SparseM defaults), otherwise a list with elements: nsubmax, nnzlmax, and tmpmax, for example cholAlloc=list(nsubmax=25000, nnzlmax=100000, tmpmax=25000)}
 }
 \details{
   The asymptotic standard error of $\lambda$ is only computed when
@@ -49,8 +49,6 @@ block-diagonal, and with the elements involving lambda being very small,
 while other parts of the matrix can be very large (often many orders
 of magnitude in difference). It often happens that the \code{tol.solve}
 argument needs to be set to a smaller value than the default, or the RHS variables can be centred or reduced in range.
-
-
 }
 \value{
   A list object of class \code{sarlm}

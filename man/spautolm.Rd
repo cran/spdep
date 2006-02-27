@@ -17,7 +17,7 @@
  Function taking family and weights arguments for spatial autoregression model estimation by Maximum Likelihood, using full matrix methods, not suited to large data sets with thousands of observations. The implementation is GLS using the single spatial coefficient value, here termed lambda, found by line search using \code{optimize} to maximise the log likelihood.
 }
 \usage{
-spautolm(formula, data = list(), listw, weights = NULL, na.action=na.fail, verbose = FALSE, tol.opt = .Machine$double.eps^(2/3), family = "SAR", method="full", interval=c(-1,0.999), zero.policy = FALSE)
+spautolm(formula, data = list(), listw, weights = NULL, na.action=na.fail, verbose = FALSE, tol.opt = .Machine$double.eps^(2/3), family = "SAR", method="full", interval=c(-1,0.999), zero.policy = FALSE, cholAlloc=NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -35,6 +35,7 @@ is called.}
   \item{method}{character string: default "full" for use of full matrices, "SparseM" for sparse matrices (restricted to spatial weights symmetric or similar to symmetric)}
   \item{interval}{search interval for autoregressive parameter when not using method="eigen"; default is c(-1,0.999), \code{optimize} will reset NA/NaN to a bound and gives a warning when the interval is poorly set}
   \item{zero.policy}{Include list of no-neighbour observations in output if TRUE --- otherwise zero.policy is handled within the listw argument}
+  \item{cholAlloc}{control arguments for memory allocation in \code{chol} for sparse matrices in method="SparseM": if NULL, default values are used (larger than SparseM defaults), otherwise a list with elements: nsubmax, nnzlmax, and tmpmax, for example cholAlloc=list(nsubmax=25000, nnzlmax=100000, tmpmax=25000)}
 }
 \details{
   This implementation is based on \code{\link[MASS]{lm.gls}} and \code{\link{errorsarlm}}, and should be treated as preliminary. In particular, the function does not (yet) prevent asymmetric spatial weights being used with "CAR" family models. It appears that both numerical issues (convergence in particular) and uncertainties about the exact spatial weights matrix used make it difficult to reproduce Cressie and Chan's 1989 results, also given in Cressie 1993.

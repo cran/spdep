@@ -8,13 +8,13 @@ lag and mixed models of the form:
 
 \deqn{y = \rho W y + X \beta + \varepsilon}{y = rho W y + X beta + e}
 
-where $\rho$ is found by \code{optimize()}, or \code{optim()} using method "L-BFGS-B" if argument optim=TRUE, first, and $\beta$ and other parameters by generalized least squares subsequently. In the mixed model, the spatially lagged independent variables are added to X.
+where $\rho$ is found by \code{optimize()} (prefered), or \code{optim()} using method "L-BFGS-B" if argument optim=TRUE, first, and $\beta$ and other parameters by generalized least squares subsequently (one-dimensional search using optim performs badly on some platforms). In the mixed model, the spatially lagged independent variables are added to X.
 }
 \usage{
 lagsarlm(formula, data=list(), listw, na.action=na.fail,
   type="lag", method="eigen", quiet=TRUE,
   zero.policy=FALSE, interval = c(-1, 0.999), tol.solve=1.0e-10, 
-  tol.opt=.Machine$double.eps^0.5, control, optim=FALSE)
+  tol.opt=.Machine$double.eps^0.5, control, optim=FALSE, cholAlloc=NULL)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
@@ -37,6 +37,7 @@ neighbours, if FALSE (default) assign NA - causing \code{lagsarlm()} to terminat
   \item{tol.opt}{the desired accuracy of the optimization - passed to \code{optimize()} (default=square root of double precision machine tolerance)}
   \item{control}{A list of control parameters passed to \code{optim}, se details in \code{\link[stats]{optim}}}
   \item{optim}{If TRUE use experimental \code{optim} branch and control argument}
+  \item{cholAlloc}{control arguments for memory allocation in \code{chol} for sparse matrices in method="SparseM": if NULL, default values are used (larger than SparseM defaults), otherwise a list with elements: nsubmax, nnzlmax, and tmpmax, for example cholAlloc=list(nsubmax=25000, nnzlmax=100000, tmpmax=25000)}
 }
 \details{
   The asymptotic standard error of $\rho$ is only computed when

@@ -1,4 +1,4 @@
-# Copyright 2001-4 by Roger Bivand 
+# Copyright 2001-5 by Roger Bivand, bugfix large n Ronnie Babigumira
 #
 
 joincount <- function(dums, listw) {
@@ -42,7 +42,7 @@ joincount.test <- function(fx, listw, zero.policy=FALSE,
 	res <- vector(mode="list", length=nBB)
 	tab <- table(fx)
 	BB5 <- 0.5 * BB
-	ntab <- as.vector(tab)
+	ntab <- as.numeric(as.vector(tab))
 	Ejc <- (wc$S0*(ntab*(ntab-1))) / (2*n*wc$n1)
 	Vjc <- (wc$S1*(ntab*(ntab-1))) / (n*wc$n1)
 	Vjc <- Vjc + (((wc$S2 - 2*wc$S1)*ntab*(ntab-1)*(ntab-2)) /
@@ -183,7 +183,7 @@ joincount.multi <- function(fx, listw, zero.policy=FALSE,
 	rownames(res) <- colnames(res) <- levels(fx)
 
 	tab <- table(fx)
-	ntab <- as.vector(tab)
+	ntab <- as.numeric(as.vector(tab))
 	wc <- spweights.constants(listw, zero.policy=zero.policy)
 	S02 <- wc$S0*wc$S0
 
@@ -240,7 +240,7 @@ joincount.multi <- function(fx, listw, zero.policy=FALSE,
 		((2*S02*(2*n-3))/((n*wc$n1)*(n*wc$n1*wc$n2*wc$n3))))*
 		sum(nrns(ntab^2, op="*"))
 	if(k>2) {
-		ntnsnr <- 0
+		ntnsnr <- as.numeric(0)
 		for (r in 1:(k-2)) {
 			for (s in (r+1):(k-1)) {
 				for (t in (s+1):(k)) {
@@ -254,7 +254,7 @@ joincount.multi <- function(fx, listw, zero.policy=FALSE,
 		((8*S02)/((n*wc$n1*wc$n2)*wc$n1)))*ntnsnr
 	}
 	if(k>3) {
-		nuntnsnr <- 0
+		nuntnsnr <- as.numeric(0)
 		for (r in 1:(k-3)) {
 			for (s in (r+1):(k-2)) {
 				for (t in (s+1):(k-1)) {
