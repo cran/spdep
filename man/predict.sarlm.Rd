@@ -37,10 +37,14 @@ The function approaches prediction first by dividing invocations between
 those with or without newdata. When no newdata is present, the response 
 variable may be reconstructed as the sum of the trend, the signal, and the
 noise (residuals). Since the values of the response variable are known,
-their spatial lags are used to calculate signal components. For the error
+their spatial lags are used to calculate signal components (Cressie 1993, p. 564). For the error
 model, trend = \eqn{X \beta}{X beta}, and signal = \eqn{\lambda W y - 
 \lambda W X \beta}{lambda W y - lambda W X beta}. For the lag and mixed
 models, trend = \eqn{X \beta}{X beta}, and signal = \eqn{\rho W y}{rho W y}.
+
+This approach differs from the design choices made in other software, for
+example GeoDa, which does not use observations of the response variable,
+and corresponds to the newdata situation described below.
 
 When however newdata is used for prediction, no observations of the response 
 variable being predicted are available. Consequently, while the trend
@@ -77,7 +81,7 @@ returning a data frame with columns: "fit", "trend" and "signal".
 }
 
 \references{Haining, R. 1990 \emph{Spatial data analysis in the social
-and environmental sciences}, Cambridge: Cambridge University Press, p. 258.}
+and environmental sciences}, Cambridge: Cambridge University Press, p. 258; Cressie, N. A. C. 1993 \emph{Statistics for spatial data}, Wiley, New York.}
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 
 \seealso{\code{\link{errorsarlm}}, \code{\link{lagsarlm}}}

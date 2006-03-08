@@ -21,8 +21,7 @@ print.LMtestlist(x, ...)
 }
 
 \arguments{
-  \item{model}{an object of class \code{lm} returned by \code{lm}; weights
-and offsets should not be used}
+  \item{model}{an object of class \code{lm} returned by \code{lm} or optionally a vector of externally calculated residuals for use when only "LMerr" is chosen; weights and offsets should not be used in the \code{lm} object}
   \item{listw}{a \code{listw} object created for example by \code{nb2listw},
 expected to be row-standardised (W-style)}
   \item{zero.policy}{if TRUE assign zero to the lagged value of zones without
@@ -75,5 +74,7 @@ oldcrime.lm <- lm(CRIME ~ HOVAL + INC, data = COL.OLD)
 summary(oldcrime.lm)
 lm.LMtests(oldcrime.lm, nb2listw(COL.nb), test=c("LMerr", "LMlag", "RLMerr",
   "RLMlag", "SARMA"))
+lm.LMtests(oldcrime.lm, nb2listw(COL.nb))
+lm.LMtests(residuals(oldcrime.lm), nb2listw(COL.nb))
 }
 \keyword{spatial}

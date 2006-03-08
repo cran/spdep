@@ -39,6 +39,13 @@ is called.}
 }
 \details{
   This implementation is based on \code{\link[MASS]{lm.gls}} and \code{\link{errorsarlm}}, and should be treated as preliminary. In particular, the function does not (yet) prevent asymmetric spatial weights being used with "CAR" family models. It appears that both numerical issues (convergence in particular) and uncertainties about the exact spatial weights matrix used make it difficult to reproduce Cressie and Chan's 1989 results, also given in Cressie 1993.
+
+Note that the fitted() function for the output object assumes that the response 
+variable may be reconstructed as the sum of the trend, the signal, and the
+noise (residuals). Since the values of the response variable are known,
+their spatial lags are used to calculate signal components (Cressie 1993, p. 564). This differs from other software, including GeoDa, which does not use knowledge of the response 
+variable in making predictions for the fitting data.
+
 }
 \value{
   A list object of class \code{spautolm}:

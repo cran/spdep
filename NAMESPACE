@@ -8,6 +8,7 @@ importMethodsFrom(SparseM, "%*%")
 importMethodsFrom(SparseM, t)
 importClassesFrom(SparseM, matrix.csr)
 importFrom(stats, model.matrix, model.response)
+import(boot)
 
 export(EBImoran.mc, probmap, choynowski, EBest, EBlocal, LR.sarlm, 
 	LR1.sarlm, Wald1.sarlm, airdist, card, rookcell, 
@@ -43,7 +44,9 @@ export(spautolm, residuals.spautolm, deviance.spautolm, coef.spautolm,
 	logLik.spautolm, print.summary.spautolm, autocov_dist, GMerrorsar, 
 	residuals.gmsar, deviance.gmsar, coef.gmsar, fitted.gmsar, 
 	print.gmsar, summary.gmsar, LR1.gmsar, logLik.gmsar, 
-	print.summary.gmsar, SpatialFiltering, print.SFResult, fitted.SFResult)
+	print.summary.gmsar, SpatialFiltering, print.SFResult, fitted.SFResult,
+	ME, print.ME_res, fitted.ME_res, stsls, print.stsls, summary.stsls,
+	print.summary.stsls, residuals.stsls, coef.stsls, deviance.stsls)
 
 import(maptools)
 
@@ -113,4 +116,14 @@ S3method(print, summary.gmsar)
 
 S3method(fitted, SFResult)
 S3method(print, SFResult)
+S3method(fitted, ME_res)
+S3method(print, ME_res)
+
+S3method(residuals, stsls)
+S3method(deviance, stsls)
+S3method(coef, stsls)
+S3method(print, stsls)
+S3method(summary, stsls)
+
+S3method(print, summary.stsls)
 

@@ -1,8 +1,25 @@
-# Copyright 2001-5 by Roger Bivand 
+# Copyright 2001-6 by Roger Bivand 
 #
 
 lm.LMtests <- function(model, listw, zero.policy=FALSE, test="LMerr",
 	spChk=NULL) {
+	if (length(test) == 1 && test[1] == "LMerr") {
+		res <- lm.LMErr(model=model, listw=listw, 
+			zero.policy=zero.policy, spChk=spChk) 
+		if (class(model) == "lm") res$data.name <- paste("\n", 
+	    		paste(strwrap(paste("model: ",
+	    		gsub("[ ]+", " ", paste(deparse(model$call), 
+	    		sep="", collapse="")))), collapse="\n"),
+    	     		"\nweights: ", deparse(substitute(listw)), "\n", sep="")
+		else res$data.name <- paste("\nresiduals: ", 
+			deparse(substitute(model)), "\nweights: ", 
+			deparse(substitute(listw)), "\n", sep="")
+		tres <- vector(mode="list", length=1)
+		names(tres) <- test
+		tres[[1]] <- res
+		class(tres) <- "LMtestlist"
+		return(tres)
+	}
 	if (!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
 	if(class(model) != "lm") stop(paste(deparse(substitute(model)),
@@ -109,3 +126,49 @@ tracew <- function (listw) {
 	dlmtr
 }
 
+lm.LMErr <- function(model, listw, zero.policy=FALSE, spChk=NULL) {
+	if (!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
+		"is not a listw object"))
+	N <- length(listw$neighbours)
+	if (class(model) == "lm") u <- resid(model)
+	else if (is.numeric(model) && length(model) == N) {
+		u <- model
+		if (!isTRUE(all.equal(mean(u), 0.0)))
+		    warning("mean of externally provided residuals not zero")
+	} else stop(paste(deparse(substitute(model)),
+		"not an lm object or a numeric vector of correct length"))
+
+	if (N != length(u)) stop("objects of different length")
+	if (is.null(spChk)) spChk <- get.spChkOption()
+	if (spChk && !chkIDs(u, listw))
+		stop("Check of data and weights ID integrity failed")
+	u <- as.vector(u)
+
+	if (is.null(attr(listw$weights, "W")) || !attr(listw$weights, "W"))
+		warning("Spatial weights matrix not row standardized")
+	TrW <- tracew(listw)
+	Wu <- lag.listw(listw, u, zero.policy)
+	sigma2 <- (t(u) %*% u) / N
+	dutWu <- (t(u) %*% Wu) / sigma2
+	resa <- (dutWu ^ 2) / TrW
+	statistic <- resa
+	names(statistic) <- "LMErr"
+	parameter <- 1
+	names(parameter) <- "df"
+	p.value <- 1 - pchisq(statistic, parameter)
+	if (p.value < 0 || p.value > 1) 
+	    warning("Out-of-range p-value: reconsider test arguments")
+	names(p.value) <- ""
+	method <- "Lagrange multiplier diagnostics for spatial dependence"
+	if (class(model) == "lm") data.name <- paste("\n", 
+	    paste(strwrap(paste("model: ",
+	    gsub("[ ]+", " ", paste(deparse(model$call), 
+	    sep="", collapse="")))), collapse="\n"),
+    	     "\nweights: ", deparse(substitute(listw)), "\n", sep="")
+        else data.name <- paste("\nresiduals: ", deparse(substitute(model)),
+    	     "\nweights: ", deparse(substitute(listw)), "\n", sep="")
+	res <- list(statistic=statistic, parameter=parameter,
+		p.value=p.value, method=method, data.name=data.name)
+	class(res) <- "htest"
+	res
+}

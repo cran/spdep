@@ -1,4 +1,5 @@
 # Copyright 2002-2003 by Roger Bivand and Marilia Carvalho
+# Addition of Martuzzi and Elliott Copyright 2006 Olaf Berke and Roger Bivand
 #
 
 EBImoran <- function (z, listw, nn, S0, zero.policy = FALSE) 
@@ -99,7 +100,7 @@ probmap <- function(n, x, row.names=NULL) {
 }
 
 
-EBest <- function(n, x) {
+EBest <- function(n, x, family="poisson") {
     if (!is.numeric(x)) 
         stop(paste(deparse(substitute(x)), "is not a numeric vector"))
     if (!is.numeric(n)) 
@@ -112,19 +113,47 @@ EBest <- function(n, x) {
         stop("non-positive risk population")
     if (any(n < 0)) 
         stop("negative number of cases")
+    if (length(x) != length(n)) stop("vectors of different length")
     m <- length(n)
     p <- n/x
     nsum <- sum(n)
     xsum <- sum(x)
     b <- nsum/xsum
     s2 <- sum(x * (((p - b)^2)/xsum))
-    a <- s2 - (b/(xsum/m))
-    if (a < 0) a <- 0
-    est <- b + (a*(p - b)) / (a + (b/x))
-    res <- data.frame(raw=p, estmm=est)
-    attr(res, "parameters") <- list(a=a, b=b)
+    if (family == "poisson") {
+        a <- s2 - (b/(xsum/m))
+        if (a < 0) a <- 0
+        est <- b + (a*(p - b)) / (a + (b/x))
+        res <- data.frame(raw=p, estmm=est)
+        attr(res, "family") <- family
+        attr(res, "parameters") <- list(a=a, b=b)
+    } else if (family == "binomial") {
+# contributed by Olaf Berke
+	rho <- (x*s2 - (x/mean(x))*(b*(1-b))) / 
+		((x-1)*s2 + ((mean(x)-x) /mean(x))*(b*(1-b)))
+	est <- rho*p + (1-rho)*b
+	res <- data.frame(raw = p, estmm = est)
+        attr(res, "family") <- family
+	attr(res, "parameters") <- list(a=s2, b=b)
+    } else stop("family unknown")
     res
 }
+
+#EBestB <- function (n,x)
+#{
+#p <- n/x
+#b <- sum(n)/sum(x)
+#    nsum <- sum(n)
+#    xsum <- sum(x)
+#    b <- nsum/xsum
+#s2 <- sum(x*(p-b)^2) / xsum
+#roh <- (x*s2 - (x/mean(x))*(b*(1-b))) / 
+#  ((x-1)*s2 + ((mean(x)-x) /mean(x))*(b*(1-b)))
+#est <- roh*p + (1-roh)*b
+#result <- data.frame(raw = p, ebest = est)
+#attr(result, "parameters") <- list(a = b, b = s2)
+#result
+#}
 
 EBlocal <- function(ri, ni, nb, zero.policy = FALSE,
     spChk = NULL, geoda = FALSE) {
