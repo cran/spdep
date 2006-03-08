@@ -34,6 +34,13 @@ neighbours, if FALSE (default) assign NA - causing \code{GMerrorsar()} to termin
 }
 \details{
   When the control list is set with care, the function will converge to values close to the ML estimator without requiring computation of the Jacobian, the most resource-intensive part of ML estimation. For moderately sized data sets with hundreds of observations, but not many thousands, the Jacobian is computed once to give the likelihood of the fitted model, allowing a test against the model with no spatial dependence.
+
+Note that the fitted() function for the output object assumes that the response 
+variable may be reconstructed as the sum of the trend, the signal, and the
+noise (residuals). Since the values of the response variable are known,
+their spatial lags are used to calculate signal components (Cressie 1993, p. 564). This differs from other software, including GeoDa, which does not use knowledge of the response 
+variable in making predictions for the fitting data.
+
 }
 \value{
   A list object of class \code{gmsar}
@@ -54,7 +61,7 @@ neighbours, if FALSE (default) assign NA - causing \code{GMerrorsar()} to termin
   \item{LL}{log likelihood value at computed optimum}
   \item{na.action}{(possibly) named vector of excluded or omitted observations if non-default na.action argument used}
 }
-\references{Kelejian, H. H., and Prucha, I. R., 1999. A Generalized Moments Estimator for the Autoregressive Parameter in a Spatial Model. International Economic Review, 40, pp. 509--533.}
+\references{Kelejian, H. H., and Prucha, I. R., 1999. A Generalized Moments Estimator for the Autoregressive Parameter in a Spatial Model. International Economic Review, 40, pp. 509--533; Cressie, N. A. C. 1993 \emph{Statistics for spatial data}, Wiley, New York.}
 \author{Luc Anselin and Roger Bivand}
 
 \seealso{\code{\link[stats]{optim}}, \code{\link{errorsarlm}}}

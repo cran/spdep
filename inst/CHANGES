@@ -1,3 +1,7 @@
+0.3-22	Fixed polylist object formats; added Moran eigenvector 
+	filtering for glm() models in function ME(), which reproduces the
+	results of SpatialFiltering() for the lag case; added family= argument 
+	to EBest to cover non-rare case (contributed by Olaf Berke).
 0.3-20 Fix for method="SparseM" when memory allocation in chol() failed
 0.3-17 Added function spautolm for weighted and unweighted SAR and CAR spatial
 	regression, Luc Anselin's implementation of the Kelejian-Prucha

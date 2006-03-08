@@ -49,6 +49,13 @@ block-diagonal, and with the elements involving lambda being very small,
 while other parts of the matrix can be very large (often many orders
 of magnitude in difference). It often happens that the \code{tol.solve}
 argument needs to be set to a smaller value than the default, or the RHS variables can be centred or reduced in range.
+
+Note that the fitted() function for the output object assumes that the response 
+variable may be reconstructed as the sum of the trend, the signal, and the
+noise (residuals). Since the values of the response variable are known,
+their spatial lags are used to calculate signal components (Cressie 1993, p. 564). This differs from other software, including GeoDa, which does not use knowledge of the response 
+variable in making predictions for the fitting data.
+
 }
 \value{
   A list object of class \code{sarlm}
@@ -88,7 +95,7 @@ West Virginia University, Morgantown, WV (\url{www.spacestat.com});
 Anselin L, Bera AK (1998) Spatial dependence in linear regression models
 with an introduction to spatial econometrics. In: Ullah A, Giles DEA
 (eds) Handbook of applied economic statistics. Marcel Dekker, New York,
-pp. 237-289.}
+pp. 237-289; Cressie, N. A. C. 1993 \emph{Statistics for spatial data}, Wiley, New York.}
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 
 \seealso{\code{\link{lm}}, \code{\link{lagsarlm}}, 
