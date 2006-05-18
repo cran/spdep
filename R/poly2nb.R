@@ -1,4 +1,4 @@
-# Copyright 2001-2005 by Roger Bivand 
+# Copyright 2001-2006 by Roger Bivand 
 #
 	
 
@@ -13,7 +13,8 @@ poly2nb <- function(pl, row.names=NULL, snap=sqrt(.Machine$double.eps),
 	if (inherits(pl, "multiparts")) stop("Convert to newer polylist format")
 	n <- length(pl)
 	if (n < 1) stop("non-positive number of entities")
-	regid <- attr(pl, "region.id")
+	if (is.null(row.names)) regid <- attr(pl, "region.id")
+	else regid <- NULL
 	if (is.null(regid)) {
 		if(is.null(row.names)) regid <- as.character(1:n)
 		else {
@@ -32,16 +33,21 @@ poly2nb <- function(pl, row.names=NULL, snap=sqrt(.Machine$double.eps),
 		res
 	}
 	bb <- poly2bbs(pl)
+	if (storage.mode(bb) != "double") storage.mode(bb) <- "double"
+	dsnap <- as.double(snap)
+	nrs <- integer(n)
+	for (i in 1:n) {
+		pl[[i]] <- na.omit(pl[[i]][-1,])
+		nrs[i] <- as.integer(nrow(pl[[i]]))
+		pl[[i]] <- as.double(pl[[i]])
+	}
 	
 
 
-	polypoly2 <- function(poly1, poly2, snap) {
-		n1 <- nrow(poly1)
-		n2 <- nrow(poly2)
-		if (any(n1 == 0 || n2 == 0)) return(as.integer(0))
-		res <- .Call("polypoly", as.double(poly1), 
-			as.integer(n1), as.double(poly2), 
-			as.integer(n2), as.double(snap), PACKAGE="spdep")
+	polypoly2 <- function(poly1, nrs1, poly2, nrs2, snap) {
+		if (any(nrs1 == 0 || nrs2 == 0)) return(as.integer(0))
+		res <- .Call("polypoly", poly1, nrs1, poly2, 
+			nrs2, snap, PACKAGE="spdep")
 		res
 	}
 
@@ -50,12 +56,12 @@ poly2nb <- function(pl, row.names=NULL, snap=sqrt(.Machine$double.eps),
 	criterion <- ifelse(queen, 0, 1)
 	for (i in 1:(n-1)) {
 		for (j in (i+1):n) {
-			jhit <- .Call("spInsiders", as.double(bb[i,]), 
-				as.double(bb[j,]), PACKAGE="spdep")
+			jhit <- .Call("spInsiders", bb[i,], 
+				bb[j,], PACKAGE="spdep")
 			if (jhit > 0) {
 			    khit <- 0
-			    khit <- polypoly2(na.omit(pl[[i]][-1,]), 
-				na.omit(pl[[j]][-1,]), snap)
+			    khit <- polypoly2(pl[[i]], nrs[i], pl[[j]], 
+				nrs[j],dsnap)
 
 			    if (khit > criterion) {
 				ans[[i]] <- c(ans[[i]], j)

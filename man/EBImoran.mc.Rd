@@ -65,5 +65,5 @@ names(sids.p) <- rownames(nc.sids)
 moran.mc(sids.p, nb2listw(ncCC89.nb, style="B", zero.policy=TRUE),
  nsim=999, zero.policy=TRUE)
 }
-\keyword{spatial}% at least one, from doc/KEYWORDS
+\keyword{spatial}
 

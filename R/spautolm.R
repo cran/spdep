@@ -2,7 +2,7 @@
 spautolm <- function(formula, data = list(), listw, weights=NULL,
     na.action=na.fail, verbose=FALSE, tol.opt=.Machine$double.eps^(2/3),
     family="SAR", method="full", interval=c(-1,0.999), zero.policy=FALSE,
-    cholAlloc=NULL) 
+    cholAlloc=NULL, tol.solve=.Machine$double.eps) 
 {
     if (!inherits(listw, "listw")) 
         stop("No neighbourhood list")
@@ -38,6 +38,7 @@ spautolm <- function(formula, data = list(), listw, weights=NULL,
     if (method == "full") {
 # spatial weights matrix
         W <- listw2mat(listw)
+	attr(W, "dimnames") <- NULL
         if (family == "CAR") if (!isTRUE(all.equal(W, t(W))))
 	    warning("Non-symmetric spatial weights in CAR model")
 # range for line search
@@ -51,13 +52,14 @@ spautolm <- function(formula, data = list(), listw, weights=NULL,
             upper=eig.range[2]-.Machine$double.eps, maximum=TRUE,
             tol = tol.opt, Y=Y, X=X, n=n, W=W, eig=eig, I=I,
             weights=diag(weights), sum_lw=sum_lw, family=family,
-            verbose=verbose)
+            verbose=verbose, tol.solve=tol.solve)
         lambda <- opt$maximum
         names(lambda) <- "lambda"
         LL <- opt$objective
 # get GLS coefficients
         fit <- .SPAR.fit(lambda=lambda, Y=Y, X=X, n=n, W=W, I=I,
-            weights=diag(weights), family=family, out=TRUE)
+            weights=diag(weights), family=family, out=TRUE,
+		tol.solve=tol.solve)
 # create residuals and fitted values (Cressie 1993, p. 564)
 	fit$signal_trend <- drop(X %*% fit$coefficients)
 	fit$signal_stochastic <- drop(lambda * W %*% (Y - fit$signal_trend))
@@ -65,7 +67,8 @@ spautolm <- function(formula, data = list(), listw, weights=NULL,
 	fit$residuals <- drop(Y - fit$fitted.values)
 # get null LL
         LL0 <- .opt.fit.full(lambda=0, Y=Y, X=X, n=n, W=W, eig=eig, I=I,
-            weights=diag(weights), sum_lw=sum_lw, family=family, verbose=FALSE)
+            weights=diag(weights), sum_lw=sum_lw, family=family, verbose=FALSE,
+		tol.solve=tol.solve)
     } else if (method == "SparseM") {
         if (listw$style %in% c("W", "S") && !can.sim)
         stop("SparseM method requires symmetric weights")
@@ -100,13 +103,13 @@ spautolm <- function(formula, data = list(), listw, weights=NULL,
             upper=interval[2], maximum=TRUE,
             tol = tol.opt, Y=Y, X=X, n=n, W=W, W_J=W_J, I=I,
             weights=weights, sum_lw=sum_lw, family=family,
-            verbose=verbose, cholAlloc=cholAlloc)
+            verbose=verbose, cholAlloc=cholAlloc, tol.solve=tol.solve)
         lambda <- opt$maximum
         names(lambda) <- "lambda"
         LL <- opt$objective
 # get GLS coefficients
         fit <- .SPAR.fit(lambda=lambda, Y=Y, X=X, n=n, W=W, I=I,
-            weights=weights, family=family, out=TRUE)
+            weights=weights, family=family, out=TRUE, tol.solve=tol.solve)
 # create residuals and fitted values (Cressie 1993, p. 564)
 	fit$signal_trend <- drop(X %*% fit$coefficients)
 	fit$signal_stochastic <- drop(lambda * W %*% (Y - fit$signal_trend))
@@ -115,7 +118,7 @@ spautolm <- function(formula, data = list(), listw, weights=NULL,
 # get null LL
         LL0 <- .opt.fit.SparseM(lambda=0, Y=Y, X=X, n=n, W=W, W_J=W_J, I=I,
             weights=weights, sum_lw=sum_lw, family=family, verbose=FALSE,
-            cholAlloc=cholAlloc)
+            cholAlloc=cholAlloc, tol.solve=tol.solve)
         weights <- diag(weights)
     } else stop("unknown method")
     res <- list(fit=fit, lambda=lambda, LL=LL, LL0=LL0, call=match.call(),
@@ -135,11 +138,11 @@ spautolm <- function(formula, data = list(), listw, weights=NULL,
 }
 
 .opt.fit.full <- function(lambda, Y, X, n, W, eig, I, weights, sum_lw,
-    family="SAR", verbose=TRUE) {
+    family="SAR", verbose=TRUE, tol.solve=.Machine$double.eps) {
 # fitting function called from optimize()
 #    IlW <- diag(n) - lambda * W
     SSE <- .SPAR.fit(lambda=lambda, Y=Y, X=X, n=n, W=W, weights=weights,
-        I=I, family=family, out=FALSE)
+        I=I, family=family, out=FALSE, tol.solve=tol.solve)
     s2 <- SSE/n
     if (is.complex(eig)) detIlW <- Re(prod(1 - lambda*eig)) 
     else detIlW <- prod(1 - lambda*eig)
@@ -150,10 +153,10 @@ spautolm <- function(formula, data = list(), listw, weights=NULL,
 }
 
 .opt.fit.SparseM <- function(lambda, Y, X, n, W, W_J, I, weights, sum_lw,
-    family="SAR", verbose=TRUE, cholAlloc) {
+    family="SAR", verbose=TRUE, cholAlloc, tol.solve=.Machine$double.eps) {
 # fitting function called from optimize()
     SSE <- .SPAR.fit(lambda=lambda, Y=Y, X=X, n=n, W=W, weights=weights,
-        I=I, family=family, out=FALSE)
+        I=I, family=family, out=FALSE, tol.solve=tol.solve)
     s2 <- SSE/n
     Jacobian <- log(det(chol((I - lambda * W_J), nsubmax=cholAlloc$nsubmax, 
 	nnzlmax=cholAlloc$nnzlmax, tmpmax=cholAlloc$tmpmax))^2)
@@ -165,10 +168,10 @@ spautolm <- function(formula, data = list(), listw, weights=NULL,
 }
 
 .SPAR.fit <- function(lambda, Y, X, n, W, weights, I, family,
-    out=FALSE) {
+    out=FALSE, tol.solve=.Machine$double.eps) {
     dmmf <- eval(parse(text=family))
     IlW <- dmmf((I - lambda * W), weights)
-    imat <- qr.solve(t(X) %*% as.matrix(IlW %*% X))
+    imat <- base:::solve(t(X) %*% as.matrix(IlW %*% X), tol=tol.solve)
     coef <- crossprod(imat, t(X) %*% as.matrix(IlW %*% Y))
     fitted <- X %*% coef
     residuals <- Y - fitted

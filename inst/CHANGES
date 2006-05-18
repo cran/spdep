@@ -1,3 +1,7 @@
+0.3-24	Added tol.solve= argument to spautolm() and tidied symmetry-checking 
+	for family="CAR", method="full" in the same function (thanks to 
+	Sam Veloz); by profiling and moving type checking, poly2nb() 
+	runs faster (thanks to Hisaji Ono).
 0.3-22	Fixed polylist object formats; added Moran eigenvector 
 	filtering for glm() models in function ME(), which reproduces the
 	results of SpatialFiltering() for the lag case; added family= argument 

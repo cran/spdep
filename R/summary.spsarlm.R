@@ -24,6 +24,12 @@ summary.sarlm <- function(object, correlation = FALSE, ...)
 		colnames(object$Coef) <- c("Estimate", "Std. Error", 
 			"z value", "Pr(>|z|)")
 	} else {
+	    # intercept-only bug fix Larry Layne 20060404
+	    if (is.null(object$LLs)) {
+		object$Coef <- cbind(object$coefficients)
+		colnames(object$Coef) <- c("Estimate")
+
+	    } else {
 		object$coeftitle <- "(log likelihood/likelihood ratio)"
 		m <- length(object$coefficients)
 		LLs <- numeric(m)
@@ -48,6 +54,7 @@ summary.sarlm <- function(object, correlation = FALSE, ...)
 		object$Coef <- cbind(object$coefficients, LLs, LRs, Pvals)
 		colnames(object$Coef) <- c("Estimate", "Log likelihood",
 			"LR statistic", "Pr(>|z|)")
+	    }
 	}
 	if (object$ase) {
 		object$Wald1 <- Wald1.sarlm(object)
