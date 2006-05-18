@@ -111,3 +111,20 @@ read.dat2listw <- function(file) {
 	invisible(listw)
 }
 
+
+write.sn2Arc <- function(sn, file, field=NULL) {
+	if(!inherits(sn, "spatial.neighbour")) 
+	    stop("not a spatial.neighbour object")
+	if (is.null(field)) stop("field must be given")
+	n <- attr(sn, "n")
+	if (n < 1) stop("non-positive number of entities")
+	nms <- as.character(attr(sn, "region.id"))
+	sn[,1] <- nms[sn[,1]]
+	sn[,2] <- nms[sn[,2]]
+	con <- file(file, open="w")
+	writeLines(field, con)
+	write.table(as.data.frame(sn), file=con, append=TRUE,
+		row.names=FALSE, col.names=FALSE, quote=FALSE)
+	close(con)
+}
+

@@ -1,4 +1,4 @@
-# Copyright 1998-2004 by Roger Bivand and Andrew Bernat
+# Copyright 1998-2006 by Roger Bivand and Andrew Bernat
 #
 
 lagsarlm <- function(formula, data = list(), listw, 
@@ -13,7 +13,7 @@ lagsarlm <- function(formula, data = list(), listw,
 	if (!inherits(listw, "listw")) stop("No neighbourhood list")
 	can.sim <- as.logical(NA)
 	if (listw$style %in% c("W", "S")) 
-		can.sim <- can.be.simmed(listw)
+		can.sim <- spdep:::can.be.simmed(listw)
 	if (!is.null(na.act)) {
 	    subset <- !(1:length(listw$neighbours) %in% na.act)
 	    listw <- subset(listw, subset, zero.policy=zero.policy)
@@ -280,9 +280,12 @@ dosparse <- function (listw, y, x, wy, K, quiet, tol.opt,
 	}
 	m <- ncol(x)
 	n <- nrow(x)
-	LLs <- vector(mode="list", length=length(K:m))
-	j <- 1
-	for (i in K:m) {
+	LLs <- NULL
+	# intercept-only bug fix Larry Layne 20060404
+	if (m > 1) {
+	    LLs <- vector(mode="list", length=length(K:m))
+	    j <- 1
+	    for (i in K:m) {
 		# drop bug found by Gilles Spielvogel 20050128
 		thisx <- x[,-i, drop = FALSE]
 		lm.null <- lm.fit(thisx, y)
@@ -322,6 +325,7 @@ dosparse <- function (listw, y, x, wy, K, quiet, tol.opt,
 		attr(LLs[[j]], "name") <- colnames(x)[i]
 		class(LLs[[j]]) <- "logLik"
 		j <- j + 1
+	    }
 	}
 	lm.null <- lm(y ~ x - 1)
 	lm.w <- lm.fit(x, wy)
