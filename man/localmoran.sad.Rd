@@ -23,7 +23,7 @@ approximation - is based on the randomisation assumption.
 localmoran.sad(model, select, nb, glist=NULL, style="W", zero.policy=FALSE,
   alternative="greater", spChk=NULL, resfun=weighted.residuals, save.Vi=FALSE, 
   tol = .Machine$double.eps^0.5, maxiter = 1000, tol.bounds=0.0001)
-as.data.frame.localmoransad(x, row.names=NULL, optional=FALSE) 
+%as.data.frame.localmoransad(x, row.names=NULL, optional=FALSE) 
 print.localmoransad(x, ...)
 summary.localmoransad(object, ...)
 print.summary.localmoransad(x, ...)
@@ -48,10 +48,10 @@ tested}
   \item{maxiter}{the maximum number of iterations for \code{uniroot}}
   \item{tol.bounds}{offset from bounds for \code{uniroot}}
   \item{x}{object to be printed}
-  \item{row.names}{ignored argument to \code{as.data.frame.localmoransad};
-row names assigned from localmoransad object}
-  \item{optional}{ignored argument to \code{as.data.frame.localmoransad};
-row names assigned from localmoransad object}
+%  \item{row.names}{ignored argument to \code{as.data.frame.localmoransad};
+%row names assigned from localmoransad object}
+%  \item{optional}{ignored argument to \code{as.data.frame.localmoransad};
+%row names assigned from localmoransad object}
   \item{object}{object to be summarised}
   \item{...}{arguments to be passed through}
   \item{listw}{a \code{listw} object created for example by \code{nb2listw}}

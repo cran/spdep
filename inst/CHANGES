@@ -1,4 +1,4 @@
-0.3-24	Added tol.solve= argument to spautolm() and tidied symmetry-checking 
+0.3-25	Added tol.solve= argument to spautolm() and tidied symmetry-checking 
 	for family="CAR", method="full" in the same function (thanks to 
 	Sam Veloz); by profiling and moving type checking, poly2nb() 
 	runs faster (thanks to Hisaji Ono).
