@@ -181,46 +181,6 @@ print.localmoransad <- function(x, ...) {
     invisible(res)
 }
 
-if (as.numeric(R.Version()$minor) < 4) {
-as.data.frame.localmoransad <- function(x, row.names=NULL, optional=FALSE) {
-    n <- length(x)
-    if (n < 1) stop("x too short")
-    res <- matrix(0, nrow=n, ncol=14)
-    regnames <- NULL
-    if (!is.null(row.names)) 
-	if (length(row.names) == n) regnames <- row.names
-    if (is.null(regnames))for (i in 1:n) regnames <- c(regnames, x[[i]]$i)
-    for (i in 1:n) {
-        tau <- x[[i]]$tau
-	df <- x[[i]]$df
-        tau <- c(tau[1], rep(0, df-2), tau[2])
-        max.I <- tau[1]
-        min.I <- tau[length(tau)]
-        E.I <- sum(tau)/df
-        tau <- tau - E.I
-        V.I <- (2*sum(tau^2)) / (df*(df+2))
-        Z.I <- (x[[i]]$estimate - E.I) / sqrt(V.I)
-	if (x[[i]]$alternative == "two.sided") 
-	    P.I <- 2 * (1 - pnorm(Z.I))
-        else if (x[[i]]$alternative == "greater")
-            P.I <- pnorm(Z.I, lower.tail=FALSE)
-        else P.I <- pnorm(Z.I)
-        Sk.I <- ((8*sum(tau^3))/(df*(df+2)*(df+4))) / (V.I^(3/2))
-        Kur.I <- ((48*sum(tau^4) + 12*(sum(tau^2))^2) /
-            (df*(df+2)*(df+4)*(df+6))) / (V.I^2)
-	res[i,] <- c(x[[i]]$estimate, Z.I, P.I, x[[i]]$statistic,
-	    x[[i]]$p.value, E.I, V.I, Sk.I, Kur.I, min.I, max.I,
-	    x[[i]]$internal1)
-    }
-    colnames(res) <- c("Local Morans I", "Stand. dev. (N)", "Pr. (N)",
-        "Saddlepoint", "Pr. (Sad)", "Expectation", "Variance",
-        "Skewness", "Kurtosis", "Minimum", "Maximum",
-        "omega", "sad.r", "sad.u")
-    rownames(res) <- regnames
-    res <- as.data.frame(res)
-    res
-}
-} else {
 as.data.frame.localmoransad <- function(x, row.names=NULL, optional=FALSE, ...) {
     n <- length(x)
     if (n < 1) stop("x too short")
@@ -259,7 +219,6 @@ as.data.frame.localmoransad <- function(x, row.names=NULL, optional=FALSE, ...) 
     res <- as.data.frame(res)
     res
 }
-} 
 
 summary.localmoransad <- function(object, ...) {
     res <- as.data.frame(object)

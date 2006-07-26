@@ -1,4 +1,4 @@
-# Copyright 2001 by Roger Bivand 
+# Copyright 2001-6 by Roger Bivand 
 #
 
 droplinks <- function(nb, drop, sym=TRUE) {
@@ -26,7 +26,7 @@ droplinks <- function(nb, drop, sym=TRUE) {
 			for (j in nb[[i]])
 				nb[[j]] <- nb[[j]][nb[[j]] != i]
 		}
-		nb[[i]] <- 0
+		nb[[i]] <- as.integer(0)
 	}
 	nb <- sym.attr.nb(nb)
 	invisible(nb)

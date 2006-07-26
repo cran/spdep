@@ -1,4 +1,4 @@
-# Copyright 2001-2002 by Roger Bivand
+# Copyright 2001-2006 by Roger Bivand
 #
 
 
@@ -27,10 +27,11 @@ nblag <- function(neighbours, maxlag)
 					new <- c(new, neighbours[[j]])
 				new <- sort(unique(new))
 				res <- new[-which(new %in% already)]
-				if(length(res) == 0) lags[[thislag]][[i]] <- 0
+				if(length(res) == 0) 
+					lags[[thislag]][[i]] <- as.integer(0)
 				else lags[[thislag]][[i]] <- res
 			}
-			else lags[[thislag]][[i]] <- 0
+			else lags[[thislag]][[i]] <- as.integer(0)
 		}
 	}
 	for (i in 1:maxlag) {
