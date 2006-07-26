@@ -87,9 +87,10 @@ mat2listw <- function(x, row.names=NULL) {
 			neighbours[[i]] <- nbs
 			weights[[i]] <- x[i, nbs]
 		} else {
-			neighbours[[i]] <- 0
+			neighbours[[i]] <- as.integer(0)
 		}
 	}
+	attr(weights, "mode") <- "unknown" # Brian Rubineau
 	class(neighbours) <- "nb"
 	attr(neighbours, "region.id") <- row.names
  	attr(neighbours, "call") <- NA

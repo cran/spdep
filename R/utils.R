@@ -1,4 +1,4 @@
-# Copyright 2001-5 by Roger Bivand 
+# Copyright 2001-6 by Roger Bivand 
 #
 
 spweights.constants <- function(listw, zero.policy=FALSE) {
@@ -142,7 +142,7 @@ listw2star <- function(listw, ireg, style, n, D, a, zero.policy=FALSE) {
     nb <- vector(mode="list", length=n)
     class(nb) <- "nb"
     wts <- vector(mode="list", length=n)
-    for (i in 1:n) nb[[i]] <- 0
+    for (i in 1:n) nb[[i]] <- as.integer(0)
     inb <- listw$neighbours[[ireg]]
     iwts <- listw$weights[[ireg]]
     cond <- TRUE

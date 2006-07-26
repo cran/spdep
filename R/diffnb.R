@@ -1,4 +1,4 @@
-# Copyright 2001-3 by Roger Bivand 
+# Copyright 2001-6 by Roger Bivand 
 #
 
 
@@ -18,12 +18,12 @@ diffnb <- function(x, y, verbose=TRUE) {
 		xt <- xi %in% yi
 		yt <- yi %in% xi
 		if (!(all(xt) && all(yt))) {
-			res[[i]] <- sort(unique(c(xi[which(!xt)],
-				yi[which(!yt)])))
+			res[[i]] <- as.integer(sort(unique(c(xi[which(!xt)],
+				yi[which(!yt)]))))
 			if(verbose && (res[[i]] != 0))
 				cat("Neighbour difference for region id:",
 				ids[i], "in relation to id:", ids[res[[i]]], "\n")
-		}
+		} else res[[i]] <- as.integer(0)
 	}
 	class(res) <- "nb"
 	attr(res, "region.id") <- attr(x, "region.id")
