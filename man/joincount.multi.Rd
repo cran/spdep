@@ -1,4 +1,4 @@
-% Copyright 2004 by Roger S. Bivand
+% Copyright 2004-6 by Roger S. Bivand
 \name{joincount.multi}
 \alias{joincount.multi}
 \alias{print.jcmulti}
@@ -7,7 +7,7 @@
   A function for tallying join counts between same-colour and different colour spatial objects, where neighbour relations are defined by a weights list. Given the global counts in each colour, expected counts and variances are calculated under non-free sampling, and a z-value reported. Since multiple tests are reported, no p-values are given, allowing the user to adjust the significance level applied. Jtot is the count of all different-colour joins.
 }
 \usage{
-joincount.multi(fx, listw, zero.policy = FALSE, spChk = NULL)
+joincount.multi(fx, listw, zero.policy = FALSE, adjust.n=TRUE, spChk = NULL)
 print.jcmulti(x, ...)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -15,6 +15,7 @@ print.jcmulti(x, ...)
   \item{fx}{a factor of the same length as the neighbours and weights objects in listw}
   \item{listw}{a \code{listw} object created for example by \code{nb2listw}}
   \item{zero.policy}{if TRUE assign zero to the lagged value of zones without neighbours, if FALSE assign NA}
+  \item{adjust.n}{default TRUE, if FALSE the number of observations is not adjusted for no-neighbour observations, if TRUE, the number of observations is adjusted consistently (up to and including spdep 0.3-28 the adjustment was inconsistent - thanks to Tomoki NAKAYA for a careful bug report)}
   \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
   \item{x}{object to be printed}
   \item{...}{arguments to be passed through for printing}

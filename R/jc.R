@@ -1,4 +1,4 @@
-# Copyright 2001-5 by Roger Bivand, bugfix large n Ronnie Babigumira
+# Copyright 2001-6 by Roger Bivand, bugfix large n Ronnie Babigumira
 #
 
 joincount <- function(dums, listw) {
@@ -15,7 +15,7 @@ joincount <- function(dums, listw) {
 }
 
 joincount.test <- function(fx, listw, zero.policy=FALSE,
-	alternative="greater", spChk=NULL) {
+	alternative="greater", adjust.n=TRUE, spChk=NULL) {
 	alternative <- match.arg(alternative, c("greater", "less", "two.sided"))
 	if (!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
@@ -43,12 +43,21 @@ joincount.test <- function(fx, listw, zero.policy=FALSE,
 	tab <- table(fx)
 	BB5 <- 0.5 * BB
 	ntab <- as.numeric(as.vector(tab))
-	Ejc <- (wc$S0*(ntab*(ntab-1))) / (2*n*wc$n1)
-	Vjc <- (wc$S1*(ntab*(ntab-1))) / (n*wc$n1)
+# comment and bug report by Tomoki NAKAYA about no-neighbour observations
+	if (adjust.n) {
+		N <- wc$n
+	} else {
+		N <- n
+		wc$n1 <- N-1
+		wc$n2 <- N-2
+		wc$n3 <- N-3
+	}
+	Ejc <- (wc$S0*(ntab*(ntab-1))) / (2*N*wc$n1)
+	Vjc <- (wc$S1*(ntab*(ntab-1))) / (N*wc$n1)
 	Vjc <- Vjc + (((wc$S2 - 2*wc$S1)*ntab*(ntab-1)*(ntab-2)) /
-		(n*wc$n1*wc$n2))
+		(N*wc$n1*wc$n2))
 	Vjc <- Vjc + (((S02 + wc$S1 - wc$S2)*ntab*(ntab-1)*(ntab-2)*
-		(ntab-3)) / (n*wc$n1*wc$n2*wc$n3))
+		(ntab-3)) / (N*wc$n1*wc$n2*wc$n3))
 	Vjc <- (0.25 * Vjc) - Ejc^2
 	for (i in 1:nBB) {
 		estimate <- c(BB5[i], Ejc[i], Vjc[i])
@@ -154,7 +163,7 @@ joincount.mc <- function(fx, listw, nsim, zero.policy=FALSE,
 
 
 
-joincount.multi <- function(fx, listw, zero.policy=FALSE,
+joincount.multi <- function(fx, listw, zero.policy=FALSE, adjust.n=TRUE,
 	spChk=NULL) {
 	if(!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
@@ -185,15 +194,24 @@ joincount.multi <- function(fx, listw, zero.policy=FALSE,
 	tab <- table(fx)
 	ntab <- as.numeric(as.vector(tab))
 	wc <- spweights.constants(listw, zero.policy=zero.policy)
+# comment and bug report by Tomoki NAKAYA about no-neighbour observations
+	if (adjust.n) {
+		N <- wc$n
+	} else {
+		N <- n
+		wc$n1 <- N-1
+		wc$n2 <- N-2
+		wc$n3 <- N-3
+	}
 	S02 <- wc$S0*wc$S0
 
-	Ejc <- (wc$S0*(ntab*(ntab-1))) / (2*n*wc$n1)
+	Ejc <- (wc$S0*(ntab*(ntab-1))) / (2*N*wc$n1)
 
-	Vjc <- (wc$S1*(ntab*(ntab-1))) / (n*wc$n1)
+	Vjc <- (wc$S1*(ntab*(ntab-1))) / (N*wc$n1)
 	Vjc <- Vjc + (((wc$S2 - 2*wc$S1)*ntab*(ntab-1)*(ntab-2)) /
-		(n*wc$n1*wc$n2))
+		(N*wc$n1*wc$n2))
 	Vjc <- Vjc + (((S02 + wc$S1 - wc$S2)*ntab*(ntab-1)*(ntab-2)*
-		(ntab-3)) / (n*wc$n1*wc$n2*wc$n3))
+		(ntab-3)) / (N*wc$n1*wc$n2*wc$n3))
 	Vjc <- (0.25 * Vjc) - Ejc^2
 
 	nrns <- function(x, op="*") {
@@ -225,19 +243,19 @@ joincount.multi <- function(fx, listw, zero.policy=FALSE,
 		}
 	}
 
-	Exp <- (wc$S0*(nrns(ntab, op="*"))) / (n*wc$n1)
-	Var <- (2*wc$S1*nrns(ntab, op="*"))/(n*wc$n1)
+	Exp <- (wc$S0*(nrns(ntab, op="*"))) / (N*wc$n1)
+	Var <- (2*wc$S1*nrns(ntab, op="*"))/(N*wc$n1)
 	Var <- Var + (((wc$S2 - 2*wc$S1)*nrns(ntab, op="*")*
-		(nrns(ntab, op="+")-2))/(n*wc$n1*wc$n2))
+		(nrns(ntab, op="+")-2))/(N*wc$n1*wc$n2))
 	Var <- Var + ((4*(S02 + wc$S1 - wc$S2)*nrns((ntab*(ntab-1)), op="*")) /
-		(n*wc$n1*wc$n2*wc$n3))
+		(N*wc$n1*wc$n2*wc$n3))
 	Var <- (0.25 * Var) - Exp^2
 	Jtot <- sum(ldiag)
 	JtotExp <- sum(Exp)
-	Jvar <- ((wc$S2/(n*wc$n1))-((4*(S02 + wc$S1 - wc$S2)*wc$n1) /
-		(n*wc$n1*wc$n2*wc$n3)))*sum(nrns(ntab, op="*"))
-	Jvar <- Jvar + 4*(((wc$S1 - wc$S2)/(n*wc$n1*wc$n2*wc$n3)) + 
-		((2*S02*(2*n-3))/((n*wc$n1)*(n*wc$n1*wc$n2*wc$n3))))*
+	Jvar <- ((wc$S2/(N*wc$n1))-((4*(S02 + wc$S1 - wc$S2)*wc$n1) /
+		(N*wc$n1*wc$n2*wc$n3)))*sum(nrns(ntab, op="*"))
+	Jvar <- Jvar + 4*(((wc$S1 - wc$S2)/(N*wc$n1*wc$n2*wc$n3)) + 
+		((2*S02*(2*n-3))/((N*wc$n1)*(N*wc$n1*wc$n2*wc$n3))))*
 		sum(nrns(ntab^2, op="*"))
 	if(k>2) {
 		ntnsnr <- as.numeric(0)
@@ -249,9 +267,9 @@ joincount.multi <- function(fx, listw, zero.policy=FALSE,
 				}
 			}
 		}
-		Jvar <- Jvar + (((2*wc$S1 - 5*wc$S2)/(n*wc$n1*wc$n2))+
-		((12*(S02 + wc$S1 - wc$S2))/(n*wc$n1*wc$n2*wc$n3))+
-		((8*S02)/((n*wc$n1*wc$n2)*wc$n1)))*ntnsnr
+		Jvar <- Jvar + (((2*wc$S1 - 5*wc$S2)/(N*wc$n1*wc$n2))+
+		((12*(S02 + wc$S1 - wc$S2))/(N*wc$n1*wc$n2*wc$n3))+
+		((8*S02)/((N*wc$n1*wc$n2)*wc$n1)))*ntnsnr
 	}
 	if(k>3) {
 		nuntnsnr <- as.numeric(0)
@@ -265,8 +283,8 @@ joincount.multi <- function(fx, listw, zero.policy=FALSE,
 				}
 			}
 		}
-		Jvar <- Jvar - 8*(((wc$S1 - wc$S2)/(n*wc$n1*wc$n2*wc$n3))+
-		((2*S02*(2*n-3))/((n*wc$n1)*(n*wc$n1*wc$n2*wc$n3))))*nuntnsnr
+		Jvar <- Jvar - 8*(((wc$S1 - wc$S2)/(N*wc$n1*wc$n2*wc$n3))+
+		((2*S02*(2*N-3))/((N*wc$n1)*(N*wc$n1*wc$n2*wc$n3))))*nuntnsnr
 	}
 	Jvar <- (0.25 * Jvar)
 	statistic <- (c(diag(res), ldiag, Jtot) - c(Ejc, Exp, JtotExp)) / 

@@ -1,4 +1,4 @@
-% Copyright 2001 by Roger S. Bivand
+% Copyright 2001-6 by Roger S. Bivand
 \name{joincount.test}
 \alias{joincount.test}
 \alias{print.jclist}
@@ -13,8 +13,7 @@ factors, and results may be checked against those of \code{geary.mc}
 permutations.
 }
 \usage{
-joincount.test(fx, listw, zero.policy=FALSE, alternative="greater",
- spChk=NULL)
+joincount.test(fx, listw, zero.policy=FALSE, alternative="greater", adjust.n=TRUE, spChk=NULL)
 print.jclist(x, ...)
 }
 \arguments{
@@ -22,6 +21,7 @@ print.jclist(x, ...)
   \item{listw}{a \code{listw} object created for example by \code{nb2listw}}
   \item{zero.policy}{if TRUE assign zero to the lagged value of zones without neighbours, if FALSE assign NA}
   \item{alternative}{a character string specifying the alternative hypothesis, must be one of "greater" (default), "less" or "two.sided".}
+  \item{adjust.n}{default TRUE, if FALSE the number of observations is not adjusted for no-neighbour observations, if TRUE, the number of observations is adjusted consistently (up to and including spdep 0.3-28 the adjustment was inconsistent - thanks to Tomoki NAKAYA for a careful bug report)}
   \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
   \item{x}{object to be printed}
   \item{...}{arguments to be passed through for printing}
