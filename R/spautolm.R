@@ -21,7 +21,7 @@ spautolm <- function(formula, data = list(), listw, weights=NULL,
     if (any(is.na(X))) stop("NAs in independent variable")
     n <- nrow(X)
 # set up default weights
-    if (is.null(weights)) weights <- rep(1, n)
+    if (is.null(weights)) weights <- rep(as.numeric(1), n)
     lm.base <- lm(Y ~ X - 1, weights=weights)
     aliased <- is.na(coefficients(lm.base))
     cn <- names(aliased)
@@ -86,7 +86,7 @@ spautolm <- function(formula, data = list(), listw, weights=NULL,
 #	    similar <- TRUE
 	} else W_J <- W
 	gc(FALSE)
-        weights <- new("matrix.csr", ra=weights, ja=1:n, ia=1:(n+1), 
+        Sweights <- new("matrix.csr", ra=weights, ja=1:n, ia=1:(n+1), 
 	    dimension=c(n,n))
 #	tmpmax <- sum(card(listw$neighbours)) + n
 	if (is.null(cholAlloc)) {
@@ -102,24 +102,24 @@ spautolm <- function(formula, data = list(), listw, weights=NULL,
         opt <- optimize(.opt.fit.SparseM, lower=interval[1],
             upper=interval[2], maximum=TRUE,
             tol = tol.opt, Y=Y, X=X, n=n, W=W, W_J=W_J, I=I,
-            weights=weights, sum_lw=sum_lw, family=family,
+            weights=Sweights, sum_lw=sum_lw, family=family,
             verbose=verbose, cholAlloc=cholAlloc, tol.solve=tol.solve)
         lambda <- opt$maximum
         names(lambda) <- "lambda"
         LL <- opt$objective
 # get GLS coefficients
         fit <- .SPAR.fit(lambda=lambda, Y=Y, X=X, n=n, W=W, I=I,
-            weights=weights, family=family, out=TRUE, tol.solve=tol.solve)
+            weights=Sweights, family=family, out=TRUE, tol.solve=tol.solve)
 # create residuals and fitted values (Cressie 1993, p. 564)
 	fit$signal_trend <- drop(X %*% fit$coefficients)
 	fit$signal_stochastic <- drop(lambda * W %*% (Y - fit$signal_trend))
 	fit$fitted.values <- fit$signal_trend + fit$signal_stochastic
 	fit$residuals <- drop(Y - fit$fitted.values)
 # get null LL
-        LL0 <- .opt.fit.SparseM(lambda=0, Y=Y, X=X, n=n, W=W, W_J=W_J, I=I,
-            weights=weights, sum_lw=sum_lw, family=family, verbose=FALSE,
-            cholAlloc=cholAlloc, tol.solve=tol.solve)
-        weights <- diag(weights)
+        LL0 <- .opt.fit.SparseM(lambda=as.numeric(0), Y=Y, X=X, n=n, W=W,
+            W_J=W_J, I=I, weights=Sweights, sum_lw=sum_lw, family=family,
+            verbose=verbose, cholAlloc=cholAlloc, tol.solve=tol.solve)
+#        weights <- diag(Sweights)
     } else stop("unknown method")
     res <- list(fit=fit, lambda=lambda, LL=LL, LL0=LL0, call=match.call(),
         parameters=(ncol(X)+2), aliased=aliased, method=method,
