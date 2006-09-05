@@ -1,4 +1,4 @@
-# Copyright 2001-3 by Nicholas Lewin-Koh and Roger S. Bivand.
+# Copyright 2001-6 by Nicholas Lewin-Koh and Roger S. Bivand.
 #
 
 
@@ -17,13 +17,13 @@ graph2nb <- function(gob, row.names=NULL,sym=FALSE) {
           for (i in 1:gob$np) {
 		res[[i]] <- sort(unique(c(gob$to[gob$from==i],
                                        gob$from[gob$to==i])))
-	  	if(length(res[[i]]) == 0) res[[i]] <- 0
+	  	if(length(res[[i]]) == 0) res[[i]] <- as.integer(0)
 	  }
         }
         else{
 	  for (i in 1:gob$np) {
 		res[[i]] <- sort(gob$to[gob$from==i])
-	  	if(length(res[[i]]) == 0) res[[i]] <- 0
+	  	if(length(res[[i]]) == 0) res[[i]] <- as.integer(0)
 	  }
         }
         attr(res, "region.id") <- row.names
