@@ -1,4 +1,4 @@
-# Copyright 2001-4 by Roger Bivand 
+# Copyright 2001-6 by Roger Bivand 
 #
 
 
@@ -78,7 +78,7 @@ make.sym.nb <- function(nb){
         	}
         	for(i in 1:length(nb)){
         		res[[i]] <- sort(unique(c(to[from==i],from[to==i])))
-        		if(length(res[[i]]) == 0) res[[i]] <- 0
+        		if(length(res[[i]]) == 0) res[[i]] <- as.integer(0)
         	}
         	attr(res, "region.id") <- attr(nb,"region.id")
         	attr(res, "call") <- attr(nb, "call")

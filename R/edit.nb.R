@@ -1,4 +1,4 @@
-# Copyright 2001 by Roger Bivand and Nicholas Lewin-Koh
+# Copyright 2001-6 by Roger Bivand and Nicholas Lewin-Koh
 #
 
 edit.nb <- function(name, coords, polys=NULL, ...) {
@@ -48,12 +48,12 @@ edit.nb <- function(name, coords, polys=NULL, ...) {
         deletions <- c(deletions, paste(cand, collapse="-"))
         nb[[cand[1]]] <- nb[[cand[1]]][nb[[cand[1]]] != cand[2]]
 				if(length(nb[[cand[1]]]) == 0) {
-                                  nb[[cand[1]]] <- 0
+                                  nb[[cand[1]]] <- as.integer(0)
                                   cat(cand[1], "is now an island\n")
 				}
         nb[[cand[2]]] <- nb[[cand[2]]][nb[[cand[2]]] != cand[1]]
         if(length(nb[[cand[2]]]) == 0) {
-          nb[[cand[2]]] <- 0
+          nb[[cand[2]]] <- as.integer(0)
           cat(cand[2], "is now an island\n")
         }
 ###
