@@ -12,7 +12,7 @@ for a missing spatially lagged dependent variable (LMlag), variants
 of these robust to the presence of the other (RLMerr, RLMlag - RLMerr
 tests for error dependence in the possible presence of a missing lagged
 dependent variable, RLMlag the other way round), and a portmanteau test
-(SARMA, in fact LMerr + RLMlag).
+(SARMA, in fact LMerr + RLMlag). Note: from spdep 0.3-32, the value of the weights matrix trace term is returned correctly for both underlying symmetric and asymmetric neighbour lists, before 0.3-32, the value was wrong for listw objects based on asymmetric neighbour lists, such as k-nearest neighbours (thanks to Luc Anselin for finding the bug).
 }
 \usage{
 lm.LMtests(model, listw, zero.policy=FALSE, test="LMerr", spChk=NULL)

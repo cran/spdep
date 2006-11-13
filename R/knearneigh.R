@@ -22,5 +22,5 @@ knearneigh <- function(x, k=1, lonlat=FALSE)
     	dimension=dimension, x=x)
     class(res) <- "knn"
     attr(res, "call") <- match.call()
-    invisible(res)
+    res
 }

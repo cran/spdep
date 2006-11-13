@@ -12,7 +12,7 @@ is.symmetric.nb <- function(nb, verbose=TRUE, force=FALSE)
 			verbose=as.logical(verbose), PACKAGE="spdep")
 	}
 	if(!res && verbose) cat("Non-symmetric neighbours list\n")
-	invisible(res)
+	res
 }
 
 is.symmetric.glist <- function(nb, glist)
@@ -41,7 +41,7 @@ sym.attr.nb <- function(nb) {
 	if(is.null(nbsym))
 		attr(nb, "sym") <- is.symmetric.nb(nb, verbose=FALSE,
 			force=TRUE)
-	invisible(nb)
+	nb
 }
 
 include.self <- function(nb) {
@@ -59,7 +59,11 @@ include.self <- function(nb) {
 	}
 		
 	attr(nb, "self.included") <- TRUE
-	invisible(nb)
+	nb
+}
+
+is.selfneighbour <- function(nb) {
+    res <- sapply(seq(along=nb), function(i) i %in% nb[[i]]) 
 }
 
 # Copyright 2001 by Nicholas Lewin-Koh 
@@ -86,6 +90,6 @@ make.sym.nb <- function(nb){
         	attr(res, "sym") <- TRUE
         	class(res) <- "nb"
 	}
-	invisible(res)
+	res
 }
 

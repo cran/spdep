@@ -4,5 +4,5 @@
 card <- function(nb) {
     if (!inherits(nb, "nb")) stop("not a neighbours list")
     z <- .Call("card", nb, PACKAGE="spdep")
-    invisible(z)
+    z
 }

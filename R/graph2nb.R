@@ -31,5 +31,5 @@ graph2nb <- function(gob, row.names=NULL,sym=FALSE) {
  	attr(res, "type") <- attr(gob, "type")
 	class(res) <- "nb"
 	res <- sym.attr.nb(res)
-	invisible(res)
+	res
 }

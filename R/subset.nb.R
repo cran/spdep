@@ -33,7 +33,7 @@ subset.nb <- function(x, subset, ...) {
 	    attr(z, xattrs[i]) <- attr(x, xattrs[i])
     }
     z <- sym.attr.nb(z)
-    invisible(z)
+    z
 }
 
 
@@ -51,7 +51,7 @@ subset.listw <- function(x, subset, zero.policy=FALSE, ...) {
     subnb <- subset.nb(x=nb, subset=subset)
     sublistw <- nb2listw(neighbours=subnb, glist=NULL, style=style,
 	zero.policy=zero.policy)
-    invisible(sublistw)
+    sublistw
 }
 
 

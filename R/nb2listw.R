@@ -96,7 +96,7 @@ nb2listw <- function(neighbours, glist=NULL, style="W", zero.policy=FALSE)
 		attr(res, "GeoDa") <- attr(neighbours, "GeoDa")
 	if (!is.null(attr(res, "GeoDa")$dist)) 
 		attr(res, "GeoDa")$dist <- NULL
-	invisible(res)
+	res
 }
 
 can.be.simmed <- function(listw) {

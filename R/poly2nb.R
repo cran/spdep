@@ -77,7 +77,7 @@ poly2nb <- function(pl, row.names=NULL, snap=sqrt(.Machine$double.eps),
 	if (queen) attr(ans, "type") <- "queen"
 	else attr(ans, "type") <- "rook"
 	ans <- sym.attr.nb(ans)
-	invisible(ans)
+	ans
 }
 
 

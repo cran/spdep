@@ -97,7 +97,7 @@ cell2nb <- function(nrow, ncol, type="rook", torus=FALSE) {
 	attr(res, type) <- TRUE
 	if (torus) attr(res, "torus") <- TRUE
 	res <- sym.attr.nb(res)
-	invisible(res)
+	res
 }
 
 

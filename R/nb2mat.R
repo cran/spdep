@@ -9,7 +9,7 @@ nb2mat <- function(neighbours, glist=NULL, style="W", zero.policy=FALSE)
 		zero.policy=zero.policy)
 	res <- listw2mat(listw)
 	attr(res, "call") <- match.call()
-	invisible(res)
+	res
 }
 
 listw2mat <- function(listw) {
@@ -24,7 +24,7 @@ listw2mat <- function(listw) {
 		res[i, listw$neighbours[[i]]] <- listw$weights[[i]]
 	if (!is.null(attr(listw, "region.id")))
 		row.names(res) <- attr(listw, "region.id")
-	invisible(res)
+	res
 }
 
 invIrM <- function(neighbours, rho, glist=NULL, style="W") {
@@ -39,7 +39,7 @@ invIrM <- function(neighbours, rho, glist=NULL, style="W") {
 	mat <- diag(n) - rho * V
 	res <- solve(mat)
 	attr(res, "call") <- match.call()
-	invisible(res)
+	res
 }
 
 invIrW <- function(listw, rho) {
@@ -54,7 +54,7 @@ invIrW <- function(listw, rho) {
 	mat <- diag(n) - rho * V
 	res <- solve(mat)
 	attr(res, "call") <- match.call()
-	invisible(res)
+	res
 }
 
 mat2listw <- function(x, row.names=NULL) {
@@ -100,5 +100,5 @@ mat2listw <- function(x, row.names=NULL) {
 	class(res) <- c("listw", "nb")
 	attr(res, "region.id") <- attr(neighbours, "region.id")
 	attr(res, "call") <- match.call()
-	invisible(res)	
+	res
 }

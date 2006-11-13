@@ -60,7 +60,7 @@ read.gal <- function(file, region.id=NULL, override.id=FALSE)
 	attr(res1, "gal") <- TRUE
 	attr(res1, "call") <- TRUE
 	res1 <- sym.attr.nb(res1)
-	invisible(res1)
+	res1
 }
 
 write.nb.gal <- function(nb, file, oldstyle=TRUE, shpfile=NULL, ind=NULL) {

@@ -26,6 +26,6 @@ tri2nb <- function(coords, row.names = NULL) {
 	attr(nb, "tri") <- TRUE
 	attr(nb, "call") <- match.call()
 	nb <- sym.attr.nb(nb)
-	invisible(nb)
+	nb
 }
 

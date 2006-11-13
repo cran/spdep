@@ -14,6 +14,5 @@ airdist <- function(ann=FALSE) {
 			pos=4, offset=0.2, cex=0.7)
 	}
 	if (.Platform$OS.type == "windows") bringToTop(-1)
-	print(res)
-	invisible(list(dist=res, coords=coords))
+	list(dist=res, coords=coords)
 }

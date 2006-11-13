@@ -43,7 +43,8 @@ asListwMatrixCsr <- function(mcsr) {
 	ia <- mcsr@ia
 	dia <- diff(mcsr@ia)
 	if(length(dia) != n) stop("dimension does not match row indices")
-	if (any(dia < 1) | any(dia > n)) stop("row indices out of range")
+	if (any(dia < 0) | any(dia > n)) stop("row indices out of range")
+# bug hit by Martin Reismann 061025
 	if (any(ja < 1) | any(ja > n)) stop("column indices out of range")
 	region.id <- as.character(1:n)
 	nlist <- vector(mode="list", length=n)

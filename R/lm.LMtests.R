@@ -107,20 +107,19 @@ tracew <- function (listw) {
 	n <- length(listw$neighbours)
 	if (n < 1) stop("non-positive n")
 	ndij <- card(listw$neighbours)
+	dlmtr <- 0
 	for (i in 1:n) {
 		dij <- listw$neighbours[[i]]
 		wdij <- listw$weights[[i]]
 		for (j in seq(length=ndij[i])) {
 			k <- dij[j]
-			if (k > i) {
+# Luc Anselin 2006-11-11 problem with asymmetric listw
 			    dk <- which(listw$neighbours[[k]] == i)
 			    if (length(dk) > 0 && dk > 0 &&
 				dk <= length(listw$neighbours[[k]]))
 				wdk <- listw$weights[[k]][dk]
-				else wdk <- 0
-				dlmtr <- dlmtr + (wdk * wdk) + 2 *
-				(wdij[j] * wdk) + (wdij[j] * wdij[j])
-			}
+			    else wdk <- 0
+			    dlmtr <- dlmtr + (wdij[j]*wdij[j]) + (wdij[j]*wdk)
 		}
 	}
 	dlmtr

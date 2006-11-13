@@ -16,7 +16,7 @@ relativeneigh <- function(coords) {
     z$to<-z$to[1:z$nedges]
     attr(z, "call") <- match.call()
     class(z)<-c("Graph","relative")
-    invisible(z)
+    z
 }
 
 plot.relative<-function(x, show.points=FALSE, add=FALSE, linecol=par(col),...){

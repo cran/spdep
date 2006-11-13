@@ -27,5 +27,5 @@ knn2nb <- function(knn, row.names=NULL, sym=FALSE) {
 	attr(res, "type") <- "knn"
  	attr(res, "knn-k") <- knn$k
 	class(res) <- "nb"
-	invisible(res)
+	res
 }
