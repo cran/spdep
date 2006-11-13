@@ -1,4 +1,4 @@
-# Copyright 2001-4 by Roger Bivand 
+# Copyright 2001-6 by Roger Bivand 
 #
 
 lm.morantest <- function(model, listw, zero.policy=FALSE, 
@@ -6,7 +6,7 @@ lm.morantest <- function(model, listw, zero.policy=FALSE,
 	alternative <- match.arg(alternative, c("greater", "less", "two.sided"))
 	if (!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
-	if(class(model) != "lm") stop(paste(deparse(substitute(model)),
+	if(!inherits(model, "lm")) stop(paste(deparse(substitute(model)),
 		"not an lm object"))
  	N <- length(listw$neighbours)
 	u <- resfun(model)

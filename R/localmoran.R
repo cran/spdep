@@ -57,7 +57,7 @@ localmoran <- function(x, listw, zero.policy=FALSE, na.action=na.fail,
 	attr(res, "call") <- match.call()
 	if (!is.null(na.act)) attr(res, "na.action") <- na.act
 	class(res) <- c("localmoran", class(res))
-	invisible(res)
+	res
 }
 
 

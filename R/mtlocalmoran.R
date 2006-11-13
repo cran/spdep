@@ -165,7 +165,7 @@ localmoran.sad <- function (model, select, nb, glist = NULL, style = "W",
 	res[[i]] <- obj
     }
     class(res) <- "localmoransad"
-    invisible(res)
+    res
 }
 
 print.localmoransad <- function(x, ...) {

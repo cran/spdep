@@ -19,6 +19,6 @@ nbdists <- function(nb, coords, lonlat=FALSE) {
         dlist <- .Call("nbdists", nb, as.matrix(coords), as.integer(np), 
             as.integer(dimension), as.integer(lonlat), PACKAGE="spdep")
 	attr(dlist[[1]], "call") <- match.call()
-	invisible(dlist[[1]])
+	dlist[[1]]
 }
 

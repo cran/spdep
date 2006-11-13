@@ -29,6 +29,6 @@ diffnb <- function(x, y, verbose=TRUE) {
 	attr(res, "region.id") <- attr(x, "region.id")
 	attr(res, "call") <- match.call()
 	res <- sym.attr.nb(res)
-	invisible(res)
+	res
 }	
 	

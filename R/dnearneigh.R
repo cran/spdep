@@ -31,5 +31,5 @@ dnearneigh <- function(x, d1, d2, row.names=NULL, lonlat=FALSE) {
     attr(z[[1]], "call") <- match.call()
     attr(z[[1]], "dnn") <- c(d1, d2)
     z[[1]] <- sym.attr.nb(z[[1]])
-    invisible(z[[1]])
+    z[[1]]
 }

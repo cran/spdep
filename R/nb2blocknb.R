@@ -33,7 +33,7 @@ nb2blocknb <- function(nb, ID, row.names = NULL) {
 	attr(res, "block") <- TRUE
 	attr(res, "call") <- match.call()
 	res <- sym.attr.nb(res)
-	invisible(res)
+	res
 }
 
 

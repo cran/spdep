@@ -21,7 +21,7 @@ geary.intern <- function(x, listw, n, zero.policy, type="geary") {
 		as.numeric(x), as.integer(cardnb),
 		as.logical(zero.policy), as.logical(ft), PACKAGE="spdep")
 	if (any(is.na(res))) warning("NAs in lagged values")
-	invisible(res)
+	res
 }
 
 geary.test <- function(x, listw, randomisation=TRUE, zero.policy=FALSE,

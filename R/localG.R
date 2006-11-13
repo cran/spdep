@@ -34,5 +34,5 @@ localG <- function(x, listw, zero.policy=FALSE, spChk=NULL) {
 	attr(res, "gstari") <- gstari
 	attr(res, "call") <- match.call()
 	class(res) <- "localG"
-	invisible(res)
+	res
 }

@@ -145,6 +145,6 @@ edit.nb <- function(name, coords, polys=NULL, ...) {
   attr(nb, "region.id") <- row.names
   class(nb) <- "nb"
   nb <- sym.attr.nb(nb)
-  invisible(nb)
+  nb
 }
 

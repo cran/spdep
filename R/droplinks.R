@@ -29,6 +29,6 @@ droplinks <- function(nb, drop, sym=TRUE) {
 		nb[[i]] <- as.integer(0)
 	}
 	nb <- sym.attr.nb(nb)
-	invisible(nb)
+	nb
 }
 

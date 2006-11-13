@@ -4,7 +4,7 @@
 \alias{Szero}
 \title{Provides constants for spatial weights matrices}
 \description{
- The function calculates the constants needed for tests of spatial autocorrelation for general weights matrices represented as \code{listw} objects
+ The function calculates the constants needed for tests of spatial autocorrelation for general weights matrices represented as \code{listw} objects. Note: from spdep 0.3-32, the values of S1 and S2 are returned correctly for both underlying symmetric and asymmetric neighbour lists, before 0.3-32, S1 and S2 were wrong for listw objects based on asymmetric neighbour lists, such as k-nearest neighbours (thanks to Luc Anselin for finding the bug).
 }
 \usage{
 spweights.constants(listw, zero.policy=FALSE)

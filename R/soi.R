@@ -24,5 +24,5 @@ soi.graph <- function(tri.nb,coords){
              from=answ$from,to=answ$to,circles=answ$circ)
   attr(answ, "call") <- match.call()
   class(answ)<-c("Graph","SOI")
-  invisible(answ)
+  answ
 }

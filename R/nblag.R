@@ -40,5 +40,5 @@ nblag <- function(neighbours, maxlag)
 		lags[[i]] <- sym.attr.nb(lags[[i]])
 	}
 	attr(lags, "call") <- match.call()
-	invisible(lags)
+	lags
 }

@@ -16,7 +16,7 @@ gabrielneigh <- function(coords) {
     z$to<-z$to[1:z$nedges]
     attr(z, "call") <- match.call()
     class(z)<-c("Graph","Gabriel")
-    invisible(z)
+    z
 }
 
 plot.Gabriel<-function(x, show.points=FALSE, add=FALSE,

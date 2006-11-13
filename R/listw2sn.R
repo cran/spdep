@@ -18,7 +18,7 @@ listw2sn <- function(listw) {
 	if (!(is.null(attr(listw, "GeoDa"))))
 		attr(res, "GeoDa") <- attr(listw, "GeoDa")
 	attr(res, "listw.call") <- attr(listw, "call")
-	invisible(res)
+	res
 }
 
 sn2listw <- function(sn) {
@@ -53,6 +53,6 @@ sn2listw <- function(sn) {
 		attr(res, "GeoDa") <- attr(sn, "GeoDa")
 	attr(res, "region.id") <- region.id
 	attr(res, "call") <- match.call()
-	invisible(res)
+	res
 }
 
