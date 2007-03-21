@@ -6,6 +6,8 @@
 \title{Marshall's infant mortality in Auckland dataset}
 \usage{data(auckland)}
 \description{
+(Use \code{example(auckland)} to load the data from shapefile and generate neighbour list on the fly).
+
 The \code{auckland} data frame has 167 rows (census area units --- CAU) and 4 columns. The dataset also includes the "nb" object \code{auckland.nb} of neighbour relations based on contiguity, and the "polylist" object \code{auckpolys} of polygon boundaries for the CAU. The \code{auckland} data frame includes the following columns:
 }
 \format{
@@ -13,8 +15,8 @@ The \code{auckland} data frame has 167 rows (census area units --- CAU) and 4 co
   \describe{
     \item{Easting}{a numeric vector of x coordinates in an unknown spatial reference system}
     \item{Northing}{a numeric vector of y coordinates in an unknown spatial reference system}
-    \item{Deaths.1977.85}{a numeric vector of counts of infant (under 5 years of age) deaths in Auckland, 1977-1985}
-    \item{Under.5.1981}{a numeric vector of population under 5 years of age at the 1981 Census}
+    \item{M77\_85}{a numeric vector of counts of infant (under 5 years of age) deaths in Auckland, 1977-1985}
+    \item{Und5\_81}{a numeric vector of population under 5 years of age at the 1981 Census}
   }
 }
 \details{
@@ -22,5 +24,10 @@ The \code{auckland} data frame has 167 rows (census area units --- CAU) and 4 co
 }
 \source{
  Marshall R M (1991) Mapping disease and mortality rates using Empirical Bayes Estimators, Applied Statistics, 40, 283--294; Bailey T, Gatrell A (1995) Interactive Spatial Data Analysis, Harlow: Longman --- INFOMAP data set used with permission.
+}
+\examples{
+auckland <- readShapePoly(system.file("etc/shapes/auckland.shp",
+ package="spdep")[1])
+auckland.nb <- poly2nb(auckland)
 }
 \keyword{datasets}

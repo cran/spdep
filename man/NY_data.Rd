@@ -5,7 +5,7 @@
 \docType{data}
 \title{New York leukemia data}
 \description{
-  New York leukemia data taken from the data sets supporting Waller and Gotway 2004.
+  New York leukemia data taken from the data sets supporting Waller and Gotway 2004 (the data should be loaded by running \code{example(NY_data)} to demonstrate spatial data import techniques).
 }
 \usage{data(NY_data)}
 \format{
@@ -35,15 +35,15 @@
   Waller, L. and C. Gotway (2004) \emph{Applied Spatial Statistics for Public Health Data}. New York: John Wiley and Sons.
 }
 \examples{
-\dontrun{
 ## NY leukemia
-require(foreign)
-nydata <- read.dbf("nydata.dbf")
-nyadjmat <- as.matrix(read.dbf("nyadjwts.dbf")[-1])
-ID <- as.character(names(read.dbf("nyadjwts.dbf"))[-1])
+nydata <- read.dbf(system.file("etc/misc/nydata.dbf", package="spdep")[1])
+coordinates(nydata) <- c("X", "Y")
+nyadjmat <- as.matrix(read.dbf(system.file("etc/misc/nyadjwts.dbf",
+ package="spdep")[1])[-1])
+ID <- as.character(names(read.dbf(system.file("etc/misc/nyadjwts.dbf",
+ package="spdep")[1]))[-1])
 identical(substring(ID, 2, 10), substring(as.character(nydata$AREAKEY), 2, 10))
 nyadjlw <- mat2listw(nyadjmat, as.character(nydata$AREAKEY))
 listw_NY <- nb2listw(nyadjlw$neighbours, style="B")
-}
 }
 \keyword{datasets}

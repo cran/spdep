@@ -8,28 +8,35 @@
 \title{North Carolina SIDS data}
 \usage{data(nc.sids)}
 \description{
-The \code{nc.sids} data frame has 100 rows and 9 columns. It contains data
+(Use \code{example(nc.sids)} to read the data set from shapefile, together with import of two different list of neighbours).
+
+The \code{nc.sids} data frame has 100 rows and 21 columns. It contains data
 given in Cressie (1991, pp. 386-9), Cressie and Read (1985) and Cressie and Chan (1989) on sudden infant deaths in North Carolina for 1974-78 and 1979-84. The data set also contains the neighbour list given by Cressie and Chan (1989) omitting self-neighbours (ncCC89.nb), and the neighbour list given by Cressie and Read (1985) for contiguities (ncCR85.nb). The data are ordered by county ID number, not alphabetically as in the source tables \code{sidspolys} is a "polylist" object of polygon boundaries, and \code{sidscents} is a matrix of their centroids.
 
 }
 \format{
   This data frame contains the following columns:
   \describe{
-    \item{CNTY.ID}{county ID}
+    \item{SP\_ID}{SpatialPolygons ID}
+    \item{CNTY\_ID}{county ID}
+    \item{east}{eastings, county seat, miles, local projection}
+    \item{north}{northings, county seat, miles, local projection}
+    \item{L\_id}{Cressie and Read (1985) L index}
+    \item{M\_id}{Cressie and Read (1985) M index}
+    \item{names}{County names}
+    \item{AREA}{County polygon areas in degree units}
+    \item{PERIMETER}{County polygon perimeters in degree units}
+    \item{CNTY\_}{Internal county ID}
+    \item{NAME}{County names}
+    \item{FIPS}{County ID}
+    \item{FIPSNO}{County ID}
+    \item{CRESS\_ID}{Cressie papers ID}
     \item{BIR74}{births, 1974-78}
     \item{SID74}{SID deaths, 1974-78}
     \item{NWBIR74}{non-white births, 1974-78}
     \item{BIR79}{births, 1979-84}
     \item{SID79}{SID deaths, 1979-84}
     \item{NWBIR79}{non-white births, 1979-84}
-    \item{east}{eastings, county seat, miles, local projection}
-    \item{north}{northings, county seat, miles, local projection}
-    \item{x}{easting, county seats approximately reprojected to UTM zone 18}
-    \item{y}{northings, county seats approximately reprojected to UTM zone 18}
-    \item{lon}{easting, county seats in long-lat}
-    \item{lat}{northings, county seats in long-lat}
-    \item{L.id}{Cressie and Read (1985) L index}
-    \item{M.id}{Cressie and Read (1985) M index}
   }
 }
 \source{
@@ -37,12 +44,18 @@ given in Cressie (1991, pp. 386-9), Cressie and Read (1985) and Cressie and Chan
 }
 
 \examples{
-library(maptools)
-data(nc.sids)
-plot(sidspolys, border="grey", forcefill=FALSE)
-plot(ncCR85.nb, sidscents, add=TRUE, col="blue")
-plot(sidspolys, border="grey", forcefill=FALSE)
-plot(ncCC89.nb, cbind(nc.sids$lon, nc.sids$lat),
- add=TRUE, col="blue")
+nc.sids <- readShapePoly(system.file("etc/shapes/sids.shp", package="spdep")[1],
+  ID="FIPSNO", proj4string=CRS("+proj=longlat +ellps=clrk66"))
+rn <- sapply(slot(nc.sids, "polygons"), function(x) slot(x, "ID"))
+ncCC89_nb <- read.gal(system.file("etc/weights/ncCC89.gal", package="spdep")[1],
+  region.id=rn)
+ncCR85_nb <- read.gal(system.file("etc/weights/ncCR85.gal", package="spdep")[1],
+  region.id=rn)
+\dontrun{
+plot(sids, border="grey")
+plot(ncCR85_nb, coordinates(sids), add=TRUE, col="blue")
+plot(sids, border="grey")
+plot(ncCC89_nb, coordinates(sids), add=TRUE, col="blue")
+}
 }
 \keyword{datasets}

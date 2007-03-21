@@ -33,7 +33,8 @@ A \code{listw} object with the following members:
 \seealso{\code{\link{summary.nb}}, \code{\link{read.gal}}}
 
 \examples{
-data(columbus)
+example(columbus)
+coords <- coordinates(columbus)
 cards <- card(col.gal.nb)
 col.w <- nb2listw(col.gal.nb)
 plot(cards, unlist(lapply(col.w$weights, sum)),xlim=c(0,10),

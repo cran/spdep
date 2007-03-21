@@ -19,7 +19,8 @@ The function returns an object of class \code{nb} with a list of integer vectors
 \seealso{\code{\link{summary.nb}}}
 
 \examples{
-data(columbus)
+example(columbus)
+coords <- coordinates(columbus)
 summary(col.gal.nb, coords)
 summary(include.self(col.gal.nb), coords)
 }

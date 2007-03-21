@@ -1,10 +1,18 @@
-# Copyright 2001-3 by Roger Bivand
+# Copyright 2001-7 by Roger Bivand
+# Upgrade to sp classes February 2007
 #
 
 
-nbdists <- function(nb, coords, lonlat=FALSE) {
+nbdists <- function(nb, coords, longlat=NULL) {
 	if (!inherits(nb, "nb")) 
         	stop("Not a neighbours list")
+   	if (inherits(coords, "SpatialPoints")) {
+      		if ((is.null(longlat) || !is.logical(longlat)) 
+		    && !is.na(is.projected(coords)) && !is.projected(coords)) {
+         		longlat <- TRUE
+      		} else longlat <- FALSE
+      		coords <- coordinates(coords)
+   	} else if (is.null(longlat) || !is.logical(longlat)) longlat <- FALSE
 	if (!is.numeric(coords)) stop("Data non-numeric")
 	if (!is.matrix(coords)) 
             stop("Data not in matrix form")
@@ -17,7 +25,7 @@ nbdists <- function(nb, coords, lonlat=FALSE) {
             stop("Number of coords not equal to number of regions")
         dimension <- ncol(coords)
         dlist <- .Call("nbdists", nb, as.matrix(coords), as.integer(np), 
-            as.integer(dimension), as.integer(lonlat), PACKAGE="spdep")
+            as.integer(dimension), as.integer(longlat), PACKAGE="spdep")
 	attr(dlist[[1]], "call") <- match.call()
 	dlist[[1]]
 }

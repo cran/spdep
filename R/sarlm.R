@@ -12,11 +12,21 @@ deviance.sarlm <- function(object, ...) {
 }
 
 coef.sarlm <- function(object, ...) {
-	ret <- object$coefficients
+	ret <- NULL
+#	ret <- sqrt(object$s2)
+#	names(ret) <- "sigma"
 	if(object$type == "error") ret <- c(ret, object$lambda)
 	else ret <- c(ret, object$rho)
+	ret <- c(ret, object$coefficients)
+
 	ret
 }
+
+#vcov.sarlm <- function(object, ...) {
+#	if (!object$ase) stop("no asymptotic covariance matrix available")
+#        (object$s2^2) * object$resvar
+#}
+
 
 fitted.sarlm <- function(object, ...) {
 	if (is.null(object$na.action))

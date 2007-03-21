@@ -21,8 +21,8 @@ from an original GAL-format file. The matrix \code{bbs} is DEPRECATED, but retai
   \describe{
     \item{AREA}{computed by ArcView}
     \item{PERIMETER}{computed by ArcView}
-    \item{COLUMBUS.}{internal polygon ID (ignore)}
-    \item{COLUMBUS.I}{another internal polygon ID (ignore)}
+    \item{COLUMBUS\_}{internal polygon ID (ignore)}
+    \item{COLUMBUS\_I}{another internal polygon ID (ignore)}
     \item{POLYID}{yet another polygon ID}
     \item{NEIG}{neighborhood id value (1-49);
              conforms to id value used in Spatial Econometrics book.}
@@ -31,18 +31,16 @@ from an original GAL-format file. The matrix \code{bbs} is DEPRECATED, but retai
     \item{CRIME}{residential burglaries and vehicle thefts per thousand
         households in the neighborhood}
     \item{OPEN}{open space in neighborhood}
-    \item{PLUMB}{percentage housing units without plumbin}
+    \item{PLUMB}{percentage housing units without plumbing}
     \item{DISCBD}{distance to CBD}
     \item{X}{x coordinate (in arbitrary digitizing units, not polygon coordinates)}
     \item{Y}{y coordinate (in arbitrary digitizing units, not polygon coordinates)}
-    \item{AREA}{neighborhood area (computed by SpaceStat)}
     \item{NSA}{north-south dummy (North=1)}
     \item{NSB}{north-south dummy (North=1)}
     \item{EW}{east-west dummy (East=1)}
     \item{CP}{core-periphery dummy (Core=1)}
     \item{THOUS}{constant=1,000}
     \item{NEIGNO}{NEIG+1,000, alternative neighborhood id value}
-    \item{PERIM}{polygon perimeter (computed by SpaceStat)}
   }
 }
 \details{
@@ -59,7 +57,9 @@ Luc Anselin, Spatial Analysis Laboratory, Department of Agricultural and Consume
 }
 
 \examples{
-data(columbus)
-summary(columbus)
+columbus <- readShapePoly(system.file("etc/shapes/columbus.shp",
+ package="spdep")[1])
+col.gal.nb <- read.gal(system.file("etc/weights/columbus.gal",
+ package="spdep")[1])
 }
 \keyword{datasets}

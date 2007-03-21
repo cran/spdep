@@ -23,26 +23,20 @@ A data frame with three columns, and with class \code{spatial.neighbour}:
   \item{from}{region number id for the start of the link (S-PLUS row.id)}
   \item{to}{region number id for the end of the link (S-PLUS col.id)}
   \item{weights}{weight for this link}
-\code{logSpwdet} returns log det(I - rho * W).
+%\code{logSpwdet} returns log det(I - rho * W).
 }
 
 
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 
-\seealso{\code{\link{nb2listw}}, \code{\link{errorsarlm}},
- \code{\link{lagsarlm}}}
+\seealso{\code{\link{nb2listw}}}
 
 \examples{
-data(columbus)
+example(columbus)
 col.listw <- nb2listw(col.gal.nb)
 col.listw$neighbours[[1]]
 col.listw$weights[[1]]
 col.sn <- listw2sn(col.listw)
 str(col.sn)
-W <- asMatrixCsrListw(similar.listw(col.listw))
-str(W)
-rho <- seq(-0.8, 0.9, 0.1)
-for (i in rho) print(paste("rho:", i, "log(det(I - rho*W))",
-  log(det(asMatrixCsrIrW(W, i)))), quote=TRUE)
 }
 \keyword{spatial}

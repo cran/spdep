@@ -39,15 +39,15 @@ df2sn(df, i="i", i_ID="i_ID", j="j", wt="wt")
 \seealso{\code{\link{sn2listw}}, \code{\link[maptools]{write.linelistShape}}}
 
 \examples{
-data(columbus)
+example(columbus)
+coords <- coordinates(columbus)
 res <- listw2lines(nb2listw(col.gal.nb), coords)
 str(res$df)
 fn <- paste(tempdir(), "nbshape", sep="/")
 write.linelistShape(res$ll, res$df, file=fn)
-inMap <- read.shape(fn)
-str(inMap$att.data)
-diffnb(sn2listw(df2sn(inMap$att.data))$neighbours, col.gal.nb)
-identical(coords, unique(t(sapply(Map2lines(inMap), function(x) x[1,]))))
+inMap <- readShapeLines(fn)
+summary(inMap)
+diffnb(sn2listw(df2sn(as(inMap, "data.frame")))$neighbours, col.gal.nb)
 }
 \keyword{spatial}
 

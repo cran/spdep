@@ -1,4 +1,4 @@
-# Copyright 2001-3 by Roger Bivand
+# Copyright 2001-7 by Roger Bivand, Markus Reder and Werner Mueller
 #
 
 
@@ -27,32 +27,40 @@ listw2mat <- function(listw) {
 	res
 }
 
-invIrM <- function(neighbours, rho, glist=NULL, style="W") {
+invIrM <- function(neighbours, rho, glist=NULL, style="W", method="solve", 
+	feasible=NULL) {
 	if(class(neighbours) != "nb") stop("Not a neighbours list")
-	n <- length(neighbours)
-	V <- nb2mat(neighbours, glist, style)
-	e <- eigen(V, only.values = TRUE)$values
-	if (is.complex(e)) feasible <- 1/(range(Re(e)))
-	else feasible <- 1/(range(e))
-	if (rho <= feasible[1] || rho >= feasible[2])
-		stop(paste("Rho outside feasible range:", feasible))
-	mat <- diag(n) - rho * V
-	res <- solve(mat)
-	attr(res, "call") <- match.call()
-	res
+	invIrW(nb2listw(neighbours, glist=glist, style=style), rho=rho, 
+		method=method, feasible=feasible)
 }
 
-invIrW <- function(listw, rho) {
+invIrW <- function(listw, rho, method="solve", feasible=NULL) {
 	if(!inherits(listw, "listw")) stop("Not a weights list")
 	n <- length(listw$neighbours)
 	V <- listw2mat(listw)
-	e <- eigen(V, only.values = TRUE)$values
-	if (is.complex(e)) feasible <- 1/(range(Re(e)))
-	else feasible <- 1/(range(e))
-	if (rho <= feasible[1] || rho >= feasible[2])
-		stop(paste("Rho outside feasible range:", feasible))
-	mat <- diag(n) - rho * V
-	res <- solve(mat)
+	if (is.null(feasible) || (is.logical(feasible) && !feasible)) {
+		V <- listw2mat(listw)
+		e <- eigen(V, only.values = TRUE)$values
+		if (is.complex(e)) feasible <- 1/(range(Re(e)))
+		else feasible <- 1/(range(e))
+		if (rho <= feasible[1] || rho >= feasible[2])
+			stop(paste("Rho outside feasible range:", feasible))
+	}
+	if (method == "chol"){
+		if (listw$style %in% c("W", "S") && !(can.be.simmed(listw)))
+			stop("Cholesky method requires symmetric weights")
+		if (listw$style %in% c("B", "C", "U") && 
+			!(is.symmetric.glist(listw$neighbours, listw$weights)))
+			stop("Cholesky method requires symmetric weights")
+		if (listw$style %in% c("W", "S")) {
+			V <- listw2mat(listw2U(similar.listw(listw)))
+		}
+		mat <- diag(n) - rho * V
+		res <- chol2inv(chol(mat))
+	} else if (method == "solve") {
+		mat <- diag(n) - rho * V
+		res <- solve(mat)
+	} else stop("unknown method")
 	attr(res, "call") <- match.call()
 	res
 }

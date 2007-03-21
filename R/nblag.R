@@ -42,3 +42,24 @@ nblag <- function(neighbours, maxlag)
 	attr(lags, "call") <- match.call()
 	lags
 }
+
+# Copyright 2006-2007 (c) Giovanni Millo and Roger Bivand
+
+nblag_cumul <- function (nblags) {
+    if (any(sapply(nblags, function(x) class(x) != "nb")))
+        stop("nblags must be a list of neighbour objects")
+    maxlag <- length(nblags)
+    if (maxlag < 2) stop("maxlag must be greater than 1")
+
+    n <- length(nblags[[1]])
+    lags <- vector(mode="list", length=n)
+    for (i in 1:n) {
+        res <- nblags[[1]][[i]]
+	for (j in 2:maxlag) res <- c(res, nblags[[j]][[i]])
+        lags[[i]] <- res[order(res)]
+    }
+    attr(lags, "region.id") <- attr(neighbours, "region.id")
+    attr(lags, "call") <- match.call()
+    class(lags) <- "nb"
+    lags
+}

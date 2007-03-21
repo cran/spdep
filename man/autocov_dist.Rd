@@ -6,17 +6,17 @@
   Calculates the autocovariate to be used in autonormal, autopoisson or autologistic regression. Three distance-weighting schemes are available.
 }
 \usage{
-autocov_dist(z, xy, nbs = 1, type = "inverse", zero.policy = FALSE, style = "W", lonlat=FALSE)
+autocov_dist(z, xy, nbs = 1, type = "inverse", zero.policy = FALSE, style = "W", longlat=NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{z}{the response variable}
-  \item{xy}{the matrix of coordinates}
+  \item{xy}{a matrix of coordinates or a SpatialPoints object}
   \item{nbs}{neighbourhood radius; default is 1}
   \item{type}{the weighting scheme: "one" gives equal weight to all data points in the neighbourhood; "inverse" (the default) weights by inverse distance; "inverse.squared" weights by the square of "inverse"}
   \item{zero.policy}{If FALSE stop with error for any empty neighbour sets, if TRUE permit the weights list to be formed with zero-length weights vectors}
   \item{style}{style' can take values W, B, C, U, and S; W gives mean values for neighbours}
-  \item{lonlat}{TRUE if point coordinates are longitude-latitude decimal, in which case distances are measured in kilometers}
+  \item{longlat}{TRUE if point coordinates are longitude-latitude decimal, in which case distances are measured in kilometers; if xy is a SpatialPoints object, the value is taken from the object itself}
 }
 
 \value{
@@ -27,8 +27,8 @@ autocov_dist(z, xy, nbs = 1, type = "inverse", zero.policy = FALSE, style = "W",
 
 \seealso{\code{\link{nb2listw}}}
 \examples{
-data(columbus)
-xy <- as.matrix(columbus[,13:14])
+example(columbus)
+xy <- cbind(columbus$X, columbus$Y)
 ac1a <- autocov_dist(columbus$CRIME, xy, nbs=10, style="W", type="one")
 acinva <- autocov_dist(columbus$CRIME, xy, nbs=10, style="W", type="inverse")
 acinv2a <- autocov_dist(columbus$CRIME, xy, nbs=10, style="W", type="inverse.squared")
@@ -56,6 +56,15 @@ all.equal(acinv2b, acinv2a)
 
 glm(CRIME ~ HOVAL + ac1b, data=columbus, family="gaussian")
 spautolm(columbus$CRIME ~ HOVAL, data=columbus, listw=nb2listw(nb, style="W"))
+
+xy <- SpatialPoints(xy)
+acinva <- autocov_dist(columbus$CRIME, xy, nbs=10, style="W", type="inverse")
+nb <- dnearneigh(xy, 0, 10)
+nbd <- nbdists(nb, xy)
+gl <- lapply(nbd, function(x) 1/x)
+lw <- nb2listw(nb, glist=gl)
+acinvb <- lag(lw, columbus$CRIME)
+all.equal(acinvb, acinva)
 
 }
 \keyword{spatial}

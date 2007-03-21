@@ -52,22 +52,21 @@ of the Institute of British Geographers}, 66, 95--118.}
 \seealso{\code{\link{nblag}}, \code{\link{moran}}, \code{\link[stats]{p.adjust}}}
 
 \examples{
-data(nc.sids)
+example(nc.sids)
 ft.SID74 <- sqrt(1000)*(sqrt(nc.sids$SID74/nc.sids$BIR74) +
   sqrt((nc.sids$SID74+1)/nc.sids$BIR74))
 tr.SIDS74 <- ft.SID74*sqrt(nc.sids$BIR74)
-names(tr.SIDS74) <- rownames(nc.sids)
-cspc <- sp.correlogram(ncCC89.nb, tr.SIDS74, order=8, method="corr",
+cspc <- sp.correlogram(ncCC89_nb, tr.SIDS74, order=8, method="corr",
  zero.policy=TRUE)
 print(cspc)
 plot(cspc)
-Ispc <- sp.correlogram(ncCC89.nb, tr.SIDS74, order=8, method="I",
+Ispc <- sp.correlogram(ncCC89_nb, tr.SIDS74, order=8, method="I",
  zero.policy=TRUE)
 print(Ispc)
 print(Ispc, "bonferroni")
 plot(Ispc)
-drop.no.neighs <- !(1:length(ncCC89.nb) \%in\% which(card(ncCC89.nb) == 0))
-sub.ncCC89.nb <- subset(ncCC89.nb, drop.no.neighs)
+drop.no.neighs <- !(1:length(ncCC89_nb) \%in\% which(card(ncCC89_nb) == 0))
+sub.ncCC89.nb <- subset(ncCC89_nb, drop.no.neighs)
 plot(sp.correlogram(sub.ncCC89.nb, subset(tr.SIDS74,  drop.no.neighs),
  order=8, method="corr"))
 }

@@ -22,7 +22,8 @@ A list of:
 \author{Nicholas Lewin-Koh \email{kohnicho@comp.nus.edu.sg}}
 \seealso{\code{\link{plot.nb}}}
 \examples{
-data(columbus)
+example(columbus)
+coords <- coordinates(columbus)
 plot(col.gal.nb, coords, col="grey")
 col2 <- droplinks(col.gal.nb, 21)
 plot(col2, coords, add=TRUE)

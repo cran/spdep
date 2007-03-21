@@ -28,7 +28,8 @@ neighbours lists}
 \seealso{\code{\link{summary.nb}}}
 
 \examples{
-data(columbus)
+example(columbus)
+coords <- coordinates(columbus)
 plot(col.gal.nb, coords)
 title(main="GAL order 1 links with first nearest neighbours in red")
 col.knn <- knearneigh(coords, k=1)

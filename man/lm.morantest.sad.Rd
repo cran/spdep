@@ -62,12 +62,15 @@ Geographical Analysis, forthcoming; see also Tiefelsdorf's SPSS code:
 \seealso{\code{\link{lm.morantest}}}
 
 \examples{
-data(eire)
-e.lm <- lm(OWNCONS ~ ROADACC, data=eire.df)
+eire <- readShapePoly(system.file("etc/shapes/eire.shp", package="spdep")[1],
+  ID="names", proj4string=CRS("+proj=utm +zone=30 +units=km"))
+eire.nb <- poly2nb(eire)
+#data(eire)
+e.lm <- lm(OWNCONS ~ ROADACC, data=eire)
 lm.morantest(e.lm, nb2listw(eire.nb))
 lm.morantest.sad(e.lm, nb2listw(eire.nb))
 summary(lm.morantest.sad(e.lm, nb2listw(eire.nb)))
-e.wlm <- lm(OWNCONS ~ ROADACC, data=eire.df, weights=RETSALE)
+e.wlm <- lm(OWNCONS ~ ROADACC, data=eire, weights=RETSALE)
 lm.morantest(e.wlm, nb2listw(eire.nb), resfun=rstudent)
 lm.morantest.sad(e.wlm, nb2listw(eire.nb), resfun=rstudent)
 }

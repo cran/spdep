@@ -52,7 +52,7 @@ SpatialFiltering(formula, lagformula, data, nb, glist = NULL, style = "C", zero.
 
 \seealso{\code{\link[stats]{lm}}, \code{\link[base]{eigen}}, \code{\link{nb2listw}}, \code{\link{listw2U}}}
 \examples{
-data(columbus)
+example(columbus)
 lmbase <- lm(CRIME ~ INC + HOVAL, data=columbus)
 sarcol <- SpatialFiltering(CRIME ~ INC + HOVAL, data=columbus, nb=col.gal.nb, style="W", ExactEV=TRUE)
 sarcol

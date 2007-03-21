@@ -10,7 +10,7 @@ poly2nb(pl, row.names = NULL, snap=sqrt(.Machine$double.eps), queen=TRUE)
 }
 
 \arguments{
-  \item{pl}{list of polygons of class \code{polylist}, or an object of class \code{SpatialPolygons}}
+  \item{pl}{list of polygons of class \code{polylist}, or an object of a class extending \code{SpatialPolygons}}
   \item{row.names}{character vector of region ids to be added to the neighbours list as attribute \code{region.id}, default \code{seq(1, nrow(x))}; if \code{polys} has a \code{region.id} attribute, it is copied to the neighbours list.}
   \item{snap}{boundary points less than \code{snap} distance apart are considered to indicate contiguity}
   \item{queen}{if TRUE, a single shared boundary point meets the contiguity condition, if FALSE, more than one shared point is required}
@@ -20,34 +20,34 @@ A neighbours list with class \code{nb}
 }
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 
-\seealso{\code{\link{summary.nb}}, \code{\link[maptools]{plot.polylist}}}
+\seealso{\code{\link{summary.nb}}}
 
 \examples{
-data(columbus)
-xx <- poly2nb(polys)
+example(columbus)
+coords <- coordinates(columbus)
+xx <- poly2nb(columbus)
 dxx <- diffnb(xx, col.gal.nb)
-library(maptools)
-plot(polys, border="grey", forcefill=FALSE)
+plot(columbus, border="grey")
 plot(col.gal.nb, coords, add=TRUE)
 plot(dxx, coords, add=TRUE, col="red")
 title(main="Differences (red) in Columbus GAL weights (black)\nand polygon generated queen weights")
-xxx <- poly2nb(polys, queen=FALSE)
+xxx <- poly2nb(columbus, queen=FALSE)
 dxxx <- diffnb(xxx, col.gal.nb)
-plot(polys, border = "grey", forcefill=FALSE)
+plot(columbus, border = "grey")
 plot(col.gal.nb, coords, add = TRUE)
 plot(dxxx, coords, add = TRUE, col = "red")
 title(main="Differences (red) in Columbus GAL weights (black)\nand polygon generated rook weights")
 cards <- card(xx)
 maxconts <- which(cards == max(cards))
 if(length(maxconts) > 1) maxconts <- maxconts[1]
-fg <- rep("grey", length(polys))
+fg <- rep("grey", length(cards))
 fg[maxconts] <- "red"
 fg[xx[[maxconts]]] <- "green"
-plot(polys, col=fg, forcefill=FALSE)
+plot(columbus, col=fg)
 title(main="Region with largest number of contiguities")
-xx <- readShapePoly(system.file("shapes/sids.shp", package="maptools")[1], IDvar="FIPSNO", proj4string=CRS("+proj=longlat +ellps=clrk66"))
-xxnb <- poly2nb(as(xx, "SpatialPolygons"))
-plot(xx)
-plot(xxnb, coordinates(xx), add=TRUE, col="blue")
+example(nc.sids)
+xxnb <- poly2nb(nc.sids)
+plot(nc.sids)
+plot(xxnb, coordinates(nc.sids), add=TRUE, col="blue")
 }
 \keyword{spatial}

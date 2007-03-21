@@ -6,7 +6,7 @@
 poly2nb <- function(pl, row.names=NULL, snap=sqrt(.Machine$double.eps),
 	queen=TRUE) {
 	if (!inherits(pl, "polylist")) {
-		if (inherits(pl, "SpatialPolygons"))
+		if (extends(class(pl), "SpatialPolygons"))
 			pl <- maptools:::.SpP2polylist(pl)
 		else stop("Not a polygon list")
 	}

@@ -71,7 +71,7 @@ COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD, nb2listw(COL.nb, s
 summary(COL.errW.eig)
 COL.errW.GM <- GMerrorsar(CRIME ~ INC + HOVAL, data=COL.OLD, nb2listw(COL.nb, style="W"))
 summary(COL.errW.GM)
-data(NY_data)
+example(NY_data)
 esar1f <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata, listw=listw_NY, family="SAR", method="full")
 summary(esar1f)
 esar1gm <- GMerrorsar(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata, listw=listw_NY)

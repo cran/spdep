@@ -25,7 +25,7 @@ anova.sarlm(object, ...)
 \seealso{\code{\link{LR.sarlm}}, \code{\link{AIC}}}
 
 \examples{
-data(columbus)
+example(columbus)
 lm.mod <- lm(CRIME ~ HOVAL + INC, data=columbus)
 lag <- lagsarlm(CRIME ~ HOVAL + INC, data=columbus, nb2listw(col.gal.nb))
 mixed <- lagsarlm(CRIME ~ HOVAL + INC, data=columbus, nb2listw(col.gal.nb),

@@ -3,16 +3,16 @@
 \alias{knearneigh}
 \title{K nearest neighbours for spatial weights}
 \description{
-The function returns a matrix with the indices of regions belonging to the set of the k nearest neighbours of each other. If lonlat = TRUE, Great Circle distances are used.
+The function returns a matrix with the indices of regions belonging to the set of the k nearest neighbours of each other. If longlat = TRUE, Great Circle distances are used.
 }
 \usage{
-knearneigh(x, k=1, lonlat = FALSE)
+knearneigh(x, k=1, longlat = NULL)
 }
 
 \arguments{
-  \item{x}{matrix of region point coordinates}
+  \item{x}{matrix of region point coordinates or a SpatialPoints object}
   \item{k}{number of nearest neighbours to be returned}
-  \item{lonlat}{TRUE if point coordinates are longitude-latitude decimal degrees, in which case distances are measured in kilometers}
+  \item{longlat}{TRUE if point coordinates are longitude-latitude decimal degrees, in which case distances are measured in kilometers; if x is a SpatialPoints object, the value is taken from the object itself}
 }
 \details{
 The underlying C code is based on the \code{knn} function in the class package in the VR bundle.
@@ -31,10 +31,10 @@ A list of class \code{knn}
 \code{\link{knn2nb}}}
 
 \examples{
-data(columbus)
+example(columbus)
+coords <- coordinates(columbus)
 col.knn <- knearneigh(coords, k=4)
-library(maptools)
-plot(polys, border="grey", forcefill=FALSE)
+plot(columbus, border="grey")
 plot(knn2nb(col.knn), coords, add=TRUE)
 title(main="K nearest neighbours, k = 4")
 data(state)
@@ -46,12 +46,17 @@ if (as.numeric(paste(version$major, version$minor, sep="")) < 19) {
  m50.48 <- match(us48.fipsno$"State_name", state.name)
 }
 xy <- as.matrix(as.data.frame(state.center))[m50.48,]
-llk4.nb <- knn2nb(knearneigh(xy, k=4, lonlat=FALSE))
-gck4.nb <- knn2nb(knearneigh(xy, k=4, lonlat=TRUE))
+llk4.nb <- knn2nb(knearneigh(xy, k=4, longlat=FALSE))
+gck4.nb <- knn2nb(knearneigh(xy, k=4, longlat=TRUE))
 plot(llk4.nb, xy)
 plot(diffnb(llk4.nb, gck4.nb), xy, add=TRUE, col="red", lty=2)
 title(main="Differences between Euclidean and Great Circle k=4 neighbours")
-summary(llk4.nb, xy, lonlat=TRUE)
-summary(gck4.nb, xy, lonlat=TRUE)
+summary(llk4.nb, xy, longlat=TRUE)
+summary(gck4.nb, xy, longlat=TRUE)
+
+xy1 <- SpatialPoints((as.data.frame(state.center))[m50.48,],
+  proj4string=CRS("+proj=longlat"))
+gck4a.nb <- knn2nb(knearneigh(xy1, k=4))
+summary(gck4a.nb, xy1)
 }
 \keyword{spatial}

@@ -24,10 +24,10 @@ The function returns an object of class \code{nb} with a list of integer vectors
 \seealso{\code{\link{knearneigh}}}
 
 \examples{
-data(columbus)
+example(columbus)
+coords <- coordinates(columbus)
 col.knn <- knearneigh(coords, k=4)
-library(maptools)
-plot(polys, border="grey", forcefill=FALSE)
+plot(columbus, border="grey")
 plot(knn2nb(col.knn), coords, add=TRUE)
 title(main="K nearest neighbours, k = 4")
 }

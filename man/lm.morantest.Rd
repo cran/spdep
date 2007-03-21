@@ -47,7 +47,7 @@ lm.morantest(oldcrime.lm, nb2listw(COL.nb, style="W"))
 lm.LMtests(oldcrime.lm, nb2listw(COL.nb, style="W"))
 lm.morantest(oldcrime.lm, nb2listw(COL.nb, style="S"))
 lm.morantest(oldcrime1.lm, nb2listw(COL.nb, style="W"))
-moran.test(spNamedVec("CRIME", COL.OLD), nb2listw(COL.nb, style="W"),
+moran.test(COL.OLD$CRIME, nb2listw(COL.nb, style="W"),
  randomisation=FALSE)
 oldcrime.wlm <- lm(CRIME ~ HOVAL + INC, data = COL.OLD, weights = I(1/AREA))
 lm.morantest(oldcrime.wlm, nb2listw(COL.nb, style="W"), resfun=weighted.residuals)

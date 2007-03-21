@@ -1,4 +1,4 @@
-% Copyright 2004 by Roger S. Bivand
+% Copyright 2004-7 by Roger S. Bivand
 \encoding{latin1}
 \name{bptest.sarlm}
 \alias{bptest.sarlm}
@@ -20,6 +20,8 @@ bptest.sarlm(object, varformula=NULL, studentize = TRUE, data=list())
 }
 \details{
    Asymptotically this corresponds to the test given by Anselin (1988), but is not exactly the same. The studentized version is more conservative and perhaps to be prefered. The residuals, and for spatial error models the RHS variables, are adjusted for the spatial coefficient, as suggested bt Luc Anselin (personal communication).
+
+It is also technically possible to make heteroskedasticity corrections to standard error estimates by using the \dQuote{lm.target} component of \code{sarlm} objects - using functions in the lmtest and sandwich packages.
 }
 
 \value{
@@ -46,11 +48,17 @@ Dordrecht: Kluwer, pp. 121--122.
 
 \seealso{\code{\link{errorsarlm}}, \code{\link{lagsarlm}}}
 \examples{
-data(columbus)
+example(columbus)
 error.col <- errorsarlm(CRIME ~ HOVAL + INC, data=columbus,
  nb2listw(col.gal.nb))
 bptest.sarlm(error.col)
 bptest.sarlm(error.col, studentize=FALSE)
+\dontrun{
+if (require(lmtest) && require(sandwich)) {
+  coeftest(error.col$lm.target, vcov=vcovHC(error.col$lm.target,
+    type="HC0"), df=Inf)
+}
+}
 }
 \keyword{spatial}
 
