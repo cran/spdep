@@ -39,7 +39,7 @@ data(oldcol)
 colw <- nb2listw(COL.nb, style="W")
 nsim <- 99
 set.seed(1234)
-sim1 <- moran.mc(spNamedVec("CRIME", COL.OLD), listw=colw, nsim=nsim)
+sim1 <- moran.mc(COL.OLD$CRIME, listw=colw, nsim=nsim)
 sim1
 mean(sim1$res[1:nsim])
 var(sim1$res[1:nsim])
@@ -50,7 +50,7 @@ return(moran(x=var, ...)$I)
 }
 set.seed(1234)
 library(boot)
-boot1 <- boot(spNamedVec("CRIME", COL.OLD), statistic=MoranI.boot, R=nsim, sim="permutation", listw=colw, n=nrow(COL.OLD), S0=Szero(colw))
+boot1 <- boot(COL.OLD$CRIME, statistic=MoranI.boot, R=nsim, sim="permutation", listw=colw, n=nrow(COL.OLD), S0=Szero(colw))
 boot1
 plot(boot1)
 mean(boot1$t)
@@ -58,10 +58,10 @@ var(boot1$t)
 summary(boot1$t)
 colold.lags <- nblag(COL.nb, 3)
 set.seed(1234)
-sim2 <- moran.mc(spNamedVec("CRIME", COL.OLD), nb2listw(colold.lags[[2]],
+sim2 <- moran.mc(COL.OLD$CRIME, nb2listw(colold.lags[[2]],
  style="W"), nsim=nsim)
 summary(sim2$res[1:nsim])
-sim3 <- moran.mc(spNamedVec("CRIME", COL.OLD), nb2listw(colold.lags[[3]],
+sim3 <- moran.mc(COL.OLD$CRIME, nb2listw(colold.lags[[3]],
  style="W"), nsim=nsim)
 summary(sim3$res[1:nsim])
 }

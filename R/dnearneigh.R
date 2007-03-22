@@ -1,7 +1,15 @@
-# Copyright 2000-4 by Roger S. Bivand. 
+# Copyright 2000-7 by Roger S. Bivand. 
+# Upgrade to sp classes February 2007
 #
 
-dnearneigh <- function(x, d1, d2, row.names=NULL, lonlat=FALSE) {
+dnearneigh <- function(x, d1, d2, row.names=NULL, longlat=NULL) {
+   if (inherits(x, "SpatialPoints")) {
+      if ((is.null(longlat) || !is.logical(longlat)) 
+	 && !is.na(is.projected(x)) && !is.projected(x)) {
+         longlat <- TRUE
+      } else longlat <- FALSE
+      x <- coordinates(x)
+   } else if (is.null(longlat) || !is.logical(longlat)) longlat <- FALSE
     if (!is.numeric(x)) stop("Data non-numeric")
     if (!is.matrix(x)) stop("Data not in matrix form")
     if (any(is.na(x))) stop("Data include NAs")
@@ -19,13 +27,13 @@ dnearneigh <- function(x, d1, d2, row.names=NULL, lonlat=FALSE) {
     if (dimension > 2) stop("Only 2D data accepted")
     md <- 0
     if (d1 < 0) d1 <- 0.0
-    if (!lonlat) {
+    if (!longlat) {
 	for (i in 1:dimension) md <- sum(md, (diff(range(x[,i]))^2))
 	md <- md + (.Machine$double.eps)^(1/4)
     	if (d2 > sqrt(md)) d2 <- sqrt(md)
     }
     z <- .Call("dnearneigh", as.double(d1), as.double(d2), as.integer(np),
-        as.integer(dimension), as.double(x), as.integer(lonlat), 
+        as.integer(dimension), as.double(x), as.integer(longlat), 
 	PACKAGE="spdep")
     attr(z[[1]], "region.id") <- row.names
     attr(z[[1]], "call") <- match.call()

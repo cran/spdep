@@ -22,7 +22,7 @@ subset.listw(x, subset, zero.policy = FALSE, ...)
 
 
 \examples{
-data(columbus)
+example(columbus)
 to.be.dropped <- c(31, 34, 36, 39, 42, 46)
 pre <- nb2listw(col.gal.nb)
 print(pre)

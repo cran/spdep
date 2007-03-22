@@ -44,7 +44,7 @@ An object of class \code{ME_res}:
 \seealso{\code{\link{SpatialFiltering}}, \code{\link[stats]{glm}}}
 
 \examples{
-data(columbus)
+example(columbus)
 lmbase <- lm(CRIME ~ INC + HOVAL, data=columbus)
 lagcol <- SpatialFiltering(CRIME ~ 1, ~ INC + HOVAL, data=columbus, nb=col.gal.nb, style="W", alpha=0.1, verbose=TRUE)
 lagcol
@@ -63,10 +63,10 @@ lagcol2
 lmlag2 <- lm(CRIME ~ INC + HOVAL + fitted(lagcol2), data=columbus)
 anova(lmlag2)
 anova(lmbase, lmlag2)
-data(nc.sids)
+example(nc.sids)
 glmbase <- glm(SID74 ~ 1, data=nc.sids, offset=log(BIR74), family="poisson")
 set.seed(123)
-MEpois1 <- ME(SID74 ~ 1, data=nc.sids, offset=log(BIR74), family="poisson", listw=nb2listw(ncCR85.nb), alpha=0.2, verbose=TRUE)
+MEpois1 <- ME(SID74 ~ 1, data=nc.sids, offset=log(BIR74), family="poisson", listw=nb2listw(ncCR85_nb), alpha=0.2, verbose=TRUE)
 MEpois1
 glmME <- glm(SID74 ~ 1 + fitted(MEpois1), data=nc.sids, offset=log(BIR74), family="poisson")
 anova(glmME, test="Chisq")

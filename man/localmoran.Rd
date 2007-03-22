@@ -43,13 +43,13 @@ International), 261--277.}
 \examples{
 data(afcon)
 oid <- order(afcon$id)
-resI <- localmoran(spNamedVec("totcon", afcon), nb2listw(paper.nb))
+resI <- localmoran(afcon$totcon, nb2listw(paper.nb))
 printCoefmat(data.frame(resI[oid,], row.names=afcon$name[oid]), check.names=FALSE)
 hist(resI[,5])
-resI <- localmoran(spNamedVec("totcon", afcon), nb2listw(paper.nb), p.adjust.method="bonferroni")
+resI <- localmoran(afcon$totcon, nb2listw(paper.nb), p.adjust.method="bonferroni")
 printCoefmat(data.frame(resI[oid,], row.names=afcon$name[oid]), check.names=FALSE)
 hist(resI[,5])
-totcon <- spNamedVec("totcon", afcon)
+totcon <-afcon$totcon
 is.na(totcon) <- sample(1:length(totcon), 5)
 totcon
 resI.na <- localmoran(totcon, nb2listw(paper.nb), na.action=na.exclude,
@@ -57,7 +57,7 @@ resI.na <- localmoran(totcon, nb2listw(paper.nb), na.action=na.exclude,
 if (class(attr(resI.na, "na.action")) == "exclude") {
  print(data.frame(resI.na[oid,], row.names=afcon$name[oid]), digits=2)
 } else print(resI.na, digits=2)
-resG <- localG(spNamedVec("totcon", afcon), nb2listw(include.self(paper.nb)))
+resG <- localG(afcon$totcon, nb2listw(include.self(paper.nb)))
 print(data.frame(resG[oid], row.names=afcon$name[oid]), digits=2)
 
 }

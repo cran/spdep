@@ -23,7 +23,8 @@ subset.nb(x, subset, ...)
 \seealso{\code{\link{nb2listw}}}
 
 \examples{
-data(columbus)
+example(columbus)
+coords <- coordinates(columbus)
 plot(col.gal.nb, coords)
 to.be.dropped <- c(31, 34, 36, 39, 42, 46)
 text(coords[to.be.dropped,1], coords[to.be.dropped,2], labels=to.be.dropped,

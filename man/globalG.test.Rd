@@ -33,15 +33,14 @@ use of distance statistics, \emph{Geographical Analysis}, 24, p. 195.}
 \seealso{\code{\link{localG}}}
 
 \examples{
-data(nc.sids)
+example(nc.sids)
 sidsrate79 <- (1000*nc.sids$SID79)/nc.sids$BIR79
-names(sidsrate79) <- rownames(nc.sids)
 dists <- c(10, 20, 30, 33, 40, 50, 60, 70, 80, 90, 100)
 ndists <- length(dists)
 ZG <- numeric(length=ndists)
 milesxy <- cbind(nc.sids$east, nc.sids$north)
 for (i in 1:ndists) {
-  thisnb <- dnearneigh(milesxy, 0, dists[i], row.names=rownames(nc.sids))
+  thisnb <- dnearneigh(milesxy, 0, dists[i])
   thislw <- nb2listw(thisnb, style="B", zero.policy=TRUE)
   ZG[i] <- globalG.test(sidsrate79, thislw, zero.policy=TRUE)$statistic
 }

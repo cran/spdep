@@ -34,18 +34,18 @@ A list with class \code{htest} and \code{mc.sim} containing the following compon
 
 \examples{
 data(oldcol)
-sim1 <- geary.mc(spNamedVec("CRIME", COL.OLD), nb2listw(COL.nb, style="W"),
+sim1 <- geary.mc(COL.OLD$CRIME, nb2listw(COL.nb, style="W"),
  nsim=99, alternative="less")
 sim1
 mean(sim1$res)
 var(sim1$res)
 summary(sim1$res)
 colold.lags <- nblag(COL.nb, 3)
-sim2 <- geary.mc(spNamedVec("CRIME", COL.OLD), nb2listw(colold.lags[[2]],
+sim2 <- geary.mc(COL.OLD$CRIME, nb2listw(colold.lags[[2]],
  style="W"), nsim=99)
 sim2
 summary(sim2$res)
-sim3 <- geary.mc(spNamedVec("CRIME", COL.OLD), nb2listw(colold.lags[[3]],
+sim3 <- geary.mc(COL.OLD$CRIME, nb2listw(colold.lags[[3]],
  style="W"), nsim=99)
 sim3
 summary(sim3$res)

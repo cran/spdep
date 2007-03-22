@@ -102,22 +102,29 @@ Geographical Analysis, 34, pp. 187--206; see also Tiefelsdorf's SPSS code:
  \code{\link{lm.morantest.sad}}, \code{\link{errorsarlm}}}
 
 \examples{
-data(eire)
-e.lm <- lm(OWNCONS ~ ROADACC, data=eire.df)
-e.locmor <- summary(localmoran.sad(e.lm, eire.nb, select=1:nrow(eire.df)))
+eire <- readShapePoly(system.file("etc/shapes/eire.shp", package="spdep")[1],
+  ID="names", proj4string=CRS("+proj=utm +zone=30 +units=km"))
+eire.nb <- poly2nb(eire)
+#data(eire)
+e.lm <- lm(OWNCONS ~ ROADACC, data=eire)
+e.locmor <- summary(localmoran.sad(e.lm, eire.nb,
+  select=1:length(slot(eire, "polygons"))))
 e.locmor
 mean(e.locmor[,1])
 lm.morantest(e.lm, nb2listw(eire.nb))
 hist(e.locmor[,"Pr. (Sad)"])
-e.wlm <- lm(OWNCONS ~ ROADACC, data=eire.df, weights=RETSALE)
-e.locmorw1 <- summary(localmoran.sad(e.wlm, eire.nb, select=1:nrow(eire.df), resfun=weighted.residuals))
+e.wlm <- lm(OWNCONS ~ ROADACC, data=eire, weights=RETSALE)
+e.locmorw1 <- summary(localmoran.sad(e.wlm, eire.nb,
+  select=1:length(slot(eire, "polygons")), resfun=weighted.residuals))
 e.locmorw1
-e.locmorw2 <- summary(localmoran.sad(e.wlm, eire.nb, select=1:nrow(eire.df), resfun=rstudent))
+e.locmorw2 <- summary(localmoran.sad(e.wlm, eire.nb,
+  select=1:length(slot(eire, "polygons")), resfun=rstudent))
 e.locmorw2
-e.errorsar <- errorsarlm(OWNCONS ~ ROADACC, data=eire.df,
- listw=nb2listw(eire.nb))
+e.errorsar <- errorsarlm(OWNCONS ~ ROADACC, data=eire,
+  listw=nb2listw(eire.nb))
 e.errorsar
-e.clocmor <- summary(localmoran.sad(e.errorsar, eire.nb, select=1:nrow(eire.df)))
+e.clocmor <- summary(localmoran.sad(e.errorsar, eire.nb,
+  select=1:length(slot(eire, "polygons"))))
 e.clocmor
 hist(e.clocmor[,"Pr. (Sad)"])
 }

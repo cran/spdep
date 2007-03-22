@@ -3,8 +3,8 @@
 \alias{oldcol}
 \alias{COL.OLD}
 \alias{COL.nb}
-\alias{coords.OLD}
-\alias{polys.OLD}
+%\alias{coords.OLD}
+%\alias{polys.OLD}
 \non_function{}
 \title{Columbus OH spatial analysis data set - old numbering}
 \usage{data(oldcol)}
@@ -13,9 +13,7 @@ The \code{COL.OLD} data frame has 49 rows and 22 columns. The observations are
 ordered and numbered as in the original analyses of the data set in the
 SpaceStat documentation and in Anselin, L. 1988 Spatial econometrics: methods and models, Dordrecht: Kluwer.
 Unit of analysis: 49 neighbourhoods in Columbus, OH, 1980 data.
-In addition the data set includes a \code{polylist} object \code{polys.OLD}
-with the boundaries of the neighbourhoods, a matrix of polygon centroids
-\code{coords.OLD}, and \code{COL.nb}, the neighbours list
+In addition the data set includes \code{COL.nb}, the neighbours list
 as used in Anselin (1988).
 }
 \format{

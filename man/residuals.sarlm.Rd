@@ -3,6 +3,7 @@
 \alias{residuals.sarlm}
 \alias{deviance.sarlm}
 \alias{coef.sarlm}
+%\alias{vcov.sarlm}
 \alias{fitted.sarlm}
 \title{Access functions for spatial simultaneous autoregressive linear
 model objects}
@@ -14,6 +15,7 @@ from spatial simultaneous autoregressive linear model objects
 residuals.sarlm(object, ...)
 deviance.sarlm(object, ...)
 coef.sarlm(object, ...)
+%vcov.sarlm(object, ...)
 fitted.sarlm(object, ...)
 }
 %- maybe also `usage' for other objects documented here.

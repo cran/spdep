@@ -1,4 +1,4 @@
-# Copyright 2005-2006 by Roger Bivand and Pedro Peres-Neto (from Matlab)
+# Copyright 2005-2007 by Roger Bivand and Pedro Peres-Neto (from Matlab)
 #
 
 ME <- function(formula, data, family = gaussian, weights, offset, listw, 
@@ -6,7 +6,7 @@ ME <- function(formula, data, family = gaussian, weights, offset, listw,
 	MoraneI.boot <- function(var, i, ...) {
 		var <- var[i]
 		I <- (n/S0)*(crossprod(sW %*% var, var))/cpvar
-		return(c(I))
+		return(c(as(I, "matrix")))
 	}
 
 	MIR_a <- function(resids, sW, n, cpvar, S0, nsim, stdev=TRUE) {
@@ -25,7 +25,10 @@ ME <- function(formula, data, family = gaussian, weights, offset, listw,
 	}
 
 	listw <- listw2U(listw) # make weights symmetric
-	sW <- asMatrixCsrListw(listw)
+#	sW <- asMatrixCsrListw(listw)
+	sW <- as_dgRMatrix_listw(listw)
+	sW <- as(sW, "CsparseMatrix")
+	
 	Wmat <- listw2mat(listw) # convert to full matrix form
 	n <- ncol(Wmat)
 	S0 <- Szero(listw)
@@ -81,7 +84,8 @@ ME <- function(formula, data, family = gaussian, weights, offset, listw,
 		cpvar <- crossprod(glm_res)
 #		iZ[i] <- MIR_a(glm_res, sW=sW, n=n, cpvar=cpvar, S0=S0, 
 #			nsim=nsim)$statistic
-		iZ[i] <- (n/S0)*(crossprod(sW %*% glm_res, glm_res))/cpvar
+		iZ[i] <- c(as((n/S0)*(crossprod(sW %*% glm_res, glm_res)) /
+			cpvar, "matrix"))
 	}
 	min_iZ <- which.min(abs(iZ))
 	X <- cbind(X, eV[, min_iZ])
@@ -108,8 +112,8 @@ ME <- function(formula, data, family = gaussian, weights, offset, listw,
 			cpvar <- crossprod(glm_res)
 #			iZ[i] <- MIR_a(glm_res, sW=sW, n=n, cpvar=cpvar, S0=S0,
 #				nsim=nsim)$statistic
-			iZ[i] <- (n/S0)*(crossprod(sW %*% glm_res, 
-				glm_res))/cpvar
+			iZ[i] <- c(as((n/S0)*(crossprod(sW %*% glm_res, 
+				glm_res))/cpvar, "matrix"))
 		    } else iZ[i] <- NA
 		}
 		min_iZ <- which.min(abs(iZ))

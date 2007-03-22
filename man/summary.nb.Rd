@@ -11,16 +11,16 @@ matrix of coordinates is given as well, summary descriptive measures for
 the link lengths are also printed. Print and summary functions are also available for \code{"listw"} weights list objects.
 }
 \usage{
-summary.nb(object, coords=NULL, lonlat = FALSE, scale = 1, ...)
+summary.nb(object, coords=NULL, longlat = NULL, scale = 1, ...)
 print.nb(x, ...)
-summary.listw(object, coords, lonlat, zero.policy = FALSE, scale = 1, ...)
+summary.listw(object, coords, longlat, zero.policy = FALSE, scale = 1, ...)
 print.listw(x, zero.policy = FALSE, ...)
 }
 
 \arguments{
   \item{object}{an object of class \code{nb}}
-  \item{coords}{matrix of region point coordinates}
-  \item{lonlat}{TRUE if point coordinates are longitude-latitude decimal degrees, in which case distances are measured in kilometers}
+  \item{coords}{matrix of region point coordinates or a SpatialPoints object}
+  \item{longlat}{TRUE if point coordinates are longitude-latitude decimal degrees, in which case distances are measured in kilometers; if coords is a SpatialPoints object, the value is taken from the object itself}
   \item{...}{additional arguments affecting the output produced}
   \item{x}{an object of class \code{nb}}
   \item{zero.policy}{If FALSE stop with error for any empty neighbour sets}
@@ -31,7 +31,8 @@ print.listw(x, zero.policy = FALSE, ...)
 \seealso{\code{\link{plot.nb}}}
 
 \examples{
-data(columbus)
+example(columbus)
+coords <- coordinates(columbus)
 col.gal.nb
 summary(col.gal.nb, coords)
 col.listw <- nb2listw(col.gal.nb, style="W")

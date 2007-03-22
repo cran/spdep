@@ -21,7 +21,7 @@ list.
 \seealso{\code{\link{summary.nb}}}
 
 \examples{
-data(columbus)
+example(columbus)
 table(card(col.gal.nb))
 }
 \keyword{spatial}

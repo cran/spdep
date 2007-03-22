@@ -32,14 +32,13 @@ and a \code{parameters} attribute list with components:
 \seealso{\code{\link{EBlocal}}, \code{\link{probmap}}, \code{\link{EBImoran.mc}}}
 
 \examples{
-data(auckland)
-res <- EBest(auckland$Deaths.1977.85, 9*auckland$Under.5.1981)
+example(auckland)
+res <- EBest(auckland$M77_85, 9*auckland$Und5_81)
 attr(res, "parameters")
 cols <- grey(6:2/7)
 brks <- c(-Inf,2,2.5,3,3.5,Inf)
-library(maptools)
-plot(auckpolys, col=cols[findInterval(res$estmm*1000, brks)], forcefill=FALSE)
-legend(c(70,90), c(70,95), fill=cols, legend=leglabs(brks), bty="n")
+plot(auckland, col=cols[findInterval(res$estmm*1000, brks, all.inside=TRUE)])
+legend("bottomleft", fill=cols, legend=leglabs(brks), bty="n")
 title(main="Global moment estimator of infant mortality per 1000 per year")
 data(huddersfield)
 res <- EBest(huddersfield$cases, huddersfield$total, family="binomial")

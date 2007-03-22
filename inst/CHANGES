@@ -1,3 +1,5 @@
+0.4-01	Added dependence on Matrix, added Matrix methods to lagsarlm and 
+	errorsarlm as well as spautolm, add nb2WB, other fixes
 0.3-28	Changes to ensure that class "nb" objects conform to specification, 
 	with only integer values (including a single zero for no neighbours).
 	Thanks to Prof. Brian Ripley for reporting problem.

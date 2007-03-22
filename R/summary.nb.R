@@ -1,8 +1,9 @@
-# Copyright 2001-3 by Roger Bivand
+# Copyright 2001-7 by Roger Bivand
+# Upgrade to sp classes February 2007
 #
 
 
-summary.nb <- function(object, coords=NULL, lonlat=FALSE, scale=1, ...) {
+summary.nb <- function(object, coords=NULL, longlat=NULL, scale=1, ...) {
     nb <- object
     if (!inherits(nb, "nb")) stop("Not a neighbours list")
     c.nb <- card(nb)
@@ -25,13 +26,20 @@ summary.nb <- function(object, coords=NULL, lonlat=FALSE, scale=1, ...) {
 	    max.nb, " link", ifelse(max.nb < 2, "", "s"), "\n", sep="")
     }
     if(!is.null(coords)) {
+   	if (inherits(coords, "SpatialPoints")) {
+      		if ((is.null(longlat) || !is.logical(longlat)) 
+ 		    && !is.na(is.projected(coords)) && !is.projected(coords)) {
+         		longlat <- TRUE
+      		} else longlat <- FALSE
+      		coords <- coordinates(coords)
+   	} else if (is.null(longlat) || !is.logical(longlat)) longlat <- FALSE
         if (!is.matrix(coords)) stop("Data not in matrix form")
         if (any(is.na(coords))) stop("Data include NAs")
         np <- nrow(coords)
 	if(np != n.nb) stop("Number of coords not equal to number of regions")
         dimension <- ncol(coords)
 	dlist <- .Call("nbdists", nb, as.matrix(coords), as.integer(np), 
-	    as.integer(dimension), as.integer(lonlat), PACKAGE="spdep")[[1]]
+	    as.integer(dimension), as.integer(longlat), PACKAGE="spdep")[[1]]
 	cat("Summary of link distances:\n")
 	print(summary(unlist(dlist)))
 	stem(unlist(dlist), scale=scale)
@@ -59,10 +67,10 @@ print.nb <- function(x, ...) {
     invisible(x)
 }
 
-summary.listw <- function(object, coords=NULL, lonlat=FALSE, 
+summary.listw <- function(object, coords=NULL, longlat=FALSE, 
 	zero.policy=FALSE, scale=1, ...) {
 	cat("Characteristics of weights list object:\n")
-	summary(object$neighbours, coords=coords, lonlat=lonlat, 
+	summary(object$neighbours, coords=coords, longlat=longlat, 
 		scale=scale, ...)
 	style <- object$style
 	cat(paste("\nWeights style:", style, "\n"))

@@ -30,16 +30,16 @@ Interactive Spatial Data Analysis, Harlow: Longman, pp. 300--303.}
 
 \seealso{\code{\link{probmap}}}
 \examples{
-data(auckland)
-res <- choynowski(auckland$Deaths.1977.85, 9*auckland$Under.5.1981)
-res1 <- probmap(auckland$Deaths.1977.85, 9*auckland$Under.5.1981)
+example(auckland)
+res <- choynowski(auckland$M77_85, 9*auckland$Und5_81)
+res1 <- probmap(auckland$M77_85, 9*auckland$Und5_81)
 table(abs(res$pmap - res1$pmap) < 0.00001, res$type)
-plot(auckpolys, forcefill=FALSE)
 lt005 <- (res$pmap < 0.05) & (res$type)
 ge005 <- (res$pmap < 0.05) & (!res$type)
-plot(subset(auckpolys, lt005), add=TRUE, col=grey(2/7), forcefill=FALSE) 
-plot(subset(auckpolys, ge005), add=TRUE, col=grey(5/7), forcefill=FALSE)
-legend(c(70,90), c(70,95), fill=grey(c(2,5)/7),
- legend=c("low", "high"), bty="n")
+cols <- rep("white", length(lt005))
+cols[lt005] <- grey(2/7)
+cols[ge005] <- grey(5/7)
+plot(auckland, col=cols) 
+legend("bottomleft", fill=grey(c(2,5)/7), legend=c("low", "high"), bty="n")
 }
 \keyword{spatial}

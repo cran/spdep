@@ -1,14 +1,25 @@
 useDynLib(spdep)
 
-importFrom(SparseM, as.matrix.csr)
-importMethodsFrom(SparseM, det)
-importMethodsFrom(SparseM, chol)
-importMethodsFrom(SparseM, as.matrix)
-importMethodsFrom(SparseM, "%*%")
-importMethodsFrom(SparseM, t)
-importClassesFrom(SparseM, matrix.csr)
 importFrom(stats, model.matrix, model.response)
-import(boot)
+#import(SparseM)
+
+#importFrom(SparseM, as.matrix.csr)
+#importMethodsFrom(SparseM, det, chol, as.matrix, "%*%", t)
+#importClassesFrom(SparseM, matrix.csr)
+
+#importFrom(Matrix, Diagonal)
+#importMethodsFrom(Matrix, coerce, chol, diag, Arith, t)
+#importClassesFrom(Matrix, dgRMatrix, dsTMatrix, sparseMatrix, 
+#    dgCMatrix, dsCMatrix)
+
+
+import(Matrix)
+#importFrom(stats, model.matrix, model.response)
+
+#import(sp)
+#import(maptools)
+#import(boot)
+#import(SparseM)
 
 export(EBImoran.mc, probmap, choynowski, EBest, EBlocal, LR.sarlm, 
 	LR1.sarlm, Wald1.sarlm, airdist, card, rookcell, 
@@ -20,7 +31,7 @@ export(EBImoran.mc, probmap, choynowski, EBest, EBlocal, LR.sarlm,
 	write.sn2gwt, lm.LMtests, lm.morantest, localG, localmoran, moran,
 	moran.test, moran.mc, moran.plot, localmoran.sad, lm.morantest.sad,
 	nb2listw, nb2mat, listw2mat, mat2listw, invIrM, invIrW, nbdists, nblag,
-	poly2nb, read.gal, write.nb.gal, read.geoda, relativeneigh,
+	nblag_cumul, poly2nb, read.gal, write.nb.gal, read.geoda, relativeneigh,
 	soi.graph, sp.correlogram, sp.mantel.mc, set.spChkOption, chkIDs,
 	get.spChkOption, spNamedVec, tri2nb,
 	spweights.constants, lag.listw, listw2U, listw2star, is.symmetric.nb,
@@ -47,6 +58,9 @@ export(spautolm, residuals.spautolm, deviance.spautolm, coef.spautolm,
 	print.summary.gmsar, SpatialFiltering, print.SFResult, fitted.SFResult,
 	ME, print.ME_res, fitted.ME_res, stsls, print.stsls, summary.stsls,
 	print.summary.stsls, residuals.stsls, coef.stsls, deviance.stsls)
+
+export(nb2WB, listw2WB, as_dgRMatrix_listw, as_dsTMatrix_listw, as_dgCMatrix_I,
+	as_dgCMatrix_IrW, Jacobian_W)
 
 import(maptools)
 
@@ -86,6 +100,7 @@ S3method(summary, sarlm)
 S3method(residuals, sarlm)
 S3method(deviance, sarlm)
 S3method(coef, sarlm)
+#S3method(vcov, sarlm)
 S3method(fitted, sarlm)
 S3method(logLik, sarlm)
 S3method(anova, sarlm)

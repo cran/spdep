@@ -50,8 +50,8 @@ data(afcon)
 plot(africa.rook.nb, afxy)
 plot(diffnb(paper.nb, africa.rook.nb), afxy, col="red", add=TRUE)
 text(afxy, labels=attr(africa.rook.nb, "region.id"), pos=4, offset=0.4)
-moran.test(spNamedVec("totcon", afcon), nb2listw(africa.rook.nb))
-moran.test(spNamedVec("totcon", afcon), nb2listw(paper.nb))
-geary.test(spNamedVec("totcon", afcon), nb2listw(paper.nb))
+moran.test(afcon$totcon, nb2listw(africa.rook.nb))
+moran.test(afcon$totcon, nb2listw(paper.nb))
+geary.test(afcon$totcon, nb2listw(paper.nb))
 }
 \keyword{datasets}

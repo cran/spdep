@@ -41,24 +41,25 @@ A list with class \code{htest} containing the following components:
 
 \examples{
 data(oldcol)
-geary.test(spNamedVec("CRIME", COL.OLD), nb2listw(COL.nb, style="W"))
-geary.test(spNamedVec("CRIME", COL.OLD), nb2listw(COL.nb, style="W"),
+geary.test(COL.OLD$CRIME, nb2listw(COL.nb, style="W"))
+geary.test(COL.OLD$CRIME, nb2listw(COL.nb, style="W"),
  randomisation=FALSE)
 colold.lags <- nblag(COL.nb, 3)
-geary.test(spNamedVec("CRIME", COL.OLD), nb2listw(colold.lags[[2]],
+geary.test(COL.OLD$CRIME, nb2listw(colold.lags[[2]],
  style="W"))
-geary.test(spNamedVec("CRIME", COL.OLD), nb2listw(colold.lags[[3]],
+geary.test(COL.OLD$CRIME, nb2listw(colold.lags[[3]],
  style="W"), alternative="greater")
 print(is.symmetric.nb(COL.nb))
+coords.OLD <- cbind(COL.OLD$X, COL.OLD$Y)
 COL.k4.nb <- knn2nb(knearneigh(coords.OLD, 4))
 print(is.symmetric.nb(COL.k4.nb))
-geary.test(spNamedVec("CRIME", COL.OLD), nb2listw(COL.k4.nb, style="W"))
-geary.test(spNamedVec("CRIME", COL.OLD), nb2listw(COL.k4.nb, style="W"),
+geary.test(COL.OLD$CRIME, nb2listw(COL.k4.nb, style="W"))
+geary.test(COL.OLD$CRIME, nb2listw(COL.k4.nb, style="W"),
  randomisation=FALSE)
 cat("Note non-symmetric weights matrix - use listw2U()\n")
-geary.test(spNamedVec("CRIME", COL.OLD), listw2U(nb2listw(COL.k4.nb,
+geary.test(COL.OLD$CRIME, listw2U(nb2listw(COL.k4.nb,
  style="W")))
-geary.test(spNamedVec("CRIME", COL.OLD), listw2U(nb2listw(COL.k4.nb,
+geary.test(COL.OLD$CRIME, listw2U(nb2listw(COL.k4.nb,
  style="W")), randomisation=FALSE)
 }
 \keyword{spatial}

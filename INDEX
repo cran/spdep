@@ -2,6 +2,8 @@ afcon                   Spatial patterns of conflict in Africa 1966-78
 airdist                 Measure distance from plot
 anova.sarlm             Comparison of simultaneous autoregressive
                         models
+as_dgRMatrix_listw      Interface between Matrix class objects and
+                        weights lists
 asMatrixCsrListw        Convert spatial weights list to CSR matrix form
 auckland                Marshall's infant mortality in Auckland dataset
 autocov_dist            Distance-weighted autocovariate
@@ -72,6 +74,7 @@ nb2lines                Use arc-type shapefiles for import and export
                         of weights
 nb2listw                Spatial weights for neighbours lists
 nb2mat                  Spatial weights matrices for neighbours lists
+nb2WB                   Output spatial weights for WinBUGS
 nbdists                 Spatial link distance measures
 nblag                   Higher order neighbours lists
 n.comp.nb               Depth First Search on Neighbor Lists

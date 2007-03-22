@@ -3,17 +3,17 @@
 \alias{dnearneigh}
 \title{Neighbourhood contiguity by distance}
 \description{
-The function identifies neighbours of region points by Euclidean distance between lower (greater than) and upper (less than or equal to) bounds, or with lonlat = TRUE, by Great Circle distance in kilometers.
+The function identifies neighbours of region points by Euclidean distance between lower (greater than) and upper (less than or equal to) bounds, or with longlat = TRUE, by Great Circle distance in kilometers.
 }
 \usage{
-dnearneigh(x, d1, d2, row.names = NULL, lonlat = FALSE)
+dnearneigh(x, d1, d2, row.names = NULL, longlat = NULL)
 }
 \arguments{
-  \item{x}{matrix of point coordinates}
+  \item{x}{matrix of point coordinates or a SpatialPoints object}
   \item{d1}{lower distance bound}
   \item{d2}{upper distance bound}
   \item{row.names}{character vector of region ids to be added to the neighbours list as attribute \code{region.id}, default \code{seq(1, nrow(x))}}
-  \item{lonlat}{TRUE if point coordinates are longitude-latitude decimal degrees, in which case distances are measured in kilometers}
+  \item{longlat}{TRUE if point coordinates are longitude-latitude decimal degrees, in which case distances are measured in kilometers; if x is a SpatialPoints object, the value is taken from the object itself}
 }
 \value{
 The function returns a list of integer vectors giving the region id numbers
@@ -24,13 +24,14 @@ for neighbours satisfying the distance criteria.
 \seealso{\code{\link{knearneigh}}}
 
 \examples{
-data(columbus)
+example(columbus)
+coords <- coordinates(columbus)
+rn <- sapply(slot(columbus, "polygons"), function(x) slot(x, "ID"))
 k1 <- knn2nb(knearneigh(coords))
 all.linked <- max(unlist(nbdists(k1, coords)))
-col.nb.0.all <- dnearneigh(coords, 0, all.linked, row.names=rownames(columbus))
+col.nb.0.all <- dnearneigh(coords, 0, all.linked, row.names=rn)
 summary(col.nb.0.all, coords)
-library(maptools)
-plot(polys, border="grey", forcefill=FALSE)
+plot(columbus, border="grey")
 plot(col.nb.0.all, coords, add=TRUE)
 title(main=paste("Distance based neighbours 0-",  format(all.linked),
  " distance units", sep=""))
@@ -43,16 +44,23 @@ if (as.numeric(paste(version$major, version$minor, sep="")) < 19) {
  m50.48 <- match(us48.fipsno$"State_name", state.name)
 }
 xy <- as.matrix(as.data.frame(state.center))[m50.48,]
-llk1 <- knn2nb(knearneigh(xy, k=1, lonlat=FALSE))
-all.linked <- max(unlist(nbdists(llk1, xy, lonlat=FALSE)))
-ll.nb <- dnearneigh(xy, 0, all.linked, lonlat=FALSE)
-summary(ll.nb, xy, lonlat=TRUE, scale=0.5)
-gck1 <- knn2nb(knearneigh(xy, k=1, lonlat=TRUE))
-all.linked <- max(unlist(nbdists(gck1, xy, lonlat=TRUE)))
-gc.nb <- dnearneigh(xy, 0, all.linked, lonlat=TRUE)
-summary(gc.nb, xy, lonlat=TRUE, scale=0.5)
+llk1 <- knn2nb(knearneigh(xy, k=1, longlat=FALSE))
+all.linked <- max(unlist(nbdists(llk1, xy, longlat=FALSE)))
+ll.nb <- dnearneigh(xy, 0, all.linked, longlat=FALSE)
+summary(ll.nb, xy, longlat=TRUE, scale=0.5)
+gck1 <- knn2nb(knearneigh(xy, k=1, longlat=TRUE))
+all.linked <- max(unlist(nbdists(gck1, xy, longlat=TRUE)))
+gc.nb <- dnearneigh(xy, 0, all.linked, longlat=TRUE)
+summary(gc.nb, xy, longlat=TRUE, scale=0.5)
 plot(ll.nb, xy)
 plot(diffnb(ll.nb, gc.nb), xy, add=TRUE, col="red", lty=2)
 title(main="Differences between Euclidean and Great Circle neighbours")
+
+xy1 <- SpatialPoints((as.data.frame(state.center))[m50.48,],
+  proj4string=CRS("+proj=longlat"))
+gck1a <- knn2nb(knearneigh(xy1, k=1))
+all.linked <- max(unlist(nbdists(gck1a, xy1)))
+gc.nb <- dnearneigh(xy1, 0, all.linked)
+summary(gc.nb, xy1, scale=0.5)
 }
 \keyword{spatial}

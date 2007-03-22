@@ -1,4 +1,4 @@
-# Copyright 2001-4 by Roger S. Bivand. 
+# Copyright 2001-7 by Roger S. Bivand and Virgilio Gomez-Rubio
 #
 
 nb2listw <- function(neighbours, glist=NULL, style="W", zero.policy=FALSE)
@@ -170,3 +170,30 @@ similar.listw <- function(listw) {
 	} else stop("Conversion not suitable for this weights style")
 	res
 }
+
+#This code converts a "nb" object into a list of three elements 
+#(adj, weights, num) in the format required by WinBUGS
+#
+#The weights assigned are 1's always, which is the standard for
+#most models
+
+nb2WB <- function(nb)
+{
+	if (class(nb) != "nb") stop("not nb class object")
+        adj <- unlist(nb)
+        num <- unlist(lapply(nb, length))
+        weights <- rep(1, sum(num))
+
+        list(adj=adj, weights=weights, num=num)
+}
+
+listw2WB <- function(listw)
+{
+	if (class(listw) != "listw") stop("not listw class object")
+        adj <- unlist(listw$neighbours)
+        num <- unlist(lapply(listw$neighbours, length))
+        weights <- unlist(listw$weights)
+
+        list(adj=adj, weights=weights, num=num)
+}
+

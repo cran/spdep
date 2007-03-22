@@ -1,4 +1,4 @@
-# Copyright 2005 by Luc Anselin and Roger Bivand
+# Copyright 2005-7 by Luc Anselin and Roger Bivand
 # Kelejian-Prucha generalized moments equations
 # for spatial SAR error model
 # main function
@@ -111,22 +111,21 @@ GMerrorsar <- function(#W, y, X,
 			warning("No log likelihood value available")
 		} else {
 			if (listw$style %in% c("W", "S") & can.sim) {
-				csrw <- asMatrixCsrListw(similar.listw(listw), 
-					zero.policy=zero.policy)
-#				similar <- TRUE
-			} else csrw <- asMatrixCsrListw(listw, 
-				zero.policy=zero.policy)
+			    csrw <- as_dsTMatrix_listw(similar.listw(listw))
+#			    similar <- TRUE
+			} else csrw <- as_dsTMatrix_listw(listw)
 			gc(FALSE)
-			I <- asMatrixCsrI(n)
-			tmpmax <- sum(card(listw$neighbours)) + n
+			I <- as_dgCMatrix_I(n)
+			I <- as(I, "CsparseMatrix")
+#			tmpmax <- sum(card(listw$neighbours)) + n
 			yl <- y - lambda*wy
 			xl <- x - lambda*WX
 			xl.q <- qr.Q(qr(xl))
 			xl.q.yl <- t(xl.q) %*% yl
 			SSE <- t(yl) %*% yl - t(xl.q.yl) %*% xl.q.yl
 			s2 <- SSE/n
-			Jacobian <- log(det(chol((I - lambda * csrw), 
-				tmpmax=tmpmax))^2)
+			CHOL <- chol(as((I - lambda * csrw), "dsCMatrix"))
+			Jacobian <- sum(2*log(diag(CHOL)))
 			gc(FALSE)
 			LL <- (Jacobian -
 				((n/2)*log(2*pi)) - (n/2)*log(s2) - 

@@ -2,6 +2,7 @@
 
 
 asMatrixCsrListw <- function(listw, zero.policy=FALSE) {
+	.Deprecated("as_dgRMatrix_listw", package="spdep")
 	if(!inherits(listw, "listw")) stop("not a listw object")
 	n <- length(listw$neighbours)
 	ra <- unlist(listw$weights)
@@ -19,12 +20,14 @@ asMatrixCsrListw <- function(listw, zero.policy=FALSE) {
 }
 
 asMatrixCsrI <- function(n) {
+	.Deprecated("as_dgCMatrix_I", package="spdep")
 	if (n < 1) stop("matrix must have positive dimensions")
 	I <- new("matrix.csr", ra=rep(1, n), ja=1:n, ia=1:(n+1), 
 		dimension=c(n,n))
 	I
 }
 asMatrixCsrIrW <- function(W, rho) {
+	.Deprecated("as_dgCMatrix_IrW", package="spdep")
 	if(!inherits(W, "matrix.csr")) stop("not a matrix.csr object")
 	n <- dim(W)[1]
 	I <- asMatrixCsrI(n)
@@ -33,6 +36,7 @@ asMatrixCsrIrW <- function(W, rho) {
 }
 
 asListwMatrixCsr <- function(mcsr) {
+	.Deprecated("none available", package="spdep")
 	if(!is.matrix.csr(mcsr)) stop("not a matrix.csr object")
 	dim <- mcsr@dimension
 	if (dim[1] != dim[2]) warning("rectangular matrix")

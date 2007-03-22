@@ -35,9 +35,11 @@ TRUE if symmetric, FALSE if not
 \seealso{\code{\link{read.gal}}}
 
 \examples{
-data(columbus)
+example(columbus)
+coords <- coordinates(columbus)
+ind <- sapply(slot(columbus, "polygons"), function(x) slot(x, "ID"))
 print(is.symmetric.nb(col.gal.nb, verbose=TRUE, force=TRUE))
-k4 <- knn2nb(knearneigh(coords, k=4), row.names=rownames(columbus))
+k4 <- knn2nb(knearneigh(coords, k=4), row.names=ind)
 k4 <- sym.attr.nb(k4)
 print(is.symmetric.nb(k4))
 k4.sym <- make.sym.nb(k4)

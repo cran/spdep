@@ -59,13 +59,13 @@ is in the vegan package.}
 
 \examples{
 data(oldcol)
-sim1 <- sp.mantel.mc(spNamedVec("CRIME", COL.OLD), nb2listw(COL.nb),
+sim1 <- sp.mantel.mc(COL.OLD$CRIME, nb2listw(COL.nb),
  nsim=99, type="geary", alternative="less")
 sim1
 plot(sim1)
-sp.mantel.mc(spNamedVec("CRIME", COL.OLD), nb2listw(COL.nb), nsim=99,
+sp.mantel.mc(COL.OLD$CRIME, nb2listw(COL.nb), nsim=99,
  type="sokal", alternative="less")
-sp.mantel.mc(spNamedVec("CRIME", COL.OLD), nb2listw(COL.nb), nsim=99,
+sp.mantel.mc(COL.OLD$CRIME, nb2listw(COL.nb), nsim=99,
  type="moran")
 }
 \keyword{spatial}

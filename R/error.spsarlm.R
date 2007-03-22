@@ -1,10 +1,9 @@
-# Copyright 1998-2006 by Roger Bivand (non-W styles Rein Halbersma)
+# Copyright 1998-2007 by Roger Bivand (non-W styles Rein Halbersma)
 #
 
 errorsarlm <- function(formula, data = list(), listw, na.action=na.fail, 
 	method="eigen", quiet=TRUE, zero.policy=FALSE, interval=c(-1,0.999), 
-	tol.solve=1.0e-10, tol.opt=.Machine$double.eps^0.5, control, 
-	optim=FALSE, cholAlloc=NULL) {
+	tol.solve=1.0e-10, tol.opt=.Machine$double.eps^0.5, cholAlloc=NULL) {
 	mt <- terms(formula, data = data)
 	mf <- lm(formula, data, na.action=na.action, method="model.frame")
 	na.act <- attr(mf, "na.action")
@@ -27,6 +26,14 @@ errorsarlm <- function(formula, data = list(), listw, na.action=na.fail,
 			!(is.symmetric.glist(listw$neighbours, listw$weights)))
 		    stop("SparseM method requires symmetric weights")
 		    if (!quiet) cat("sparse matrix techniques using SparseM\n")
+		},
+	        Matrix = {
+		    if (listw$style %in% c("W", "S") && !can.sim)
+		    stop("Matrix method requires symmetric weights")
+		    if (listw$style %in% c("B", "C", "U") && 
+			!(is.symmetric.glist(listw$neighbours, listw$weights)))
+		    stop("Matrix method requires symmetric weights")
+		    if (!quiet) cat("sparse matrix techniques using Matrix\n")
 		},
 		stop("...\n\nUnknown method\n"))
 	y <- model.response(mf, "numeric")
@@ -71,10 +78,6 @@ errorsarlm <- function(formula, data = list(), listw, na.action=na.fail,
 	colnames(WX) <- xcolnames
 	rm(wx)
 	similar <- FALSE
-	if ((optim) && missing(control)) {
-		control<- list(trace=0, fnscale=-1, factr=tol.opt,
-			pgtol=tol.opt)
-	}
 	if (method == "eigen") {
 		if (!quiet) cat("Computing eigenvalues ...\n")
 		if (listw$style %in% c("W", "S") & can.sim) {
@@ -85,32 +88,14 @@ errorsarlm <- function(formula, data = list(), listw, na.action=na.fail,
 # range inverted 031031, email from Salvati Nicola (and Rein Halbersma)
 		if (is.complex(eig)) eig.range <- 1/range(Re(eig))
 		else eig.range <- 1/range(eig)
-		if (optim) {
-		    lm.rho <- lm.fit(cbind(x, wy), y)
-		    rho <- coef(lm.rho)[length(coef(lm.rho))]
-		    if (rho < eig.range[1]+.Machine$double.eps) rho <- 0.0
-		    if (rho > eig.range[2]-.Machine$double.eps) rho <- 0.0
-		    opt <- optim(par=c(rho), sar.error.f, method="L-BFGS-B", 
-			lower=eig.range[1]+.Machine$double.eps, 
-			upper=eig.range[2]-.Machine$double.eps, 
-			control=control, 
-			eig=eig, y=y, wy=wy, x=x, WX=WX, n=n, quiet=quiet)
-		    if (opt$convergence == 1) warning("iteration limit reached")
-		    if (opt$convergence == 51) warning(opt$message)
-		    if (opt$convergence == 52) warning(opt$message)
-		    lambda <- c(opt$par[1])
-		    names(lambda) <- "lambda"
-		    LL <- c(opt$value)
-		} else {
-		    opt <- optimize(sar.error.f, 
+		opt <- optimize(sar.error.f, 
 			lower=eig.range[1]+.Machine$double.eps, 
 			upper=eig.range[2]-.Machine$double.eps, maximum=TRUE,
 			tol=tol.opt, eig=eig, y=y, wy=wy, x=x, WX=WX, 
 			n=n, quiet=quiet)
-		    lambda <- opt$maximum
-		    names(lambda) <- "lambda"
-		    LL <- opt$objective
-		}
+		lambda <- opt$maximum
+		names(lambda) <- "lambda"
+		LL <- opt$objective
 	} else if (method == "SparseM") {
 		if (listw$style %in% c("W", "S") & can.sim) {
 #			csrw <- asMatrixCsrListw(similar.listw(listw))
@@ -131,31 +116,27 @@ errorsarlm <- function(formula, data = list(), listw, na.action=na.fail,
 				tmpmax=tmpmax)
 		}
 		# tmpmax and gc() calls: Danlin Yu 20041213
-		if (optim) {
-		    lm.rho <- lm.fit(cbind(x, wy), y)
-		    rho <- coef(lm.rho)[length(coef(lm.rho))]
-		    if (rho <= interval[1]) rho <- 0.0
-		    if (rho >= interval[2]) rho <- 0.0
-		    opt <- optim(par=c(rho), sar.error.f.sM, method="L-BFGS-B", 
-			lower=interval[1],
-			upper=interval[2],
-			control=control, 
-			csrw=csrw, I=I, y=y, wy=wy, x=x, WX=WX, 
-			n=n, tmpmax=cholAlloc$tmpmax, quiet=quiet)
-		    if (opt$convergence == 1) warning("iteration limit reached")
-		    if (opt$convergence == 51) warning(opt$message)
-		    if (opt$convergence == 52) warning(opt$message)
-		    lambda <- c(opt$par[1])
-		    names(lambda) <- "lambda"
-		    LL <- c(opt$value)
-		} else {
-		    opt <- optimize(sar.error.f.sM, interval=interval, 
+		opt <- optimize(sar.error.f.sM, interval=interval, 
 			maximum=TRUE, tol=tol.opt, csrw=csrw, I=I, y=y, wy=wy, 
 			x=x, WX=WX, n=n, cholAlloc=cholAlloc, quiet=quiet)
-		    lambda <- opt$maximum
-		    names(lambda) <- "lambda"
-		    LL <- opt$objective
-		}
+		lambda <- opt$maximum
+		names(lambda) <- "lambda"
+		LL <- opt$objective
+		gc(FALSE)
+	} else if (method == "Matrix") {
+        	if (listw$style %in% c("W", "S") & can.sim) {
+	    	    csrw <- as_dsTMatrix_listw(listw2U(similar.listw(listw)))
+	    	    similar <- TRUE
+		} else csrw <- as_dsTMatrix_listw(listw)
+		gc(FALSE)
+        	I <- as_dgCMatrix_I(n)
+		I <- as(I, "CsparseMatrix")
+		opt <- optimize(sar.error.f.M, interval=interval, 
+			maximum=TRUE, tol=tol.opt, csrw=csrw, I=I, y=y, wy=wy, 
+			x=x, WX=WX, n=n, quiet=quiet)
+		lambda <- opt$maximum
+		names(lambda) <- "lambda"
+		LL <- opt$objective
 		gc(FALSE)
 	}
 	lm.target <- lm(I(y - lambda*wy) ~ I(x - lambda*WX) - 1)
@@ -235,9 +216,30 @@ sar.error.f.sM <- function(lambda, csrw, I, y, wy, x, WX, n, cholAlloc, quiet) {
 	xl.q.yl <- t(xl.q) %*% yl
 	SSE <- t(yl) %*% yl - t(xl.q.yl) %*% xl.q.yl
 	s2 <- SSE/n
-	Jacobian <- log(det(chol((I - lambda * csrw), 
+        Det <- get("det", "package:SparseM")
+	Jacobian <- log(Det(chol((I - lambda * csrw), 
 		nsubmax=cholAlloc$nsubmax, nnzlmax=cholAlloc$nnzlmax, 
 		tmpmax=cholAlloc$tmpmax))^2)
+	gc(FALSE)
+	ret <- (Jacobian -
+		((n/2)*log(2*pi)) - (n/2)*log(s2) - (1/(2*(s2)))*SSE)
+	if (!quiet) cat("lambda:", lambda, " function:", ret, " Jacobian:", Jacobian, " SSE:", SSE, "\n")
+	ret
+}
+
+sar.error.f.M <- function(lambda, csrw, I, y, wy, x, WX, n, quiet) {
+	yl <- y - lambda*wy
+	xl <- x - lambda*WX
+	xl.q <- qr.Q(qr(xl))
+	xl.q.yl <- t(xl.q) %*% yl
+	SSE <- t(yl) %*% yl - t(xl.q.yl) %*% xl.q.yl
+	s2 <- SSE/n
+    	CHOL <- try(chol(as((I - lambda * csrw), "dsCMatrix")), silent=TRUE)
+    	if (class(CHOL) == "try-error") {
+        	Jacobian <- NA
+    	} else {
+        	Jacobian <- sum(2*log(diag(CHOL)))
+    	}
 	gc(FALSE)
 	ret <- (Jacobian -
 		((n/2)*log(2*pi)) - (n/2)*log(s2) - (1/(2*(s2)))*SSE)

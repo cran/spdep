@@ -30,7 +30,8 @@ A \code{listw} object with the following members:
  
 \seealso{\code{\link{nb2listw}}, \code{\link{nb2mat}}}
 \examples{
-data(columbus)
+example(columbus)
+coords <- coordinates(columbus)
 col005 <- dnearneigh(coords, 0, 0.5, attr(col.gal.nb, "region.id"))
 summary(col005)
 col005.w.mat <- nb2mat(col005, zero.policy=TRUE)

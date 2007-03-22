@@ -41,7 +41,7 @@ Wald1.sarlm(object)
 \seealso{\code{\link{logLik.lm}}, \code{\link{anova.sarlm}}}
 
 \examples{
-data(columbus)
+example(columbus)
 mixed <- lagsarlm(CRIME ~ HOVAL + INC, data=columbus, nb2listw(col.gal.nb),
   type="mixed")
 error <- errorsarlm(CRIME ~ HOVAL + INC, data=columbus, nb2listw(col.gal.nb))

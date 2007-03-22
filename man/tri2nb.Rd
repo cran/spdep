@@ -38,10 +38,11 @@ The function returns an object of class \code{nb} with a list of integer vectors
 
 \examples{
 require(tripack)
-data(columbus)
-col.tri.nb <- tri2nb(coords, row.names=rownames(columbus))
-library(maptools)
-plot(polys, border="grey", forcefill=FALSE)
+example(columbus)
+coords <- coordinates(columbus)
+ind <- sapply(slot(columbus, "polygons"), function(x) slot(x, "ID"))
+col.tri.nb <- tri2nb(coords, row.names=ind)
+plot(columbus, border="grey")
 plot(col.tri.nb, coords, add=TRUE)
 title(main="Raw triangulation links")
 x <- seq(0,1,0.1)
