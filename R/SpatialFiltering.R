@@ -166,9 +166,9 @@ SpatialFiltering <- function (formula, lagformula, data=list(), nb, glist=NULL, 
         z <- Inf
         idx <- 0
         
-        for (j in 1:nofreg) {                                         #Inner Loop - Find next eigenvector
-            if (sel[j,3] == acsign ) {                                #Use only feasible unselected evecs
-                xe <- cbind(X, vec[,j])                               #Add test eigenvector
+        for (j in 1:nofreg) { #Inner Loop - Find next eigenvector
+            if (sel[j,3] == acsign ) { #Use only feasible unselected evecs
+                xe <- cbind(X, vec[,j])  #Add test eigenvector
                 
                 #Based on whether it is an only SAR model or not
                 if (is.onlysar) 
@@ -187,13 +187,13 @@ SpatialFiltering <- function (formula, lagformula, data=list(), nb, glist=NULL, 
                     V <- MStat$Var          
                   }
 
-                if (abs((mi - E) / sqrt(V)) < z) {                             #Identify min z(Moran)
+                if (abs((mi - E) / sqrt(V)) < z) { #Identify min z(Moran)
                     MinMi = mi
                     z <- (MinMi - E) / sqrt(V)
                     idx =j
                 }
             }
-        }                                                                      #End inner loop
+        }  #End inner loop
         
         #Update design matrix permanently by selected eigenvector
         X <- cbind(X,vec[,idx])
@@ -221,16 +221,25 @@ SpatialFiltering <- function (formula, lagformula, data=list(), nb, glist=NULL, 
         sel[idx,3] <- 0 
 
         if (is.null(alpha)) {
-	    if (abs(ZMinMi) < tol) break
+	    if (abs(ZMinMi) < tol) {
+		break
+	    } else if (abs(ZMinMi) > abs(oldZMinMi)) {
+		if (!ExactEV) {
+		   cat("   An inversion has been detected. The procedure will terminate now.\n")
+           	   cat("   It is suggested to use the exact expectation and variance of Moran's I\n")
+           	   cat("   by setting the option ExactEV to TRUE.\n")
+		}
+		break
+	    }
 	} else {
 	    if (altfunc(ZMinMi, alternative=alternative) >= alpha) break
 	}
         if (!ExactEV) {
            if (abs(ZMinMi) > abs(oldZMinMi)) {
-           cat("   An inversion has been detected. The procedure will terminate now.\n")
-           cat("   It is suggested to use the exact expectation and variance of Moran's I\n")
-           cat("   by setting the option ExactEV to TRUE.\n")
-           break
+		cat("   An inversion has been detected. The procedure will terminate now.\n")
+           	cat("   It is suggested to use the exact expectation and variance of Moran's I\n")
+           	cat("   by setting the option ExactEV to TRUE.\n")
+                break
            }
         }
         oldZMinMi <- ZMinMi
@@ -246,7 +255,7 @@ SpatialFiltering <- function (formula, lagformula, data=list(), nb, glist=NULL, 
     colnames(out) <- c("Step","SelEvec","Eval","MinMi","ZMinMi","Pr(ZI)","R2","gamma")
     rownames(out) <- out[,1]
     
-    selVec <- vec[,out[,2]]
+    selVec <- vec[,out[,2], drop=FALSE]
     colnames(selVec) <- c(paste("vec",out[2:nrow(out),2],sep=""))
     
     #Generating a result object 

@@ -189,7 +189,7 @@ nb2WB <- function(nb)
 
 listw2WB <- function(listw)
 {
-	if (class(listw) != "listw") stop("not listw class object")
+	if (!inherits(listw, "listw")) stop("not listw class object")
         adj <- unlist(listw$neighbours)
         num <- unlist(lapply(listw$neighbours, length))
         weights <- unlist(listw$weights)
