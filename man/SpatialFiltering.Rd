@@ -8,7 +8,9 @@
   The function selects eigenvectors in a semi-parametric spatial filtering approach to removing spatial dependence from linear models. Selection is by brute force by finding the single eigenvector reducing the standard variate of Moran's I for regression residuals most, and continuing until no candidate eigenvector reduces the value by more than \code{tol}. It returns a summary table from the selection process and a matrix of selected eigenvectors for the specified model.
 }
 \usage{
-SpatialFiltering(formula, lagformula, data, nb, glist = NULL, style = "C", zero.policy = FALSE, tol = 0.1, zerovalue = 1e-04, ExactEV = FALSE, symmetric = TRUE, alpha=NULL, alternative="two.sided", verbose=TRUE)
+SpatialFiltering(formula, lagformula, data, nb, glist = NULL, style = "C",
+ zero.policy = FALSE, tol = 0.1, zerovalue = 1e-04, ExactEV = FALSE,
+ symmetric = TRUE, alpha=NULL, alternative="two.sided", verbose=TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -54,13 +56,15 @@ SpatialFiltering(formula, lagformula, data, nb, glist = NULL, style = "C", zero.
 \examples{
 example(columbus)
 lmbase <- lm(CRIME ~ INC + HOVAL, data=columbus)
-sarcol <- SpatialFiltering(CRIME ~ INC + HOVAL, data=columbus, nb=col.gal.nb, style="W", ExactEV=TRUE)
+sarcol <- SpatialFiltering(CRIME ~ INC + HOVAL, data=columbus,
+ nb=col.gal.nb, style="W", ExactEV=TRUE)
 sarcol
 lmsar <- lm(CRIME ~ INC + HOVAL + fitted(sarcol), data=columbus)
 lmsar
 anova(lmbase, lmsar)
 lm.morantest(lmsar, nb2listw(col.gal.nb))
-lagcol <- SpatialFiltering(CRIME ~ 1, ~ INC + HOVAL - 1, data=columbus, nb=col.gal.nb, style="W")
+lagcol <- SpatialFiltering(CRIME ~ 1, ~ INC + HOVAL - 1, data=columbus,
+ nb=col.gal.nb, style="W")
 lagcol
 lmlag <- lm(CRIME ~ INC + HOVAL + fitted(lagcol), data=columbus)
 lmlag

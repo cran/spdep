@@ -8,7 +8,8 @@
   Computes the matrix used for generating simultaneous autoregressive random variables, for a given value of rho, a neighbours list object, a chosen coding scheme style, and optionally a list of general weights corresponding to neighbours.
 }
 \usage{
-invIrM(neighbours, rho, glist=NULL, style="W", method="solve", feasible=NULL)
+invIrM(neighbours, rho, glist=NULL, style="W", method="solve",
+ feasible=NULL)
 invIrW(listw, rho, method="solve", feasible=NULL)
 }
 
@@ -36,12 +37,18 @@ The function generates the full weights matrix V, checks that rho lies in its fe
 nb7rt <- cell2nb(7, 7, torus=TRUE)
 set.seed(1)
 x <- matrix(rnorm(500*length(nb7rt)), nrow=length(nb7rt))
-res0 <- apply(invIrM(nb7rt, rho=0.0, method="chol", feasible=TRUE) \%*\% x, 2, function(x) var(x)/length(x))
-res2 <- apply(invIrM(nb7rt, rho=0.2, method="chol", feasible=TRUE) \%*\% x, 2, function(x) var(x)/length(x))
-res4 <- apply(invIrM(nb7rt, rho=0.4, method="chol", feasible=TRUE) \%*\% x, 2, function(x) var(x)/length(x))
-res6 <- apply(invIrM(nb7rt, rho=0.6, method="chol", feasible=TRUE) \%*\% x, 2, function(x) var(x)/length(x))
-res8 <- apply(invIrM(nb7rt, rho=0.8, method="chol", feasible=TRUE) \%*\% x, 2, function(x) var(x)/length(x))
-res9 <- apply(invIrM(nb7rt, rho=0.9, method="chol", feasible=TRUE) \%*\% x, 2, function(x) var(x)/length(x))
+res0 <- apply(invIrM(nb7rt, rho=0.0, method="chol",
+ feasible=TRUE) \%*\% x, 2, function(x) var(x)/length(x))
+res2 <- apply(invIrM(nb7rt, rho=0.2, method="chol",
+ feasible=TRUE) \%*\% x, 2, function(x) var(x)/length(x))
+res4 <- apply(invIrM(nb7rt, rho=0.4, method="chol",
+ feasible=TRUE) \%*\% x, 2, function(x) var(x)/length(x))
+res6 <- apply(invIrM(nb7rt, rho=0.6, method="chol",
+ feasible=TRUE) \%*\% x, 2, function(x) var(x)/length(x))
+res8 <- apply(invIrM(nb7rt, rho=0.8, method="chol",
+ feasible=TRUE) \%*\% x, 2, function(x) var(x)/length(x))
+res9 <- apply(invIrM(nb7rt, rho=0.9, method="chol",
+ feasible=TRUE) \%*\% x, 2, function(x) var(x)/length(x))
 plot(density(res9), col="red", xlim=c(-0.01, max(density(res9)$x)),
   ylim=range(density(res0)$y),
   xlab="estimated variance of the mean",
@@ -52,7 +59,9 @@ lines(density(res2), col="brown")
 lines(density(res4), col="green")
 lines(density(res6), col="orange")
 lines(density(res8), col="pink")
-legend(c(-0.02, 0.01), c(7, 25), legend=c("0.0", "0.2", "0.4", "0.6", "0.8", "0.9"), col=c("black", "brown", "green", "orange", "pink", "red"), lty=1, bty="n")
+legend(c(-0.02, 0.01), c(7, 25),
+ legend=c("0.0", "0.2", "0.4", "0.6", "0.8", "0.9"),
+ col=c("black", "brown", "green", "orange", "pink", "red"), lty=1, bty="n")
 system.time(invIrM(nb7rt, rho=0.9, method="chol", feasible=TRUE))
 system.time(invIrM(nb7rt, rho=0.9, method="chol", feasible=NULL))
 system.time(invIrM(nb7rt, rho=0.9, method="solve", feasible=TRUE))

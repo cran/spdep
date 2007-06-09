@@ -13,9 +13,10 @@ error models of the form:
 where $\lambda$ is found by \code{optimize()} first, and $\beta$ and other parameters by generalized least squares subsequently (one-dimensional search using optim performs badly on some platforms).
 }
 \usage{
-errorsarlm(formula, data=list(), listw, na.action=na.fail, method="eigen",
-  quiet=TRUE, zero.policy=FALSE, interval = c(-1, 0.999), tol.solve=1.0e-10, 
-  tol.opt=.Machine$double.eps^0.5, cholAlloc=NULL)
+errorsarlm(formula, data=list(), listw, na.action=na.fail,
+ method="eigen", quiet=TRUE, zero.policy=FALSE,
+ interval = c(-1, 0.999), tol.solve=1.0e-10,
+ tol.opt=.Machine$double.eps^0.5, cholAlloc=NULL)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{

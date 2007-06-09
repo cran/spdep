@@ -11,7 +11,8 @@ sp.mantel.mc <- function(var, listw, nsim, type="moran", zero.policy=FALSE,
 	if(missing(nsim)) stop("nsim must be given")
 	n <- length(listw$neighbours)
 	if (n < 1) stop("non-positive n")
-	if(nsim > gamma(n+1)) stop("nsim too large for this n")
+        gamres <- suppressWarnings(nsim > gamma(n + 1))
+        if (gamres) stop("nsim too large for this number of observations")
 	if (nsim < 1) stop("non-positive nsim")
 
 	if (any(is.na(var))) stop("NA in var")
@@ -76,13 +77,20 @@ sp.mantel.mc <- function(var, listw, nsim, type="moran", zero.policy=FALSE,
 	lres
 }
 
-plot.mc.sim <- function(x, ...) {
+plot.mc.sim <- function(x, xlim, xlab, main, sub, ..., ptype="density") {
 	res <- x$res
-	xlim <- range(res)
+	if (missing(xlim)) xlim <- range(res)*1.1
 	n <- length(res)
 	obs <- res[n]
 	res <- res[-n]
-	plot(density(res), xlim=xlim, xlab=strsplit(x$data.name, "\n")[[1]][1], 
-		main="Density plot of permutation outcomes", sub=x$method)
-	abline(v=obs)
+        if (missing(xlab)) xlab <- strsplit(x$data.name, "\n")[[1]][1]
+        if (missing(sub)) sub <- x$method
+	if(ptype == "density") {
+            if (missing(main)) main <- "Density plot of permutation outcomes"
+            plot(density(res), xlim=xlim, xlab=xlab, main=main, sub=sub, ...)
+        } else {
+            if (missing(main)) main <- "Histogram of permutation outcomes"
+            hist(res, xlim=xlim, xlab=xlab, main=main, sub=sub, ...)
+        }
+	abline(v=obs, col=1, lwd=2)
 }

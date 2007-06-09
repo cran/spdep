@@ -6,7 +6,8 @@
 The function builds a neighbours list based on regions with contiguous boundaries, that is sharing one or more boundary point. The current function is in part interpreted and may run slowly for many regions or detailed boundaries, but from 0.2-16 should not fail because of lack of memory when single polygons are built of very many border coordinates.
 }
 \usage{
-poly2nb(pl, row.names = NULL, snap=sqrt(.Machine$double.eps), queen=TRUE)
+poly2nb(pl, row.names = NULL, snap=sqrt(.Machine$double.eps),
+ queen=TRUE)
 }
 
 \arguments{
@@ -30,13 +31,15 @@ dxx <- diffnb(xx, col.gal.nb)
 plot(columbus, border="grey")
 plot(col.gal.nb, coords, add=TRUE)
 plot(dxx, coords, add=TRUE, col="red")
-title(main="Differences (red) in Columbus GAL weights (black)\nand polygon generated queen weights")
+title(main=paste("Differences (red) in Columbus GAL weights (black)",
+ "and polygon generated queen weights", sep="\n"))
 xxx <- poly2nb(columbus, queen=FALSE)
 dxxx <- diffnb(xxx, col.gal.nb)
 plot(columbus, border = "grey")
 plot(col.gal.nb, coords, add = TRUE)
 plot(dxxx, coords, add = TRUE, col = "red")
-title(main="Differences (red) in Columbus GAL weights (black)\nand polygon generated rook weights")
+title(main=paste("Differences (red) in Columbus GAL weights (black)",
+ "and polygon generated rook weights", sep="\n"))
 cards <- card(xx)
 maxconts <- which(cards == max(cards))
 if(length(maxconts) > 1) maxconts <- maxconts[1]

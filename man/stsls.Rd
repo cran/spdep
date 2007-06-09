@@ -12,7 +12,8 @@
   The function fits a spatial lag model by two stage least squares, with the option of adjusting the results for heteroskedasticity.
 }
 \usage{
-stsls(formula, data = list(), listw, zero.policy = FALSE, na.action = na.fail, robust = FALSE)
+stsls(formula, data = list(), listw, zero.policy = FALSE,
+ na.action = na.fail, robust = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -59,7 +60,9 @@ COL.lag.stslsR <- stsls(CRIME ~ INC + HOVAL, data=COL.OLD, nb2listw(COL.nb),
 robust=TRUE)
 summary(COL.lag.stslsR, correlation=TRUE)
 data(boston)
-gp2a <- stsls(log(CMEDV) ~ CRIM + ZN + INDUS + CHAS + I(NOX^2) + I(RM^2) +  AGE + log(DIS) + log(RAD) + TAX + PTRATIO + B + log(LSTAT), data=boston.c, nb2listw(boston.soi))
+gp2a <- stsls(log(CMEDV) ~ CRIM + ZN + INDUS + CHAS + I(NOX^2) + I(RM^2) +
+  AGE + log(DIS) + log(RAD) + TAX + PTRATIO + B + log(LSTAT),
+ data=boston.c, nb2listw(boston.soi))
 summary(gp2a)
 }
 \keyword{spatial}

@@ -7,7 +7,8 @@
 A permutation test for same colour join count statistics calculated by using nsim random permutations of fx for the given spatial weighting scheme, to establish the ranks of the observed statistics (for each colour) in relation to the nsim simulated values.
 }
 \usage{
-joincount.mc(fx, listw, nsim, zero.policy=FALSE, alternative="greater", spChk=NULL)
+joincount.mc(fx, listw, nsim, zero.policy=FALSE, alternative="greater",
+ spChk=NULL)
 }
 \arguments{
   \item{fx}{a factor of the same length as the neighbours and weights objects in listw}

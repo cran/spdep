@@ -6,7 +6,8 @@
  A permutation test for Geary's C statistic calculated by using nsim random permutations of x for the given spatial weighting scheme, to establish the rank of the observed statistic in relation to the nsim simulated values.
 }
 \usage{
-geary.mc(x, listw, nsim, zero.policy=FALSE, alternative="less", spChk=NULL)
+geary.mc(x, listw, nsim, zero.policy=FALSE, alternative="less",
+ spChk=NULL)
 }
 \arguments{
   \item{x}{a numeric vector the same length as the neighbours list in listw}

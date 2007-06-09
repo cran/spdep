@@ -6,7 +6,8 @@
  .
 }
 \usage{
-globalG.test(x, listw, zero.policy=FALSE, alternative="greater", spChk=NULL)
+globalG.test(x, listw, zero.policy=FALSE, alternative="greater",
+ spChk=NULL)
 }
 \arguments{
   \item{x}{a numeric vector the same length as the neighbours list in listw}

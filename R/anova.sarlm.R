@@ -1,4 +1,4 @@
-# Copyright 2003 by Roger Bivand 
+# Copyright 2003-7 by Roger Bivand 
 #
 
 anova.sarlm <- function(object, ...) {
@@ -30,7 +30,7 @@ anova.sarlm <- function(object, ...) {
             stop("First model has a different response from the rest")
         object <- object[subs]
         aux <- lapply(object, logLik)
-        if (length(unique(unlist(lapply(aux, 
+        if (length(unique(unlist(lapply(object, 
 	    function(el) length(residuals(el)))))) > 1) {
             stop("All fitted objects must use the same number of observations")
         }
