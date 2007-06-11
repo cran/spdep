@@ -9,8 +9,8 @@
 print and plot helper functions.
 }
 \usage{
-sp.correlogram(neighbours, var, order = 1, method = "corr", style = "W", 
-  randomisation = TRUE, zero.policy = FALSE, spChk=NULL)
+sp.correlogram(neighbours, var, order = 1, method = "corr",
+ style = "W", randomisation = TRUE, zero.policy = FALSE, spChk=NULL)
 plot.spcor(x, main, ylab, ylim, ...)
 print.spcor(x, p.adj.method="none", ...)
 }

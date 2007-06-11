@@ -13,7 +13,8 @@ factors, and results may be checked against those of \code{geary.mc}
 permutations.
 }
 \usage{
-joincount.test(fx, listw, zero.policy=FALSE, alternative="greater", adjust.n=TRUE, spChk=NULL)
+joincount.test(fx, listw, zero.policy=FALSE, alternative="greater",
+ adjust.n=TRUE, spChk=NULL)
 print.jclist(x, ...)
 }
 \arguments{

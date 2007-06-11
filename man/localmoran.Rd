@@ -44,10 +44,13 @@ International), 261--277.}
 data(afcon)
 oid <- order(afcon$id)
 resI <- localmoran(afcon$totcon, nb2listw(paper.nb))
-printCoefmat(data.frame(resI[oid,], row.names=afcon$name[oid]), check.names=FALSE)
+printCoefmat(data.frame(resI[oid,], row.names=afcon$name[oid]),
+ check.names=FALSE)
 hist(resI[,5])
-resI <- localmoran(afcon$totcon, nb2listw(paper.nb), p.adjust.method="bonferroni")
-printCoefmat(data.frame(resI[oid,], row.names=afcon$name[oid]), check.names=FALSE)
+resI <- localmoran(afcon$totcon, nb2listw(paper.nb),
+ p.adjust.method="bonferroni")
+printCoefmat(data.frame(resI[oid,], row.names=afcon$name[oid]),
+ check.names=FALSE)
 hist(resI[,5])
 totcon <-afcon$totcon
 is.na(totcon) <- sample(1:length(totcon), 5)

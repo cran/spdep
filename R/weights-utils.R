@@ -66,15 +66,18 @@ is.selfneighbour <- function(nb) {
     res <- sapply(seq(along=nb), function(i) i %in% nb[[i]]) 
 }
 
-# Copyright 2001 by Nicholas Lewin-Koh 
+# Copyright 2001-7 by Nicholas Lewin-Koh and Roger Bivand
 
 make.sym.nb <- function(nb){
 	if(!inherits(nb, "nb")) stop("Not neighbours list")
 	if (is.symmetric.nb(nb, FALSE, TRUE)) {
 		res <- nb
 	} else {
-        	k <- unlist(lapply(nb,length))
+#        	k <- unlist(lapply(nb,length))
+# problems handling no-neighbour entities
+		k <- card(nb)
         	to <- unlist(nb)
+		to <- to[to > 0]
         	from <- NULL
         	res <- vector(mode="list", length=length(nb))
         	for(i in 1:length(nb)){

@@ -15,7 +15,8 @@
   An implementation of Kelejian and Prucha's generalised moments estimator for the autoregressive parameter in a spatial model.
 }
 \usage{
-GMerrorsar(formula, data = list(), listw, na.action = na.fail, zero.policy = FALSE, return_LL = TRUE, control = list(), verbose=FALSE)
+GMerrorsar(formula, data = list(), listw, na.action = na.fail,
+ zero.policy = FALSE, return_LL = TRUE, control = list(), verbose=FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -67,14 +68,18 @@ variable in making predictions for the fitting data.
 \seealso{\code{\link[stats]{optim}}, \code{\link{errorsarlm}}}
 \examples{
 data(oldcol)
-COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD, nb2listw(COL.nb, style="W"), method="eigen")
+COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
+ nb2listw(COL.nb, style="W"), method="eigen")
 summary(COL.errW.eig)
-COL.errW.GM <- GMerrorsar(CRIME ~ INC + HOVAL, data=COL.OLD, nb2listw(COL.nb, style="W"))
+COL.errW.GM <- GMerrorsar(CRIME ~ INC + HOVAL, data=COL.OLD,
+ nb2listw(COL.nb, style="W"))
 summary(COL.errW.GM)
 example(NY_data)
-esar1f <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata, listw=listw_NY, family="SAR", method="full")
+esar1f <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
+ listw=listw_NY, family="SAR", method="full")
 summary(esar1f)
-esar1gm <- GMerrorsar(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata, listw=listw_NY)
+esar1gm <- GMerrorsar(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
+ data=nydata, listw=listw_NY)
 summary(esar1gm)
 }
 \keyword{spatial}

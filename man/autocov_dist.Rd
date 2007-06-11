@@ -6,7 +6,8 @@
   Calculates the autocovariate to be used in autonormal, autopoisson or autologistic regression. Three distance-weighting schemes are available.
 }
 \usage{
-autocov_dist(z, xy, nbs = 1, type = "inverse", zero.policy = FALSE, style = "W", longlat=NULL)
+autocov_dist(z, xy, nbs = 1, type = "inverse", zero.policy = FALSE,
+ style = "W", longlat=NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -29,9 +30,12 @@ autocov_dist(z, xy, nbs = 1, type = "inverse", zero.policy = FALSE, style = "W",
 \examples{
 example(columbus)
 xy <- cbind(columbus$X, columbus$Y)
-ac1a <- autocov_dist(columbus$CRIME, xy, nbs=10, style="W", type="one")
-acinva <- autocov_dist(columbus$CRIME, xy, nbs=10, style="W", type="inverse")
-acinv2a <- autocov_dist(columbus$CRIME, xy, nbs=10, style="W", type="inverse.squared")
+ac1a <- autocov_dist(columbus$CRIME, xy, nbs=10, style="W",
+ type="one")
+acinva <- autocov_dist(columbus$CRIME, xy, nbs=10, style="W",
+ type="inverse")
+acinv2a <- autocov_dist(columbus$CRIME, xy, nbs=10, style="W",
+ type="inverse.squared")
 
 plot(ac1a ~ columbus$CRIME, pch=16, asp=1)
 points(acinva ~ columbus$CRIME, pch=16, col="red")
@@ -55,10 +59,12 @@ acinv2b <- lag(lw, columbus$CRIME)
 all.equal(acinv2b, acinv2a)
 
 glm(CRIME ~ HOVAL + ac1b, data=columbus, family="gaussian")
-spautolm(columbus$CRIME ~ HOVAL, data=columbus, listw=nb2listw(nb, style="W"))
+spautolm(columbus$CRIME ~ HOVAL, data=columbus,
+ listw=nb2listw(nb, style="W"))
 
 xy <- SpatialPoints(xy)
-acinva <- autocov_dist(columbus$CRIME, xy, nbs=10, style="W", type="inverse")
+acinva <- autocov_dist(columbus$CRIME, xy, nbs=10, style="W",
+ type="inverse")
 nb <- dnearneigh(xy, 0, 10)
 nbd <- nbdists(nb, xy)
 gl <- lapply(nbd, function(x) 1/x)

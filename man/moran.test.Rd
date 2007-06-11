@@ -7,7 +7,7 @@
 }
 \usage{
 moran.test(x, listw, randomisation=TRUE, zero.policy=FALSE,
-	alternative="greater", rank = FALSE, na.action=na.fail, spChk=NULL)
+ alternative="greater", rank = FALSE, na.action=na.fail, spChk=NULL)
 }
 \arguments{
   \item{x}{a numeric vector the same length as the neighbours list in listw}
@@ -71,7 +71,8 @@ names(ranks) <- rownames(COL.OLD)
 moran.test(ranks, nb2listw(COL.nb, style="W"), rank=TRUE)
 crime <- COL.OLD$CRIME
 is.na(crime) <- sample(1:length(crime), 10)
-res <- try(moran.test(crime, nb2listw(COL.nb, style="W"), na.action=na.fail))
+res <- try(moran.test(crime, nb2listw(COL.nb, style="W"),
+ na.action=na.fail))
 res
 moran.test(crime, nb2listw(COL.nb, style="W"), zero.policy=TRUE,
  na.action=na.omit)

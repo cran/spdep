@@ -70,7 +70,7 @@ ME <- function(formula, data, family = gaussian, weights, offset, listw,
 		stdev=stdev)
 	pIZ <- mRES$p.value
 	tres <- c(NA, mRES$statistic, pIZ)
-	if (pIZ > alpha) stop("alpha larger than base correlation")
+	if (pIZ > alpha) stop("base correlation larger than alpha")
 
 	Cent <- diag(n) - (matrix(1, n, n)/n)
 	eV <- eigen(Cent %*% Wmat %*% Cent, EISPACK=TRUE)$vectors

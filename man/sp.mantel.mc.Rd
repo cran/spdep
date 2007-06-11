@@ -15,7 +15,7 @@ permutation test.
 \usage{
 sp.mantel.mc(var, listw, nsim, type = "moran", zero.policy = FALSE,
  alternative = "greater", spChk=NULL)
-plot.mc.sim(x, ...)
+plot.mc.sim(x, xlim, xlab, main, sub, ..., ptype="density")
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
@@ -29,6 +29,11 @@ plot.mc.sim(x, ...)
   must be one of "greater" (default), or "less".}
   \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
   \item{x}{the object to be plotted}
+  \item{xlim}{the range of the x axis}
+  \item{xlab}{a title for the x axis}
+  \item{main}{an overall title for the plot}
+  \item{sub}{a sub title for the plot}
+  \item{ptype}{either "density" or "hist"}
   \item{...}{further arguments passed through}
 }
 

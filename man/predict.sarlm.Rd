@@ -12,7 +12,8 @@ model objects, using Haining's terminology for decomposition into
 trend, signal, and noise --- see reference.
 }
 \usage{
-predict.sarlm(object, newdata = NULL, listw = NULL, zero.policy = FALSE, ...)
+predict.sarlm(object, newdata = NULL, listw = NULL,
+ zero.policy = FALSE, ...)
 print.sarlm.pred(x, ...)
 }
 %- maybe also `usage' for other objects documented here.

@@ -7,8 +7,8 @@
   Moran's I test for spatial autocorrelation in residuals from an estimated linear model (\code{lm()}). The helper function \code{listw2U()} constructs a weights list object corresponding to the sparse matrix \eqn{\frac{1}{2} ( \mathbf{W} + \mathbf{W}'}{1/2 (W + W')}
 }
 \usage{
-lm.morantest(model, listw, zero.policy=FALSE, 
-	    alternative = "greater", spChk=NULL, resfun=weighted.residuals)
+lm.morantest(model, listw, zero.policy=FALSE, alternative = "greater",
+ spChk=NULL, resfun=weighted.residuals)
 listw2U(listw)
 }
 \arguments{
@@ -49,9 +49,12 @@ lm.morantest(oldcrime.lm, nb2listw(COL.nb, style="S"))
 lm.morantest(oldcrime1.lm, nb2listw(COL.nb, style="W"))
 moran.test(COL.OLD$CRIME, nb2listw(COL.nb, style="W"),
  randomisation=FALSE)
-oldcrime.wlm <- lm(CRIME ~ HOVAL + INC, data = COL.OLD, weights = I(1/AREA))
-lm.morantest(oldcrime.wlm, nb2listw(COL.nb, style="W"), resfun=weighted.residuals)
-lm.morantest(oldcrime.wlm, nb2listw(COL.nb, style="W"), resfun=rstudent)
+oldcrime.wlm <- lm(CRIME ~ HOVAL + INC, data = COL.OLD,
+ weights = I(1/AREA))
+lm.morantest(oldcrime.wlm, nb2listw(COL.nb, style="W"),
+ resfun=weighted.residuals)
+lm.morantest(oldcrime.wlm, nb2listw(COL.nb, style="W"),
+ resfun=rstudent)
 if (require(boot)) {
   oldcrime.lmx <- lm(CRIME ~ HOVAL + INC, data = COL.OLD, x=TRUE)
   listw <- nb2listw(COL.nb, style="W")
@@ -61,7 +64,8 @@ if (require(boot)) {
     return(moran(x=residuals(lmres), ...)$I)
   }
   boot1 <- boot(residuals(oldcrime.lmx), statistic=MoraneI.boot, R=499,
-    sim="permutation", listw=listw, n=length(listw$neighbours), S0=Szero(listw))
+    sim="permutation", listw=listw, n=length(listw$neighbours),
+    S0=Szero(listw))
   zi <- (boot1$t0 - mean(boot1$t))/sqrt(var(boot1$t))
   boot1
   plot(boot1)

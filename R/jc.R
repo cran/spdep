@@ -109,7 +109,8 @@ joincount.mc <- function(fx, listw, nsim, zero.policy=FALSE,
 	if (is.null(spChk)) spChk <- get.spChkOption()
 	if (spChk && !chkIDs(fx, listw))
 		stop("Check of data and weights ID integrity failed")
-	if(nsim > gamma(n+1)) stop("nsim too large for this n")
+        gamres <- suppressWarnings(nsim > gamma(n + 1))
+        if (gamres) stop("nsim too large for this number of observations")
 
 	ff <- ~ fx - 1
 	dums <- model.matrix(ff, model.frame(ff))

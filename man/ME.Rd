@@ -7,7 +7,8 @@
 \description{
   The Moran eigenvector filtering function is intended to remove spatial autocorrelation from the residuals of generalised linear models. It uses brute force eigenvector selection to reach a subset of such vectors to be added to the RHS of the GLM model to reduce residual autocorrelation to below the specified alpha value.}
 \usage{
-ME(formula, data, family = gaussian, weights, offset, listw, alpha=0.05, nsim=99, verbose=TRUE, stdev=FALSE)
+ME(formula, data, family = gaussian, weights, offset, listw,
+ alpha=0.05, nsim=99, verbose=TRUE, stdev=FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -46,29 +47,35 @@ An object of class \code{ME_res}:
 \examples{
 example(columbus)
 lmbase <- lm(CRIME ~ INC + HOVAL, data=columbus)
-lagcol <- SpatialFiltering(CRIME ~ 1, ~ INC + HOVAL, data=columbus, nb=col.gal.nb, style="W", alpha=0.1, verbose=TRUE)
+lagcol <- SpatialFiltering(CRIME ~ 1, ~ INC + HOVAL, data=columbus,
+ nb=col.gal.nb, style="W", alpha=0.1, verbose=TRUE)
 lagcol
 lmlag <- lm(CRIME ~ INC + HOVAL + fitted(lagcol), data=columbus)
 anova(lmlag)
 anova(lmbase, lmlag)
 set.seed(123)
-lagcol1 <- ME(CRIME ~ INC + HOVAL, data=columbus, family="gaussian", listw=nb2listw(col.gal.nb), alpha=0.1, verbose=TRUE)
+lagcol1 <- ME(CRIME ~ INC + HOVAL, data=columbus, family="gaussian",
+ listw=nb2listw(col.gal.nb), alpha=0.1, verbose=TRUE)
 lagcol1
 lmlag1 <- lm(CRIME ~ INC + HOVAL + fitted(lagcol1), data=columbus)
 anova(lmlag1)
 anova(lmbase, lmlag1)
 set.seed(123)
-lagcol2 <- ME(CRIME ~ INC + HOVAL, data=columbus, family="gaussian", listw=nb2listw(col.gal.nb), alpha=0.1, stdev=TRUE, verbose=TRUE)
+lagcol2 <- ME(CRIME ~ INC + HOVAL, data=columbus, family="gaussian",
+ listw=nb2listw(col.gal.nb), alpha=0.1, stdev=TRUE, verbose=TRUE)
 lagcol2
 lmlag2 <- lm(CRIME ~ INC + HOVAL + fitted(lagcol2), data=columbus)
 anova(lmlag2)
 anova(lmbase, lmlag2)
 example(nc.sids)
-glmbase <- glm(SID74 ~ 1, data=nc.sids, offset=log(BIR74), family="poisson")
+glmbase <- glm(SID74 ~ 1, data=nc.sids, offset=log(BIR74),
+ family="poisson")
 set.seed(123)
-MEpois1 <- ME(SID74 ~ 1, data=nc.sids, offset=log(BIR74), family="poisson", listw=nb2listw(ncCR85_nb), alpha=0.2, verbose=TRUE)
+MEpois1 <- ME(SID74 ~ 1, data=nc.sids, offset=log(BIR74),
+ family="poisson", listw=nb2listw(ncCR85_nb), alpha=0.2, verbose=TRUE)
 MEpois1
-glmME <- glm(SID74 ~ 1 + fitted(MEpois1), data=nc.sids, offset=log(BIR74), family="poisson")
+glmME <- glm(SID74 ~ 1 + fitted(MEpois1), data=nc.sids, offset=log(BIR74),
+ family="poisson")
 anova(glmME, test="Chisq")
 anova(glmbase, glmME, test="Chisq")
 data(hopkins)
@@ -77,7 +84,8 @@ hopkins_part[which(hopkins_part > 0, arr.ind=TRUE)] <- 1
 hopkins.rook.nb <- cell2nb(16, 16, type="rook")
 glmbase <- glm(c(hopkins_part) ~ 1, family="binomial")
 set.seed(123)
-MEbinom1 <- ME(c(hopkins_part) ~ 1, family="binomial", listw=nb2listw(hopkins.rook.nb), alpha=0.2, verbose=TRUE)
+MEbinom1 <- ME(c(hopkins_part) ~ 1, family="binomial",
+ listw=nb2listw(hopkins.rook.nb), alpha=0.2, verbose=TRUE)
 glmME <- glm(c(hopkins_part) ~ 1 + fitted(MEbinom1), family="binomial")
 anova(glmME, test="Chisq")
 anova(glmbase, glmME, test="Chisq")

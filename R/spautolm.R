@@ -70,6 +70,7 @@ spautolm <- function(formula, data = list(), listw, weights=NULL,
             weights=diag(weights), sum_lw=sum_lw, family=family, verbose=FALSE,
 		tol.solve=tol.solve)
     } else if (method == "SparseM") {
+        if (family == "SMA") stop("SMA only for full method")
         if (listw$style %in% c("W", "S") && !can.sim)
         stop("SparseM method requires symmetric weights")
         if (listw$style %in% c("B", "C", "U") && 
@@ -121,6 +122,7 @@ spautolm <- function(formula, data = list(), listw, weights=NULL,
             verbose=verbose, cholAlloc=cholAlloc, tol.solve=tol.solve)
 #        weights <- diag(Sweights)
     }  else if (method == "Matrix") {
+        if (family == "SMA") stop("SMA only for full method")
         if (listw$style %in% c("W", "S") && !can.sim)
         stop("Matrix method requires symmetric weights")
         if (listw$style %in% c("B", "C", "U") && 
@@ -185,10 +187,18 @@ spautolm <- function(formula, data = list(), listw, weights=NULL,
     SSE <- .SPAR.fit(lambda=lambda, Y=Y, X=X, n=n, W=W, weights=weights,
         I=I, family=family, out=FALSE, tol.solve=tol.solve)
     s2 <- SSE/n
-    if (is.complex(eig)) detIlW <- Re(prod(1 - lambda*eig)) 
-    else detIlW <- prod(1 - lambda*eig)
-    ret <- ((1/ifelse((length(grep("CAR", family)) != 0), 2, 1))*log(detIlW) +
-	(1/2)*sum_lw - ((n/2)*log(2*pi)) - (n/2)*log(s2) - (1/(2*(s2)))*SSE)
+    if (family == "SMA") {
+        if (is.complex(eig)) detIlW <- Re(prod(1/(1 + lambda * eig))) 
+        else detIlW <- prod(1/(1 + lambda * eig))
+        ldet <- log(detIlW)
+    } else {
+        if (is.complex(eig)) detIlW <- Re(prod(1 - lambda*eig)) 
+        else detIlW <- prod(1 - lambda*eig)
+        ldet <- (1/ifelse((length(grep("CAR", family)) != 0), 2, 1)) * 
+            log(detIlW)
+    }
+    ret <- (ldet + (1/2)*sum_lw - ((n/2)*log(2*pi)) - (n/2)*log(s2) - 
+        (1/(2*(s2)))*SSE)
     if (verbose)  cat("lambda:", lambda, "function:", ret, "Jacobian", log(detIlW), "SSE", SSE, "\n")
     ret
 }
@@ -231,7 +241,8 @@ spautolm <- function(formula, data = list(), listw, weights=NULL,
 .SPAR.fit <- function(lambda, Y, X, n, W, weights, I, family,
     out=FALSE, tol.solve=.Machine$double.eps) {
     dmmf <- eval(parse(text=family))
-    IlW <- dmmf((I - lambda * W), weights)
+    if (family == "SMA") IlW <- dmmf((I + lambda * W), weights)
+    else IlW <- dmmf((I - lambda * W), weights)
     imat <- base:::solve(t(X) %*% as.matrix(IlW %*% X), tol=tol.solve)
     coef <- crossprod(imat, t(X) %*% as.matrix(IlW %*% Y))
     fitted <- X %*% coef
@@ -256,6 +267,12 @@ SAR <- function(IlW, weights) {
 # Conditional  autoregressive
 CAR <- function(IlW, weights) {
     IlW %*% weights
+}
+
+# Spatial moving average
+SMA <- function(IlW, weights) {
+    IlW <- solve(IlW)
+    t(IlW) %*% weights %*% IlW
 }
 
 

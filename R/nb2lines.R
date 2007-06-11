@@ -1,7 +1,7 @@
-# Copyright 2005 by Roger Bivand
+# Copyright 2005-7 by Roger Bivand
 #
 
-nb2lines <- function(nb, wts, coords) {
+nb2lines <- function(nb, wts, coords, proj4string=CRS(as.character(NA))) {
 
 	x <- coords[,1]
 	y <- coords[,2]
@@ -23,7 +23,10 @@ nb2lines <- function(nb, wts, coords) {
 				jj <- inb[j]
 				xx <- c(x[i], x[jj])
 				yy <- c(y[i], y[jj])
-				ll[[line]] <- cbind(xx, yy)
+				xy <- cbind(xx, yy)
+#				ll[[line]] <- cbind(xx, yy)
+				Ll <- list(Line(xy))
+				ll[[line]] <- Lines(Ll, ID=as.character(line))
 				df[line, "i"] <- i
 				df[line, "i_ID"] <- ID[i]
 				df[line, "j"] <- jj
@@ -36,11 +39,14 @@ nb2lines <- function(nb, wts, coords) {
 			}
 		}
 	}
-	list(ll=ll, df=df)
+	row.names(df) <- as.character(1:(line-1))
+	SpatialLinesDataFrame(SpatialLines(ll, proj4string=proj4string),
+		data=df)
+#	list(ll=ll, df=df)
 }
 
-listw2lines <- function(listw, coords) {
-	nb2lines(listw$neighbours, listw$weights, coords)
+listw2lines <- function(listw, coords, proj4string=CRS(as.character(NA))) {
+	nb2lines(listw$neighbours, listw$weights, coords, proj4string)
 }
 
 df2sn <- function(df, i="i", i_ID="i_ID", j="j", wt="wt") {

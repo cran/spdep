@@ -15,7 +15,13 @@ nb2blocknb(nb, ID, row.names = NULL)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{nb}{an object of class \code{nb} with a list of integer vectors containing neighbour region number ids}
-  \item{ID}{identification tags of the locations for the location-less observations; \code{sort(unique(as.character(ID)))} must be identical to \code{sort(as.character(attr(nb, "region.id")))}; same length as \code{row.names} if provided.}
+  \item{ID}{identification tags of the locations for the location-less observations;
+
+ \code{sort(unique(as.character(ID)))} must be identical to 
+
+\code{sort(as.character(attr(nb, "region.id")))};
+
+ same length as \code{row.names} if provided.}
   \item{row.names}{character vector of observation ids to be added to the neighbours list as attribute \code{region.id}, default \code{seq(1, nrow(x))}; same length as \code{ID} if provided.}
 }
 \details{
@@ -45,7 +51,8 @@ The function returns an object of class \code{nb} with a list of integer vectors
 data(boston)
 summary(as.vector(table(boston.c$TOWN)))
 townaggr <- aggregate(boston.utm, list(town=boston.c$TOWN), mean)
-block.rel <- graph2nb(relativeneigh(as.matrix(townaggr[,2:3])), as.character(townaggr[,1]), sym=TRUE)
+block.rel <- graph2nb(relativeneigh(as.matrix(townaggr[,2:3])),
+ as.character(townaggr[,1]), sym=TRUE)
 block.rel
 print(is.symmetric.nb(block.rel))
 plot(block.rel, as.matrix(townaggr[,2:3]))

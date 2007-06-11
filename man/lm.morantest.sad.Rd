@@ -11,7 +11,8 @@ approximation to global Moran's I's reference distribution.
 }
 \usage{
 lm.morantest.sad(model, listw, zero.policy=FALSE, alternative="greater", 
-  spChk=NULL, resfun=weighted.residuals, tol=.Machine$double.eps^0.5, maxiter=1000, tol.bounds=0.0001)
+  spChk=NULL, resfun=weighted.residuals, tol=.Machine$double.eps^0.5,
+  maxiter=1000, tol.bounds=0.0001)
 print.moransad(x, ...)
 summary.moransad(object, ...)
 print.summary.moransad(x, ...) 
