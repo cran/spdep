@@ -1,5 +1,5 @@
 # Copyright 2005-7 by Roger Bivand
-spautolm <- function(formula, data = list(), listw, weights=NULL,
+spautolm <- function(formula, data = list(), listw, weights,
     na.action=na.fail, verbose=FALSE, tol.opt=.Machine$double.eps^(2/3),
     family="SAR", method="full", interval=c(-1,0.999), zero.policy=FALSE,
     cholAlloc=NULL, tol.solve=.Machine$double.eps) 
@@ -7,8 +7,17 @@ spautolm <- function(formula, data = list(), listw, weights=NULL,
     if (!inherits(listw, "listw")) 
         stop("No neighbourhood list")
 
-    mt <- terms(formula, data = data)
-    mf <- lm(formula, data, na.action=na.action, method="model.frame")
+    mf <- match.call(expand.dots = FALSE)
+    m <- match(c("formula", "data", "weights", "na.action"), names(mf), 0)
+    mf <- mf[c(1, m)]
+    mf$drop.unused.levels <- TRUE
+    mf[[1]] <- as.name("model.frame")
+    mf <- eval(mf, parent.frame())
+    mt <- attr(mf, "terms")
+
+#    mt <- terms(formula, data = data)
+#    mf <- lm(formula, data, , weights, na.action=na.action,
+#        method="model.frame")
     na.act <- attr(mf, "na.action")
     if (!is.null(na.act)) {
         subset <- !(1:length(listw$neighbours) %in% na.act)
@@ -20,8 +29,13 @@ spautolm <- function(formula, data = list(), listw, weights=NULL,
     X <- model.matrix(mt, mf)
     if (any(is.na(X))) stop("NAs in independent variable")
     n <- nrow(X)
+    weights <- as.vector(model.extract(mf, "weights"))
 # set up default weights
+    if (!is.null(weights) && !is.numeric(weights)) 
+        stop("'weights' must be a numeric vector")
     if (is.null(weights)) weights <- rep(as.numeric(1), n)
+    if (any(is.na(weights))) stop("NAs in weights")
+    if (any(weights < 0)) stop("negative weights")
     lm.base <- lm(Y ~ X - 1, weights=weights)
     aliased <- is.na(coefficients(lm.base))
     cn <- names(aliased)

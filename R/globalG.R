@@ -48,7 +48,8 @@ globalG.test <- function(x, listw, zero.policy=FALSE,
 		 B4*(sx^4)) / ((((sx^2) - sx2)^2)*n*n1*n2*n3)) - (E.G^2)
 
 	statistic <- (G - E.G) / sqrt(var.G)
-	names(statistic) <- "Getis-Ord global G statistic"
+	names(statistic) <- "standard deviate"
+	method <- "Getis-Ord global G statistic"
 	if (alternative == "two.sided") PrG <- 2 * pnorm(-abs(statistic), 
 		lower.tail=FALSE)
         else if (alternative == "greater")
@@ -61,7 +62,7 @@ globalG.test <- function(x, listw, zero.policy=FALSE,
 	data.name <- paste(deparse(substitute(x)), "\nweights:",
 	    deparse(substitute(listw)), "\n")
 	res <- list(statistic=statistic, p.value=PrG, estimate=vec, 
-	    alternative=alternative, data.name=data.name)
+	    alternative=alternative, data.name=data.name, method=method)
 	class(res) <- "htest"
 	res
 }

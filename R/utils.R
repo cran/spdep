@@ -49,10 +49,12 @@ Szero <- function(listw) {
 
 lag.listw <- function(x, var, zero.policy=FALSE, NAOK=FALSE, ...) {
 	listw <- x
-	x <- var
-	if (!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
+	if (!inherits(listw, "listw")) stop(paste(deparse(substitute(x)),
 		"is not a listw object"))
-	if (!is.numeric(x)) stop(paste(deparse(substitute(listw)),
+	x <- var
+	if (!is.vector(c(x)) && !is.matrix(x)) stop(paste(deparse(substitute(var)),
+		"not a vector or matrix"))
+	if (!is.numeric(x)) stop(paste(deparse(substitute(var)),
 		"not numeric"))
 	if (!is.logical(NAOK)) stop("NAOK must be logical")
 #	if (any(is.na(x))) stop("NA in X")

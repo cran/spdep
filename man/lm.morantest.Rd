@@ -8,7 +8,7 @@
 }
 \usage{
 lm.morantest(model, listw, zero.policy=FALSE, alternative = "greater",
- spChk=NULL, resfun=weighted.residuals)
+ spChk=NULL, resfun=weighted.residuals, naSubset=TRUE)
 listw2U(listw)
 }
 \arguments{
@@ -21,6 +21,7 @@ neighbours, if FALSE assign NA}
 must be one of "greater" (default), "less" or "two.sided".}
   \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
   \item{resfun}{default: weighted.residuals; the function to be used to extract residuals from the \code{lm} object, may be \code{residuals}, \code{weighted.residuals}, \code{rstandard}, or \code{rstudent}}
+  \item{naSubset}{default TRUE to subset listw object for omitted observations in model object (this is a change from earlier behaviour, when the \code{model$na.action} component was ignored, and the listw object had to be subsetted by hand)}
 }
 \value{
 A list with class \code{htest} containing the following components:
