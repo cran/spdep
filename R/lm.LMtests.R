@@ -1,8 +1,21 @@
-# Copyright 2001-6 by Roger Bivand 
+# Copyright 2001-7 by Roger Bivand 
 #
 
 lm.LMtests <- function(model, listw, zero.policy=FALSE, test="LMerr",
-	spChk=NULL) {
+	spChk=NULL, naSubset=TRUE) {
+
+	if (class(model) == "lm") na.act <- model$na.action
+	else na.act <- attr(model, "na.action")
+
+	listw_name <- deparse(substitute(listw))
+
+	if (!inherits(listw, "listw")) stop(paste(listw_name,
+		"is not a listw object"))
+	if (!is.null(na.act) && naSubset) {
+	    subset <- !(1:length(listw$neighbours) %in% na.act)
+	    listw <- subset(listw, subset, zero.policy=zero.policy)
+	}
+
 	if (length(test) == 1 && test[1] == "LMerr") {
 		res <- lm.LMErr(model=model, listw=listw, 
 			zero.policy=zero.policy, spChk=spChk) 
@@ -10,18 +23,16 @@ lm.LMtests <- function(model, listw, zero.policy=FALSE, test="LMerr",
 	    		paste(strwrap(paste("model: ",
 	    		gsub("[ ]+", " ", paste(deparse(model$call), 
 	    		sep="", collapse="")))), collapse="\n"),
-    	     		"\nweights: ", deparse(substitute(listw)), "\n", sep="")
+    	     		"\nweights: ", listw_name, "\n", sep="")
 		else res$data.name <- paste("\nresiduals: ", 
 			deparse(substitute(model)), "\nweights: ", 
-			deparse(substitute(listw)), "\n", sep="")
+			listw_name, "\n", sep="")
 		tres <- vector(mode="list", length=1)
 		names(tres) <- test
 		tres[[1]] <- res
 		class(tres) <- "LMtestlist"
 		return(tres)
 	}
-	if (!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
-		"is not a listw object"))
 	if(class(model) != "lm") stop(paste(deparse(substitute(model)),
 		"not an lm object"))
 	N <- length(listw$neighbours)
@@ -88,7 +99,7 @@ lm.LMtests <- function(model, listw, zero.policy=FALSE, test="LMerr",
 		data.name <- paste("\n", paste(strwrap(paste("model: ",
 		    gsub("[ ]+", " ", paste(deparse(model$call), 
 		    sep="", collapse="")))), collapse="\n"),
-    	            "\nweights: ", deparse(substitute(listw)), "\n", sep="")
+    	            "\nweights: ", listw_name, "\n", sep="")
 		tres[[i]] <- list(statistic=statistic, parameter=parameter,
 			p.value=p.value, method=method, data.name=data.name)
 		class(tres[[i]]) <- "htest"
@@ -126,8 +137,7 @@ tracew <- function (listw) {
 }
 
 lm.LMErr <- function(model, listw, zero.policy=FALSE, spChk=NULL) {
-	if (!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
-		"is not a listw object"))
+	if (!inherits(listw, "listw")) stop("listw is not a listw object")
 	N <- length(listw$neighbours)
 	if (class(model) == "lm") u <- resid(model)
 	else if (is.numeric(model) && length(model) == N) {

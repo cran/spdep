@@ -4,7 +4,7 @@
 
 nb2mat <- function(neighbours, glist=NULL, style="W", zero.policy=FALSE)
 {
-	if(class(neighbours) != "nb") stop("Not a neighbours list")
+	if(!inherits(neighbours, "nb")) stop("Not a neighbours list")
 	listw <- nb2listw(neighbours, glist=glist, style=style,
 		zero.policy=zero.policy)
 	res <- listw2mat(listw)

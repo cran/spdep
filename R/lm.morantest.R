@@ -1,13 +1,19 @@
-# Copyright 2001-6 by Roger Bivand 
+# Copyright 2001-7 by Roger Bivand 
 #
 
 lm.morantest <- function(model, listw, zero.policy=FALSE, 
-	    alternative = "greater", spChk=NULL, resfun=weighted.residuals) {
+	    alternative = "greater", spChk=NULL, resfun=weighted.residuals,		    naSubset=TRUE) {
 	alternative <- match.arg(alternative, c("greater", "less", "two.sided"))
-	if (!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
+	listw_name <- deparse(substitute(listw))
+	if (!inherits(listw, "listw")) stop(paste(listw_name,
 		"is not a listw object"))
 	if(!inherits(model, "lm")) stop(paste(deparse(substitute(model)),
 		"not an lm object"))
+	na.act <- model$na.action
+	if (!is.null(na.act) && naSubset) {
+	    subset <- !(1:length(listw$neighbours) %in% na.act)
+	    listw <- subset(listw, subset, zero.policy=zero.policy)
+	}
  	N <- length(listw$neighbours)
 	u <- resfun(model)
 	if (N != length(u)) 
@@ -66,7 +72,7 @@ lm.morantest <- function(model, listw, zero.policy=FALSE,
     	data.name <- paste("\n", paste(strwrap(paste("model: ",
 	    gsub("[[:space:]]+", " ", 
 	    paste(deparse(model$call), sep="", collapse="")))), collapse="\n"),
-    	    "\nweights: ", deparse(substitute(listw)), "\n", sep="")
+    	    "\nweights: ", listw_name, "\n", sep="")
     	res <- list(statistic = statistic, p.value = p.value,
 	       estimate = estimate, method = method,
 		alternative = alternative, data.name = data.name)
