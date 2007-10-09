@@ -5,7 +5,7 @@
 \alias{COL.nb}
 %\alias{coords.OLD}
 %\alias{polys.OLD}
-\non_function{}
+\docType{data}
 \title{Columbus OH spatial analysis data set - old numbering}
 \usage{data(oldcol)}
 \description{

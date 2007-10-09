@@ -37,7 +37,6 @@ plot.mc.sim(x, xlim, xlab, main, sub, ..., ptype="density")
   \item{...}{further arguments passed through}
 }
 
-}
 \value{
 A list with class \code{htest} and \code{mc.sim} containing the following components:
   \item{statistic}{the value of the observed Geary's C.}

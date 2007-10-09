@@ -28,7 +28,6 @@ print.jclist(x, ...)
   \item{...}{arguments to be passed through for printing}
 }
 
-}
 \value{
 A list with class \code{jclist} of lists with class \code{htest} for each of the k colours containing the following components:
   \item{statistic}{the value of the standard deviate of the join count statistic.}

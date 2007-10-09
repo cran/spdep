@@ -3,7 +3,7 @@
 \alias{boston}
 \alias{boston.soi}
 \alias{boston.utm}
-\non_function{}
+\docType{data}
 \title{Corrected Boston Housing Data}
 \usage{data(boston)}
 \description{

@@ -5,7 +5,7 @@
 \alias{coords}
 \alias{polys}
 \alias{bbs}
-\non_function{}
+\docType{data}
 \title{Columbus OH spatial analysis data set}
 \usage{data(columbus)}
 \description{

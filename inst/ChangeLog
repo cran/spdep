@@ -1,8 +1,33 @@
+2007-10-09 10:32  rsbivand
+
+	* DESCRIPTION, R/lm.LMtests.R, R/lm.morantest.R, R/spautolm.R,
+	  man/COL.OLD.Rd, man/afcon.Rd, man/auckland.Rd, man/boston.Rd,
+	  man/columbus.Rd, man/eire.Rd, man/getisord.Rd, man/lm.LMtests.Rd,
+	  man/lm.morantest.Rd, man/nc.sids.Rd, man/spautolm.Rd,
+	  man/used.cars.Rd: non_function
+
+2007-07-25 10:50  rsbivand
+
+	* DESCRIPTION, R/utils.R: lag.listw warning
+
+2007-06-13 10:36  rsbivand
+
+	* R/globalG.R: globalG
+
+2007-06-12 15:38  rsbivand
+
+	* R/nb2mat.R, man/spautolm.Rd: inherit in nb2mat
+
+2007-06-11 10:05  rsbivand
+
+	* DESCRIPTION: encoding
+
 2007-06-10 22:35  rsbivand
 
 	* DESCRIPTION, R/EBI.R, R/anova.sarlm.R, R/geary.R, R/jc.R,
 	  R/moran.R, R/nb2lines.R, R/sp.mantel.R, man/nb2lines.Rd,
-	  man/sp.mantel.mc.Rd: SMA, moran.mc, nb.comp
+	  man/sp.mantel.mc.Rd, ChangeLog, inst/ChangeLog: SMA, moran.mc,
+	  nb.comp
 
 2007-06-03 21:28  rsbivand
 

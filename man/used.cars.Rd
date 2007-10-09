@@ -1,7 +1,7 @@
 \name{used.cars}
 \alias{used.cars}
 \alias{usa48.nb}
-\non_function{}
+\docType{data}
 \title{US 1960 used car prices}
 \usage{data(used.cars)}
 \description{
