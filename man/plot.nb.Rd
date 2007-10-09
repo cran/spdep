@@ -24,7 +24,6 @@ plot.listw(x, coords, col="black", points=TRUE, add=FALSE, arrows=FALSE,
 neighbours lists}
   \item{...}{further graphical parameters as in \code{par(..)}}
 }
-}
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 
 \seealso{\code{\link{summary.nb}}}

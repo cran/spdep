@@ -6,7 +6,7 @@
 \alias{eire.polys.utm}
 \alias{eire.coords.utm}
 \alias{eire.nb}
-\non_function{}
+\docType{data}
 \title{Eire data sets}
 \usage{data(eire)}
 \description{

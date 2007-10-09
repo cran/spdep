@@ -4,7 +4,7 @@
 \alias{africa.rook.nb}
 \alias{afxy}
 \alias{paper.nb}
-\non_function{}
+\docType{data}
 \title{Spatial patterns of conflict in Africa 1966-78}
 \usage{data(afcon)}
 \description{

@@ -32,7 +32,6 @@ It is also technically possible to make heteroskedasticity corrections to standa
   \item{method}{a character string indicating what type of test was
     performed.}
 }
-}
 \references{T.S. Breusch & A.R. Pagan (1979),
 A Simple Test for Heteroscedasticity and Random Coefficient Variation.
 \emph{Econometrica} \bold{47}, 1287--1294

@@ -2,7 +2,7 @@
 \alias{auckland}
 \alias{auckland.nb}
 \alias{auckpolys}
-\non_function{}
+\docType{data}
 \title{Marshall's infant mortality in Auckland dataset}
 \usage{data(auckland)}
 \description{

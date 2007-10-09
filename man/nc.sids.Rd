@@ -4,7 +4,7 @@
 \alias{ncCC89.nb}
 \alias{sidspolys}
 \alias{sidscents}
-\non_function{}
+\docType{data}
 \title{North Carolina SIDS data}
 \usage{data(nc.sids)}
 \description{

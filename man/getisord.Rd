@@ -4,7 +4,7 @@
 \alias{x}
 \alias{y}
 \alias{xyz}
-\non_function{}
+\docType{data}
 \title{Getis-Ord remote sensing example data}
 \usage{data(getisord)}
 \description{

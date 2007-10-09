@@ -14,7 +14,6 @@ diffnb(x, y, verbose=TRUE)
   \item{verbose}{report regions ids taken from object attribute "region.id" with differences}
 }
 
-}
 \value{
 A neighbours list with class \code{nb}
 }
