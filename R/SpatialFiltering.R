@@ -1,32 +1,8 @@
-SpatialFiltering <- function (formula, lagformula, data=list(), nb, glist=NULL, style="C", zero.policy=FALSE, tol=0.1, zerovalue = 0.0001, ExactEV=FALSE, symmetric=TRUE, alpha=NULL, alternative="two.sided", verbose=TRUE) {
-    #tol      : tolerance value for convergence of spatial filtering (Moran's I). 
-    #           The search for eigenvector terminates, once the residual autocorrelation falls below
-    #           abs(Moran’s I) < tol
-    #           For positive spatial autocorrelation in the residuals of the basic unfiltered model, only
-    #           those eigenvectors associated with positive autocorrelation are in the selection set.
-    #           Vice versa, for negative autocorrelation in the regression residuals.
-    #
-    #zerovalue: eigenvectors with eigenvalues smaller than zerovalue will be excluded in eigenvector search
-    #           Allows to restrict the search set of eigenvectors to those with extreme autocorrelation
-    #           levels.
-    #
-    #ExactEV   : In some incidences the approximation of using the expectation and variance of Moran's I
-    #            from the previous iteration will lead to inversions. Set ExactEV=TRUE in this situation
-    #            to use exact expectations and variances
-    #alpha:      Added for Pedro Peres-Neto to explore its consequences as compared to tol= as a stopping rule.
-    #
-    #           Authors: Yongwan Chun and Michael Tiefelsdorf
-    #                    Dept. of Geography - The Ohio State University
-    #                    Columbus, Ohio 43210
-    #                    emails: chun.49@osu.edu and tiefelsdorf.1@osu.edu
-    #		Modified by Roger Bivand
-    #
-    # Reference: Tiefelsdorf M, Griffith DA. Semiparametric Filtering of Spatial 
-    #            Autocorrelation: The Eigenvector Approach. Environment and Planning A 
-    #            under review. 
-    #            See http://geog-www.sbs.ohio-state.edu/faculty/Tiefelsdorf/SpatialFiltering.pdf
-    #
-    #  Version 0.9.1 - September 11, 2004
+SpatialFiltering <- function (formula, lagformula, data=list(), nb,
+ glist=NULL, style="C", zero.policy=FALSE, tol=0.1, zerovalue = 0.0001,
+ ExactEV=FALSE, symmetric=TRUE, alpha=NULL, alternative="two.sided",
+ verbose=TRUE) {
+#  Version 0.9.1 - September 11, 2004
 # Adaptation to formula format Roger Bivand December 2005
     
     if (missing(nb)) stop("Neighbour list argument missing")
@@ -40,7 +16,8 @@ SpatialFiltering <- function (formula, lagformula, data=list(), nb, glist=NULL, 
     nofreg <- nrow(S)           # number of observations
 
 
-    #Generate Eigenvectors if eigen vectors are not given (M1 for no SAR, MX for SAR)
+# Generate Eigenvectors if eigen vectors are not given
+# (M1 for no SAR, MX for SAR)
     mt <- terms(formula, data = data)
     mf <- lm(formula, data, method="model.frame")
     y <- model.extract(mf, "response")
@@ -76,7 +53,8 @@ SpatialFiltering <- function (formula, lagformula, data=list(), nb, glist=NULL, 
     TSS <- sum((y - mean(y))^2)
 
     #Compute first Moran Expectation and Variance
-    nofexo <- ncol(X)                                  #Number of exogenous variables (incl. const)
+    nofexo <- ncol(X)
+# Number of exogenous variables (incl. const)
     degfree <- nofreg - nofexo
     M <- diag(1,nofreg) - X %*% solve(crossprod(X),t(X))
     MSM <- M %*% S %*% M     
@@ -150,8 +128,8 @@ SpatialFiltering <- function (formula, lagformula, data=list(), nb, glist=NULL, 
         
         #Only SAR the first parameter estimation for all eigenvectors
         #Due to orthogonality each coefficient can be estimate individually
-        for (j in 1:nofreg) {                                    #Loop
-            if (sel[j,3] == acsign ) {                           #Use only feasible unselected evecs
+        for (j in 1:nofreg) { #Loop
+            if (sel[j,3] == acsign ) { #Use only feasible unselected evecs
                 gamma4eigenvec[j,2] <- solve(crossprod(vec[,j]), crossprod(vec[,j], y))  
             }  
         }      
@@ -162,7 +140,7 @@ SpatialFiltering <- function (formula, lagformula, data=list(), nb, glist=NULL, 
     #Loop over all eigenvectors with positive or negative eigenvalue 
 
     oldZMinMi <- Inf
-    for (i in 1:nofreg) {                                             #Outer Loop
+    for (i in 1:nofreg) { #Outer Loop
         z <- Inf
         idx <- 0
         
@@ -250,7 +228,7 @@ SpatialFiltering <- function (formula, lagformula, data=list(), nb, glist=NULL, 
     gammas <- as.matrix(betagam[(nofexo+1):(nrow(betagam)),1])
         
     #Formatting the output
-    gammas <- rbind(0, gammas)                 # Add 0 for iteration zero
+    gammas <- rbind(0, gammas)  # Add 0 for iteration zero
     out <- cbind(Aout,gammas)    
     colnames(out) <- c("Step","SelEvec","Eval","MinMi","ZMinMi","Pr(ZI)","R2","gamma")
     rownames(out) <- out[,1]
