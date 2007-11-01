@@ -29,9 +29,6 @@ SpatialFiltering(formula, lagformula, data, nb, glist = NULL, style = "C",
   \item{alternative}{a character string specifying the alternative hypothesis, must be one of greater, less or two.sided (default).}
   \item{verbose}{if TRUE report eigenvectors selected}
 }
-\details{
-  
-}
 \value{
   An \code{SFResult} object, with:
   \item{selection}{a matrix summarising the selection of eigenvectors for inclusion, with columns:
@@ -49,7 +46,7 @@ SpatialFiltering(formula, lagformula, data, nb, glist = NULL, style = "C",
   }
   \item{dataset}{a matrix of the selected eigenvectors in order of selection}
 }
-\references{Tiefelsdorf M, Griffith DA. Semiparametric Filtering of Spatial Autocorrelation: The Eigenvector Approach. Environment and Planning A, forthcoming. \url{http://geog-www.sbs.ohio-state.edu/faculty/Tiefelsdorf/SpatialFiltering.pdf}}
+\references{Tiefelsdorf M, Griffith DA. (2007) Semiparametric Filtering of Spatial Autocorrelation: The Eigenvector Approach. Environment and Planning A, 39 (5) 1193 - 1221. \url{http://geog-www.sbs.ohio-state.edu/faculty/Tiefelsdorf/SpatialFiltering.pdf}}
 \author{Yongwan Chun, Michael Tiefelsdorf, Roger Bivand}
 
 \seealso{\code{\link[stats]{lm}}, \code{\link[base]{eigen}}, \code{\link{nb2listw}}, \code{\link{listw2U}}}
