@@ -1,3 +1,66 @@
+2007-12-28 17:48  rsbivand
+
+	* DESCRIPTION, INDEX, NAMESPACE, R/anova.sarlm.R,
+	  R/error.spsarlm.R, R/kpgm_new.R, R/lag.spsarlm.R, R/listw2cs.R,
+	  R/listw2sn.R, R/spautolm.R, man/asMatrixCsrListw.Rd,
+	  man/as_dgRMatrix_listw.Rd, man/boston.Rd, man/eigenw.Rd,
+	  man/errorsarlm.Rd, man/lagsarlm.Rd, man/listw2sn.Rd,
+	  man/similar.listw.Rd, man/spautolm.Rd: spam transition
+
+2007-12-12 09:43  rsbivand
+
+	* R/kpgm_new.R, man/GMerrorsar.Rd: vv
+
+2007-12-11 17:11  rsbivand
+
+	* R/spautolm.R, man/spautolm.Rd: llprof
+
+2007-12-09 21:14  rsbivand
+
+	* R/moran.exact.R, R/mtmoran.R, man/localmoran.exact.Rd: exact
+
+2007-12-06 09:36  rsbivand
+
+	* R/moran.exact.R, R/mtmoran.R, man/joincount.test.Rd,
+	  man/lm.morantest.exact.Rd, man/moran.exact.Rd, NAMESPACE: add
+	  exact
+
+2007-11-30 19:34  rsbivand
+
+	* R/localmoran.exact.R, R/moran.exact.R, R/moran.exact.alt.R,
+	  man/compon.Rd, man/graphneigh.Rd, man/moran.exact.Rd,
+	  man/nboperations.Rd: exact moran
+
+2007-11-27 20:21  rsbivand
+
+	* R/: moran.exact.alt.R, mtlocalmoran.R: add exact
+
+2007-11-27 17:45  rsbivand
+
+	* R/mtmoran.R, man/lm.morantest.sad.Rd: add exact
+
+2007-11-27 17:19  rsbivand
+
+	* R/: kpgm_new.R, mtmoran.R: add exact
+
+2007-11-27 16:10  rsbivand
+
+	* ChangeLog, DESCRIPTION, NAMESPACE, R/localmoran.exact.R,
+	  R/moran.exact.R, R/moran.exact.alt.R, R/mtlocalmoran.R,
+	  R/mtmoran.R, inst/ChangeLog, man/lm.morantest.sad.Rd,
+	  man/localmoran.exact.Rd, man/localmoran.sad.Rd,
+	  man/moran.exact.Rd: adding Moran exact
+
+2007-11-01 10:45  rsbivand
+
+	* ChangeLog, DESCRIPTION, R/SpatialFiltering.R, R/geary.R,
+	  R/moran.R, R/mtlocalmoran.R, R/mtmoran.R, R/sp.mantel.R,
+	  inst/ChangeLog, man/SpatialFiltering.Rd, man/bptest.sarlm.Rd,
+	  man/diffnb.Rd, man/geary.Rd, man/geary.mc.Rd, man/geary.test.Rd,
+	  man/globalG.test.Rd, man/joincount.test.Rd, man/lag.listw.Rd,
+	  man/moran.Rd, man/moran.mc.Rd, man/moran.test.Rd, man/plot.nb.Rd,
+	  man/sp.mantel.mc.Rd, man/spweights.constants.Rd: OSX issue
+
 2007-10-09 10:32  rsbivand
 
 	* DESCRIPTION, R/lm.LMtests.R, R/lm.morantest.R, R/spautolm.R,

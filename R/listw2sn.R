@@ -1,5 +1,16 @@
-# Copyright 2001-3 by Roger Bivand
+# Copyright 2001-7 by Roger Bivand
 #
+
+as.spam.listw <- function(listw) {
+    N <- length(listw$neighbours)
+    W_sn <- listw2sn(listw)
+    rpts <- as.integer(cumsum(c(1, card(listw$neighbours))))
+    W <- new("spam", entries=W_sn$weights, colindices=W_sn$to,
+        rowpointers=rpts, dimension=as.integer(c(N, N)))
+    stopifnot(validspamobject(W))
+    W
+}
+
 
 listw2sn <- function(listw) {
 	if(!inherits(listw, "listw")) stop("not a listw object")

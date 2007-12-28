@@ -23,7 +23,7 @@ approximation - is based on the randomisation assumption.
 localmoran.sad(model, select, nb, glist=NULL, style="W",
  zero.policy=FALSE, alternative="greater", spChk=NULL,
  resfun=weighted.residuals, save.Vi=FALSE,
- tol = .Machine$double.eps^0.5, maxiter = 1000, tol.bounds=0.0001)
+ tol = .Machine$double.eps^0.5, maxiter = 1000, tol.bounds=0.0001, save.M=FALSE)
 %as.data.frame.localmoransad(x, row.names=NULL, optional=FALSE) 
 print.localmoransad(x, ...)
 summary.localmoransad(object, ...)
@@ -33,7 +33,7 @@ listw2star(listw, ireg, style, n, D, a, zero.policy=FALSE)
 %- maybe also `usage' for other objects documented here.
 \arguments{
   \item{model}{an object of class \code{lm} returned by \code{lm} (assuming no global spatial autocorrelation), or an object of class \code{sarlm} returned by a spatial simultaneous autoregressive model fit (assuming global spatial autocorrelation represented by the model spatial coefficient); weights may be specified in the \code{lm} fit, but offsets should not be used}
-  \item{select}{an integer vector of the id. numbers of zones to be tested}
+  \item{select}{an integer vector of the id. numbers of zones to be tested; if missing, all zones}
   \item{nb}{a list of neighbours of class \code{nb}}
   \item{glist}{a list of general weights corresponding to neighbours}
   \item{style}{can take values W, B, C, and S}
@@ -48,6 +48,7 @@ tested}
   \item{tol}{the desired accuracy (convergence tolerance) for \code{uniroot}}
   \item{maxiter}{the maximum number of iterations for \code{uniroot}}
   \item{tol.bounds}{offset from bounds for \code{uniroot}}
+  \item{save.M}{if TRUE, save a list of left and right M products in a list for the conditional tests, or a list of the regression model matrix components}
   \item{x}{object to be printed}
 %  \item{row.names}{ignored argument to \code{as.data.frame.localmoransad};
 %row names assigned from localmoransad object}
@@ -108,24 +109,20 @@ eire <- readShapePoly(system.file("etc/shapes/eire.shp", package="spdep")[1],
 eire.nb <- poly2nb(eire)
 #data(eire)
 e.lm <- lm(OWNCONS ~ ROADACC, data=eire)
-e.locmor <- summary(localmoran.sad(e.lm, eire.nb,
-  select=1:length(slot(eire, "polygons"))))
+e.locmor <- summary(localmoran.sad(e.lm, nb=eire.nb))
 e.locmor
 mean(e.locmor[,1])
 lm.morantest(e.lm, nb2listw(eire.nb))
 hist(e.locmor[,"Pr. (Sad)"])
 e.wlm <- lm(OWNCONS ~ ROADACC, data=eire, weights=RETSALE)
-e.locmorw1 <- summary(localmoran.sad(e.wlm, eire.nb,
-  select=1:length(slot(eire, "polygons")), resfun=weighted.residuals))
+e.locmorw1 <- summary(localmoran.sad(e.wlm, nb=eire.nb, resfun=weighted.residuals))
 e.locmorw1
-e.locmorw2 <- summary(localmoran.sad(e.wlm, eire.nb,
-  select=1:length(slot(eire, "polygons")), resfun=rstudent))
+e.locmorw2 <- summary(localmoran.sad(e.wlm, nb=eire.nb, resfun=rstudent))
 e.locmorw2
 e.errorsar <- errorsarlm(OWNCONS ~ ROADACC, data=eire,
   listw=nb2listw(eire.nb))
 e.errorsar
-e.clocmor <- summary(localmoran.sad(e.errorsar, eire.nb,
-  select=1:length(slot(eire, "polygons"))))
+e.clocmor <- summary(localmoran.sad(e.errorsar, nb=eire.nb))
 e.clocmor
 hist(e.clocmor[,"Pr. (Sad)"])
 }

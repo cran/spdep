@@ -3,7 +3,8 @@
 
 lm.morantest.sad <- function (model, listw, zero.policy = FALSE, 
     alternative = "greater", spChk=NULL, resfun=weighted.residuals, 
-    tol = .Machine$double.eps^0.5, maxiter = 1000, tol.bounds=0.0001) 
+    tol = .Machine$double.eps^0.5, maxiter = 1000, tol.bounds=0.0001,
+    zero.tol=1.0e-7) 
 {
     if (!inherits(listw, "listw")) 
         stop(paste(deparse(substitute(listw)), "is not a listw object"))
@@ -25,6 +26,8 @@ lm.morantest.sad <- function (model, listw, zero.policy = FALSE,
     Nnn <- N
     if (zero.policy) Nnn <- length(which(card(listw$neighbours) > 0))
     I <- (Nnn/S0) * ((t(u) %*% lu)/(t(u) %*% u))
+    I_save <- I
+    if (!isTRUE(all.equal((Nnn/S0), 1))) I <- I * (S0/Nnn)
     p <- model$rank
     p1 <- 1:p
     nacoefs <- which(is.na(coefficients(model)))
@@ -40,10 +43,39 @@ lm.morantest.sad <- function (model, listw, zero.policy = FALSE,
     MVM <- M %*% U %*% M
     MVM <- 0.5 * (t(MVM) + MVM)
     evalue <- eigen(MVM, only.values=TRUE)$values
-    idxpos <- (which(abs(evalue) < 1.0e-7)[1]) - 1
+    idxpos <- which(abs(evalue) < zero.tol)
+    if (length(idxpos) != p)
+        warning("number of zero eigenvalues greater than number of variables")
+    idxpos <- idxpos[1] - 1
     if (idxpos < 1) stop("invalid first zero eigenvalue index")
     tau <- evalue[1:idxpos]
     tau <- c(tau, evalue[(idxpos+1+p):N])
+    mres <- moranSad(tau, I, tol, maxiter, tol.bounds, alternative=alternative)
+    statistic <- mres$sad.p
+    attr(statistic, "names") <- "Saddlepoint approximation"
+    p.value <- mres$p.sad
+    estimate <- c(I_save)
+    attr(estimate, "names") <- "Observed Moran's I"
+    internal1 <- c(mres$omega, mres$sad.r, mres$sad.u)
+    attr(internal1, "names") <- c("omega", "sad.r", "sad.u")
+    internal2 <- unlist(mres$root)[2:4]
+    attr(internal2, "names") <- c("f.root", "iter", "estim.prec")
+    method <- paste("Saddlepoint approximation for global Moran's I",
+        "(Barndorff-Nielsen formula)")
+    data.name <- paste("\nmodel:", paste(strwrap(gsub("[[:space:]]+", " ", 
+	    paste(deparse(model$call), sep="", collapse=""))), collapse="\n"),
+    	    "\nweights: ", deparse(substitute(listw)), "\n", sep="")
+    res <- list(statistic = statistic, p.value = p.value,
+        estimate = estimate, method = method,
+	alternative = alternative, data.name = data.name,
+	internal1 = internal1, internal2 = internal2,
+	df = (N-p), tau = tau)
+    class(res) <- "moransad"
+    return(res)
+}
+
+moranSad <- function(tau, I, tol=.Machine$double.eps^0.5, maxiter=1000,
+    tol.bounds=0.0001, alternative="greater") {
     taumi <- tau - I
     low <- (1 / (2*taumi[length(taumi)])) + tol.bounds
     high <- (1 / (2*taumi[1])) - tol.bounds
@@ -62,27 +94,7 @@ lm.morantest.sad <- function (model, listw, zero.policy = FALSE,
     else p.sad <- pnorm(sad.p)
     if (p.sad < 0 || p.sad > 1) 
 	warning("Out-of-range p-value: reconsider test arguments")
-    statistic <- sad.p
-    attr(statistic, "names") <- "Saddlepoint approximation"
-    p.value <- p.sad
-    estimate <- c(I)
-    attr(estimate, "names") <- "Observed Moran's I"
-    internal1 <- c(omega, sad.r, sad.u)
-    attr(internal1, "names") <- c("omega", "sad.r", "sad.u")
-    internal2 <- unlist(root)[2:4]
-    attr(internal2, "names") <- c("f.root", "iter", "estim.prec")
-    method <- paste("Saddlepoint approximation for global Moran's I",
-        "(Barndorff-Nielsen formula)")
-    data.name <- paste("\nmodel:", paste(strwrap(gsub("[[:space:]]+", " ", 
-	    paste(deparse(model$call), sep="", collapse=""))), collapse="\n"),
-    	    "\nweights: ", deparse(substitute(listw)), "\n", sep="")
-    res <- list(statistic = statistic, p.value = p.value,
-        estimate = estimate, method = method,
-	alternative = alternative, data.name = data.name,
-	internal1 = internal1, internal2 = internal2,
-	df = (N-p), tau = tau)
-    class(res) <- "moransad"
-    return(res)
+    return(list(p.sad=p.sad, sad.p=sad.p, sad.r=sad.r, sad.u=sad.u, omega=omega, root=root))
 }
 
 print.moransad <- function(x, ...) {

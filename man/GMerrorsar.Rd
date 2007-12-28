@@ -60,6 +60,7 @@ variable in making predictions for the fitting data.
   \item{aliased}{if not NULL, details of aliased variables}
   \item{zero.policy}{zero.policy for this model}
   \item{LL}{log likelihood value at computed optimum}
+  \item{vv}{list of internal bigG and litg components for testing optimisation surface}
   \item{na.action}{(possibly) named vector of excluded or omitted observations if non-default na.action argument used}
 }
 \references{Kelejian, H. H., and Prucha, I. R., 1999. A Generalized Moments Estimator for the Autoregressive Parameter in a Spatial Model. International Economic Review, 40, pp. 509--533; Cressie, N. A. C. 1993 \emph{Statistics for spatial data}, Wiley, New York.}

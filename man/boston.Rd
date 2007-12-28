@@ -86,7 +86,7 @@ gp0 <- lm(log(CMEDV) ~ CRIM + ZN + INDUS + CHAS + I(NOX^2) + I(RM^2) +
 summary(gp0)
 logLik(gp0)
 lm.morantest(hr0, nb2listw(boston.soi))
-gp1 <- errorsarlm(log(CMEDV) ~ CRIM + ZN + INDUS + CHAS + I(NOX^2) + I(RM^2)
+\dontrun{gp1 <- errorsarlm(log(CMEDV) ~ CRIM + ZN + INDUS + CHAS + I(NOX^2) + I(RM^2)
  +  AGE + log(DIS) + log(RAD) + TAX + PTRATIO + B + log(LSTAT),
  data=boston.c, nb2listw(boston.soi), method="Matrix", 
  tol.opt = .Machine$double.eps^(1/4))
@@ -94,7 +94,7 @@ summary(gp1)
 gp2 <- lagsarlm(log(CMEDV) ~ CRIM + ZN + INDUS + CHAS + I(NOX^2) + I(RM^2)
  +  AGE + log(DIS) + log(RAD) + TAX + PTRATIO + B + log(LSTAT),
  data=boston.c, nb2listw(boston.soi), method="Matrix")
-summary(gp2)
+summary(gp2)}
 
 }
 \keyword{datasets}

@@ -94,7 +94,7 @@ The helper functions return an \code{nb} object with a list of integer
   
   }
 
-\author{Nicholas Lewin-Koh \email{kohnicho@comp.nus.edu.sg}}
+\author{Nicholas Lewin-Koh \email{nikko@hailmail.net}}
 
 \seealso{\code{\link{knearneigh}}, \code{\link{dnearneigh}},
 \code{\link{knn2nb}}}

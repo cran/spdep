@@ -31,7 +31,7 @@ Ord, J. K. 1975 Estimation methods for models of spatial interaction, Journal
 of the American Statistical Association, 70, 120-126.}
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 
-\seealso{\code{\link{eigen}}, %\code{\link{logSpwdet}}
+\seealso{\code{\link{eigen}}%, \code{\link{logSpwdet}}
 }
 
 \examples{

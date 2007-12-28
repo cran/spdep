@@ -58,7 +58,7 @@ anova.sarlm <- function(object, ...) {
     	row.names(aod) <- unlist(lapply(as.list(ancall[-1]), 
             deparse))
     	attr(aod, "nmodels") <- nmodels
-    	class(aod) <- c("anova.sarlm", "data.frame")
+    	class(aod) <- c("anova", "data.frame")
     	return(aod)
 
     } else {

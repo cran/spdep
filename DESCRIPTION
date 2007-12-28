@@ -1,6 +1,6 @@
 Package: spdep
-Version: 0.4-9
-Date: 2007-11-01
+Version: 0.4-12
+Date: 2007-12-28
 Title: Spatial dependence: weighting schemes, statistics and models
 Encoding: latin1
 Author: Roger Bivand <Roger.Bivand@nhh.no>, with contributions by Luc Anselin,
@@ -9,8 +9,7 @@ Author: Roger Bivand <Roger.Bivand@nhh.no>, with contributions by Luc Anselin,
   Werner Mueller, Hisaji Ono, Pedro Peres-Neto, Markus Reder,
   Michael Tiefelsdorf, and Danlin Yu.
 Maintainer: Roger Bivand <Roger.Bivand@nhh.no>
-Depends: R (>= 2.4.0), tripack, sp (>= 0.9), maptools (>= 0.5-4), boot, Matrix (>= 0.9975-11)
-Suggests: SparseM (>= 0.68)
+Depends: R (>= 2.4.0), tripack, sp (>= 0.9), maptools (>= 0.5-4), boot, spam(>= 0.13-1), Matrix (>= 0.9975-11)
 Description: A collection of functions to create spatial weights matrix
   objects from polygon contiguities, from point patterns by distance and
   tesselations, for summarising these objects, and for permitting their
@@ -18,11 +17,11 @@ Description: A collection of functions to create spatial weights matrix
   autocorrelation, including global Moran's I, Geary's C, Hubert/Mantel
   general cross product statistic, Empirical Bayes estimates and Assunção/Reis
   Index, Getis/Ord G and multicoloured join count statistics, 
-  local Moran's I and Getis/Ord G, saddlepoint approximations for global
-  and local Moran's I; and functions for estimating spatial simultaneous
-  autoregressive (SAR) lag and error models, weighted and unweighted
-  SAR and CAR spatial regression models, semi-parametric and Moran
-  eigenvector spatial filtering, GM SAR error models, and generalized spatial
-  two stage least squares models.
+  local Moran's I and Getis/Ord G, saddlepoint approximations  and exact
+  tests for global and local Moran's I; and functions for estimating
+  spatial simultaneous autoregressive (SAR) lag and error models,
+  weighted and unweighted SAR and CAR spatial regression models,
+  semi-parametric and Moran eigenvector spatial filtering, GM SAR error
+  models, and generalized spatial two stage least squares models.
 License: GPL (>= 2)
-Packaged: Thu Nov  1 10:35:36 2007; rsb
+Packaged: Fri Dec 28 17:49:52 2007; rsb

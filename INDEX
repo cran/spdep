@@ -4,7 +4,6 @@ anova.sarlm             Comparison of simultaneous autoregressive
                         models
 as_dgRMatrix_listw      Interface between Matrix class objects and
                         weights lists
-asMatrixCsrListw        Convert spatial weights list to CSR matrix form
 auckland                Marshall's infant mortality in Auckland dataset
 autocov_dist            Distance-weighted autocovariate
 baltimore               House sales prices, Baltimore, MD 1978
@@ -54,10 +53,12 @@ lm.LMtests              Lagrange Multiplier diagnostics for spatial
                         dependence in linear models
 lm.morantest            Moran's I test for residual spatial
                         autocorrelation
+lm.morantest.exact      Exact global Moran's I test
 lm.morantest.sad        Saddlepoint approximation of global Moran's I
                         test
 localG                  G and Gstar local spatial statistics
 localmoran              Local Moran's I statistic
+localmoran.exact        Exact local Moran's Ii tests
 localmoran.sad          Saddlepoint approximation of local Moran's Ii
                         tests
 LR.sarlm                Likelihood ratio test

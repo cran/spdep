@@ -12,7 +12,7 @@ approximation to global Moran's I's reference distribution.
 \usage{
 lm.morantest.sad(model, listw, zero.policy=FALSE, alternative="greater", 
   spChk=NULL, resfun=weighted.residuals, tol=.Machine$double.eps^0.5,
-  maxiter=1000, tol.bounds=0.0001)
+  maxiter=1000, tol.bounds=0.0001, zero.tol = 1e-07)
 print.moransad(x, ...)
 summary.moransad(object, ...)
 print.summary.moransad(x, ...) 
@@ -31,6 +31,7 @@ must be one of greater (default), less or two.sided.}
   \item{tol}{the desired accuracy (convergence tolerance) for \code{uniroot}}
   \item{maxiter}{the maximum number of iterations for \code{uniroot}}
   \item{tol.bounds}{offset from bounds for \code{uniroot}}
+  \item{zero.tol}{tolerance used to find eigenvalues close to absolute zero}
   \item{x}{object to be printed}
   \item{object}{object to be summarised}
   \item{...}{arguments to be passed through}
@@ -54,6 +55,7 @@ therefore only be used with care when n is large.
   \item{df}{degrees of freedom}
   \item{tau}{eigenvalues (excluding zero values)}
 }
+
 \references{Tiefelsdorf, M. 2002 The Saddlepoint approximation of Moran's I 
 and local Moran's Ii reference distributions and their numerical evaluation. 
 Geographical Analysis, forthcoming; see also Tiefelsdorf's SPSS code:
