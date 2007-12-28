@@ -9,7 +9,7 @@ weights matrix in weights list form for testing whether same-colour joins
 occur more frequently than would be expected if the zones were labelled
 in a spatially random way. The assumptions underlying the test are
 sensitive to the form of the graph of neighbour relationships and other
-factors, and results may be checked against those of \code{geary.mc}
+factors, and results may be checked against those of \code{joincount.mc}
 permutations.
 }
 \usage{
@@ -32,7 +32,7 @@ print.jclist(x, ...)
 A list with class \code{jclist} of lists with class \code{htest} for each of the k colours containing the following components:
   \item{statistic}{the value of the standard deviate of the join count statistic.}
   \item{p.value}{the p-value of the test.}
-  \item{estimate}{the value of the observed statistic, its expectation and variance.}
+  \item{estimate}{the value of the observed statistic, its expectation and variance under non-free sampling.}
   \item{alternative}{a character string describing the alternative hypothesis.}
   \item{method}{a character string giving the method used.}
   \item{data.name}{a character string giving the name(s) of the data.}

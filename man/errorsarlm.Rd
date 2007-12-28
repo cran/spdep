@@ -16,7 +16,8 @@ where $\lambda$ is found by \code{optimize()} first, and $\beta$ and other param
 errorsarlm(formula, data=list(), listw, na.action=na.fail,
  method="eigen", quiet=TRUE, zero.policy=FALSE,
  interval = c(-1, 0.999), tol.solve=1.0e-10,
- tol.opt=.Machine$double.eps^0.5, cholAlloc=NULL)
+ tol.opt=.Machine$double.eps^0.5%, cholAlloc=NULL
+)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
@@ -28,7 +29,7 @@ is called.}
   \item{listw}{a \code{listw} object created for example by \code{nb2listw}}
   \item{na.action}{a function (default \code{na.fail}), can also be \code{na.omit} or \code{na.exclude} with consequences for residuals and fitted values - in these cases the weights list will be subsetted to remove NAs in the data. It may be necessary to set zero.policy to TRUE because this subsetting may create no-neighbour observations. Note that only weights lists created without using the glist argument to \code{nb2listw} may be subsetted.}
   \item{method}{"eigen" (default) - the Jacobian is computed as the product 
-of (1 - rho*eigenvalue) using \code{eigenw}, and "SparseM" or "Matrix" for strictly symmetric weights lists of styles "B", "C" and "U", or made symmetric by similarity (Ord, 1975, Appendix C) if possible for styles "W" and "S", using code from the SparseM package or Matrix package to calculate the determinant.
+of (1 - rho*eigenvalue) using \code{eigenw}, and "spam" or "Matrix" for strictly symmetric weights lists of styles "B", "C" and "U", or made symmetric by similarity (Ord, 1975, Appendix C) if possible for styles "W" and "S", using code from the spam package or Matrix package to calculate the determinant.
 }
   \item{quiet}{default=TRUE; if FALSE, reports function values during optimization.}
   \item{zero.policy}{if TRUE assign zero to the lagged value of zones without 
@@ -36,12 +37,16 @@ neighbours, if FALSE (default) assign NA - causing \code{errorsarlm()} to termin
   \item{interval}{search interval for autoregressive parameter when not using method="eigen"; default is c(-1,1)}
   \item{tol.solve}{the tolerance for detecting linear dependencies in the columns of matrices to be inverted - passed to \code{solve()} (default=1.0e-10). This may be used if necessary to extract coefficient standard errors (for instance lowering to 1e-12), but errors in \code{solve()} may constitute indications of poorly scaled variables: if the variables have scales differing much from the autoregressive coefficient, the values in this matrix may be very different in scale, and inverting such a matrix is analytically possible by definition, but numerically unstable; rescaling the RHS variables alleviates this better than setting tol.solve to a very small value}
   \item{tol.opt}{the desired accuracy of the optimization - passed to \code{optim()} (default=square root of double precision machine tolerance, a larger root may be used if the warning: ERROR: ABNORMAL\_TERMINATION\_IN\_LNSRCH is seen, see help(boston) for an example)}
-  \item{cholAlloc}{control arguments for memory allocation in \code{chol} for sparse matrices in method="SparseM": if NULL, default values are used (larger than SparseM defaults), otherwise a list with elements: nsubmax, nnzlmax, and tmpmax, for example cholAlloc=list(nsubmax=25000, nnzlmax=100000, tmpmax=25000)}
+%  \item{cholAlloc}{control arguments for memory allocation in \code{chol} for
+% sparse matrices in method="SparseM": if NULL, default values are used
+% (larger than SparseM defaults), otherwise a list with elements: nsubmax,
+% nnzlmax, and tmpmax, for example cholAlloc=list(nsubmax=25000,
+% nnzlmax=100000, tmpmax=25000)}
 }
 \details{
   The asymptotic standard error of $\lambda$ is only computed when
 method=eigen, because the full matrix operations involved would be costly
-for large n typically associated with the choice of method="SparseM". The
+for large n typically associated with the choice of method="spam or "Matrix". The
 same applies to the coefficient covariance matrix. Taken as the
 asymptotic matrix from the literature, it is typically badly scaled, being
 block-diagonal, and with the elements involving lambda being very small,
@@ -109,12 +114,8 @@ summary(COL.errW.eig, correlation=TRUE)
 COL.errB.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb, style="B"), method="eigen", quiet=FALSE)
 summary(COL.errB.eig, correlation=TRUE)
-\dontrun{require(SparseM)
-COL.errW.SM <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb, style="W"), method="SparseM", quiet=FALSE)
-summary(COL.errW.SM)}
 COL.errW.M <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb, style="W"), method="Matrix", quiet=FALSE)
+ nb2listw(COL.nb, style="W"), method="spam", quiet=FALSE)
 summary(COL.errW.M)
 NA.COL.OLD <- COL.OLD
 NA.COL.OLD$CRIME[20:25] <- NA

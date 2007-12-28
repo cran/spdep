@@ -19,7 +19,7 @@ A list of:
 \item{comp.id}{vector with the indices of the disjoint connected subgraphs that
  the nodes in \code{nb.obj} belong to}
 }
-\author{Nicholas Lewin-Koh \email{kohnicho@comp.nus.edu.sg}}
+\author{Nicholas Lewin-Koh \email{nikko@hailmail.net}}
 \seealso{\code{\link{plot.nb}}}
 \examples{
 example(columbus)

@@ -4,7 +4,8 @@
 lagsarlm <- function(formula, data = list(), listw, 
 	na.action=na.fail, type="lag", method="eigen", quiet=TRUE, 
 	zero.policy=FALSE, interval=c(-1,0.999), tol.solve=1.0e-10, 
-	tol.opt=.Machine$double.eps^0.5, cholAlloc=NULL) {
+	tol.opt=.Machine$double.eps^0.5#, cholAlloc=NULL
+	) {
 	mt <- terms(formula, data = data)
 	mf <- lm(formula, data, na.action=na.action, 
 		method="model.frame")
@@ -23,14 +24,14 @@ lagsarlm <- function(formula, data = list(), listw,
 	if (!quiet) cat("Jacobian calculated using ")
 	switch(method, 
 		eigen = if (!quiet) cat("neighbourhood matrix eigenvalues\n"),
-	        SparseM = {
-		    if (listw$style %in% c("W", "S") && !can.sim)
-		    stop("SparseM method requires symmetric weights")
-		    if (listw$style %in% c("B", "C", "U") && 
-			!(is.symmetric.glist(listw$neighbours, listw$weights)))
-		    stop("SparseM method requires symmetric weights")
-		    if (!quiet) cat("sparse matrix techniques using SparseM\n")
-		},
+#	        SparseM = {
+#		    if (listw$style %in% c("W", "S") && !can.sim)
+#		    stop("SparseM method requires symmetric weights")
+#		    if (listw$style %in% c("B", "C", "U") && 
+#			!(is.symmetric.glist(listw$neighbours, listw$weights)))
+#		    stop("SparseM method requires symmetric weights")
+#		    if (!quiet) cat("sparse matrix techniques using SparseM\n")
+#		},
 	        Matrix = {
 		    if (listw$style %in% c("W", "S") && !can.sim)
 		    stop("Matrix method requires symmetric weights")
@@ -38,6 +39,14 @@ lagsarlm <- function(formula, data = list(), listw,
 			!(is.symmetric.glist(listw$neighbours, listw$weights)))
 		    stop("Matrix method requires symmetric weights")
 		    if (!quiet) cat("sparse matrix techniques using Matrix\n")
+		},
+	        spam = {
+		    if (listw$style %in% c("W", "S") && !can.sim)
+		    stop("spam method requires symmetric weights")
+		    if (listw$style %in% c("B", "C", "U") && 
+			!(is.symmetric.glist(listw$neighbours, listw$weights)))
+		    stop("spam method requires symmetric weights")
+		    if (!quiet) cat("sparse matrix techniques using spam\n")
 		},
 		stop("...\nUnknown method\n"))
 	y <- model.extract(mf, "response")
@@ -129,7 +138,7 @@ lagsarlm <- function(formula, data = list(), listw,
 	} else {
 		opt <- dosparse(listw=listw, y=y, x=x, wy=wy, K=K, quiet=quiet,
 			tol.opt=tol.opt, method=method, interval=interval, 
-			can.sim=can.sim, cholAlloc=cholAlloc, 
+			can.sim=can.sim, #cholAlloc=cholAlloc, 
 			zero.policy=zero.policy)
 		rho <- c(opt$maximum)
 		names(rho) <- "rho"
@@ -220,18 +229,26 @@ sar.lag.mixed.f <- function(rho, eig, e.a, e.b, e.c, n, quiet)
 
 
 
-sar.lag.mix.f.sM <- function(rho, W, I, e.a, e.b, e.c, n, cholAlloc, quiet)
-{
+sar.lag.mix.f.sp <- function(rho, W, I, e.a, e.b, e.c, n, 
+#cholAlloc, 
+	quiet) {
 	SSE <- e.a - 2*rho*e.b + rho*rho*e.c
 	s2 <- SSE/n
-	Det <- get("det", "package:SparseM")
-	Jacobian <- log(Det(chol((I - rho * W), nsubmax=cholAlloc$nsubmax, 
-	    nnzlmax=cholAlloc$nnzlmax, tmpmax=cholAlloc$tmpmax))^2)
+#	Det <- get("det", "package:SparseM")
+#	Jacobian <- log(Det(chol((I - rho * W), nsubmax=cholAlloc$nsubmax, 
+#	    nnzlmax=cholAlloc$nnzlmax, tmpmax=cholAlloc$tmpmax))^2)
+	J1 <- try(determinant((I - rho * W), logarithm=TRUE)$modulus,
+            silent=TRUE)
+        if (class(J1) == "try-error") {
+        	Jacobian <- NA
+        } else {
+        	Jacobian <- J1
+        }
 	gc(FALSE)
 	ret <- (Jacobian
 		- ((n/2)*log(2*pi)) - (n/2)*log(s2) - (1/(2*s2))*SSE)
 	if (!quiet) 
-	    cat("(SparseM) rho:\t", rho, "\tfunction value:\t", ret, "\n")
+	    cat("(spam) rho:\t", rho, "\tfunction value:\t", ret, "\n")
 	ret
 }
 
@@ -254,30 +271,38 @@ sar.lag.mix.f.M <- function(rho, W, I, e.a, e.b, e.c, n, quiet)
 }
 
 dosparse <- function (listw, y, x, wy, K, quiet, tol.opt, method, interval, 
-	can.sim, cholAlloc=cholAlloc, zero.policy=FALSE) {
+	can.sim, #cholAlloc=cholAlloc, 
+	zero.policy=FALSE) {
 	similar <- FALSE
 	m <- ncol(x)
 	n <- nrow(x)
-	if (method == "SparseM") {
-		if (listw$style %in% c("W", "S") && can.sim) {
+#	if (method == "SparseM") {
+#		if (listw$style %in% c("W", "S") && can.sim) {
 #			W <- asMatrixCsrListw(similar.listw(listw))
-			W <- asMatrixCsrListw(similar.listw(listw),
-        			zero.policy=zero.policy)
-			similar <- TRUE
-		} else W <- asMatrixCsrListw(listw, zero.policy=zero.policy)
-		I <- asMatrixCsrI(n)
-		if (is.null(cholAlloc)) {
-		# Martin Reismann large sparse nnzlmax problem
-			nlink <- sum(card(listw$neighbours))
-			tmpmax <- 3 * (nlink + n)
-			nnzlmax <- max(10*nlink, floor(.2*nlink^1.4))
-			nsubmax <- tmpmax
-			cholAlloc <- list(nsubmax=nsubmax, nnzlmax=nnzlmax,
-				tmpmax=tmpmax)
-		}
+#			W <- asMatrixCsrListw(similar.listw(listw),
+#        			zero.policy=zero.policy)
+#			similar <- TRUE
+#		} else W <- asMatrixCsrListw(listw, zero.policy=zero.policy)
+#		I <- asMatrixCsrI(n)
+#		if (is.null(cholAlloc)) {
+#		# Martin Reismann large sparse nnzlmax problem
+#			nlink <- sum(card(listw$neighbours))
+#			tmpmax <- 3 * (nlink + n)
+#			nnzlmax <- max(10*nlink, floor(.2*nlink^1.4))
+#			nsubmax <- tmpmax
+#			cholAlloc <- list(nsubmax=nsubmax, nnzlmax=nnzlmax,
+#				tmpmax=tmpmax)
+#		}
 #		tmpmax <- sum(card(listw$neighbours)) + n
-		# tmpmax and gc() calls: Danlin Yu 20041213
+#		# tmpmax and gc() calls: Danlin Yu 20041213
+#		gc(FALSE)
+	if (method == "spam") {
+        	if (listw$style %in% c("W", "S") & can.sim) {
+	    		W <- as.spam.listw(listw2U(similar.listw(listw)))
+	    		similar <- TRUE
+		} else W <- as.spam.listw(listw)
 		gc(FALSE)
+        	I <- diag.spam(1, n, n)
 	} else if (method == "Matrix") {
         	if (listw$style %in% c("W", "S") & can.sim) {
 	    		W <- as_dsTMatrix_listw(listw2U(similar.listw(listw)))
@@ -287,8 +312,6 @@ dosparse <- function (listw, y, x, wy, K, quiet, tol.opt, method, interval,
         	I <- as_dgCMatrix_I(n)
 		I <- as(I, "CsparseMatrix")
 	}
-	m <- ncol(x)
-	n <- nrow(x)
 	LLs <- NULL
 	# intercept-only bug fix Larry Layne 20060404
 	if (m > 1) {
@@ -304,11 +327,15 @@ dosparse <- function (listw, y, x, wy, K, quiet, tol.opt, method, interval,
 		e.a <- t(e.null) %*% e.null
 		e.b <- t(e.w) %*% e.null
 		e.c <- t(e.w) %*% e.w
-		if (method == "SparseM") {
-		    LLs[[j]] <- optimize(sar.lag.mix.f.sM,
+#		if (method == "SparseM") {
+#		    LLs[[j]] <- optimize(sar.lag.mix.f.sM,
+#			interval=interval, maximum=TRUE, tol=tol.opt, W=W, I=I,
+#			e.a=e.a, e.b=e.b, e.c=e.c, n=n, cholAlloc=cholAlloc, 
+#			quiet=quiet)$objective
+		if (method == "spam") {
+		    LLs[[j]] <- optimize(sar.lag.mix.f.sp,
 			interval=interval, maximum=TRUE, tol=tol.opt, W=W, I=I,
-			e.a=e.a, e.b=e.b, e.c=e.c, n=n, cholAlloc=cholAlloc, 
-			quiet=quiet)$objective
+			e.a=e.a, e.b=e.b, e.c=e.c, n=n, quiet=quiet)$objective
 		} else if (method == "Matrix") {
 		    LLs[[j]] <- optimize(sar.lag.mix.f.M,
 			interval=interval, maximum=TRUE, tol=tol.opt, W=W, I=I,
@@ -331,11 +358,15 @@ dosparse <- function (listw, y, x, wy, K, quiet, tol.opt, method, interval,
 	e.b <- t(e.w) %*% e.null
 	e.c <- t(e.w) %*% e.w
 #	sn <- listw2sn(listw)
-	if (method == "SparseM") {
-	    opt <- optimize(sar.lag.mix.f.sM,
+#	if (method == "SparseM") {
+#	    opt <- optimize(sar.lag.mix.f.sM,
+#		interval=interval, maximum=TRUE, tol=tol.opt, W=W, I=I,
+#		e.a=e.a, e.b=e.b, e.c=e.c, n=n, cholAlloc=cholAlloc, 
+#		quiet=quiet)
+	if (method == "spam") {
+	    opt <- optimize(sar.lag.mix.f.sp,
 		interval=interval, maximum=TRUE, tol=tol.opt, W=W, I=I,
-		e.a=e.a, e.b=e.b, e.c=e.c, n=n, cholAlloc=cholAlloc, 
-		quiet=quiet)
+		e.a=e.a, e.b=e.b, e.c=e.c, n=n, quiet=quiet)
 	} else if (method == "Matrix") {
 	    opt <- optimize(sar.lag.mix.f.M,
 		interval=interval, maximum=TRUE, tol=tol.opt, W=W, I=I,

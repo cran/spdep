@@ -33,7 +33,7 @@ complement.nb(nb.obj)
                input neighbor list(s)} 
 }
 
-\author{Nicholas Lewin-Koh \email{kohnicho@comp.nus.edu.sg}}
+\author{Nicholas Lewin-Koh \email{nikko@hailmail.net}}
 
 \seealso{\code{\link{intersect.nb}}, \code{\link{union.nb}},
 \code{\link{setdiff.nb}}}

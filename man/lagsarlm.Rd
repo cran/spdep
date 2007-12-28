@@ -14,7 +14,8 @@ where $\rho$ is found by \code{optimize()} first, and $\beta$ and other paramete
 lagsarlm(formula, data=list(), listw, na.action=na.fail,
   type="lag", method="eigen", quiet=TRUE,
   zero.policy=FALSE, interval = c(-1, 0.999), tol.solve=1.0e-10, 
-  tol.opt=.Machine$double.eps^0.5, cholAlloc=NULL)
+  tol.opt=.Machine$double.eps^0.5%, cholAlloc=NULL
+)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
@@ -27,7 +28,7 @@ is called.}
   \item{na.action}{a function (default \code{na.fail}), can also be \code{na.omit} or \code{na.exclude} with consequences for residuals and fitted values - in these cases the weights list will be subsetted to remove NAs in the data. It may be necessary to set zero.policy to TRUE because this subsetting may create no-neighbour observations. Note that only weights lists created without using the glist argument to \code{nb2listw} may be subsetted.}
   \item{type}{default "lag", may be set to "mixed"; when "mixed", the lagged intercept is dropped for spatial weights style "W", that is row-standardised weights, but otherwise included}
   \item{method}{"eigen" (default) - the Jacobian is computed as the product 
-of (1 - rho*eigenvalue) using \code{eigenw}, and "SparseM" or "Matrix" for strictly symmetric weights lists of styles "B", "C" and "U", or made symmetric by similarity (Ord, 1975, Appendix C) if possible for styles "W" and "S", using code from the SparseM or Matrix packages to calculate the determinant.
+of (1 - rho*eigenvalue) using \code{eigenw}, and "spam" or "Matrix" for strictly symmetric weights lists of styles "B", "C" and "U", or made symmetric by similarity (Ord, 1975, Appendix C) if possible for styles "W" and "S", using code from the spam or Matrix packages to calculate the determinant.
 }
   \item{quiet}{default=TRUE; if FALSE, reports function values during optimization.}
   \item{zero.policy}{if TRUE assign zero to the lagged value of zones without 
@@ -35,12 +36,16 @@ neighbours, if FALSE (default) assign NA - causing \code{lagsarlm()} to terminat
   \item{interval}{search interval for autoregressive parameter when not using method="eigen"; default is c(-1,1)}
   \item{tol.solve}{the tolerance for detecting linear dependencies in the columns of matrices to be inverted - passed to \code{solve()} (default=1.0e-10). This may be used if necessary to extract coefficient standard errors (for instance lowering to 1e-12), but errors in \code{solve()} may constitute indications of poorly scaled variables: if the variables have scales differing much from the autoregressive coefficient, the values in this matrix may be very different in scale, and inverting such a matrix is analytically possible by definition, but numerically unstable; rescaling the RHS variables alleviates this better than setting tol.solve to a very small value}
   \item{tol.opt}{the desired accuracy of the optimization - passed to \code{optimize()} (default=square root of double precision machine tolerance)}
-  \item{cholAlloc}{control arguments for memory allocation in \code{chol} for sparse matrices in method="SparseM": if NULL, default values are used (larger than SparseM defaults), otherwise a list with elements: nsubmax, nnzlmax, and tmpmax, for example cholAlloc=list(nsubmax=25000, nnzlmax=100000, tmpmax=25000)}
+%  \item{cholAlloc}{control arguments for memory allocation in \code{chol}
+% for sparse matrices in method="SparseM": if NULL, default values are
+% used (larger than SparseM defaults), otherwise a list with elements:
+% nsubmax, nnzlmax, and tmpmax, for example cholAlloc=list(nsubmax=25000,
+% nnzlmax=100000, tmpmax=25000)}
 }
 \details{
   The asymptotic standard error of $\rho$ is only computed when
 method=eigen, because the full matrix operations involved would be costly
-for large n typically associated with the choice of method="SparseM" or "Matrix". The
+for large n typically associated with the choice of method="spam" or "Matrix". The
 same applies to the coefficient covariance matrix. Taken as the
 asymptotic matrix from the literature, it is typically badly scaled, and with the elements involving rho being very small,
 while other parts of the matrix can be very large (often many orders
@@ -73,7 +78,7 @@ variable in making predictions for the fitting data.
   \item{se.fit}{Not used yet}
   \item{formula}{model formula}
   \item{ase}{TRUE if method=eigen}
-  \item{LLs}{if ase=FALSE (for method="SparseM"), the log likelihood values of
+  \item{LLs}{if ase=FALSE (for method="spam" or "Matrix"), the log likelihood values of
 models estimated dropping each of the independent variables in turn, used
 in the summary function as a substitute for variable coefficient
 significance tests}
@@ -101,7 +106,8 @@ pp. 237-289; Cressie, N. A. C. 1993 \emph{Statistics for spatial data}, Wiley, N
 Bernat for contributions to the asymptotic standard error code.}
 
 \seealso{\code{\link{lm}}, \code{\link{errorsarlm}}, 
-\code{\link{eigenw}}, \code{\link{asMatrixCsrListw}}, \code{\link{predict.sarlm}},
+\code{\link{eigenw}}, %\code{\link{asMatrixCsrListw}}, 
+\code{\link{predict.sarlm}},
 \code{\link{residuals.sarlm}}
 }
 
@@ -110,13 +116,12 @@ data(oldcol)
 COL.lag.eig <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb, style="W"), method="eigen", quiet=FALSE)
 summary(COL.lag.eig, correlation=TRUE)
-\dontrun{require(SparseM)
 COL.lag.SM <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb), method="SparseM", quiet=FALSE)
-summary(COL.lag.SM, correlation=TRUE)}
-COL.lag.M <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
+ nb2listw(COL.nb), method="spam", quiet=FALSE)
+summary(COL.lag.SM, correlation=TRUE)
+\dontrun{COL.lag.M <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb), method="Matrix", quiet=FALSE)
-summary(COL.lag.M, correlation=TRUE)
+summary(COL.lag.M, correlation=TRUE)}
 COL.lag.B <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb, style="B"))
 summary(COL.lag.B, correlation=TRUE)
