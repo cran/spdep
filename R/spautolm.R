@@ -174,7 +174,7 @@ spautolm <- function(formula, data = list(), listw, weights,
 	    W_J <- as_dsTMatrix_listw(listw2U(similar.listw(listw)))
 #	    similar <- TRUE
 	} else W_J <- as_dsTMatrix_listw(listw)
-	gc(FALSE)
+#	gc(FALSE)
         Sweights <- as(Diagonal(x=weights), "sparseMatrix")
 # do line search
         if (!is.null(llprof)) {
@@ -221,7 +221,7 @@ spautolm <- function(formula, data = list(), listw, weights,
 	    W_J <- as.spam.listw(listw2U(similar.listw(listw)))
 #	    similar <- TRUE
 	} else W_J <- W
-	gc(FALSE)
+#	gc(FALSE)
         Sweights <- diag.spam(x=weights, n, n)
 # do line search
         if (!is.null(llprof)) {
@@ -325,7 +325,7 @@ spautolm <- function(formula, data = list(), listw, weights,
     } else {
         Jacobian <- sum(2*log(diag(CHOL)))
     }
-    gc(FALSE)
+#    gc(FALSE)
     ret <- ((1/ifelse((length(grep("CAR", family)) != 0), 2, 1))*Jacobian +
 	(1/2)*sum_lw - ((n/2)*log(2*pi)) - (n/2)*log(s2) - (1/(2*(s2)))*SSE)
     if (verbose)  cat("lambda:", lambda, "function", ret, "Jacobian", Jacobian, "SSE", SSE, "\n")
@@ -345,7 +345,7 @@ spautolm <- function(formula, data = list(), listw, weights,
     } else {
         Jacobian <- J1
     }
-    gc(FALSE)
+#    gc(FALSE)
     ret <- ((1/ifelse((length(grep("CAR", family)) != 0), 2, 1))*Jacobian +
 	(1/2)*sum_lw - ((n/2)*log(2*pi)) - (n/2)*log(s2) - (1/(2*(s2)))*SSE)
     if (verbose)  cat("lambda:", lambda, "function", ret, "Jacobian", Jacobian, "SSE", SSE, "\n")
