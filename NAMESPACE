@@ -1,27 +1,9 @@
 useDynLib(spdep)
 
 importFrom(stats, model.matrix, model.response)
-#import(SparseM)
-
-#importFrom(SparseM, as.matrix.csr)
-#importMethodsFrom(SparseM, det, chol, as.matrix, "%*%", t)
-#importClassesFrom(SparseM, matrix.csr)
-
-#importFrom(Matrix, Diagonal)
-#importMethodsFrom(Matrix, coerce, chol, diag, Arith, t)
-#importClassesFrom(Matrix, dgRMatrix, dsTMatrix, sparseMatrix, 
-#    dgCMatrix, dsCMatrix)
-
 
 import(spam)
-
 import(Matrix)
-#importFrom(stats, model.matrix, model.response)
-
-#import(sp)
-#import(maptools)
-#import(boot)
-#import(SparseM)
 
 export(EBImoran.mc, probmap, choynowski, EBest, EBlocal, LR.sarlm, 
 	LR1.sarlm, Wald1.sarlm, airdist, card, rookcell, 

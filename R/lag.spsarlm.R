@@ -244,7 +244,7 @@ sar.lag.mix.f.sp <- function(rho, W, I, e.a, e.b, e.c, n,
         } else {
         	Jacobian <- J1
         }
-	gc(FALSE)
+#	gc(FALSE)
 	ret <- (Jacobian
 		- ((n/2)*log(2*pi)) - (n/2)*log(s2) - (1/(2*s2))*SSE)
 	if (!quiet) 
@@ -262,7 +262,7 @@ sar.lag.mix.f.M <- function(rho, W, I, e.a, e.b, e.c, n, quiet)
     	} else {
         	Jacobian <- sum(2*log(diag(CHOL)))
     	}
-	gc(FALSE)
+#	gc(FALSE)
 	ret <- (Jacobian
 		- ((n/2)*log(2*pi)) - (n/2)*log(s2) - (1/(2*s2))*SSE)
 	if (!quiet) 
@@ -301,14 +301,14 @@ dosparse <- function (listw, y, x, wy, K, quiet, tol.opt, method, interval,
 	    		W <- as.spam.listw(listw2U(similar.listw(listw)))
 	    		similar <- TRUE
 		} else W <- as.spam.listw(listw)
-		gc(FALSE)
+#		gc(FALSE)
         	I <- diag.spam(1, n, n)
 	} else if (method == "Matrix") {
         	if (listw$style %in% c("W", "S") & can.sim) {
 	    		W <- as_dsTMatrix_listw(listw2U(similar.listw(listw)))
 	    		similar <- TRUE
 		} else W <- as_dsTMatrix_listw(listw)
-		gc(FALSE)
+#		gc(FALSE)
         	I <- as_dgCMatrix_I(n)
 		I <- as(I, "CsparseMatrix")
 	}
@@ -341,7 +341,7 @@ dosparse <- function (listw, y, x, wy, K, quiet, tol.opt, method, interval,
 			interval=interval, maximum=TRUE, tol=tol.opt, W=W, I=I,
 			e.a=e.a, e.b=e.b, e.c=e.c, n=n, quiet=quiet)$objective
 		}
-		gc(FALSE)
+#		gc(FALSE)
 		attr(LLs[[j]], "nall") <- n
 		attr(LLs[[j]], "nobs") <- n
 		attr(LLs[[j]], "df") <- (m+2)-1
@@ -374,7 +374,7 @@ dosparse <- function (listw, y, x, wy, K, quiet, tol.opt, method, interval,
 	}
 	maximum <- opt$maximum
 	objective <- opt$objective
-	gc(FALSE)
+#	gc(FALSE)
 	res <- list(maximum=maximum, objective=objective, LLs=LLs,
 		lm.null=lm.null, similar=similar, opt=opt)
 	res

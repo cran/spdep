@@ -26,8 +26,9 @@ ME <- function(formula, data, family = gaussian, weights, offset, listw,
 
 	listw <- listw2U(listw) # make weights symmetric
 #	sW <- asMatrixCsrListw(listw)
-	sW <- as_dgRMatrix_listw(listw)
-	sW <- as(sW, "CsparseMatrix")
+#	sW <- as_dgRMatrix_listw(listw)
+#	sW <- as(sW, "CsparseMatrix")
+	sW <- as.spam.listw(listw)
 	
 	Wmat <- listw2mat(listw) # convert to full matrix form
 	n <- ncol(Wmat)

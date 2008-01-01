@@ -137,7 +137,7 @@ errorsarlm <- function(formula, data = list(), listw, na.action=na.fail,
 	    		csrw <- as.spam.listw(listw2U(similar.listw(listw)))
 			    similar <- TRUE
 		} else csrw <- as.spam.listw(listw)
-		gc(FALSE)
+#		gc(FALSE)
         	I <- diag.spam(1, n, n)
 		opt <- optimize(sar.error.f.sp, interval=interval, 
 			maximum=TRUE, tol=tol.opt, csrw=csrw, I=I, y=y, wy=wy, 
@@ -145,13 +145,13 @@ errorsarlm <- function(formula, data = list(), listw, na.action=na.fail,
 		lambda <- opt$maximum
 		names(lambda) <- "lambda"
 		LL <- opt$objective
-		gc(FALSE)
+#		gc(FALSE)
 	} else if (method == "Matrix") {
         	if (listw$style %in% c("W", "S") & can.sim) {
 	    	    csrw <- as_dsTMatrix_listw(listw2U(similar.listw(listw)))
 	    	    similar <- TRUE
 		} else csrw <- as_dsTMatrix_listw(listw)
-		gc(FALSE)
+#		gc(FALSE)
         	I <- as_dgCMatrix_I(n)
 		I <- as(I, "CsparseMatrix")
 		opt <- optimize(sar.error.f.M, interval=interval, 
@@ -160,7 +160,7 @@ errorsarlm <- function(formula, data = list(), listw, na.action=na.fail,
 		lambda <- opt$maximum
 		names(lambda) <- "lambda"
 		LL <- opt$objective
-		gc(FALSE)
+#		gc(FALSE)
 	}
 	lm.target <- lm(I(y - lambda*wy) ~ I(x - lambda*WX) - 1)
 	r <- as.vector(residuals(lm.target))
@@ -263,7 +263,7 @@ sar.error.f.sp <- function(lambda, csrw, I, y, wy, x, WX, n, quiet) {
         } else {
         	Jacobian <- J1
         }
-	gc(FALSE)
+#	gc(FALSE)
 	ret <- (Jacobian -
 		((n/2)*log(2*pi)) - (n/2)*log(s2) - (1/(2*(s2)))*SSE)
 	if (!quiet) cat("lambda:", lambda, " function:", ret, " Jacobian:", Jacobian, " SSE:", SSE, "\n")
@@ -283,7 +283,7 @@ sar.error.f.M <- function(lambda, csrw, I, y, wy, x, WX, n, quiet) {
     	} else {
         	Jacobian <- sum(2*log(diag(CHOL)))
     	}
-	gc(FALSE)
+#	gc(FALSE)
 	ret <- (Jacobian -
 		((n/2)*log(2*pi)) - (n/2)*log(s2) - (1/(2*(s2)))*SSE)
 	if (!quiet) cat("lambda:", lambda, " function:", ret, " Jacobian:", Jacobian, " SSE:", SSE, "\n")
