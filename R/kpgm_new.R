@@ -22,8 +22,8 @@
 
 GMerrorsar <- function(#W, y, X, 
 	formula, data = list(), listw, na.action=na.fail, 
-	zero.policy=FALSE, return_LL=TRUE, control=list(), verbose=FALSE) 
-{
+	zero.policy=FALSE, return_LL=TRUE, control=list(), verbose=FALSE,
+	sparse_method="spam") {
 #	ols <- lm(I(y) ~ I(X) - 1)
 	mt <- terms(formula, data = data)
 	mf <- lm(formula, data, na.action=na.action, method="model.frame")
@@ -110,27 +110,34 @@ GMerrorsar <- function(#W, y, X,
     		if (listw$style %in% c("W", "S") && !can.sim) {
 			warning("No log likelihood value available")
 		} else {
-			if (listw$style %in% c("W", "S") & can.sim) {
+			if (sparse_method == "spam") {
+			  if (listw$style %in% c("W", "S") & can.sim) {
 			    csrw <- as.spam.listw(similar.listw(listw))
-#			    csrw <- as_dsTMatrix_listw(similar.listw(listw))
-#			    similar <- TRUE
-#			} else csrw <- as_dsTMatrix_listw(listw)
-			} else csrw <- as.spam.listw(listw)
+			  } else csrw <- as.spam.listw(listw)
+			  I <- diag.spam(1, n, n)
+			} else if (sparse_method == "Matrix") {
+			  if (listw$style %in% c("W", "S") & can.sim) {
+			    csrw <- as_dsTMatrix_listw(similar.listw(listw))
+			    similar <- TRUE
+			  } else csrw <- as_dsTMatrix_listw(listw)
+			  I <- as_dgCMatrix_I(n)
+			  I <- as(I, "CsparseMatrix")
+			  tmpmax <- sum(card(listw$neighbours)) + n
+			} else stop("unknown sparse_method")
 			gc(FALSE)
-			I <- diag.spam(1, n, n)
-#			I <- as_dgCMatrix_I(n)
-#			I <- as(I, "CsparseMatrix")
-#			tmpmax <- sum(card(listw$neighbours)) + n
 			yl <- y - lambda*wy
 			xl <- x - lambda*WX
 			xl.q <- qr.Q(qr(xl))
 			xl.q.yl <- t(xl.q) %*% yl
 			SSE <- t(yl) %*% yl - t(xl.q.yl) %*% xl.q.yl
 			s2 <- SSE/n
-#			CHOL <- chol(as((I - lambda * csrw), "dsCMatrix"))
-#			Jacobian <- sum(2*log(diag(CHOL)))
-			Jacobian <- determinant((I - lambda * csrw), 
+			if (sparse_method == "spam") {
+			  Jacobian <- determinant((I - lambda * csrw), 
 			    logarithm=TRUE)$modulus
+			} else if (sparse_method == "Matrix") {
+			  CHOL <- chol(as((I - lambda * csrw), "dsCMatrix"))
+			  Jacobian <- sum(2*log(diag(CHOL)))
+			}
 			gc(FALSE)
 			LL <- (Jacobian -
 				((n/2)*log(2*pi)) - (n/2)*log(s2) - 

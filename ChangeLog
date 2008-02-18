@@ -1,3 +1,62 @@
+2008-02-18 16:57  rsbivand
+
+	* DESCRIPTION: release
+
+2008-02-16 17:32  rsbivand
+
+	* ChangeLog, R/kpgm_new.R, R/nb2listw.R, R/weights-utils.R,
+	  inst/ChangeLog, man/GMerrorsar.Rd, man/testnb.Rd, src/gsymtest.c:
+	  big symmetric fuzz
+
+2008-02-09 13:41  rsbivand
+
+	* DESCRIPTION, man/geary.mc.Rd, man/geary.test.Rd,
+	  man/globalG.test.Rd, man/joincount.multi.Rd,
+	  man/joincount.test.Rd, man/moran.test.Rd,
+	  man/spweights.constants.Rd: adjust n
+
+2008-02-09 10:58  rsbivand
+
+	* R/jc.R: n adjust
+
+2008-02-09 10:51  rsbivand
+
+	* R/: geary.R, globalG.R, jc.R, moran.R, utils.R: test warnings fix
+
+2008-02-08 00:42  rsbivand
+
+	* R/: EBI.R, geary.R, globalG.R, jc.R, lm.LMtests.R,
+	  lm.morantest.R, moran.R, moran.exact.R, mtmoran.R, sp.mantel.R:
+	  test warnings fix
+
+2008-01-15 19:12  rsbivand
+
+	* DESCRIPTION, R/mtmoran.R, man/lm.morantest.sad.Rd,
+	  man/localmoran.exact.Rd, man/localmoran.sad.Rd: power
+
+2008-01-15 13:18  rsbivand
+
+	* R/moran.exact.R, R/moran.exact.alt.R, R/mtlocalmoran.R,
+	  R/mtmoran.R, man/lm.morantest.exact.Rd: power
+
+2008-01-11 21:37  rsbivand
+
+	* ChangeLog, R/localmoran.exact.R, R/moran.exact.R,
+	  R/moran.exact.alt.R, R/mtlocalmoran.R, R/mtmoran.R,
+	  inst/ChangeLog: exact
+
+2008-01-09 08:43  rsbivand
+
+	* DESCRIPTION, R/moran.exact.R, R/poly2nb.R: more exact
+
+2008-01-05 15:46  rsbivand
+
+	* R/: AAA.R, ME.R, error.spsarlm.R, lag.spsarlm.R, spautolm.R: spam
+
+2007-12-29 16:43  rsbivand
+
+	* DESCRIPTION, NAMESPACE, R/AAA.R, R/zzz.R: spam
+
 2007-12-28 17:48  rsbivand
 
 	* DESCRIPTION, INDEX, NAMESPACE, R/anova.sarlm.R,
@@ -5,7 +64,8 @@
 	  R/listw2sn.R, R/spautolm.R, man/asMatrixCsrListw.Rd,
 	  man/as_dgRMatrix_listw.Rd, man/boston.Rd, man/eigenw.Rd,
 	  man/errorsarlm.Rd, man/lagsarlm.Rd, man/listw2sn.Rd,
-	  man/similar.listw.Rd, man/spautolm.Rd: spam transition
+	  man/similar.listw.Rd, man/spautolm.Rd, ChangeLog, inst/ChangeLog:
+	  spam transition
 
 2007-12-12 09:43  rsbivand
 

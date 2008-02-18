@@ -58,7 +58,7 @@ sp.mantel.mc <- function(var, listw, nsim, type="moran", zero.policy=FALSE,
         	pval <- punif((diff + 1)/(nsim + 1), lower.tail=FALSE)
     	else if (alternative == "greater") 
         	pval <- punif((diff + 1)/(nsim + 1))
-	if (pval < 0 || pval > 1) 
+	if (!is.finite(pval) || pval < 0 || pval > 1) 
 		warning("Out-of-range p-value: reconsider test arguments")
 	statistic <- res[nsim+1]
 	names(statistic) <- "statistic"

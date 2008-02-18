@@ -12,7 +12,8 @@ approximation to global Moran's I's reference distribution.
 \usage{
 lm.morantest.sad(model, listw, zero.policy=FALSE, alternative="greater", 
   spChk=NULL, resfun=weighted.residuals, tol=.Machine$double.eps^0.5,
-  maxiter=1000, tol.bounds=0.0001, zero.tol = 1e-07)
+  maxiter=1000, tol.bounds=0.0001, zero.tol = 1e-07, Omega=NULL,
+  save.M=NULL, save.U=NULL)
 print.moransad(x, ...)
 summary.moransad(object, ...)
 print.summary.moransad(x, ...) 
@@ -32,6 +33,9 @@ must be one of greater (default), less or two.sided.}
   \item{maxiter}{the maximum number of iterations for \code{uniroot}}
   \item{tol.bounds}{offset from bounds for \code{uniroot}}
   \item{zero.tol}{tolerance used to find eigenvalues close to absolute zero}
+  \item{Omega}{A SAR process matrix may be passed in to test an alternative hypothesis, for example \code{Omega <- invIrW(listw, rho=0.1); Omega <- tcrossprod(Omega)}, \code{chol()} is taken internally}
+  \item{save.M}{return the full M matrix for use in \code{spdep:::exactMoranAlt}}
+  \item{save.U}{return the full U matrix for use in \code{spdep:::exactMoranAlt}}
   \item{x}{object to be printed}
   \item{object}{object to be summarised}
   \item{...}{arguments to be passed through}

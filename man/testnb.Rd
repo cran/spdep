@@ -27,7 +27,7 @@ is.symmetric.glist(nb, glist)
   \item{glist}{list of general weights corresponding to neighbours}
 }
 \value{
-TRUE if symmetric, FALSE if not
+TRUE if symmetric, FALSE if not; is.symmetric.glist returns a value with an attribute, "d", indicating for failed symmetry the largest failing value.
 }
 
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}

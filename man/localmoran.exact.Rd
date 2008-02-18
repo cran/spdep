@@ -27,7 +27,7 @@ neighbours, if FALSE assign NA}
 must be one of greater (default), less or two.sided.}
   \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
   \item{resfun}{default: weighted.residuals; the function to be used to extract residuals from the \code{lm} object, may be \code{residuals}, \code{weighted.residuals}, \code{rstandard}, or \code{rstudent}}
-  \item{Omega}{External covariance matrix}
+  \item{Omega}{A SAR process matrix may be passed in to test an alternative hypothesis, for example \code{Omega <- invIrW(listw, rho=0.1); Omega <- tcrossprod(Omega)}, \code{chol()} is taken internally}
   \item{save.Vi}{if TRUE, return the star-shaped weights lists for each zone 
 tested}
   \item{save.M}{if TRUE, save a list of left and right M products}
@@ -68,10 +68,10 @@ e.lm <- lm(OWNCONS ~ ROADACC, data=eire)
 localmoran.sad(e.lm, nb=eire.nb)
 localmoran.exact(e.lm, nb=eire.nb)
 e.errorsar <- errorsarlm(OWNCONS ~ ROADACC, data=eire, listw=nb2listw(eire.nb))
-localmoran.exact.alt(e.errorsar, nb=eire.nb)
+localmoran.exact.alt(e.errorsar$lm.target, nb=eire.nb)
 Omega <- invIrW(nb2listw(eire.nb), rho=0.6)
-Omega1 <- 9*tcrossprod(Omega)
-localmoran.exact.alt(e.errorsar, nb=eire.nb, Omega=Omega1)
+Omega1 <- tcrossprod(Omega)
+localmoran.exact.alt(e.errorsar$lm.target, nb=eire.nb, Omega=Omega1)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

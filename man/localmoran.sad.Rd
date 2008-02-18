@@ -23,7 +23,8 @@ approximation - is based on the randomisation assumption.
 localmoran.sad(model, select, nb, glist=NULL, style="W",
  zero.policy=FALSE, alternative="greater", spChk=NULL,
  resfun=weighted.residuals, save.Vi=FALSE,
- tol = .Machine$double.eps^0.5, maxiter = 1000, tol.bounds=0.0001, save.M=FALSE)
+ tol = .Machine$double.eps^0.5, maxiter = 1000, tol.bounds=0.0001,
+ save.M=FALSE, Omega = NULL)
 %as.data.frame.localmoransad(x, row.names=NULL, optional=FALSE) 
 print.localmoransad(x, ...)
 summary.localmoransad(object, ...)
@@ -49,6 +50,7 @@ tested}
   \item{maxiter}{the maximum number of iterations for \code{uniroot}}
   \item{tol.bounds}{offset from bounds for \code{uniroot}}
   \item{save.M}{if TRUE, save a list of left and right M products in a list for the conditional tests, or a list of the regression model matrix components}
+  \item{Omega}{A SAR process matrix may be passed in to test an alternative hypothesis, for example \code{Omega <- invIrW(listw, rho=0.1); Omega <- tcrossprod(Omega)}, \code{chol()} is taken internally}
   \item{x}{object to be printed}
 %  \item{row.names}{ignored argument to \code{as.data.frame.localmoransad};
 %row names assigned from localmoransad object}
@@ -122,7 +124,7 @@ e.locmorw2
 e.errorsar <- errorsarlm(OWNCONS ~ ROADACC, data=eire,
   listw=nb2listw(eire.nb))
 e.errorsar
-e.clocmor <- summary(localmoran.sad(e.errorsar, nb=eire.nb))
+e.clocmor <- summary(localmoran.sad(e.errorsar$lm.target, nb=eire.nb))
 e.clocmor
 hist(e.clocmor[,"Pr. (Sad)"])
 }

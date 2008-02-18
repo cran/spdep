@@ -1,4 +1,4 @@
-% Copyright 2001-2 by Roger S. Bivand
+% Copyright 2001-8 by Roger S. Bivand
 \name{geary.mc}
 \alias{geary.mc}
 \title{Permutation test for Geary's C statistic}
@@ -7,7 +7,7 @@
 }
 \usage{
 geary.mc(x, listw, nsim, zero.policy=FALSE, alternative="less",
- spChk=NULL)
+ spChk=NULL, adjust.n=TRUE)
 }
 \arguments{
   \item{x}{a numeric vector the same length as the neighbours list in listw}
@@ -16,6 +16,7 @@ geary.mc(x, listw, nsim, zero.policy=FALSE, alternative="less",
   \item{zero.policy}{if TRUE assign zero to the lagged value of zones without neighbours, if FALSE assign NA}
   \item{alternative}{a character string specifying the alternative hypothesis, must be one of "less" (default), or "greater".}
   \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
+  \item{adjust.n}{default TRUE, if FALSE the number of observations is not adjusted for no-neighbour observations, if TRUE, the number of observations is adjusted}
 }
 
 \value{

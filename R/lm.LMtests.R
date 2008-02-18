@@ -92,7 +92,7 @@ lm.LMtests <- function(model, listw, zero.policy=FALSE, test="LMerr",
 		parameter <- vec[2]
 		names(parameter) <- "df"
 		p.value <- 1 - pchisq(statistic, parameter)
-		if (p.value < 0 || p.value > 1) 
+		if (!is.finite(p.value) || p.value < 0 || p.value > 1) 
 		    warning("Out-of-range p-value: reconsider test arguments")
 		names(p.value) <- ""
 		method <- "Lagrange multiplier diagnostics for spatial dependence"
@@ -165,7 +165,7 @@ lm.LMErr <- function(model, listw, zero.policy=FALSE, spChk=NULL) {
 	parameter <- 1
 	names(parameter) <- "df"
 	p.value <- 1 - pchisq(statistic, parameter)
-	if (p.value < 0 || p.value > 1) 
+	if (!is.finite(p.value) || p.value < 0 || p.value > 1) 
 	    warning("Out-of-range p-value: reconsider test arguments")
 	names(p.value) <- ""
 	method <- "Lagrange multiplier diagnostics for spatial dependence"

@@ -1,4 +1,4 @@
-# Copyright (c) 2007 Markus Reder and Roger Bivand
+# Copyright (c) 2007-2008 Markus Reder and Roger Bivand
 
 localmoran.exact <- function(model, select, nb, glist = NULL, style = "W",
     zero.policy = FALSE, alternative = "greater", spChk=NULL, 

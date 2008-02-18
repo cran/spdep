@@ -35,6 +35,10 @@ poly2nb <- function(pl, row.names=NULL, snap=sqrt(.Machine$double.eps),
 	bb <- poly2bbs(pl)
 	if (storage.mode(bb) != "double") storage.mode(bb) <- "double"
 	dsnap <- as.double(snap)
+	bb[,1] <- bb[,1] - dsnap
+	bb[,2] <- bb[,2] - dsnap
+	bb[,3] <- bb[,3] + dsnap
+	bb[,4] <- bb[,4] + dsnap
 	nrs <- integer(n)
 	for (i in 1:n) {
 		pl[[i]] <- na.omit(pl[[i]][-1,])

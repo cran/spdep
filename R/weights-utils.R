@@ -21,16 +21,20 @@ is.symmetric.glist <- function(nb, glist)
 	nbsym <- attr(nb, "sym")
 	if(is.null(nbsym)) nbsym <- is.symmetric.nb(nb)
 	if (!nbsym) {
-		res <- FALSE
+		res0 <- vector(mode="list", length=2)
+		res0[[1]] <- FALSE
+		res0[[2]] <- Inf
 	} else {
 		if (length(nb) != length(glist)) stop("list lengths differ")
 		cnb <- as.integer(card(nb))
 		gnb <- as.integer(sapply(glist, length))
 		if (!(identical(cnb, gnb))) 
 			stop("different vector lengths in lists")
-		res <- .Call("gsymtest", nb=nb, glist=glist, card=cnb, 
+		res0 <- .Call("gsymtest", nb=nb, glist=glist, card=cnb, 
 			PACKAGE="spdep")
 	}
+	res <- res0[[1]]
+	attr(res, "d") <- res0[[2]]
 	res
 }
 

@@ -17,7 +17,8 @@ moran <- function(x, listw, n, S0, zero.policy=FALSE, NAOK=FALSE) {
 }
 
 moran.test <- function(x, listw, randomisation=TRUE, zero.policy=FALSE,
-	alternative="greater", rank = FALSE, na.action=na.fail, spChk=NULL) {
+	alternative="greater", rank = FALSE, na.action=na.fail, spChk=NULL, 
+	adjust.n=TRUE) {
 	alternative <- match.arg(alternative, c("greater", "less", "two.sided"))
 	if (!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
@@ -39,7 +40,8 @@ moran.test <- function(x, listw, randomisation=TRUE, zero.policy=FALSE,
 	n <- length(listw$neighbours)
 	if (n != length(x)) stop("objects of different length")
 	
-	wc <- spweights.constants(listw, zero.policy=zero.policy)
+	wc <- spweights.constants(listw, zero.policy=zero.policy, 
+		adjust.n=adjust.n)
 	S02 <- wc$S0*wc$S0
 	res <- moran(x, listw, wc$n, wc$S0, zero.policy=zero.policy, 
 		NAOK=NAOK)
@@ -64,7 +66,7 @@ moran.test <- function(x, listw, randomisation=TRUE, zero.policy=FALSE,
         else if (alternative == "greater")
             PrI <- pnorm(ZI, lower.tail=FALSE)
         else PrI <- pnorm(ZI)
-	if (PrI < 0 || PrI > 1) 
+	if (!is.finite(PrI) || PrI < 0 || PrI > 1) 
 		warning("Out-of-range p-value: reconsider test arguments")
 	vec <- c(I, EI, VI)
 	names(vec) <- c("Moran I statistic", "Expectation", "Variance")
@@ -125,7 +127,7 @@ moran.mc <- function(x, listw, nsim, zero.policy=FALSE,
         	pval <- punif((diff + 1)/(nsim + 1), lower.tail=FALSE)
     	else if (alternative == "greater") 
         	pval <- punif((diff + 1)/(nsim + 1))
-	if (pval < 0 || pval > 1) 
+	if (!is.finite(pval) || pval < 0 || pval > 1) 
 		warning("Out-of-range p-value: reconsider test arguments")
 	statistic <- res[nsim+1]
 	names(statistic) <- "statistic"

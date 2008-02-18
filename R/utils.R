@@ -1,13 +1,14 @@
-# Copyright 2001-6 by Roger Bivand 
+# Copyright 2001-8 by Roger Bivand 
 #
 
-spweights.constants <- function(listw, zero.policy=FALSE) {
+spweights.constants <- function(listw, zero.policy=FALSE, adjust.n=TRUE) {
 	if(!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
 	cards <- card(listw$neighbours)
 	if (!zero.policy && any(cards == 0))
 		stop("regions with no neighbours found")
-	n <- as.double(length(which(cards > 0)))
+	if (adjust.n) n <- as.double(length(which(cards > 0)))
+	else n <- as.double(length(cards))
 	n1 <- n - 1
 	n2 <- n - 2
 	n3 <- n - 3

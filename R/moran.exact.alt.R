@@ -1,4 +1,4 @@
-# Copyright (c) 2007 Markus Reder and Roger Bivand
+# Copyright (c) 2007-2008 Markus Reder and Roger Bivand
 
 localmoran.exact.alt <- function(model, select, nb, glist = NULL, style = "W",
     zero.policy = FALSE, alternative = "greater", spChk=NULL, 
@@ -8,19 +8,9 @@ localmoran.exact.alt <- function(model, select, nb, glist = NULL, style = "W",
         stop(paste(deparse(substitute(nb)), "not an nb object"))
 #    if (class(model) != "lm") 
 #        stop(paste(deparse(substitute(model)), "not an lm object"))
-    clobj <- class(model)
     dmc <- deparse(model$call)
     n <- length(nb)
-    if (clobj == "sarlm") {
-        if (is.null(Omega)) {
-    	    errorsarLambda <- c(model$lambda)
-	    if (is.null(errorsarLambda)) stop(paste(deparse(substitute(model)), 
-	        "not an error sarlm object"))
-	    IrW <- invIrM(nb, glist=glist, style=style, rho=errorsarLambda)
-            Omega <- model$s2*(IrW %*% t(IrW))
-        }
-	model <- model$lm.target
-    } else if (clobj != "lm")
+    if (!inherits(model, "lm"))
      	stop(paste(deparse(substitute(model)), "not an lm object"))
     if (is.null(Omega)) Omega <- diag(n)
     else {

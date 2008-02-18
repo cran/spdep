@@ -1,4 +1,4 @@
-% Copyright 2004-6 by Roger S. Bivand
+% Copyright 2004-8 by Roger S. Bivand
 \name{joincount.multi}
 \alias{joincount.multi}
 \alias{print.jcmulti}
@@ -7,8 +7,8 @@
   A function for tallying join counts between same-colour and different colour spatial objects, where neighbour relations are defined by a weights list. Given the global counts in each colour, expected counts and variances are calculated under non-free sampling, and a z-value reported. Since multiple tests are reported, no p-values are given, allowing the user to adjust the significance level applied. Jtot is the count of all different-colour joins.
 }
 \usage{
-joincount.multi(fx, listw, zero.policy = FALSE, adjust.n=TRUE,
- spChk = NULL)
+joincount.multi(fx, listw, zero.policy = FALSE,
+ spChk = NULL, adjust.n=TRUE)
 print.jcmulti(x, ...)
 }
 %- maybe also 'usage' for other objects documented here.

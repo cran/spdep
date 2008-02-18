@@ -22,7 +22,7 @@ must be one of greater (default), less or two.sided.}
   \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
   \item{resfun}{default: weighted.residuals; the function to be used to extract residuals from the \code{lm} object, may be \code{residuals}, \code{weighted.residuals}, \code{rstandard}, or \code{rstudent}}
   \item{zero.tol}{tolerance used to find eigenvalues close to absolute zero}
-  \item{Omega}{A SAR process matrix may be passed in to test an alternative hupothesis}
+  \item{Omega}{A SAR process matrix may be passed in to test an alternative hypothesis, for example \code{Omega <- invIrW(listw, rho=0.1); Omega <- tcrossprod(Omega)}, \code{chol()} is taken internally}
   \item{save.M}{return the full M matrix for use in \code{spdep:::exactMoranAlt}}
   \item{save.U}{return the full U matrix for use in \code{spdep:::exactMoranAlt}}
   \item{x}{a moranex object}
