@@ -1,4 +1,4 @@
-% Copyright 2001-6 by Roger S. Bivand
+% Copyright 2001-8 by Roger S. Bivand
 \name{joincount.test}
 \alias{joincount.test}
 \alias{print.jclist}
@@ -13,8 +13,8 @@ factors, and results may be checked against those of \code{joincount.mc}
 permutations.
 }
 \usage{
-joincount.test(fx, listw, zero.policy=FALSE, alternative="greater",
- adjust.n=TRUE, spChk=NULL)
+joincount.test(fx, listw, zero.policy=FALSE, alternative="greater", spChk=NULL,
+ adjust.n=TRUE)
 print.jclist(x, ...)
 }
 \arguments{

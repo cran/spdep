@@ -1,4 +1,4 @@
-# Copyright 2001-7 by Roger S. Bivand and Virgilio Gomez-Rubio
+# Copyright 2001-8 by Roger S. Bivand and Virgilio Gomez-Rubio
 #
 
 nb2listw <- function(neighbours, glist=NULL, style="W", zero.policy=FALSE)
@@ -168,6 +168,12 @@ similar.listw <- function(listw) {
 		attr(res$weights, "comp") <- attr(listw$weights, "comp")
 		res$style <- "S:sim"
 	} else stop("Conversion not suitable for this weights style")
+	sym_out <- is.symmetric.glist(res$neighbours, res$weights)
+	if (!sym_out) {
+	    if (attr(sym_out, "d") < .Machine$double.eps ^ 0.5)
+		res <- listw2U(res)
+	    else stop("defective similarity")
+	}
 	res
 }
 

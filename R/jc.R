@@ -15,7 +15,8 @@ joincount <- function(dums, listw) {
 }
 
 joincount.test <- function(fx, listw, zero.policy=FALSE,
-	alternative="greater", adjust.n=TRUE, spChk=NULL) {
+	alternative="greater", #adjust.n=TRUE, 
+	spChk=NULL, adjust.n=TRUE) {
 	alternative <- match.arg(alternative, c("greater", "less", "two.sided"))
 	if (!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
@@ -31,7 +32,8 @@ joincount.test <- function(fx, listw, zero.policy=FALSE,
 	if (spChk && !chkIDs(fx, listw))
 		stop("Check of data and weights ID integrity failed")
 
-	wc <- spweights.constants(listw, zero.policy=zero.policy)
+	wc <- spweights.constants(listw, zero.policy=zero.policy, 
+		adjust.n=adjust.n)
 	S02 <- wc$S0*wc$S0
 
 	ff <- ~ fx - 1
@@ -44,14 +46,14 @@ joincount.test <- function(fx, listw, zero.policy=FALSE,
 	BB5 <- 0.5 * BB
 	ntab <- as.numeric(as.vector(tab))
 # comment and bug report by Tomoki NAKAYA about no-neighbour observations
-	if (adjust.n) {
+#	if (adjust.n) {
 		N <- wc$n
-	} else {
-		N <- n
-		wc$n1 <- N-1
-		wc$n2 <- N-2
-		wc$n3 <- N-3
-	}
+#	} else {
+#		N <- n
+#		wc$n1 <- N-1
+#		wc$n2 <- N-2
+#		wc$n3 <- N-3
+#	}
 	Ejc <- (wc$S0*(ntab*(ntab-1))) / (2*N*wc$n1)
 	Vjc <- (wc$S1*(ntab*(ntab-1))) / (N*wc$n1)
 	Vjc <- Vjc + (((wc$S2 - 2*wc$S1)*ntab*(ntab-1)*(ntab-2)) /
@@ -72,7 +74,7 @@ joincount.test <- function(fx, listw, zero.policy=FALSE,
 		    else if (alternative == "greater")
 			p.value <- pnorm(statistic, lower.tail=FALSE)
 		    else p.value <- pnorm(statistic)
-		    if (p.value < 0 || p.value > 1) 
+		    if (!is.finite(p.value) || p.value < 0 || p.value > 1) 
 		      warning("Out-of-range p-value: reconsider test arguments")
 		}
 		method <- "Join count test under nonfree sampling"
@@ -141,7 +143,7 @@ joincount.mc <- function(fx, listw, nsim, zero.policy=FALSE,
         		pval <- punif((diff + 1)/(nsim + 1), lower.tail=FALSE)
     		else if (alternative == "greater") 
         		pval <- punif((diff + 1)/(nsim + 1))
-		if (pval < 0 || pval > 1) 
+		if (!is.finite(pval) || pval < 0 || pval > 1) 
 		    warning("Out-of-range p-value: reconsider test arguments")
 
 		method <- "Monte-Carlo simulation of join-count statistic"
@@ -164,8 +166,8 @@ joincount.mc <- function(fx, listw, nsim, zero.policy=FALSE,
 
 
 
-joincount.multi <- function(fx, listw, zero.policy=FALSE, adjust.n=TRUE,
-	spChk=NULL) {
+joincount.multi <- function(fx, listw, zero.policy=FALSE, #adjust.n=TRUE,
+	spChk=NULL, adjust.n=TRUE) {
 	if(!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
 	if(!is.factor(fx)) stop(paste(deparse(substitute(fx)),
@@ -194,16 +196,17 @@ joincount.multi <- function(fx, listw, zero.policy=FALSE, adjust.n=TRUE,
 
 	tab <- table(fx)
 	ntab <- as.numeric(as.vector(tab))
-	wc <- spweights.constants(listw, zero.policy=zero.policy)
+	wc <- spweights.constants(listw, zero.policy=zero.policy, 
+		adjust.n=adjust.n)
 # comment and bug report by Tomoki NAKAYA about no-neighbour observations
-	if (adjust.n) {
+#	if (adjust.n) {
 		N <- wc$n
-	} else {
-		N <- n
-		wc$n1 <- N-1
-		wc$n2 <- N-2
-		wc$n3 <- N-3
-	}
+#	} else {
+#		N <- n
+#		wc$n1 <- N-1
+#		wc$n2 <- N-2
+#		wc$n3 <- N-3
+#	}
 	S02 <- wc$S0*wc$S0
 
 	Ejc <- (wc$S0*(ntab*(ntab-1))) / (2*N*wc$n1)

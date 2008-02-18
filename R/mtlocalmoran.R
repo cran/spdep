@@ -1,4 +1,4 @@
-# Copyright 2002-7 by Roger Bivand and Michael Tiefelsdorf,
+# Copyright 2002-2008 by Roger Bivand and Michael Tiefelsdorf,
 # with contributions by Danlin Yu
 #
 
@@ -6,26 +6,13 @@ localmoran.sad <- function (model, select, nb, glist = NULL, style = "W",
     zero.policy = FALSE, alternative = "greater", spChk=NULL, 
     resfun=weighted.residuals,
     save.Vi = FALSE, tol = .Machine$double.eps^0.5,
-    maxiter = 1000, tol.bounds=0.0001, save.M=FALSE) {
+    maxiter = 1000, tol.bounds=0.0001, save.M=FALSE, Omega=NULL) {
 # need to impose check on weights TODO!!
     if (class(nb) != "nb") 
         stop(paste(deparse(substitute(nb)), "not an nb object"))
-    dmc <- deparse(model$call)
-    clobj <- class(model)
-    cond.sad <- FALSE
     n <- length(nb)
-    if (clobj == "sarlm") {
-    	errorsarLambda <- c(model$lambda)
-	if (is.null(errorsarLambda)) stop(paste(deparse(substitute(model)), 
-	    "not an error sarlm object"))
-# changed Omega to match exact
-	IrW <- invIrM(nb, glist=glist, style=style, rho=errorsarLambda)
-        Omega <- model$s2*(IrW %*% t(IrW))
-        Omega <- chol(Omega)
-# changed to lm.target to extract correct residuals and X 071123
-	model <- model$lm.target
-	cond.sad <- TRUE
-    } else if (clobj != "lm")
+    dmc <- deparse(model$call)
+    if (!inherits(model, "lm"))
      	stop(paste(deparse(substitute(model)), "not an lm object"))
     u <- resfun(model)
     if (n != length(u)) 
@@ -53,10 +40,13 @@ localmoran.sad <- function (model, select, nb, glist = NULL, style = "W",
     if (!is.null(wts <- weights(model))) {
 	X <- sqrt(diag(wts)) %*% X
     }
-    M <- diag(n) - X %*% tcrossprod(XtXinv, X)
-    if (cond.sad) {
+    cond.sad <- FALSE
+    if (!is.null(Omega)) {
+        Omega <- chol(Omega)
+        M <- diag(n) - X %*% tcrossprod(XtXinv, X)
         M1 <- Omega %*% M
         M2 <- M %*% t(Omega)
+        cond.sad <- TRUE
     }
     B <- listw2U(nb2listw(nb, glist=glist, style="B",
 	zero.policy=zero.policy))
@@ -86,7 +76,21 @@ localmoran.sad <- function (model, select, nb, glist = NULL, style = "W",
             p.sad <- obj$p.sad
             gamma <- obj$gamma
 	} else {
-            obj <- sadLocalMoran(Ii, Vi, X, XtXinv, m, ii=select[i],
+	    ViX <- lag.listw(Vi, X, zero.policy=TRUE)
+	    MViM <- t(X) %*% ViX %*% XtXinv
+	    t1 <- -sum(diag(MViM))
+	    sumsq.Vi <- function(x) {
+                if (is.null(x)) NA
+	        else sum(x^2)
+	    }
+	    trVi2 <- sum(sapply(Vi$weights, sumsq.Vi), na.rm=TRUE)
+	    t2a <- sum(diag(t(ViX) %*% ViX %*% XtXinv))
+	    t2b <- sum(diag(MViM %*% MViM))
+	    t2 <- trVi2 - 2*t2a + t2b
+	    e1 <- 0.5 * (t1 + sqrt(2*t2 - t1^2))
+	    en <- 0.5 * (t1 - sqrt(2*t2 - t1^2))
+            gamma <- c(c(e1), c(en))
+            obj <- sadLocalMoran(Ii, gamma, m, ii=select[i],
                 alternative=alternative)
             sad.p <- obj$sad.p
             sad.r <- obj$sad.r
@@ -162,20 +166,9 @@ sadLocalMoranAlt <- function(Ii, Vi, M1, M2, n, tol.bounds=0.0001,
     obj
 }
 
-sadLocalMoran <- function(Ii, Vi, X, XtXinv, m, ii, alternative="greater") {
-	ViX <- lag.listw(Vi, X, zero.policy=TRUE)
-	MViM <- t(X) %*% ViX %*% XtXinv
-	t1 <- -sum(diag(MViM))
-	sumsq.Vi <- function(x) {
-            if (is.null(x)) NA
-	    else sum(x^2)
-	}
-	trVi2 <- sum(sapply(Vi$weights, sumsq.Vi), na.rm=TRUE)
-	t2a <- sum(diag(t(ViX) %*% ViX %*% XtXinv))
-	t2b <- sum(diag(MViM %*% MViM))
-	t2 <- trVi2 - 2*t2a + t2b
-	e1 <- 0.5 * (t1 + sqrt(2*t2 - t1^2))
-	en <- 0.5 * (t1 - sqrt(2*t2 - t1^2))
+sadLocalMoran <- function(Ii, gamma, m, ii, alternative="greater") {
+	e1 <- gamma[1]
+	en <- gamma[2]
 	l <- en
 	h <- e1
 	mi <- Ii
@@ -202,7 +195,7 @@ sadLocalMoran <- function(Ii, Vi, X, XtXinv, m, ii, alternative="greater") {
             p.sad <- pnorm(sad.p, lower.tail=FALSE)
         else p.sad <- pnorm(sad.p)
 	obj <- list(p.sad=p.sad, sad.p=sad.p, sad.r=sad.r, sad.u=sad.u,
-            omega=omega, gamma=c(c(e1), c(en)))
+            omega=omega, gamma=gamma)
         obj
 }
 

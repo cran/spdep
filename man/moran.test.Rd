@@ -1,4 +1,4 @@
-% Copyright 2001-3 by Roger S. Bivand
+% Copyright 2001-8 by Roger S. Bivand
 \name{moran.test}
 \alias{moran.test}
 \title{Moran's I test for spatial autocorrelation}
@@ -7,7 +7,7 @@
 }
 \usage{
 moran.test(x, listw, randomisation=TRUE, zero.policy=FALSE,
- alternative="greater", rank = FALSE, na.action=na.fail, spChk=NULL)
+ alternative="greater", rank = FALSE, na.action=na.fail, spChk=NULL, adjust.n=TRUE)
 }
 \arguments{
   \item{x}{a numeric vector the same length as the neighbours list in listw}
@@ -18,6 +18,7 @@ moran.test(x, listw, randomisation=TRUE, zero.policy=FALSE,
   \item{rank}{logical value - default FALSE for continuous variables, if TRUE, uses the adaptation of Moran's I for ranks suggested by Cliff and Ord (1981, p. 46)}
   \item{na.action}{a function (default \code{na.fail}), can also be \code{na.omit} or \code{na.exclude} - in these cases the weights list will be subsetted to remove NAs in the data. It may be necessary to set zero.policy to TRUE because this subsetting may create no-neighbour observations. Note that only weights lists created without using the glist argument to \code{nb2listw} may be subsetted. If \code{na.pass} is used, zero is substituted for NA values in calculating the spatial lag}
   \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
+  \item{adjust.n}{default TRUE, if FALSE the number of observations is not adjusted for no-neighbour observations, if TRUE, the number of observations is adjusted}
 }
 
 

@@ -16,7 +16,8 @@
 }
 \usage{
 GMerrorsar(formula, data = list(), listw, na.action = na.fail,
- zero.policy = FALSE, return_LL = TRUE, control = list(), verbose=FALSE)
+ zero.policy = FALSE, return_LL = TRUE, control = list(), verbose=FALSE,
+ sparse_method="spam")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -32,6 +33,7 @@ neighbours, if FALSE (default) assign NA - causing \code{GMerrorsar()} to termin
   \item{control}{A list of control parameters. See details in \code{\link[stats]{optim}}.}
   \item{return_LL}{default TRUE, if FALSE, do not try to calculate the log likelihood of the function for the fitted model values --- see details}
   \item{verbose}{default=FALSE; if TRUE, reports function values during optimization.}
+  \item{sparse_method}{default "spam", can also be "Matrix" to use Matrix package objects for finding the Jacobian}
 }
 \details{
   When the control list is set with care, the function will converge to values close to the ML estimator without requiring computation of the Jacobian, the most resource-intensive part of ML estimation. For moderately sized data sets with hundreds of observations, but not many thousands, the Jacobian is computed once to give the likelihood of the fitted model, allowing a test against the model with no spatial dependence.
@@ -75,6 +77,9 @@ summary(COL.errW.eig)
 COL.errW.GM <- GMerrorsar(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb, style="W"))
 summary(COL.errW.GM)
+COL.errW.GM1 <- GMerrorsar(CRIME ~ INC + HOVAL, data=COL.OLD,
+ nb2listw(COL.nb, style="W"), sparse_method="Matrix")
+summary(COL.errW.GM1)
 example(NY_data)
 esar1f <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
  listw=listw_NY, family="SAR", method="full")

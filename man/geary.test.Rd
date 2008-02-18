@@ -1,4 +1,4 @@
-% Copyright 2001-3 by Roger S. Bivand
+% Copyright 2001-8 by Roger S. Bivand
 \name{geary.test}
 \alias{geary.test}
 \title{Geary's C test for spatial autocorrelation}
@@ -7,7 +7,7 @@
 }
 \usage{
 geary.test(x, listw, randomisation=TRUE, zero.policy=FALSE,
-    alternative="less", spChk=NULL)
+    alternative="less", spChk=NULL, adjust.n=TRUE)
 }
 
 \arguments{
@@ -17,6 +17,7 @@ geary.test(x, listw, randomisation=TRUE, zero.policy=FALSE,
   \item{zero.policy}{if TRUE assign zero to the lagged value of zones without neighbours, if FALSE assign NA}
   \item{alternative}{a character string specifying the alternative hypothesis, must be one of "less" (default), "greater" or "two.sided".}
   \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
+  \item{adjust.n}{default TRUE, if FALSE the number of observations is not adjusted for no-neighbour observations, if TRUE, the number of observations is adjusted}
 }
 
 \value{
