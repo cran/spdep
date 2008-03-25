@@ -21,14 +21,17 @@ similar.listw(listw)
 
 \seealso{\code{\link{lagsarlm}}, \code{\link{errorsarlm}}}
 \examples{
-\dontrun{data(oldcol)
+data(oldcol)
 COL.W <- nb2listw(COL.nb, style="W")
 COL.S <- nb2listw(COL.nb, style="S")
 log(prod(1 - 0.5 * eigenw(COL.W)))
 log(prod(1 - 0.5 * eigenw(similar.listw(COL.W))))
-Jacobian_W(as_dsTMatrix_listw(similar.listw(COL.W)), 0.5)
+W_J <- as(as_dsTMatrix_listw(similar.listw(COL.W)), "CsparseMatrix")
+I <- as_dsCMatrix_I(dim(W_J)[1])
+c(determinant(I - 0.5 * W_J, logarithm=TRUE)$modulus)
 log(prod(1 - 0.5 * eigenw(COL.S)))
 log(prod(1 - 0.5 * eigenw(similar.listw(COL.S))))
-Jacobian_W(as_dsTMatrix_listw(listw2U(similar.listw(COL.S))), 0.5)}
+W_J <- as(as_dsTMatrix_listw(similar.listw(COL.S)), "CsparseMatrix")
+c(determinant(I - 0.5 * W_J, logarithm=TRUE)$modulus)
 }
 \keyword{spatial}

@@ -30,23 +30,18 @@ as_dsTMatrix_listw <- function(listw) {
 	res
 }
 
-as_dgCMatrix_I <- function(n) {
+as_dsCMatrix_I <- function(n) {
 	if (n < 1) stop("matrix must have positive dimensions")
-	I <- as(Diagonal(n), "sparseMatrix")
-	I
+	as(as(Diagonal(n), "symmetricMatrix"), "CsparseMatrix")
 }
 
-as_dgCMatrix_IrW <- function(W, rho) {
-	if(!inherits(W, "dsTMatrix")) stop("not a dsTMatrix object")
+as_dsCMatrix_IrW <- function(W, rho) {
+	stopifnot(is(W, "symmetricMatrix"))
 	n <- dim(W)[1]
-	I <- as_dgCMatrix_I(n)
-	IrW <- I - rho * W
-	IrW
+	as_dsCMatrix_I(n) - rho * W
 }
 
 Jacobian_W <- function(W, rho) {
-	IrW <- as_dgCMatrix_IrW(W, rho)
-	logdet <- sum(2*log(diag(chol(as(IrW, "dsCMatrix")))))
-	logdet
+	sum(2*log(diag(chol(as_dsCMatrix_IrW(W, rho)))))
 }
 

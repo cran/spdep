@@ -52,10 +52,10 @@ ncCC89_nb <- read.gal(system.file("etc/weights/ncCC89.gal", package="spdep")[1],
 ncCR85_nb <- read.gal(system.file("etc/weights/ncCR85.gal", package="spdep")[1],
   region.id=rn)
 \dontrun{
-plot(sids, border="grey")
-plot(ncCR85_nb, coordinates(sids), add=TRUE, col="blue")
-plot(sids, border="grey")
-plot(ncCC89_nb, coordinates(sids), add=TRUE, col="blue")
+plot(nc.sids, border="grey")
+plot(ncCR85_nb, coordinates(nc.sids), add=TRUE, col="blue")
+plot(nc.sids, border="grey")
+plot(ncCC89_nb, coordinates(nc.sids), add=TRUE, col="blue")
 }
 }
 \keyword{datasets}

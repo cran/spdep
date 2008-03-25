@@ -1,4 +1,4 @@
-% Copyright 2002-4 by Roger S. Bivand
+% Copyright 2002-8 by Roger S. Bivand
 \name{errorsarlm}
 \alias{errorsarlm}
 %\alias{sar.error.f}
@@ -29,7 +29,7 @@ is called.}
   \item{listw}{a \code{listw} object created for example by \code{nb2listw}}
   \item{na.action}{a function (default \code{na.fail}), can also be \code{na.omit} or \code{na.exclude} with consequences for residuals and fitted values - in these cases the weights list will be subsetted to remove NAs in the data. It may be necessary to set zero.policy to TRUE because this subsetting may create no-neighbour observations. Note that only weights lists created without using the glist argument to \code{nb2listw} may be subsetted.}
   \item{method}{"eigen" (default) - the Jacobian is computed as the product 
-of (1 - rho*eigenvalue) using \code{eigenw}, and "spam" or "Matrix" for strictly symmetric weights lists of styles "B", "C" and "U", or made symmetric by similarity (Ord, 1975, Appendix C) if possible for styles "W" and "S", using code from the spam package or Matrix package to calculate the determinant.
+of (1 - rho*eigenvalue) using \code{eigenw}, and "spam" or "Matrix" for strictly symmetric weights lists of styles "B" and "C", or made symmetric by similarity (Ord, 1975, Appendix C) if possible for styles "W" and "S", using code from the spam package or Matrix package to calculate the determinant.
 }
   \item{quiet}{default=TRUE; if FALSE, reports function values during optimization.}
   \item{zero.policy}{if TRUE assign zero to the lagged value of zones without 
@@ -44,15 +44,16 @@ neighbours, if FALSE (default) assign NA - causing \code{errorsarlm()} to termin
 % nnzlmax=100000, tmpmax=25000)}
 }
 \details{
-  The asymptotic standard error of $\lambda$ is only computed when
+The asymptotic standard error of $\lambda$ is only computed when
 method=eigen, because the full matrix operations involved would be costly
-for large n typically associated with the choice of method="spam or "Matrix". The
-same applies to the coefficient covariance matrix. Taken as the
-asymptotic matrix from the literature, it is typically badly scaled, being
-block-diagonal, and with the elements involving lambda being very small,
-while other parts of the matrix can be very large (often many orders
-of magnitude in difference). It often happens that the \code{tol.solve}
-argument needs to be set to a smaller value than the default, or the RHS variables can be centred or reduced in range.
+for large n typically associated with the choice of method="spam or
+"Matrix".  The same applies to the coefficient covariance matrix. Taken
+as the asymptotic matrix from the literature, it is typically badly
+scaled, being block-diagonal, and with the elements involving lambda
+being very small, while other parts of the matrix can be very large
+(often many orders of magnitude in difference). It often happens that
+the \code{tol.solve} argument needs to be set to a smaller value than
+the default, or the RHS variables can be centred or reduced in range.
 
 Note that the fitted() function for the output object assumes that the response 
 variable may be reconstructed as the sum of the trend, the signal, and the
@@ -115,7 +116,7 @@ COL.errB.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb, style="B"), method="eigen", quiet=FALSE)
 summary(COL.errB.eig, correlation=TRUE)
 COL.errW.M <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb, style="W"), method="spam", quiet=FALSE)
+ nb2listw(COL.nb, style="W"), method="Matrix", quiet=FALSE)
 summary(COL.errW.M)
 NA.COL.OLD <- COL.OLD
 NA.COL.OLD$CRIME[20:25] <- NA

@@ -1,9 +1,10 @@
-# Copyright 2005-7 by Roger Bivand
+# Copyright 2005-8 by Roger Bivand
 spautolm <- function(formula, data = list(), listw, weights,
     na.action=na.fail, verbose=FALSE, tol.opt=.Machine$double.eps^(2/3),
     family="SAR", method="full", interval=c(-1,0.999), zero.policy=FALSE,
 #    cholAlloc=NULL, 
-    tol.solve=.Machine$double.eps, llprof=NULL) 
+    super=FALSE, Matrix_intern=TRUE, tol.solve=.Machine$double.eps,
+    llprof=NULL) 
 {
     if (!inherits(listw, "listw")) 
         stop("No neighbourhood list")
@@ -97,74 +98,15 @@ spautolm <- function(formula, data = list(), listw, weights,
         LL0 <- .opt.fit.full(lambda=0, Y=Y, X=X, n=n, W=W, eig=eig, I=I,
             weights=diag(weights), sum_lw=sum_lw, family=family, verbose=FALSE,
 		tol.solve=tol.solve)
-#    \} else if (method == "SparseM") \{
-#        if (family == "SMA") stop("SMA only for full method")
-#        if (listw$style %in% c("W", "S") && !can.sim)
-#        stop("SparseM method requires symmetric weights")
-#        if (listw$style %in% c("B", "C", "U") && 
-# 	    !(is.symmetric.glist(listw$neighbours, listw$weights)))
-#	    stop("SparseM method requires symmetric weights")
-#        I <- asMatrixCsrI(n)
-#	W <- asMatrixCsrListw(listw, zero.policy=zero.policy)
-#        if (family == "CAR") if (!isTRUE(all.equal(W, t(W))))
-#	    warning("Non-symmetric spatial weights in CAR model")
-## Jacobian only from symmetric W_J, W can be asymmetric though
-#        if (listw$style %in% c("W", "S") & can.sim) {
-#	    W_J <- asMatrixCsrListw(similar.listw(listw),
-#                zero.policy=zero.policy)
-##	    similar <- TRUE
-#	} else W_J <- W
-#	gc(FALSE)
-#        Sweights <- new("matrix.csr", ra=weights, ja=1:n, ia=1:(n+1), 
-#	    dimension=c(n,n))
-##	tmpmax <- sum(card(listw$neighbours)) + n
-#	if (is.null(cholAlloc)) {
-#	# Martin Reismann large sparse nnzlmax problem
-#		nlink <- sum(card(listw$neighbours))
-#		tmpmax <- 3 * (nlink + n)
-#		nnzlmax <- max(10*nlink, floor(.2*nlink^1.4))
-#		nsubmax <- tmpmax
-#		cholAlloc <- list(nsubmax=nsubmax, nnzlmax=nnzlmax,
-#			tmpmax=tmpmax)
-#	}
-## do line search
-#        if (!is.null(llprof)) {
-#            ll_prof <- numeric(length(llprof))
-#            for (i in seq(along=llprof)) ll_prof[i] <- .opt.fit.SparseM(
-#                llprof[i], Y=Y, X=X, n=n, W=W, W_J=W_J, I=I,
-#                weights=Sweights, sum_lw=sum_lw, family=family,
-#                verbose=verbose, cholAlloc=cholAlloc, tol.solve=tol.solve)
-#        }
-#        opt <- optimize(.opt.fit.SparseM, lower=interval[1],
-#            upper=interval[2], maximum=TRUE,
-#            tol = tol.opt, Y=Y, X=X, n=n, W=W, W_J=W_J, I=I,
-#            weights=Sweights, sum_lw=sum_lw, family=family,
-#            verbose=verbose, cholAlloc=cholAlloc, tol.solve=tol.solve)
-#        lambda <- opt$maximum
-#        names(lambda) <- "lambda"
-#        LL <- opt$objective
-## get GLS coefficients
-#        fit <- .SPAR.fit(lambda=lambda, Y=Y, X=X, n=n, W=W, I=I,
-#            weights=Sweights, family=family, out=TRUE, tol.solve=tol.solve)
-## create residuals and fitted values (Cressie 1993, p. 564)
-#	fit$signal_trend <- drop(X %*% fit$coefficients)
-#	fit$signal_stochastic <- drop(lambda * W %*% (Y - fit$signal_trend))
-#	fit$fitted.values <- fit$signal_trend + fit$signal_stochastic
-#	fit$residuals <- drop(Y - fit$fitted.values)
-## get null LL
-#        LL0 <- .opt.fit.SparseM(lambda=as.numeric(0), Y=Y, X=X, n=n, W=W,
-#            W_J=W_J, I=I, weights=Sweights, sum_lw=sum_lw, family=family,
-#            verbose=verbose, cholAlloc=cholAlloc, tol.solve=tol.solve)
-##        weights <- diag(Sweights)
     }  else if (method == "Matrix") {
         if (family == "SMA") stop("SMA only for full method")
         if (listw$style %in% c("W", "S") && !can.sim)
         stop("Matrix method requires symmetric weights")
-        if (listw$style %in% c("B", "C", "U") && 
+        if (listw$style %in% c("B", "C") && 
  	    !(is.symmetric.glist(listw$neighbours, listw$weights)))
 	    stop("Matrix method requires symmetric weights")
-        I <- as_dgCMatrix_I(n)
-	I <- as(I, "CsparseMatrix")
+        if (listw$style == "U") stop("U style not permitted, use C")
+        I <- as_dsCMatrix_I(n)
 	W <- as_dgRMatrix_listw(listw)
 	W <- as(W, "CsparseMatrix")
         if (family == "CAR") if (!isTRUE(all.equal(W, t(W))))
@@ -174,21 +116,80 @@ spautolm <- function(formula, data = list(), listw, weights,
 	    W_J <- as_dsTMatrix_listw(listw2U(similar.listw(listw)))
 #	    similar <- TRUE
 	} else W_J <- as_dsTMatrix_listw(listw)
+	W_J <- as(W_J, "CsparseMatrix")
+	if (!is.null(super)) {
+		if (!is.logical(super)) stop("super must be logical")
+		Imult <- 2
+		if (listw$style == "B") {
+                    Imult <- ceiling((2/3)*max(apply(W_J, 1, sum)))
+		    interval <- c(-0.5, +0.25)
+		} else interval <- c(-2, +1)
+                nW_J <- - W_J
+		if (super) {
+                    super <- !super
+                    warning("super=TRUE not yet working")
+                }
+		pChol <- Cholesky(W_J, super=super, Imult = Imult)
+		nChol <- Cholesky(nW_J, super=super, Imult = Imult)
+		ns1 <- last <- 10
+		plambda1 <- seq(sqrt(.Machine$double.eps), interval[2],
+                    length.out=ns1)
+		
+		while (last >= ns1) {
+                   pdet1 <- Matrix:::ldetL2up(nChol, nW_J, 1/plambda1)
+		   wp1 <- which(is.finite(pdet1))
+		   last <- wp1[length(wp1)]
+		   if (last == ns1) plambda1 <- seq(interval[2], 
+		       1.5*interval[2], length.out=ns1)
+		}
+                lwp1n <- plambda1[last]
+                lwp2n <- plambda1[last+1]
+		plambda2 <- seq(lwp2n, lwp1n, length.out=ns1)
+                pdet2 <- Matrix:::ldetL2up(nChol, nW_J, 1/plambda2)
+		wp2 <- which(is.finite(pdet2))
+                lwp2n <- plambda2[wp2[length(wp2)]]
+		
+		nlambda1 <- seq(interval[1], -sqrt(.Machine$double.eps),
+                    length.out=ns1)
+		
+		first <- 1
+		while (first == 1) {
+                   ndet1 <- Matrix:::ldetL2up(pChol, W_J, 1/(-nlambda1))
+		   wn1 <- which(is.finite(ndet1))
+		   first <- wn1[1]
+		   if (first == 1) plambda1 <- seq(1.5*interval[1], 
+			interval[1], length.out=ns1)
+		}
+
+                lwn1n <- nlambda1[wn1[1]]
+                lwn2n <- nlambda1[wn1[1]-1]
+		nlambda2 <- seq(lwn2n, lwn1n, length.out=ns1)
+                ndet2 <- Matrix:::ldetL2up(pChol, W_J, 1/(-nlambda2))
+		wn2 <- which(is.finite(ndet2))
+                lwn2n <- nlambda2[wn2[1]]
+		interval <- c(lwn2n, lwp2n)
+		if (verbose) cat("using interval:", interval, "\n")
+	}
+	else nW_J <- pChol <- nChol <- NULL
 #	gc(FALSE)
-        Sweights <- as(Diagonal(x=weights), "sparseMatrix")
+#        Sweights <- as(Diagonal(x=weights), "sparseMatrix")
+        Sweights <- as(as(Diagonal(x=weights), "symmetricMatrix"), 
+	    "CsparseMatrix")
 # do line search
         if (!is.null(llprof)) {
             ll_prof <- numeric(length(llprof))
             for (i in seq(along=llprof)) ll_prof[i] <- .opt.fit.Matrix(
                 llprof[i], Y=Y, X=X, n=n, W=W, W_J=W_J, I=I,
                 weights=Sweights, sum_lw=sum_lw, family=family,
-                verbose=verbose, tol.solve=tol.solve)
+                verbose=verbose, tol.solve=tol.solve, super=super, nW_J=nW_J,
+                pChol=pChol, nChol=nChol, Matrix_intern=Matrix_intern)
         }
         opt <- optimize(.opt.fit.Matrix, lower=interval[1],
             upper=interval[2], maximum=TRUE,
             tol = tol.opt, Y=Y, X=X, n=n, W=W, W_J=W_J, I=I,
             weights=Sweights, sum_lw=sum_lw, family=family,
-            verbose=verbose, tol.solve=tol.solve)
+            verbose=verbose, tol.solve=tol.solve, super=super, nW_J=nW_J,
+            pChol=pChol, nChol=nChol, Matrix_intern=Matrix_intern)
         lambda <- opt$maximum
         names(lambda) <- "lambda"
         LL <- opt$objective
@@ -203,7 +204,8 @@ spautolm <- function(formula, data = list(), listw, weights,
 # get null LL
         LL0 <- .opt.fit.Matrix(lambda=as.numeric(0), Y=Y, X=X, n=n, W=W,
             W_J=W_J, I=I, weights=Sweights, sum_lw=sum_lw, family=family,
-            verbose=verbose, tol.solve=tol.solve)
+            verbose=verbose, tol.solve=tol.solve, super=super, nW_J=nW_J,
+                pChol=pChol, nChol=nChol, Matrix_intern=Matrix_intern)
 #        weights <- diag(Sweights)
     }  else if (method == "spam") {
         if (family == "SMA") stop("SMA only for full method")
@@ -296,36 +298,47 @@ spautolm <- function(formula, data = list(), listw, weights,
     ret
 }
 
-#.opt.fit.SparseM <- function(lambda, Y, X, n, W, W_J, I, weights, sum_lw,
-#    family="SAR", verbose=TRUE, cholAlloc, tol.solve=.Machine$double.eps) {
-## fitting function called from optimize()
-#    SSE <- .SPAR.fit(lambda=lambda, Y=Y, X=X, n=n, W=W, weights=weights,
-#        I=I, family=family, out=FALSE, tol.solve=tol.solve)
-#    s2 <- SSE/n
-#    Det <- get("det", "package:SparseM")
-#    Jacobian <- log(Det(chol((I - lambda * W_J), nsubmax=cholAlloc$nsubmax, 
-#	nnzlmax=cholAlloc$nnzlmax, tmpmax=cholAlloc$tmpmax))^2)
-#    gc(FALSE)
-#    ret <- ((1/ifelse((length(grep("CAR", family)) != 0), 2, 1))*Jacobian +
-#	(1/2)*sum_lw - ((n/2)*log(2*pi)) - (n/2)*log(s2) - (1/(2*(s2)))*SSE)
-#    if (verbose)  cat("lambda:", lambda, "function", ret, "Jacobian", 
-#        Jacobian, "SSE", SSE, "\n")
-#    ret
-#}
 
 .opt.fit.Matrix <- function(lambda, Y, X, n, W, W_J, I, weights, sum_lw,
-    family="SAR", verbose=TRUE, tol.solve=.Machine$double.eps) {
+    family="SAR", verbose=TRUE, tol.solve=.Machine$double.eps, 
+    super=NULL, nW_J=NULL, pChol=NULL, nChol=NULL, Matrix_intern=FALSE) {
 # fitting function called from optimize()
     SSE <- .SPAR.fit(lambda=lambda, Y=Y, X=X, n=n, W=W, weights=weights,
         I=I, family=family, out=FALSE, tol.solve=tol.solve)
     s2 <- SSE/n
-    CHOL <- try(chol(as((I - lambda * W_J), "dsCMatrix")), silent=TRUE)
-    if (class(CHOL) == "try-error") {
-        Jacobian <- NA
+    if (isTRUE(all.equal(lambda, 0))) {
+        Jacobian <- lambda
     } else {
-        Jacobian <- sum(2*log(diag(CHOL)))
+        if (is.null(super))
+            Jacobian <- determinant(I - lambda * W_J, logarithm=TRUE)$modulus
+        else {
+            if (lambda > 0) {
+                if (Matrix_intern) 
+                    detTRY <- try(Matrix:::ldetL2up(nChol, nW_J, 1/lambda),
+                        silent=TRUE)
+                else
+                    detTRY <- try(c(determinant(update(nChol, nW_J, 
+                        1/lambda))$modulus), silent=TRUE)
+                if (class(detTRY) == "try-error") {
+                    Jacobian <- NaN
+                } else {
+                    Jacobian <- n * log(lambda) + detTRY
+                }
+            } else {
+                if (Matrix_intern) 
+                    detTRY <- try(Matrix:::ldetL2up(pChol, W_J, 1/(-lambda)),
+                        silent=TRUE)
+                else
+                    detTRY <- try(c(determinant(update(pChol, W_J, 
+                        1/(-lambda)))$modulus), silent=TRUE)
+                if (class(detTRY) == "try-error") {
+                    Jacobian <- NaN
+                } else {
+                    Jacobian <- n * log(-(lambda)) + detTRY
+                }
+            }
+        }
     }
-#    gc(FALSE)
     ret <- ((1/ifelse((length(grep("CAR", family)) != 0), 2, 1))*Jacobian +
 	(1/2)*sum_lw - ((n/2)*log(2*pi)) - (n/2)*log(s2) - (1/(2*(s2)))*SSE)
     if (verbose)  cat("lambda:", lambda, "function", ret, "Jacobian", Jacobian, "SSE", SSE, "\n")
