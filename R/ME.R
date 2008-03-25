@@ -1,4 +1,4 @@
-# Copyright 2005-2007 by Roger Bivand and Pedro Peres-Neto (from Matlab)
+# Copyright 2005-2008 by Roger Bivand and Pedro Peres-Neto (from Matlab)
 #
 
 ME <- function(formula, data, family = gaussian, weights, offset, listw, 
@@ -26,9 +26,9 @@ ME <- function(formula, data, family = gaussian, weights, offset, listw,
 
 	listw <- listw2U(listw) # make weights symmetric
 #	sW <- asMatrixCsrListw(listw)
-#	sW <- as_dgRMatrix_listw(listw)
-#	sW <- as(sW, "CsparseMatrix")
-	sW <- as.spam.listw(listw)
+	sW <- as_dgRMatrix_listw(listw)
+	sW <- as(sW, "CsparseMatrix")
+#	sW <- as.spam.listw(listw)
 	
 	Wmat <- listw2mat(listw) # convert to full matrix form
 	n <- ncol(Wmat)

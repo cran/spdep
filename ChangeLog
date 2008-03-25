@@ -1,3 +1,42 @@
+2008-03-25 12:28  rsbivand
+
+	* DESCRIPTION, R/error.spsarlm.R, R/kpgm_new.R, R/lag.spsarlm.R,
+	  R/spautolm.R, man/GMerrorsar.Rd, man/as_dgRMatrix_listw.Rd,
+	  man/errorsarlm.Rd, man/lagsarlm.Rd, man/similar.listw.Rd,
+	  man/spautolm.Rd: Matrix
+
+2008-03-25 10:41  rsbivand
+
+	* R/spautolm.R, man/spautolm.Rd: Matrix
+
+2008-03-23 01:42  rsbivand
+
+	* R/spautolm.R, man/spautolm.Rd: Matrix
+
+2008-03-18 16:19  rsbivand
+
+	* DESCRIPTION, R/ME.R, R/error.spsarlm.R, R/kpgm_new.R,
+	  R/lag.spsarlm.R, R/spautolm.R, man/GMerrorsar.Rd,
+	  man/as_dgRMatrix_listw.Rd, man/errorsarlm.Rd, man/lagsarlm.Rd,
+	  man/nc.sids.Rd, man/spautolm.Rd: Matrix
+
+2008-03-15 14:15  rsbivand
+
+	* DESCRIPTION, NAMESPACE, R/error.spsarlm.R, R/kpgm_new.R,
+	  R/lag.spsarlm.R, R/listw2Matrix.R, R/spautolm.R,
+	  man/as_dgRMatrix_listw.Rd: Matrix patch
+
+2008-03-14 16:31  rsbivand
+
+	* ChangeLog, DESCRIPTION, R/listw2Matrix.R,
+	  man/as_dgRMatrix_listw.Rd: Matrix
+
+2008-03-13 14:11  rsbivand
+
+	* ChangeLog, DESCRIPTION, R/error.spsarlm.R, R/kpgm_new.R,
+	  R/lag.spsarlm.R, R/listw2Matrix.R, R/spautolm.R, inst/ChangeLog,
+	  man/as_dgRMatrix_listw.Rd: Matrix coercion
+
 2008-02-18 16:57  rsbivand
 
 	* DESCRIPTION: release

@@ -1,4 +1,4 @@
-% Copyright 2002-7 by Roger S. Bivand
+% Copyright 2002-8 by Roger S. Bivand
 \name{lagsarlm}
 \alias{lagsarlm}
 \title{Spatial simultaneous autoregressive lag model estimation}
@@ -28,12 +28,12 @@ is called.}
   \item{na.action}{a function (default \code{na.fail}), can also be \code{na.omit} or \code{na.exclude} with consequences for residuals and fitted values - in these cases the weights list will be subsetted to remove NAs in the data. It may be necessary to set zero.policy to TRUE because this subsetting may create no-neighbour observations. Note that only weights lists created without using the glist argument to \code{nb2listw} may be subsetted.}
   \item{type}{default "lag", may be set to "mixed"; when "mixed", the lagged intercept is dropped for spatial weights style "W", that is row-standardised weights, but otherwise included}
   \item{method}{"eigen" (default) - the Jacobian is computed as the product 
-of (1 - rho*eigenvalue) using \code{eigenw}, and "spam" or "Matrix" for strictly symmetric weights lists of styles "B", "C" and "U", or made symmetric by similarity (Ord, 1975, Appendix C) if possible for styles "W" and "S", using code from the spam or Matrix packages to calculate the determinant.
+of (1 - rho*eigenvalue) using \code{eigenw}, and "spam" or "Matrix" for strictly symmetric weights lists of styles "B" and "C", or made symmetric by similarity (Ord, 1975, Appendix C) if possible for styles "W" and "S", using code from the spam or Matrix packages to calculate the determinant.
 }
   \item{quiet}{default=TRUE; if FALSE, reports function values during optimization.}
   \item{zero.policy}{if TRUE assign zero to the lagged value of zones without 
 neighbours, if FALSE (default) assign NA - causing \code{lagsarlm()} to terminate with an error}
-  \item{interval}{search interval for autoregressive parameter when not using method="eigen"; default is c(-1,1)}
+  \item{interval}{search interval for autoregressive parameter when not using method="eigen"; default is c(-1,1); method="Matrix" will attempt to search for an appropriate interval}
   \item{tol.solve}{the tolerance for detecting linear dependencies in the columns of matrices to be inverted - passed to \code{solve()} (default=1.0e-10). This may be used if necessary to extract coefficient standard errors (for instance lowering to 1e-12), but errors in \code{solve()} may constitute indications of poorly scaled variables: if the variables have scales differing much from the autoregressive coefficient, the values in this matrix may be very different in scale, and inverting such a matrix is analytically possible by definition, but numerically unstable; rescaling the RHS variables alleviates this better than setting tol.solve to a very small value}
   \item{tol.opt}{the desired accuracy of the optimization - passed to \code{optimize()} (default=square root of double precision machine tolerance)}
 %  \item{cholAlloc}{control arguments for memory allocation in \code{chol}
@@ -116,12 +116,15 @@ data(oldcol)
 COL.lag.eig <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb, style="W"), method="eigen", quiet=FALSE)
 summary(COL.lag.eig, correlation=TRUE)
-COL.lag.SM <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
+\dontrun{COL.lag.SM <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb), method="spam", quiet=FALSE)
-summary(COL.lag.SM, correlation=TRUE)
-\dontrun{COL.lag.M <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb), method="Matrix", quiet=FALSE)
-summary(COL.lag.M, correlation=TRUE)}
+summary(COL.lag.SM, correlation=TRUE)}
+system.time(COL.lag.M <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
+ nb2listw(COL.nb), method="Matrix", quiet=FALSE))
+summary(COL.lag.M, correlation=TRUE)
+system.time(COL.lag.M <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
+ nb2listw(COL.nb), method="spam", quiet=FALSE))
+summary(COL.lag.M, correlation=TRUE)
 COL.lag.B <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb, style="B"))
 summary(COL.lag.B, correlation=TRUE)

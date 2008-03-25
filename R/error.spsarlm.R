@@ -1,10 +1,9 @@
-# Copyright 1998-2007 by Roger Bivand (non-W styles Rein Halbersma)
+# Copyright 1998-2008 by Roger Bivand (non-W styles Rein Halbersma)
 #
 
 errorsarlm <- function(formula, data = list(), listw, na.action=na.fail, 
 	method="eigen", quiet=TRUE, zero.policy=FALSE, interval=c(-1,0.999), 
-	tol.solve=1.0e-10, tol.opt=.Machine$double.eps^0.5#, cholAlloc=NULL
-	) {
+	tol.solve=1.0e-10, tol.opt=.Machine$double.eps^0.5) {
 	mt <- terms(formula, data = data)
 	mf <- lm(formula, data, na.action=na.action, method="model.frame")
 	na.act <- attr(mf, "na.action")
@@ -20,14 +19,6 @@ errorsarlm <- function(formula, data = list(), listw, na.action=na.fail,
 		"Jacobian calculated using "))
 	switch(method,
 		eigen = if (!quiet) cat("neighbourhood matrix eigenvalues\n"),
-#	        SparseM = {
-#		    if (listw$style %in% c("W", "S") && !can.sim)
-#		    stop("SparseM method requires symmetric weights")
-#		    if (listw$style %in% c("B", "C", "U") && 
-#			!(is.symmetric.glist(listw$neighbours, listw$weights)))
-#		    stop("SparseM method requires symmetric weights")
-#		    if (!quiet) cat("sparse matrix techniques using SparseM\n")
-#		},
 	        Matrix = {
 		    if (listw$style %in% c("W", "S") && !can.sim)
 		    stop("Matrix method requires symmetric weights")
@@ -105,39 +96,11 @@ errorsarlm <- function(formula, data = list(), listw, na.action=na.fail,
 		lambda <- opt$maximum
 		names(lambda) <- "lambda"
 		LL <- opt$objective
-#	} else if (method == "SparseM") {
-#		if (listw$style %in% c("W", "S") & can.sim) {
-#			csrw <- asMatrixCsrListw(similar.listw(listw))
-#			csrw <- asMatrixCsrListw(similar.listw(listw),
-#        			zero.policy=zero.policy)
-#			similar <- TRUE
-#		} else csrw <- asMatrixCsrListw(listw, zero.policy=zero.policy)
-###		} else csrw <- asMatrixCsrListw(listw)
-#		gc(FALSE)
-#		I <- asMatrixCsrI(n)
-#		if (is.null(cholAlloc)) {
-#		# Martin Reismann large sparse nnzlmax problem
-#			nlink <- sum(card(listw$neighbours))
-#			tmpmax <- 3 * (nlink + n)
-#			nnzlmax <- max(10*nlink, floor(.2*nlink^1.4))
-#			nsubmax <- tmpmax
-#			cholAlloc <- list(nsubmax=nsubmax, nnzlmax=nnzlmax,
-#				tmpmax=tmpmax)
-#		}
-#		# tmpmax and gc() calls: Danlin Yu 20041213
-#		opt <- optimize(sar.error.f.sM, interval=interval, 
-#			maximum=TRUE, tol=tol.opt, csrw=csrw, I=I, y=y, wy=wy, 
-#			x=x, WX=WX, n=n, cholAlloc=cholAlloc, quiet=quiet)
-#		lambda <- opt$maximum
-#		names(lambda) <- "lambda"
-#		LL <- opt$objective
-#		gc(FALSE)
 	} else if (method == "spam") {
         	if (listw$style %in% c("W", "S") & can.sim) {
 	    		csrw <- as.spam.listw(listw2U(similar.listw(listw)))
 			    similar <- TRUE
 		} else csrw <- as.spam.listw(listw)
-#		gc(FALSE)
         	I <- diag.spam(1, n, n)
 		opt <- optimize(sar.error.f.sp, interval=interval, 
 			maximum=TRUE, tol=tol.opt, csrw=csrw, I=I, y=y, wy=wy, 
@@ -145,22 +108,19 @@ errorsarlm <- function(formula, data = list(), listw, na.action=na.fail,
 		lambda <- opt$maximum
 		names(lambda) <- "lambda"
 		LL <- opt$objective
-#		gc(FALSE)
 	} else if (method == "Matrix") {
         	if (listw$style %in% c("W", "S") & can.sim) {
 	    	    csrw <- as_dsTMatrix_listw(listw2U(similar.listw(listw)))
 	    	    similar <- TRUE
 		} else csrw <- as_dsTMatrix_listw(listw)
-#		gc(FALSE)
-        	I <- as_dgCMatrix_I(n)
-		I <- as(I, "CsparseMatrix")
+		csrw <- as(csrw, "CsparseMatrix")
+        	I <- as_dsCMatrix_I(n)
 		opt <- optimize(sar.error.f.M, interval=interval, 
 			maximum=TRUE, tol=tol.opt, csrw=csrw, I=I, y=y, wy=wy, 
 			x=x, WX=WX, n=n, quiet=quiet)
 		lambda <- opt$maximum
 		names(lambda) <- "lambda"
 		LL <- opt$objective
-#		gc(FALSE)
 	}
 	lm.target <- lm(I(y - lambda*wy) ~ I(x - lambda*WX) - 1)
 	r <- as.vector(residuals(lm.target))
@@ -231,24 +191,6 @@ sar.error.f <- function(lambda, eig, y, wy, x, WX, n, quiet)
 	ret
 }
 
-
-#sar.error.f.sM <- function(lambda, csrw, I, y, wy, x, WX, n, cholAlloc, quiet) {
-#	yl <- y - lambda*wy
-#	xl <- x - lambda*WX
-#	xl.q <- qr.Q(qr(xl))
-#	xl.q.yl <- t(xl.q) %*% yl
-#	SSE <- t(yl) %*% yl - t(xl.q.yl) %*% xl.q.yl
-#	s2 <- SSE/n
-#        Det <- get("det", "package:SparseM")
-#	Jacobian <- log(Det(chol((I - lambda * csrw), 
-#		nsubmax=cholAlloc$nsubmax, nnzlmax=cholAlloc$nnzlmax, 
-#		tmpmax=cholAlloc$tmpmax))^2)
-#	gc(FALSE)
-#	ret <- (Jacobian -
-#		((n/2)*log(2*pi)) - (n/2)*log(s2) - (1/(2*(s2)))*SSE)
-#	if (!quiet) cat("lambda:", lambda, " function:", ret, " Jacobian:", Jacobian, " SSE:", SSE, "\n")
-#	ret
-#}
 sar.error.f.sp <- function(lambda, csrw, I, y, wy, x, WX, n, quiet) {
 	yl <- y - lambda*wy
 	xl <- x - lambda*WX
@@ -277,13 +219,7 @@ sar.error.f.M <- function(lambda, csrw, I, y, wy, x, WX, n, quiet) {
 	xl.q.yl <- t(xl.q) %*% yl
 	SSE <- t(yl) %*% yl - t(xl.q.yl) %*% xl.q.yl
 	s2 <- SSE/n
-    	CHOL <- try(chol(as((I - lambda * csrw), "dsCMatrix")), silent=TRUE)
-    	if (class(CHOL) == "try-error") {
-        	Jacobian <- NA
-    	} else {
-        	Jacobian <- sum(2*log(diag(CHOL)))
-    	}
-#	gc(FALSE)
+	Jacobian <- determinant(I - lambda * csrw, logarithm=TRUE)$modulus
 	ret <- (Jacobian -
 		((n/2)*log(2*pi)) - (n/2)*log(s2) - (1/(2*(s2)))*SSE)
 	if (!quiet) cat("lambda:", lambda, " function:", ret, " Jacobian:", Jacobian, " SSE:", SSE, "\n")
