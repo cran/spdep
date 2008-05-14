@@ -20,8 +20,8 @@
 spautolm(formula, data = list(), listw, weights,
  na.action=na.fail, verbose = FALSE, tol.opt = .Machine$double.eps^(2/3),
  family = "SAR", method="full", interval=c(-1,0.999),
- zero.policy = FALSE, super=FALSE, Matrix_intern=TRUE, %cholAlloc=NULL, 
- tol.solve=.Machine$double.eps, llprof=NULL)
+ zero.policy = FALSE, super=NULL, Matrix_intern=TRUE, %cholAlloc=NULL, 
+ tol.solve=.Machine$double.eps, find_interval=FALSE, llprof=NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -37,7 +37,7 @@ is called.}
   \item{tol.opt}{the desired accuracy of the optimization - passed to \code{optimize()}}
   \item{family}{character string: either \code{"SAR"} or \code{"CAR"} for simultaneous or conditional autoregressions; \code{"SMA"} for spatial moving average added thanks to Jielai Ma - \code{"SMA"} is only implemented for method=\code{"full"} because it necessarily involves dense matrices}
   \item{method}{character string: default \code{"full"} for use of full matrices, \code{"Matrix"} or \code{"spam"} for sparse matrices (restricted to spatial weights symmetric or similar to symmetric) using methods in either the Matrix or spam packages. Note that users should change from spam to Matrix}
-  \item{interval}{search interval for autoregressive parameter when not using method="eigen"; default is c(-1,0.999), \code{optimize} will reset NA/NaN to a bound and gives a warning when the interval is poorly set; method="Matrix" will attempt to search for an appropriate interval}
+  \item{interval}{search interval for autoregressive parameter when not using method="eigen"; default is c(-1,0.999), \code{optimize} will reset NA/NaN to a bound and gives a warning when the interval is poorly set; method="Matrix" will attempt to search for an appropriate interval, if find\_interval=TRUE (fails on some platforms)}
   \item{zero.policy}{Include list of no-neighbour observations in output if TRUE --- otherwise zero.policy is handled within the listw argument}
   \item{super}{logical argument to \code{\link[Matrix]{Cholesky}}, only used for method="Matrix"; at present only super=FALSE is supported. It should only be used for positive lambda. If NULL, the Cholesky decompisition of the matrix is undertaken at each step.}
   \item{Matrix_intern}{default TRUE, if FALSE, does not use vectorised Matrix internal function.}
@@ -47,6 +47,7 @@ is called.}
 % nnzlmax, and tmpmax, for example cholAlloc=list(nsubmax=25000,
 % nnzlmax=100000, tmpmax=25000)}
   \item{tol.solve}{the tolerance for detecting linear dependencies in the columns of matrices to be inverted - passed to \code{solve()} (default=double precision machine tolerance). Errors in \code{solve()} may constitute indications of poorly scaled variables: if the variables have scales differing much from the autoregressive coefficient, the values in this matrix may be very different in scale, and inverting such a matrix is analytically possible by definition, but numerically unstable; rescaling the RHS variables alleviates this better than setting tol.solve to a very small value}
+  \item{find_interval}{default FALSE}{if TRUE, attempts to find the interval using Matrix internal functions}
   \item{llprof}{default NULL, can either be an integer for method="full" only, to divide the feasible range into llprof points, or a sequence of values, at which to evaluate the likelihood function}
 }
 \details{
@@ -138,11 +139,11 @@ system.time(esar1M <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
 summary(esar1M)
 system.time(esar1M <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
  data=nydata, listw=listw_NY, family="SAR", method="Matrix", verbose=TRUE,
- super=NULL))
+ super=FALSE))
 summary(esar1M)
 system.time(esar1M <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
  data=nydata, listw=listw_NY, family="SAR", method="Matrix", verbose=TRUE,
- Matrix_intern=FALSE))
+ super=FALSE, Matrix_intern=TRUE, find_interval=FALSE))
 summary(esar1M)
 system.time(esar1s <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
  data=nydata, listw=listw_NY, family="SAR", method="spam", verbose=TRUE))

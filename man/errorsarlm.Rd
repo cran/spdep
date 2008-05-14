@@ -46,7 +46,7 @@ neighbours, if FALSE (default) assign NA - causing \code{errorsarlm()} to termin
 \details{
 The asymptotic standard error of $\lambda$ is only computed when
 method=eigen, because the full matrix operations involved would be costly
-for large n typically associated with the choice of method="spam or
+for large n typically associated with the choice of method="spam" or
 "Matrix".  The same applies to the coefficient covariance matrix. Taken
 as the asymptotic matrix from the literature, it is typically badly
 scaled, being block-diagonal, and with the elements involving lambda
