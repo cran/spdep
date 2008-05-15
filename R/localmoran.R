@@ -1,8 +1,9 @@
-# Copyright 2001-5 by Roger Bivand
+# Copyright 2001-8 by Roger Bivand
 #
 
 localmoran <- function(x, listw, zero.policy=FALSE, na.action=na.fail, 
-	alternative = "greater", p.adjust.method="none", spChk=NULL) {
+	alternative = "greater", p.adjust.method="none", mlvar=TRUE,
+	spChk=NULL) {
 	if (!inherits(listw, "listw"))
 		stop(paste(deparse(substitute(listw)), "is not a listw object"))
 	if (!is.null(attr(listw$neighbours, "self.included")) &&
@@ -31,10 +32,12 @@ localmoran <- function(x, listw, zero.policy=FALSE, na.action=na.fail,
 	xx <- mean(x, na.rm=NAOK)
 	z <- x - xx
 	lz <- lag.listw(listw, z, zero.policy=zero.policy, NAOK=NAOK)
-	s2 <- sum(z^2, na.rm=NAOK)/n
+	if (mlvar) s2 <- sum(z^2, na.rm=NAOK)/n
+	else s2 <- sum(z^2, na.rm=NAOK)/(n-1)
 	res[,1] <- (z/s2) * lz
 	Wi <- sapply(listw$weights, sum)
 	res[,2] <- -Wi / (n-1)
+	if (!mlvar) s2 <- sum(z^2, na.rm=NAOK)/n
 	b2 <- (sum(z^4, na.rm=NAOK)/n)/(s2^2)
 	A <- (n-b2) / (n-1)
 	B <- (2*b2 - n) / ((n-1)*(n-2))

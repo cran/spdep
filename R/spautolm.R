@@ -3,8 +3,8 @@ spautolm <- function(formula, data = list(), listw, weights,
     na.action=na.fail, verbose=FALSE, tol.opt=.Machine$double.eps^(2/3),
     family="SAR", method="full", interval=c(-1,0.999), zero.policy=FALSE,
 #    cholAlloc=NULL, 
-    super=FALSE, Matrix_intern=TRUE, tol.solve=.Machine$double.eps,
-    llprof=NULL) 
+    super=NULL, Matrix_intern=TRUE, tol.solve=.Machine$double.eps,
+    find_interval=FALSE, llprof=NULL) 
 {
     if (!inherits(listw, "listw")) 
         stop("No neighbourhood list")
@@ -131,44 +131,46 @@ spautolm <- function(formula, data = list(), listw, weights,
                 }
 		pChol <- Cholesky(W_J, super=super, Imult = Imult)
 		nChol <- Cholesky(nW_J, super=super, Imult = Imult)
-		ns1 <- last <- 10
-		plambda1 <- seq(sqrt(.Machine$double.eps), interval[2],
+                if (find_interval && Matrix_intern) {
+		  ns1 <- last <- 10
+		  plambda1 <- seq(sqrt(.Machine$double.eps), interval[2],
                     length.out=ns1)
 		
-		while (last >= ns1) {
+		  while (last >= ns1) {
                    pdet1 <- Matrix:::ldetL2up(nChol, nW_J, 1/plambda1)
 		   wp1 <- which(is.finite(pdet1))
 		   last <- wp1[length(wp1)]
 		   if (last == ns1) plambda1 <- seq(interval[2], 
 		       1.5*interval[2], length.out=ns1)
-		}
-                lwp1n <- plambda1[last]
-                lwp2n <- plambda1[last+1]
-		plambda2 <- seq(lwp2n, lwp1n, length.out=ns1)
-                pdet2 <- Matrix:::ldetL2up(nChol, nW_J, 1/plambda2)
-		wp2 <- which(is.finite(pdet2))
-                lwp2n <- plambda2[wp2[length(wp2)]]
+		  }
+                  lwp1n <- plambda1[last]
+                  lwp2n <- plambda1[last+1]
+		  plambda2 <- seq(lwp2n, lwp1n, length.out=ns1)
+                  pdet2 <- Matrix:::ldetL2up(nChol, nW_J, 1/plambda2)
+		  wp2 <- which(is.finite(pdet2))
+                  lwp2n <- plambda2[wp2[length(wp2)]]
 		
-		nlambda1 <- seq(interval[1], -sqrt(.Machine$double.eps),
+		  nlambda1 <- seq(interval[1], -sqrt(.Machine$double.eps),
                     length.out=ns1)
 		
-		first <- 1
-		while (first == 1) {
+		  first <- 1
+		  while (first == 1) {
                    ndet1 <- Matrix:::ldetL2up(pChol, W_J, 1/(-nlambda1))
 		   wn1 <- which(is.finite(ndet1))
 		   first <- wn1[1]
 		   if (first == 1) plambda1 <- seq(1.5*interval[1], 
 			interval[1], length.out=ns1)
-		}
+		  }
 
-                lwn1n <- nlambda1[wn1[1]]
-                lwn2n <- nlambda1[wn1[1]-1]
-		nlambda2 <- seq(lwn2n, lwn1n, length.out=ns1)
-                ndet2 <- Matrix:::ldetL2up(pChol, W_J, 1/(-nlambda2))
-		wn2 <- which(is.finite(ndet2))
-                lwn2n <- nlambda2[wn2[1]]
-		interval <- c(lwn2n, lwp2n)
-		if (verbose) cat("using interval:", interval, "\n")
+                  lwn1n <- nlambda1[wn1[1]]
+                  lwn2n <- nlambda1[wn1[1]-1]
+		  nlambda2 <- seq(lwn2n, lwn1n, length.out=ns1)
+                  ndet2 <- Matrix:::ldetL2up(pChol, W_J, 1/(-nlambda2))
+		  wn2 <- which(is.finite(ndet2))
+                  lwn2n <- nlambda2[wn2[1]]
+		  interval <- c(lwn2n, lwp2n)
+		  if (verbose) cat("using interval:", interval, "\n")
+                }
 	}
 	else nW_J <- pChol <- nChol <- NULL
 #	gc(FALSE)

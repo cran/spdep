@@ -1,4 +1,4 @@
-% Copyright 2001-4 by Roger S. Bivand
+% Copyright 2001-8 by Roger S. Bivand
 \name{localmoran}
 \alias{localmoran}
 \title{Local Moran's I statistic}
@@ -6,12 +6,13 @@
  The local spatial statistic Moran's I is calculated for each zone based on the
 spatial weights object used. The values returned include a Z-value, and may be
 used as a diagnostic tool. The statistic is:
-\deqn{I_i = \frac{(x_i-\bar{x})}{{\sum_{k=1}^{n}(x_k-\bar{x})^2}/n}{\sum_{j=1}^{n}w_{ij}(x_j-\bar{x})}},
+\deqn{I_i = \frac{(x_i-\bar{x})}{{\sum_{k=1}^{n}(x_k-\bar{x})^2}/(n-1)}{\sum_{j=1}^{n}w_{ij}(x_j-\bar{x})}},
 and its expectation and variance are given in Anselin (1995).
 }
 \usage{
 localmoran(x, listw, zero.policy=FALSE, na.action=na.fail, 
-	alternative = "greater", p.adjust.method="none", spChk=NULL)
+	alternative = "greater", p.adjust.method="none", mlvar=TRUE,
+        spChk=NULL)
 }
 \arguments{
   \item{x}{a numeric vector the same length as the neighbours list in listw}
@@ -20,6 +21,7 @@ localmoran(x, listw, zero.policy=FALSE, na.action=na.fail,
   \item{na.action}{a function (default \code{na.fail}), can also be \code{na.omit} or \code{na.exclude} - in these cases the weights list will be subsetted to remove NAs in the data. It may be necessary to set zero.policy to TRUE because this subsetting may create no-neighbour observations. Note that only weights lists created without using the glist argument to \code{nb2listw} may be subsetted. If \code{na.pass} is used, zero is substituted for NA values in calculating the spatial lag. (Note that na.exclude will only work properly starting from R 1.9.0, na.omit and na.exclude assign the wrong classes in 1.8.*)}
   \item{alternative}{a character string specifying the alternative hypothesis, must be one of greater (default), less or two.sided.}
   \item{p.adjust.method}{a character string specifying the probability value adjustment for multiple tests, default "none"; see \code{\link{p.adjustSP}}. Note that the number of multiple tests for each region is only taken as the number of neighbours + 1 for each region, rather than the total number of regions.}
+  \item{mlvar}{default TRUE: values of local Moran's I are reported using the variance of the variable of interest (sum of squared deviances over n), but can be reported as the sample variance, dividing by (n-1) instead; both are used in other implementations.}
   \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
 }
 \value{

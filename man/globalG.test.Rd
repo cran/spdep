@@ -28,7 +28,9 @@ A list with class \code{htest} containing the following components:
 }
 
 \references{Getis. A, Ord, J. K. 1992 The analysis of spatial association by 
-use of distance statistics, \emph{Geographical Analysis}, 24, p. 195.}
+use of distance statistics, \emph{Geographical Analysis}, 24, p. 195; see
+also Getis. A, Ord, J. K. 1993 Erratum, \emph{Geographical Analysis}, 25, 
+p. 276.}
 \author{Hisaji ONO \email{hi-ono@mn.xdsl.ne.jp} and Roger Bivand 
 \email{Roger.Bivand@nhh.no}}
 
