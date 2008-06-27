@@ -9,8 +9,8 @@
  \code{localmoran.exact} provides exact local Moran's Ii tests under the null hypothesis, while \code{localmoran.exact.alt} provides exact local Moran's Ii tests under the alternative hypothesis. In this case, the model may be a fitted model returned by \code{errorsarlm} from which the covariance matrix is retrieved, or the covariance matrix can be passed through the \code{Omega=} argument.
 }
 \usage{
-localmoran.exact(model, select, nb, glist = NULL, style = "W", zero.policy = FALSE, alternative = "greater", spChk = NULL, resfun = weighted.residuals, save.Vi = FALSE)
-localmoran.exact.alt(model, select, nb, glist = NULL, style = "W", zero.policy = FALSE, alternative = "greater", spChk = NULL, resfun = weighted.residuals, Omega = NULL, save.Vi = FALSE, save.M = FALSE)
+localmoran.exact(model, select, nb, glist = NULL, style = "W", zero.policy = FALSE, alternative = "greater", spChk = NULL, resfun = weighted.residuals, save.Vi = FALSE, useTP=FALSE, truncErr=1e-6, zeroTreat=0.1)
+localmoran.exact.alt(model, select, nb, glist = NULL, style = "W", zero.policy = FALSE, alternative = "greater", spChk = NULL, resfun = weighted.residuals, Omega = NULL, save.Vi = FALSE, save.M = FALSE, useTP=FALSE, truncErr=1e-6, zeroTreat=0.1)
 \method{print}{localmoranex}(x, \dots)
 \method{as.data.frame}{localmoranex}(x, row.names=NULL, optional=FALSE, \dots)
 }
@@ -31,6 +31,9 @@ must be one of greater (default), less or two.sided.}
   \item{save.Vi}{if TRUE, return the star-shaped weights lists for each zone 
 tested}
   \item{save.M}{if TRUE, save a list of left and right M products}
+  \item{useTP}{default FALSE, if TRUE, use truncation point in integration rather than upper=Inf, see Tiefelsdorf (2000), eq. 6.7, p.69}
+  \item{truncErr}{when useTP=TRUE, pass truncation error to truncation point function}
+  \item{zeroTreat}{when useTP=TRUE, pass zero adjustment to truncation point function}
   \item{x}{object to be printed}
   \item{row.names}{ignored argument to \code{as.data.frame.localmoranex};
 row names assigned from localmoranex object}
@@ -67,11 +70,13 @@ eire.nb <- poly2nb(eire)
 e.lm <- lm(OWNCONS ~ ROADACC, data=eire)
 localmoran.sad(e.lm, nb=eire.nb)
 localmoran.exact(e.lm, nb=eire.nb)
+localmoran.exact(e.lm, nb=eire.nb, useTP=TRUE)
 e.errorsar <- errorsarlm(OWNCONS ~ ROADACC, data=eire, listw=nb2listw(eire.nb))
 localmoran.exact.alt(e.errorsar$lm.target, nb=eire.nb)
 Omega <- invIrW(nb2listw(eire.nb), rho=0.6)
 Omega1 <- tcrossprod(Omega)
 localmoran.exact.alt(e.errorsar$lm.target, nb=eire.nb, Omega=Omega1)
+localmoran.exact.alt(e.errorsar$lm.target, nb=eire.nb, Omega=Omega1, useTP=TRUE)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

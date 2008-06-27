@@ -2,7 +2,8 @@
 
 lm.morantest.exact <- function(model, listw, zero.policy = FALSE, 
     alternative = "greater", spChk=NULL, resfun=weighted.residuals, 
-    zero.tol=1.0e-7, Omega=NULL, save.M=NULL, save.U=NULL) 
+    zero.tol=1.0e-7, Omega=NULL, save.M=NULL, save.U=NULL, useTP=FALSE,
+    truncErr=1e-6, zeroTreat=0.1) 
 {
     if (!inherits(listw, "listw")) 
         stop(paste(deparse(substitute(listw)), "is not a listw object"))
@@ -49,11 +50,13 @@ lm.morantest.exact <- function(model, listw, zero.policy = FALSE,
         if (idxpos < 1) stop("invalid first zero eigenvalue index")
         gamma <- evalue[1:idxpos]
         gamma <- c(gamma, evalue[(idxpos+1+p):N])
-        res <- exactMoran(I, gamma, alternative=alternative, type="Global")
+        res <- exactMoran(I, gamma, alternative=alternative, type="Global",
+            useTP=useTP, truncErr=truncErr, zeroTreat=zeroTreat)
     } else {
         if (dim(Omega)[1] != N) stop("Omega of different size than data")
         res <- exactMoranAlt(I, M, U, Omega, N, alternative=alternative,
-            type="Alternative")
+            type="Alternative", useTP=useTP, truncErr=truncErr,
+            zeroTreat=zeroTreat)
     }
 
     data.name <- paste("\nmodel:", paste(strwrap(gsub("[[:space:]]+", " ", 
@@ -67,27 +70,45 @@ lm.morantest.exact <- function(model, listw, zero.policy = FALSE,
     return(res)
 }
 
+# function contributed by Michael Tiefelsdorf 2008
+# implements his 2000 book eq. 6.7, p.69
+
+truncPoint <- function(SpecI, truncErr=1e-6, zeroTreat=0.1){
+  m <- length(SpecI)
+  absSpecI <- abs(SpecI)
+  absSpecI[absSpecI < zeroTreat] <- zeroTreat
+  TU <- (truncErr*pi*m/2)^(-2/m) * prod(absSpecI^(-1/m))  
+# Break product up to reduce rounding errors and over- or under-flows
+  return(TU)  
+}
 
 
-exactMoran <- function(I, gamma, alternative="greater", type="Global", np2=NULL) {
+exactMoran <- function(I, gamma, alternative="greater", type="Global", np2=NULL, useTP=FALSE, truncErr=1e-6, zeroTreat=0.1) {
     if (!(alternative %in% c("greater", "less", "two.sided")))
 	stop("alternative must be one of: \"greater\", \"less\", or \"two.sided\"")
-    if (type == "Global") integrand <- function(x) {
-        sin(0.5 * colSums(atan((gamma-I) %*% t(x)))) /
-        (x * apply((1 + (gamma-I)^2 %*% t(x^2))^(1/4), 2, prod))}
-    else if (type == "Alternative") integrand <- function(x) {
-        sin(0.5 * colSums(atan((gamma) %*% t(x)))) /
+    if (type == "Global") {
+        SpecI <- gamma - I
+        integrand <- function(x) {
+        sin(0.5 * colSums(atan(SpecI %*% t(x)))) /
+        (x * apply((1 + SpecI^2 %*% t(x^2))^(1/4), 2, prod))}
+    } else if (type == "Alternative") {
+        if (useTP) SpecI <- gamma
+        integrand <- function(x) {sin(0.5 * colSums(atan((gamma) %*% t(x)))) /
         (x * apply((1+(gamma)^2 %*% t(x^2))^(1/4), 2, prod))}
-    else if (type == "Local") {
+    } else if (type == "Local") {
         if (is.null(np2)) stop("Local requires np2")
         min <- gamma[1]
         max <- gamma[2]
+        if (useTP) SpecI <- c(min, rep(0,np2), max) - I
         integrand <- function(x) {
             sin(0.5*(atan((min-I)*x)+(np2)*atan((-I)*x) + 
             atan((max-I)*x)))/(x*((1+(min-I)^2*x^2) *
             (1+I^2*x^2)^(np2) * (1+(max-I)^2*x^2))^(1/4))} 
     }
-    II <- integrate(integrand, lower=0, upper=Inf)$value
+    if (useTP) upper <- truncPoint(SpecI, truncErr=truncErr,
+        zeroTreat=zeroTreat)
+    else upper <- Inf
+    II <- integrate(integrand, lower=0, upper=upper)$value
     sd.ex <- qnorm(0.5-II/pi)
     if (alternative == "two.sided") p.v <- 2 * pnorm(sd.ex, 
 	lower.tail=FALSE)
@@ -111,12 +132,12 @@ exactMoran <- function(I, gamma, alternative="greater", type="Global", np2=NULL)
 }
 
 exactMoranAlt <- function(I, M, U, Omega, n, alternative="greater",
-    type="Alternative") {
+    type="Alternative", useTP=FALSE, truncErr=1e-6, zeroTreat=0.1) {
     Omega <- chol(Omega)
     A <- Omega %*% M %*% (U - diag(I, n)) %*% M %*% t(Omega)
     gamma <- sort(eigen(A)$values)
     obj <- exactMoran(I, gamma, alternative=alternative,
-        type=type)
+        type=type, useTP=useTP, truncErr=truncErr, zeroTreat=zeroTreat)
     obj
 }
 
@@ -159,7 +180,7 @@ moranExpect_H1 <- function(listw, rho, select=FALSE){
 	n <- length(select)
 	V <- listw2mat(listw)[select,select]
 	M <- diag(n)-matrix(rep(1/n,n*n),nrow=n)
-	WOm=invIrW(listw, rho=rho)[select,select]
+	WOm <- invIrW(listw, rho=rho)[select,select]
 	B <- WOm %*% M %*%  t(WOm)
 	eigen <- eigen(B)
 	lambda <- eigen$values

@@ -2,9 +2,11 @@
 
 localmoran.exact.alt <- function(model, select, nb, glist = NULL, style = "W",
     zero.policy = FALSE, alternative = "greater", spChk=NULL, 
-    resfun=weighted.residuals, Omega=NULL, save.Vi = FALSE, save.M=FALSE) {
+    resfun=weighted.residuals, Omega=NULL, save.Vi = FALSE, save.M=FALSE,
+    useTP=FALSE, truncErr=1e-6, zeroTreat=0.1) {
 # need to impose check on weights TODO!!
-    if (class(nb) != "nb") 
+# class to inherits Jari Oksanen 080603
+    if (!inherits(nb, "nb"))
         stop(paste(deparse(substitute(nb)), "not an nb object"))
 #    if (class(model) != "lm") 
 #        stop(paste(deparse(substitute(model)), "not an lm object"))
@@ -66,7 +68,8 @@ localmoran.exact.alt <- function(model, select, nb, glist = NULL, style = "W",
 	Ii <- c(crossprod(u, Viu) / utu)
 
         obj <- exactLocalMoranAlt(Ii=Ii, Vi=Vi, M1=M1, M2=M2, n=n,
-            alternative=alternative)
+            alternative=alternative, useTP=useTP, truncErr=truncErr,
+                zeroTreat=zeroTreat)
         data.name <- paste("region:", select[i],
 	    attr(nb, "region.id")[select[i]],
 	    "\n", paste(strwrap(paste("model: ", gsub("[ ]+", " ", 
@@ -86,13 +89,13 @@ localmoran.exact.alt <- function(model, select, nb, glist = NULL, style = "W",
 }
 
 exactLocalMoranAlt <- function(Ii, Vi, M1, M2, n, alternative,
-    type="Alternative") {
+    type="Alternative", useTP=FALSE, truncErr=1e-6, zeroTreat=0.1) {
     ViI <- listw2mat(Vi) - Ii * diag(n)
     innerTerm <- M1 %*% ViI %*% M2
     evalue <- eigen(innerTerm, only.values=TRUE)$values
     gamma <- c(evalue)
     obj <- exactMoran(Ii, gamma, alternative=alternative,
-        type=type)
+        type=type, useTP=useTP, truncErr=truncErr, zeroTreat=zeroTreat)
     obj
 }
 

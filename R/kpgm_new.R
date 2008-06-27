@@ -112,12 +112,12 @@ GMerrorsar <- function(#W, y, X,
 		} else {
 			if (sparse_method == "spam") {
 			  if (listw$style %in% c("W", "S") & can.sim) {
-			    csrw <- as.spam.listw(similar.listw(listw))
+			    csrw <- listw2U_spam(similar.listw_spam(listw))
 			  } else csrw <- as.spam.listw(listw)
 			  I <- diag.spam(1, n, n)
 			} else if (sparse_method == "Matrix") {
 			  if (listw$style %in% c("W", "S") & can.sim) {
-			    csrw <- as_dsTMatrix_listw(similar.listw(listw))
+			    csrw <- listw2U_Matrix(similar.listw_Matrix(listw))
 			    similar <- TRUE
 			  } else csrw <- as_dsTMatrix_listw(listw)
 			  csrw <- as(csrw, "CsparseMatrix")

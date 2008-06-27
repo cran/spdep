@@ -1,6 +1,6 @@
 Package: spdep
-Version: 0.4-21
-Date: 2008-05-14
+Version: 0.4-24
+Date: 2008-06-27
 Title: Spatial dependence: weighting schemes, statistics and models
 Encoding: latin1
 Author: Roger Bivand <Roger.Bivand@nhh.no>, with contributions by Luc Anselin,
@@ -24,4 +24,4 @@ Description: A collection of functions to create spatial weights matrix
   semi-parametric and Moran eigenvector spatial filtering, GM SAR error
   models, and generalized spatial two stage least squares models.
 License: GPL (>= 2)
-Packaged: Thu May 15 05:01:06 2008; theussl
+Packaged: Fri Jun 27 12:20:04 2008; rsb

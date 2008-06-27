@@ -1,0 +1,4 @@
+svn log --xml --verbose | xsltproc svn2cl.xsl - > ChangeLog
+cat oChangelog >> ChangeLog
+cp ChangeLog inst/ChangeLog
+

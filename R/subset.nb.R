@@ -1,8 +1,9 @@
-# Copyright 2001-5 by Roger Bivand and Yong Cai
+# Copyright 2001-8 by Roger Bivand and Yong Cai
 #
 
 subset.nb <- function(x, subset, ...) {
-    if (class(x) != "nb") stop("not a neighbours list")
+# class to inherits Jari Oksanen 080603
+    if (!inherits(x, "nb")) stop("not a neighbours list")
     if (!is.logical(subset)) stop("subset not a logical vector")
     n <- length(x)
     if (n != length(subset))

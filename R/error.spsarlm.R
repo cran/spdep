@@ -98,7 +98,7 @@ errorsarlm <- function(formula, data = list(), listw, na.action=na.fail,
 		LL <- opt$objective
 	} else if (method == "spam") {
         	if (listw$style %in% c("W", "S") & can.sim) {
-	    		csrw <- as.spam.listw(listw2U(similar.listw(listw)))
+	    		csrw <- listw2U_spam(similar.listw_spam(listw))
 			    similar <- TRUE
 		} else csrw <- as.spam.listw(listw)
         	I <- diag.spam(1, n, n)
@@ -110,7 +110,7 @@ errorsarlm <- function(formula, data = list(), listw, na.action=na.fail,
 		LL <- opt$objective
 	} else if (method == "Matrix") {
         	if (listw$style %in% c("W", "S") & can.sim) {
-	    	    csrw <- as_dsTMatrix_listw(listw2U(similar.listw(listw)))
+	    	    csrw <- listw2U_Matrix(similar.listw_Matrix(listw))
 	    	    similar <- TRUE
 		} else csrw <- as_dsTMatrix_listw(listw)
 		csrw <- as(csrw, "CsparseMatrix")

@@ -45,3 +45,6 @@ Jacobian_W <- function(W, rho) {
 	sum(2*log(diag(chol(as_dsCMatrix_IrW(W, rho)))))
 }
 
+
+listw2U_Matrix <- function(lw) 	
+	as(as(0.5 * (lw + t(lw)), "symmetricMatrix"), "CsparseMatrix")

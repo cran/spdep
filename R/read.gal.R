@@ -64,7 +64,8 @@ read.gal <- function(file, region.id=NULL, override.id=FALSE)
 }
 
 write.nb.gal <- function(nb, file, oldstyle=TRUE, shpfile=NULL, ind=NULL) {
-	if(class(nb) != "nb") stop("not an nb object")
+# class to inherits Jari Oksanen 080603
+  	if (!inherits(nb, "nb")) stop("not a neighbours list")
 	n <- length(nb)
 	if (n < 1) stop("non-positive number of entities")
 	cn <- card(nb)
