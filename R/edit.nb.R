@@ -1,10 +1,14 @@
-# Copyright 2001-6 by Roger Bivand and Nicholas Lewin-Koh
+# Copyright 2001-8 by Roger Bivand and Nicholas Lewin-Koh
 #
 
 edit.nb <- function(name, coords, polys=NULL, ...) {
   nb <- name
   cnb <- card(nb)
-  if (class(nb) != "nb") stop("Not a neighbours list")
+# class to inherits Jari Oksanen 080603
+  if (!inherits(x, "nb")) stop("not a neighbours list")
+  cl <- class(nb)
+  if (length(cl) > 1) icl <- cl[-match("nb", cl)]
+  else icl <- NULL
   x <- coords[,1]
   y <- coords[,2]
   n <- length(nb)
@@ -143,7 +147,8 @@ edit.nb <- function(name, coords, polys=NULL, ...) {
   attributes(nb) <- list(deleted=deletions)
   attr(nb, "added") <- additions
   attr(nb, "region.id") <- row.names
-  class(nb) <- "nb"
+  if (is.null(icl)) class(nb) <- "nb"
+  else class(nb) <- c("nb", icl)
   nb <- sym.attr.nb(nb)
   nb
 }

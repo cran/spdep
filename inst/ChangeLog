@@ -1,3 +1,49 @@
+2008-06-27 09:56  rsbivand
+
+	* g/ChangeLog, g/inst/ChangeLog: truncation point in exact Moran
+
+2008-06-27 09:40  rsbivand
+
+	* g/DESCRIPTION, g/R/localmoran.exact.R, g/R/moran.exact.R,
+	  g/R/moran.exact.alt.R, g/man/lm.morantest.exact.Rd,
+	  g/man/localmoran.exact.Rd: truncation point in exact Moran
+
+2008-06-19 04:08  rsbivand
+
+	* g/man/SpatialFiltering.Rd: link
+
+2008-06-03 13:56  rsbivand
+
+	* g/DESCRIPTION, g/R/EBI.R, g/R/droplinks.R, g/R/edit.nb.R,
+	  g/R/localmoran.exact.R, g/R/moran.exact.alt.R,
+	  g/R/mtlocalmoran.R, g/R/nb2listw.R, g/R/p.adjustSP.R,
+	  g/R/read.gal.R, g/R/subset.nb.R: changed class test to inherits
+	  for nb
+
+2008-05-25 21:09  rsbivand
+
+	* g/R/nb2listw.R: tidy spam similar
+
+2008-05-24 19:56  rsbivand
+
+	* g/DESCRIPTION, g/R/error.spsarlm.R, g/R/kpgm_new.R,
+	  g/R/lag.spsarlm.R, g/R/listw2Matrix.R, g/R/listw2sn.R,
+	  g/R/nb2listw.R, g/R/spautolm.R: listw2U and similar.listw in
+	  Matrix and spam
+
+2008-05-24 09:06  rsbivand
+
+	* g/R/listw2Matrix.R: first notes on listw2U in Matrix
+
+2008-05-14 20:24  rsbivand
+
+	* g/inst/ChangeLog: removed try() on Matrix logdet; arg to
+	  localmoran
+
+2008-05-14 20:24  rsbivand
+
+	* g/ChangeLog: removed try() on Matrix logdet; arg to localmoran
+
 2008-05-14 20:21  rsbivand
 
 	* g/svn2cl.xsl: removed try() on Matrix logdet; arg to localmoran

@@ -11,6 +11,8 @@ as.spam.listw <- function(listw) {
     W
 }
 
+listw2U_spam <- function(lw) 0.5 * (lw + t(lw))
+
 
 listw2sn <- function(listw) {
 	if(!inherits(listw, "listw")) stop("not a listw object")

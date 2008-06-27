@@ -2,7 +2,8 @@
 #
 
 p.adjustSP <- function(p, nb, method="none") {
-	if(class(nb) != "nb") stop("Not a neighbours list")
+# class to inherits Jari Oksanen 080603
+  	if (!inherits(nb, "nb")) stop("not a neighbours list")
         n <- card(nb) + 1
         pn <- cbind(p, n)
         res <- apply(pn, 1, function(x) p.adjust(x[1], method=method, n=x[2]))

@@ -1,8 +1,9 @@
-# Copyright 2001-6 by Roger Bivand 
+# Copyright 2001-8 by Roger Bivand 
 #
 
 droplinks <- function(nb, drop, sym=TRUE) {
-	if (class(nb) != "nb") stop("Not a neighbours list")
+# class to inherits Jari Oksanen 080603
+  	if (!inherits(nb, "nb")) stop("not a neighbours list")
 	n <- length(nb)
 	cnb <- card(nb)
 	if (n < 1) stop("non-positive length of nb")

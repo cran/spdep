@@ -2,9 +2,11 @@
 
 localmoran.exact <- function(model, select, nb, glist = NULL, style = "W",
     zero.policy = FALSE, alternative = "greater", spChk=NULL, 
-    resfun=weighted.residuals, save.Vi = FALSE) {
+    resfun=weighted.residuals, save.Vi = FALSE, useTP=FALSE, truncErr=1e-6,
+    zeroTreat=0.1) {
 # need to impose check on weights TODO!!
-    if (class(nb) != "nb") 
+# class to inherits Jari Oksanen 080603
+  if (!inherits(nb, "nb"))
         stop(paste(deparse(substitute(nb)), "not an nb object"))
     n <- length(nb)
     u <- resfun(model)
@@ -65,7 +67,8 @@ localmoran.exact <- function(model, select, nb, glist = NULL, style = "W",
 	en <- 0.5 * (t1 - sqrt(2*t2 - t1^2))
         gamma_1n <- c(c(en), c(e1))
         obj <- exactMoran(Ii, gamma_1n, alternative=alternative,
-            type="Local", np2=n-(2+p))
+            type="Local", np2=n-(2+p), useTP=useTP, truncErr=truncErr,
+            zeroTreat=zeroTreat)
         data.name <- paste("region:", select[i],
 	    attr(nb, "region.id")[select[i]],
 	    "\n", paste(strwrap(paste("model: ", gsub("[ ]+", " ", 

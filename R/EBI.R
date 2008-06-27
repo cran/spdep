@@ -157,7 +157,8 @@ EBest <- function(n, x, family="poisson") {
 
 EBlocal <- function(ri, ni, nb, zero.policy = FALSE,
     spChk = NULL, geoda = FALSE) {
-    if (class(nb) != "nb") 
+# class to inherits Jari Oksanen 080603
+    if (!inherits(nb, "nb")) 
         stop(paste(deparse(substitute(nb)), "is not an nb object"))
     lnb <- length(nb)
     if (lnb < 1) stop("zero length neighbour list")

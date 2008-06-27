@@ -8,7 +8,8 @@ localmoran.sad <- function (model, select, nb, glist = NULL, style = "W",
     save.Vi = FALSE, tol = .Machine$double.eps^0.5,
     maxiter = 1000, tol.bounds=0.0001, save.M=FALSE, Omega=NULL) {
 # need to impose check on weights TODO!!
-    if (class(nb) != "nb") 
+# class to inherits Jari Oksanen 080603
+    if (!inherits(nb, "nb"))
         stop(paste(deparse(substitute(nb)), "not an nb object"))
     n <- length(nb)
     dmc <- deparse(model$call)

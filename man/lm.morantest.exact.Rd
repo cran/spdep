@@ -7,7 +7,7 @@
   The function implements Tiefelsdorf's exact global Moran's I test.
 }
 \usage{
-lm.morantest.exact(model, listw, zero.policy = FALSE, alternative = "greater", spChk = NULL, resfun = weighted.residuals, zero.tol = 1e-07, Omega=NULL, save.M=NULL, save.U=NULL)
+lm.morantest.exact(model, listw, zero.policy = FALSE, alternative = "greater", spChk = NULL, resfun = weighted.residuals, zero.tol = 1e-07, Omega=NULL, save.M=NULL, save.U=NULL, useTP=FALSE, truncErr=1e-6, zeroTreat=0.1)
 \method{print}{moranex}(x, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -25,6 +25,9 @@ must be one of greater (default), less or two.sided.}
   \item{Omega}{A SAR process matrix may be passed in to test an alternative hypothesis, for example \code{Omega <- invIrW(listw, rho=0.1); Omega <- tcrossprod(Omega)}, \code{chol()} is taken internally}
   \item{save.M}{return the full M matrix for use in \code{spdep:::exactMoranAlt}}
   \item{save.U}{return the full U matrix for use in \code{spdep:::exactMoranAlt}}
+  \item{useTP}{default FALSE, if TRUE, use truncation point in integration rather than upper=Inf, see Tiefelsdorf (2000), eq. 6.7, p.69}
+  \item{truncErr}{when useTP=TRUE, pass truncation error to truncation point function}
+  \item{zeroTreat}{when useTP=TRUE, pass zero adjustment to truncation point function}
   \item{x}{a moranex object}
   \item{\dots}{arguments to be passed through}
 }
@@ -52,6 +55,7 @@ e.lm <- lm(OWNCONS ~ ROADACC, data=eire)
 lm.morantest(e.lm, nb2listw(eire.nb))
 lm.morantest.sad(e.lm, nb2listw(eire.nb))
 lm.morantest.exact(e.lm, nb2listw(eire.nb))
+lm.morantest.exact(e.lm, nb2listw(eire.nb), useTP=TRUE)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

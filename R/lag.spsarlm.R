@@ -274,13 +274,13 @@ dosparse <- function (listw, y, x, wy, K, quiet, tol.opt, method, interval,
 	n <- nrow(x)
 	if (method == "spam") {
         	if (listw$style %in% c("W", "S") & can.sim) {
-	    		W <- as.spam.listw(listw2U(similar.listw(listw)))
+	    		W <- listw2U_spam(similar.listw_spam(listw))
 	    		similar <- TRUE
 		} else W <- as.spam.listw(listw)
         	I <- diag.spam(1, n, n)
 	} else if (method == "Matrix") {
         	if (listw$style %in% c("W", "S") & can.sim) {
-	    		W <- as_dsTMatrix_listw(listw2U(similar.listw(listw)))
+	    		W <- listw2U_Matrix(similar.listw_Matrix(listw))
 	    		similar <- TRUE
 		} else W <- as_dsTMatrix_listw(listw)
 		W <- as(W, "CsparseMatrix")
