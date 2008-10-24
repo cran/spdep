@@ -93,7 +93,7 @@ mat2listw <- function(x, row.names=NULL) {
 		nbs  <- which(x[i,] > 0.0)
 		if (length(nbs) > 0) {
 			neighbours[[i]] <- nbs
-			weights[[i]] <- x[i, nbs]
+			weights[[i]] <- as.double(x[i, nbs]) # Laurajean Lewis
 		} else {
 			neighbours[[i]] <- as.integer(0)
 		}

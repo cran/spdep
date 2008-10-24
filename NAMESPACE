@@ -1,6 +1,8 @@
 useDynLib(spdep)
 
-importFrom(stats, model.matrix, model.response)
+importFrom(stats, model.matrix, model.response, aggregate)
+
+importFrom(boot, boot)
 
 import(spam)
 import(Matrix)
@@ -32,7 +34,7 @@ export(EBImoran.mc, probmap, choynowski, EBest, EBlocal, LR.sarlm,
 	write.sn2dat, read.dat2listw, nb2blocknb, p.adjustSP,
 #	asMatrixCsrListw, asMatrixCsrI, asMatrixCsrIrW, asListwMatrixCsr, 
 	is.symmetric.glist, similar.listw, nb2lines, listw2lines, df2sn, 
-	plot.listw)
+	plot.listw, aggregate.nb)
 
 export(spautolm, residuals.spautolm, deviance.spautolm, coef.spautolm, 
 	fitted.spautolm, print.spautolm, summary.spautolm, LR1.spautolm, 
@@ -50,6 +52,10 @@ export(lm.morantest.exact, print.moranex, localmoran.exact, localmoran.exact.alt
 
 export(as.spam.listw)
 
+export(mstree, nbcosts, nbcost, plot.mst, plot.skater, prunecost, ssw, prunemst, skater)
+
+export(aple, aple.mc, aple.plot, localAple)
+
 import(maptools)
 
 S3method(print, nb)
@@ -57,6 +63,7 @@ S3method(summary, nb)
 S3method(plot, nb)
 S3method(edit, nb)
 S3method(subset, nb)
+S3method(aggregate, nb)
 
 S3method(summary, listw)
 S3method(print, listw)
@@ -133,4 +140,7 @@ S3method(print, stsls)
 S3method(summary, stsls)
 
 S3method(print, summary.stsls)
+
+S3method(plot, mst)
+S3method(plot, skater)
 

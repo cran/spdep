@@ -89,40 +89,6 @@ Ord, J. K. 1975 Estimation methods for models of spatial interaction,
 
 \seealso{\code{\link[stats]{optimize}}, \code{\link{errorsarlm}}}
 \examples{
-\dontrun{
-esarI <- errorsarlm(ft.SID74 ~ 1, data=mdata, listw=sids.nhbr.listw,
- zero.policy=TRUE)
-summary(esarI)
-esarIa <- spautolm(ft.SID74 ~ 1, data=mdata, listw=sids.nhbr.listw,
- family="SAR")
-summary(esarIa)
-esarIV <- errorsarlm(ft.SID74 ~ ft.NWBIR74, data=mdata, listw=sids.nhbr.listw,
- zero.policy=TRUE)
-summary(esarIV)
-esarIVa <- spautolm(ft.SID74 ~ ft.NWBIR74, data=mdata, listw=sids.nhbr.listw,
- family="SAR")
-summary(esarIVa)
-esarIaw <- spautolm(ft.SID74 ~ 1, data=mdata, listw=sids.nhbr.listw,
- weights=BIR74, family="SAR")
-summary(esarIaw)
-esarIIaw <- spautolm(ft.SID74 ~ both - 1, data=mdata, listw=sids.nhbr.listw,
- weights=BIR74, family="SAR")
-summary(esarIIaw)
-esarIVaw <- spautolm(ft.SID74 ~ ft.NWBIR74, data=mdata,
- listw=sids.nhbr.listw, weights=BIR74, family="SAR")
-summary(esarIVaw)
-ecarIaw <- spautolm(ft.SID74 ~ 1, data=mdata.4, listw=sids.nhbr.listw.4,
- weights=BIR74, family="CAR")
-summary(ecarIaw)
-ecarIIaw <- spautolm(ft.SID74 ~ both - 1, data=mdata.4,
- listw=sids.nhbr.listw.4, weights=BIR74, family="CAR")
-summary(ecarIIaw)
-ecarIVaw <- spautolm(ft.SID74 ~ ft.NWBIR74, data=mdata.4,
- listw=sids.nhbr.listw.4, weights=BIR74, family="CAR")
-summary(ecarIVaw)
-nc_LL$fitIV <- append(fitted.values(ecarIVaw), NA, outl-1)
-spplot(nc_LL, c("fitIV"), cuts=12) # Cressie 1993, p. 565
-}
 example(NY_data)
 lm0 <- lm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata)
 summary(lm0)
@@ -186,6 +152,61 @@ summary(ecar1wM)
 ecar1ws <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
  listw=listw_NY, weights=POP8, family="CAR", method="spam")
 summary(ecar1ws)
+\dontrun{
+example(nc.sids)
+ft.SID74 <- sqrt(1000)*(sqrt(nc.sids$SID74/nc.sids$BIR74) + sqrt((nc.sids$SID74+1)/nc.sids$BIR74))
+lm_nc <- lm(ft.SID74 ~ 1)
+sids.nhbr30 <- dnearneigh(cbind(nc.sids$east, nc.sids$north), 0, 30, row.names=row.names(nc.sids))
+sids.nhbr30.dist <- nbdists(sids.nhbr30, cbind(nc.sids$east, nc.sids$north))
+sids.nhbr <- listw2sn(nb2listw(sids.nhbr30, glist=sids.nhbr30.dist, style="B", zero.policy=TRUE))
+dij <- sids.nhbr[,3]
+n <- nc.sids$BIR74
+el1 <- min(dij)/dij
+el2 <- sqrt(n[sids.nhbr$to]/n[sids.nhbr$from])
+sids.nhbr$weights <- el1*el2
+sids.nhbr.listw <- sn2listw(sids.nhbr)
+both <- factor(paste(nc.sids$L_id, nc.sids$M_id, sep=":"))
+ft.NWBIR74 <- sqrt(1000)*(sqrt(nc.sids$NWBIR74/nc.sids$BIR74) + sqrt((nc.sids$NWBIR74+1)/nc.sids$BIR74))
+mdata <- data.frame(both, ft.NWBIR74, ft.SID74, BIR74=nc.sids$BIR74)
+outl <- which.max(rstandard(lm_nc))
+as.character(nc.sids$names[outl])
+mdata.4 <- mdata[-outl,]
+W <- listw2mat(sids.nhbr.listw)
+W.4 <- W[-outl, -outl]
+sids.nhbr.listw.4 <- mat2listw(W.4)
+esarI <- errorsarlm(ft.SID74 ~ 1, data=mdata, listw=sids.nhbr.listw,
+ zero.policy=TRUE)
+summary(esarI)
+esarIa <- spautolm(ft.SID74 ~ 1, data=mdata, listw=sids.nhbr.listw,
+ family="SAR")
+summary(esarIa)
+esarIV <- errorsarlm(ft.SID74 ~ ft.NWBIR74, data=mdata, listw=sids.nhbr.listw,
+ zero.policy=TRUE)
+summary(esarIV)
+esarIVa <- spautolm(ft.SID74 ~ ft.NWBIR74, data=mdata, listw=sids.nhbr.listw,
+ family="SAR")
+summary(esarIVa)
+esarIaw <- spautolm(ft.SID74 ~ 1, data=mdata, listw=sids.nhbr.listw,
+ weights=BIR74, family="SAR")
+summary(esarIaw)
+esarIIaw <- spautolm(ft.SID74 ~ both - 1, data=mdata, listw=sids.nhbr.listw,
+ weights=BIR74, family="SAR")
+summary(esarIIaw)
+esarIVaw <- spautolm(ft.SID74 ~ ft.NWBIR74, data=mdata,
+ listw=sids.nhbr.listw, weights=BIR74, family="SAR")
+summary(esarIVaw)
+ecarIaw <- spautolm(ft.SID74 ~ 1, data=mdata.4, listw=sids.nhbr.listw.4,
+ weights=BIR74, family="CAR")
+summary(ecarIaw)
+ecarIIaw <- spautolm(ft.SID74 ~ both - 1, data=mdata.4,
+ listw=sids.nhbr.listw.4, weights=BIR74, family="CAR")
+summary(ecarIIaw)
+ecarIVaw <- spautolm(ft.SID74 ~ ft.NWBIR74, data=mdata.4,
+ listw=sids.nhbr.listw.4, weights=BIR74, family="CAR")
+summary(ecarIVaw)
+nc.sids$fitIV <- append(fitted.values(ecarIVaw), NA, outl-1)
+spplot(nc.sids, c("fitIV"), cuts=12) # Cressie 1993, p. 565
+}
 data(oldcol)
 COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb, style="W"))
