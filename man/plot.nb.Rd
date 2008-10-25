@@ -8,9 +8,9 @@ A function to plot a neighbours list given point coordinates to represent the re
 }
 \usage{
 plot.nb(x, coords, col="black", points=TRUE, add=FALSE, arrows=FALSE,
- length=0.1, ...)
+ length=0.1, xlim=NULL, ylim=NULL, ...)
 plot.listw(x, coords, col="black", points=TRUE, add=FALSE, arrows=FALSE,
- length=0.1, ...)
+ length=0.1, xlim=NULL, ylim=NULL, ...)
 }
 
 \arguments{
@@ -22,6 +22,7 @@ plot.listw(x, coords, col="black", points=TRUE, add=FALSE, arrows=FALSE,
   \item{arrows}{(logical) draw arrowheads for asymmetric neighbours}
   \item{length}{length in plot inches of arrow heads drawn for asymmetric
 neighbours lists}
+  \item{xlim, ylim}{plot window bounds}
   \item{...}{further graphical parameters as in \code{par(..)}}
 }
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}

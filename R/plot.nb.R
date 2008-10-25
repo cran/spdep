@@ -1,19 +1,19 @@
-# Copyright 2001-5 by Roger Bivand
+# Copyright 2001-8 by Roger Bivand
 #
 
 
 plot.nb <- function(x, coords, col="black", points=TRUE, add=FALSE, 
-	arrows=FALSE, length=0.1, ...) {
+	arrows=FALSE, length=0.1, xlim=NULL, ylim=NULL, ...) {
 	nb <- x
 	sym <- is.symmetric.nb(nb, verbose = FALSE, force = FALSE)
 	x <- coords[,1]
 	y <- coords[,2]
 	n <- length(nb)
 	if (n < 1) stop("non-positive number of entities")
-	xlim <- range(x)
-	ylim <- range(y)
 	if (!add) {
 		plot.new()
+		if (is.null(xlim)) xlim <- range(x)
+		if (is.null(ylim)) ylim <- range(y)
         	plot.window(xlim = xlim, ylim = ylim, log="", asp=1)
 	}
 	cardnb <- card(nb)
@@ -40,7 +40,7 @@ plot.nb <- function(x, coords, col="black", points=TRUE, add=FALSE,
 }
 
 plot.listw <- function(x, coords, col="black", points=TRUE, add=FALSE, 
-	arrows=FALSE, length=0.1, ...) {
+	arrows=FALSE, length=0.1, xlim=NULL, ylim=NULL, ...) {
 	plot.nb(x$neighbours, coords=coords, col=col, points=points, add=add, 
-	arrows=arrows, length=length, ...)
+	arrows=arrows, length=length, xlim=xlim, ylim=ylim, ...)
 }

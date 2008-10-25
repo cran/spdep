@@ -1,4 +1,4 @@
-# Copyright 2001-6 by Roger Bivand 
+# Copyright 2001-8 by Roger Bivand 
 #
 
 
@@ -98,5 +98,27 @@ make.sym.nb <- function(nb){
         	class(res) <- "nb"
 	}
 	res
+}
+
+aggregate.nb <- function(x, IDs, remove.self=TRUE, ...) {
+    stopifnot(length(x) == length(IDs))
+    in_reg.ids <- attr(x, "region.id")
+    mtch <- tapply(in_reg.ids, IDs, function(i) c(i))
+    out_reg.ids <- names(mtch)
+    nb_short <- vector(mode="list", length=length(mtch))
+    for (i in seq(along=mtch)) {
+        nb_short[[i]] <- as.integer(0)
+        imtch <- match(mtch[[i]], in_reg.ids)
+        res <- unlist(x[imtch])
+        nb_short[[i]] <- as.integer(sort(unique(match(IDs[res], out_reg.ids))))
+        if (remove.self && i %in% nb_short[[i]]) {
+            nb_short[[i]] <- nb_short[[i]][-(match(i, nb_short[[i]]))]
+            if (length(nb_short[[i]]) < 1) nb_short[[i]] <- as.integer(0)
+        }
+    }
+    attr(nb_short, "region.id") <- out_reg.ids
+    class(nb_short) <- "nb"
+    nb_short <- sym.attr.nb(nb_short)
+    nb_short
 }
 

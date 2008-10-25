@@ -5,7 +5,8 @@ edit.nb <- function(name, coords, polys=NULL, ...) {
   nb <- name
   cnb <- card(nb)
 # class to inherits Jari Oksanen 080603
-  if (!inherits(x, "nb")) stop("not a neighbours list")
+# corrected object Thibaut Jombart 081002
+  if (!inherits(nb, "nb")) stop("not a neighbours list")
   cl <- class(nb)
   if (length(cl) > 1) icl <- cl[-match("nb", cl)]
   else icl <- NULL

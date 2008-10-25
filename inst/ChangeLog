@@ -1,3 +1,74 @@
+2008-10-24 11:16  rsbivand
+
+	* g/DESCRIPTION, g/NAMESPACE, g/R/apleplot.R, g/man/aple.plot.Rd:
+	  local aple
+
+2008-10-12 14:13  rsbivand
+
+	* g/ChangeLog, g/inst/ChangeLog: changelog
+
+2008-10-12 14:12  rsbivand
+
+	* g/ChangeLog, g/DESCRIPTION, g/INDEX, g/NAMESPACE, g/R/apleplot.R,
+	  g/inst/ChangeLog, g/man/aple.Rd, g/man/aple.plot.Rd: adding aple
+
+2008-10-11 12:19  rsbivand
+
+	* g/R/aple.R, g/R/aple.mc.R, g/data/wheat.txt,
+	  g/inst/etc/shapes/wheat.dbf, g/inst/etc/shapes/wheat.shp,
+	  g/inst/etc/shapes/wheat.shx, g/man/aple.Rd, g/man/aple.mc.Rd,
+	  g/man/wheat.Rd: adding aple
+
+2008-10-11 12:17  rsbivand
+
+	* g/ChangeLog, g/DESCRIPTION, g/INDEX, g/NAMESPACE,
+	  g/inst/ChangeLog: adding aple
+
+2008-10-03 06:20  rsbivand
+
+	* g/man/aggregate.nb.Rd: aggregate.nb, edit.nb
+
+2008-10-02 21:17  rsbivand
+
+	* g/ChangeLog, g/inst/ChangeLog: merging SKATER regionalisation
+	  functions
+
+2008-10-02 21:16  rsbivand
+
+	* g/ChangeLog, g/inst/ChangeLog: merging SKATER regionalisation
+	  functions
+
+2008-10-02 21:14  rsbivand
+
+	* g/R/mstree.R, g/R/nbcosts.R, g/R/plot.mst.R, g/R/plot.skater.R,
+	  g/R/prunecost.R, g/R/prunemst.R, g/R/skater.R,
+	  g/inst/etc/shapes/bhicv.dbf, g/inst/etc/shapes/bhicv.shp,
+	  g/inst/etc/shapes/bhicv.shx, g/man/bhicv.Rd, g/man/mstree.Rd,
+	  g/man/nbcosts.Rd, g/man/plot.mst.Rd, g/man/plot.skater.Rd,
+	  g/man/prunecost.Rd, g/man/prunemst.Rd, g/man/skater.Rd,
+	  g/man/ssw.Rd, g/src/skater.c: merging SKATER regionalisation
+	  functions
+
+2008-10-02 21:09  rsbivand
+
+	* g/ChangeLog, g/DESCRIPTION, g/NAMESPACE, g/R/edit.nb.R,
+	  g/R/plot.nb.R, g/R/weights-utils.R, g/inst/ChangeLog,
+	  g/man/plot.nb.Rd: aggregate.nb, edit.nb
+
+2008-09-18 12:21  rsbivand
+
+	* g/DESCRIPTION, g/inst/doc/sids.Rnw: vignette
+
+2008-09-18 07:18  rsbivand
+
+	* g/DESCRIPTION, g/R/nb2mat.R, g/inst/doc/sids.Rnw: vignette
+	  (FIXME), double mat2listw
+
+2008-08-14 12:55  rsbivand
+
+	* g/inst/doc/sids.Rnw, g/man/spautolm.Rd: mdata in spautolm help
+	  file
+
 2008-06-27 09:56  rsbivand
 
 	* g/ChangeLog, g/inst/ChangeLog: truncation point in exact Moran

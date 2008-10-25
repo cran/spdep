@@ -1,12 +1,20 @@
 afcon                   Spatial patterns of conflict in Africa 1966-78
+aggregate.nb            Aggregate a spatial neighbours object
 airdist                 Measure distance from plot
 anova.sarlm             Comparison of simultaneous autoregressive
                         models
+aple                    Approximate profile-likelihood estimator (APLE)
+aple.mc                 Approximate profile-likelihood estimator (APLE)
+                        permutation test
+aple.plot               Approximate profile-likelihood estimator (APLE)
+                        scatterplot
 as_dgRMatrix_listw      Interface between Matrix class objects and
                         weights lists
 auckland                Marshall's infant mortality in Auckland dataset
 autocov_dist            Distance-weighted autocovariate
 baltimore               House sales prices, Baltimore, MD 1978
+bhicv                   Data set with 4 life condition indices of Belo
+                        Horizonte region
 boston                  Corrected Boston Housing Data
 bptest.sarlm            Breusch-Pagan test for spatial models
 card                    Cardinalities for neighbours lists
@@ -69,6 +77,7 @@ moran                   Compute Moran's I
 moran.mc                Permutation test for Moran's I statistic
 moran.plot              Moran scatterplot
 moran.test              Moran's I test for spatial autocorrelation
+mstree                  Find the minimal spanning tree
 nb2blocknb              Block up neighbour list for location-less
                         observations
 nb2lines                Use arc-type shapefiles for import and export
@@ -76,6 +85,7 @@ nb2lines                Use arc-type shapefiles for import and export
 nb2listw                Spatial weights for neighbours lists
 nb2mat                  Spatial weights matrices for neighbours lists
 nb2WB                   Output spatial weights for WinBUGS
+nbcosts                 Compute cost of edges
 nbdists                 Spatial link distance measures
 nblag                   Higher order neighbours lists
 n.comp.nb               Depth First Search on Neighbor Lists
@@ -84,17 +94,22 @@ NY_data                 New York leukemia data
 oldcol                  Columbus OH spatial analysis data set - old
                         numbering
 p.adjustSP              Adjust local association measures' p-values
+plot.mst                Plot the Minimum Spanning Tree
 plot.nb                 Plot a neighbours list
+plot.skater             Plot the object of skater class
 poly2nb                 Construct neighbours list from polygon list
 predict.sarlm           Prediction for spatial simultaneous
                         autoregressive linear model objects
 probmap                 Probability mapping for rates
+prunecost               Compute cost of prune each edge
+prunemst                Prune a Minimun Spanning Tree
 read.gal                Read a GAL lattice file into a neighbours list
 read.gwt2nb             Read and write spatial neighbour files
 residuals.sarlm         Access functions for spatial simultaneous
                         autoregressive linear model objects
 set.spChkOption         Control checking of spatial object IDs
 similar.listw           Create symmetric similar weights lists
+skater                  Spatial 'K'luster Analysis by Tree Edge Removal
 SpatialFiltering        Semi-parametric spatial filtering
 spautolm                Spatial conditional and simultaneous
                         autoregression model estimation
@@ -103,6 +118,7 @@ spdep                   Return package version number
 sp.mantel.mc            Mantel-Hubert spatial general cross product
                         statistic
 spweights.constants     Provides constants for spatial weights matrices
+ssw                     Compute the sum of dissimilarity
 stsls                   Generalized spatial two stage least squares
 subset.listw            Subset a spatial weights list
 subset.nb               Subset a neighbours list
@@ -111,4 +127,5 @@ summary.nb              Print and summary function for neighbours and
 summary.sarlm           summary method for class sarlm
 tri2nb                  Neighbours list from tri object
 used.cars               US 1960 used car prices
+wheat                   Mercer and Hall wheat yield data
 write.nb.gal            Write a neighbours list as a GAL lattice file
