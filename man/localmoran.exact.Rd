@@ -52,6 +52,7 @@ A list with class \code{localmoranex} containing "select" lists, each with
   \item{method}{a character string giving the method used.}
   \item{alternative}{a character string describing the alternative hypothesis.}
   \item{gamma}{eigenvalues (two extreme values for null, vector for alternative)}
+  \item{oType}{usually set to "E", but set to "N" if the integration leads to an out of domain value for \code{qnorm}, when the Normal assumption is substituted. This only occurs when the output p-value would be very close to zero}
   \item{data.name}{a character string giving the name(s) of the data.}
   \item{df}{degrees of freedom}
   \item{i}{zone tested}

@@ -16,8 +16,8 @@
 }
 \usage{
 GMerrorsar(formula, data = list(), listw, na.action = na.fail,
- zero.policy = FALSE, return_LL = TRUE, control = list(), verbose=FALSE,
- sparse_method="Matrix")
+ zero.policy = FALSE, return_LL = TRUE, method="Nelder-Mead", 
+ control = list(), pars, verbose=FALSE, sparse_method="Matrix")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -30,8 +30,10 @@ is called.}
   \item{na.action}{a function (default \code{na.fail}), can also be \code{na.omit} or \code{na.exclude} with consequences for residuals and fitted values - in these cases the weights list will be subsetted to remove NAs in the data. It may be necessary to set zero.policy to TRUE because this subsetting may create no-neighbour observations. Note that only weights lists created without using the glist argument to \code{nb2listw} may be subsetted.}
   \item{zero.policy}{if TRUE assign zero to the lagged value of zones without 
 neighbours, if FALSE (default) assign NA - causing \code{GMerrorsar()} to terminate with an error}
-  \item{control}{A list of control parameters. See details in \code{\link[stats]{optim}}.}
   \item{return_LL}{default TRUE, if FALSE, do not try to calculate the log likelihood of the function for the fitted model values --- see details}
+  \item{method}{default \code{"Nelder-Mead"}, method passed to \code{optim}, or optionally \code{"nlminb"} to use an alternative optimizer}
+  \item{control}{A list of control parameters. See details in \code{\link[stats]{optim}} or \code{\link[stats]{nlminb}}.}
+  \item{pars}{starting values for \eqn{\lambda}{lambda} and \eqn{\sigma^2}{sigma squared} for GMM optimisation, if missing (default), approximated from initial OLS model as the autocorrelation coefficient corrected for weights style and model sigma squared}
   \item{verbose}{default=FALSE; if TRUE, reports function values during optimization.}
   \item{sparse_method}{default "Matrix", can also be "spam" to use spam package objects for finding the Jacobian}
 }
@@ -53,7 +55,7 @@ variable in making predictions for the fitting data.
   \item{s2}{GMM residual variance}
   \item{SSE}{sum of squared GMM errors}
   \item{parameters}{number of parameters estimated}
-  \item{lm.model}{the \code{lm} object returned when estimating for $\lambda=0$}
+  \item{lm.model}{the \code{lm} object returned when estimating for \eqn{\lambda=0}{lambda=0}}
   \item{call}{the call used to create this object}
   \item{residuals}{GMM residuals}
   \item{lm.target}{the \code{lm} object returned for the GMM fit}
@@ -63,12 +65,13 @@ variable in making predictions for the fitting data.
   \item{zero.policy}{zero.policy for this model}
   \item{LL}{log likelihood value at computed optimum}
   \item{vv}{list of internal bigG and litg components for testing optimisation surface}
+  \item{optres}{object returned by optimizer}
   \item{na.action}{(possibly) named vector of excluded or omitted observations if non-default na.action argument used}
 }
 \references{Kelejian, H. H., and Prucha, I. R., 1999. A Generalized Moments Estimator for the Autoregressive Parameter in a Spatial Model. International Economic Review, 40, pp. 509--533; Cressie, N. A. C. 1993 \emph{Statistics for spatial data}, Wiley, New York.}
 \author{Luc Anselin and Roger Bivand}
 
-\seealso{\code{\link[stats]{optim}}, \code{\link{errorsarlm}}}
+\seealso{\code{\link[stats]{optim}}, \code{\link[stats]{nlminb}}, \code{\link{errorsarlm}}}
 \examples{
 data(oldcol)
 COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,

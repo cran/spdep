@@ -65,7 +65,7 @@ lag.listw <- function(x, var, zero.policy=FALSE, NAOK=FALSE, ...) {
 		if (length(x) != n) stop("object lengths differ")
 		res <- .Call("lagw", listw$neighbours, listw$weights,
 			as.double(x), as.integer(cardnb),
-			as.logical(zero.policy), NAOK=NAOK, PACKAGE="spdep")
+			as.logical(zero.policy), naok=NAOK, PACKAGE="spdep")
 	} else {
 		if (nrow(x) != n) stop("object lengths differ")
 		res <- matrix(0, nrow=nrow(x), ncol=ncol(x))
@@ -73,7 +73,7 @@ lag.listw <- function(x, var, zero.policy=FALSE, NAOK=FALSE, ...) {
 			res[,i] <- .Call("lagw", listw$neighbours,
 				listw$weights, as.double(x[,i]),
 				as.integer(cardnb), as.logical(zero.policy),
-				NAOK=NAOK, PACKAGE="spdep")
+				naok=NAOK, PACKAGE="spdep")
 
 		}
 	} 

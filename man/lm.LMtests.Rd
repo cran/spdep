@@ -35,8 +35,7 @@ RLMerr, RLMlag, SARMA; test="all" computes all the tests.}
 }
 
 \details{
-The two types of dependence are for spatial lag $\rho$ and spatial error
-$\lambda$:
+The two types of dependence are for spatial lag \eqn{\rho}{rho} and spatial error \eqn{\lambda}{lambda}:
 
 \deqn{
 \mathbf{y} = \mathbf{X \beta} + \rho \mathbf{W_{(1)} y} + \mathbf{u},

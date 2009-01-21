@@ -22,8 +22,8 @@ ssw <- function(data, id, method=c("euclidean", "maximum", "manhattan",
   if (method=="other")
     return(otherfun(data, id))
   if (method=="mahalanobis")
-    return(sum(mahalanobis(data[id, ], colMeans(data[id,]), cov, inverted)))
-  else
-    return(sum(dist(rbind(colMeans(data[id,]), data[id,]),
-                    method, p=p)[1:length(id)]))
+    return(sum(mahalanobis(data[id, , drop=FALSE],
+              colMeans(data[id, , drop=FALSE]), cov, inverted)))
+  else return(sum(dist(rbind(colMeans(data[id, , drop=FALSE]),
+               data[id, , drop=FALSE]),  method, p=p)[1:length(id)]))
 }

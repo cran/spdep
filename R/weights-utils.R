@@ -100,6 +100,8 @@ make.sym.nb <- function(nb){
 	res
 }
 
+# Idea due to Roberto Patuelli
+
 aggregate.nb <- function(x, IDs, remove.self=TRUE, ...) {
     stopifnot(length(x) == length(IDs))
     in_reg.ids <- attr(x, "region.id")

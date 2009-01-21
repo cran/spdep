@@ -13,7 +13,7 @@ nblag_cumul(nblags)
 \arguments{
   \item{neighbours}{input neighbours list of class \code{nb}}
   \item{maxlag}{the maximum lag to be constructed}
-  \item{nblags}{a list of neighbour lists as output by code{nblag}}
+  \item{nblags}{a list of neighbour lists as output by \code{nblag}}
 }
 \value{
 returns a list of lagged neighbours lists each with class \code{nb}

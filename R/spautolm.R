@@ -64,21 +64,28 @@ spautolm <- function(formula, data = list(), listw, weights,
             only.values =TRUE)$values
         if (is.complex(eig)) eig.range <- 1/range(Re(eig))
         else eig.range <- 1/range(eig)
+# fix SMA bounds
+	full_lower <- eig.range[1]+.Machine$double.eps
+	full_upper <- eig.range[2]-.Machine$double.eps
+	if (family == "SMA") {
+	    full_lower <- -(eig.range[2]-.Machine$double.eps)
+	    full_upper <- -(eig.range[1]+.Machine$double.eps)
+	}
         I <- diag(n)
 # do line search
         dweights <- diag(weights)
         if (!is.null(llprof)) {
             if (length(llprof) == 1)
-                llprof <- seq(eig.range[1]+.Machine$double.eps,
-                    eig.range[2]-.Machine$double.eps, length.out=llprof)
+                llprof <- seq(full_lower,
+                    full_upper, length.out=llprof)
             ll_prof <- numeric(length(llprof))
             for (i in seq(along=llprof)) ll_prof[i] <- .opt.fit.full(
                 llprof[i], Y=Y, X=X, n=n, W=W, eig=eig, I=I,
                 weights=dweights, sum_lw=sum_lw, family=family,
                 verbose=verbose, tol.solve=tol.solve)
         }
-        opt <- optimize(.opt.fit.full, lower=eig.range[1]+.Machine$double.eps,
-            upper=eig.range[2]-.Machine$double.eps, maximum=TRUE,
+        opt <- optimize(.opt.fit.full, lower=full_lower,
+            upper=full_upper, maximum=TRUE,
             tol = tol.opt, Y=Y, X=X, n=n, W=W, eig=eig, I=I,
             weights=dweights, sum_lw=sum_lw, family=family,
             verbose=verbose, tol.solve=tol.solve)

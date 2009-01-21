@@ -47,7 +47,7 @@ is called.}
 % nnzlmax, and tmpmax, for example cholAlloc=list(nsubmax=25000,
 % nnzlmax=100000, tmpmax=25000)}
   \item{tol.solve}{the tolerance for detecting linear dependencies in the columns of matrices to be inverted - passed to \code{solve()} (default=double precision machine tolerance). Errors in \code{solve()} may constitute indications of poorly scaled variables: if the variables have scales differing much from the autoregressive coefficient, the values in this matrix may be very different in scale, and inverting such a matrix is analytically possible by definition, but numerically unstable; rescaling the RHS variables alleviates this better than setting tol.solve to a very small value}
-  \item{find_interval}{default FALSE}{if TRUE, attempts to find the interval using Matrix internal functions}
+  \item{find_interval}{default FALSE; if TRUE, attempts to find the interval using Matrix internal functions}
   \item{llprof}{default NULL, can either be an integer for method="full" only, to divide the feasible range into llprof points, or a sequence of values, at which to evaluate the likelihood function}
 }
 \details{
@@ -63,6 +63,7 @@ variable in making predictions for the fitting data.
 \value{
   A list object of class \code{spautolm}:
   \item{fit}{a list, with items:
+  \describe{
     \item{coefficients}{ML coefficient estimates}
     \item{SSE}{ML sum of squared errors}
     \item{s2}{ML residual variance}
@@ -71,7 +72,7 @@ variable in making predictions for the fitting data.
     \item{signal\_stochastic}{spatial component of fitted.values}
     \item{fitted.values}{sum of non-spatial and spatial components of fitted.values}
     \item{residuals}{difference between observed and fitted values}
-  }
+  }}
   \item{lambda}{ML autoregressive coefficient}
   \item{LL}{log likelihood for fitted model}
   \item{LL0}{log likelihood for model with lambda=0}
