@@ -12,7 +12,7 @@ static double distance(double x1, double y1, double x2, double y2){
 }
 
 void compute_relative(int *no_nodes, int *g1, int *g2, int *nogab,
-                      double *nodes_xd, double *nodes_yd)
+      int *ngaballoc, double *nodes_xd, double *nodes_yd)
 {
   int i,j,l, no_gab=0;
   double rad;
@@ -31,6 +31,9 @@ void compute_relative(int *no_nodes, int *g1, int *g2, int *nogab,
 		break;
 	    }
 
+/* bug Dan Putler 090121 */
+	  if ((no_gab+1) > *ngaballoc) 
+		error("number of neighbours overrun - increase nnmult");
 	  if(l==*no_nodes)
 	    {
 	      g1[no_gab]=i+1; g2[no_gab++]=j+1;

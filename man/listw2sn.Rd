@@ -7,7 +7,7 @@
 \description{
 The function makes a \code{"spatial neighbour"} object representation
 (similar to the S-PLUS spatial statististics module representation of a
-\code{"listw"} spatial weights object. \code{sn2listw()} is the inverse function to \code{listw2sn()}, creating a \code{"listw"} object from a \code{"spatial neighbour"} object. The \code{as.spam.listw} method converts a \code{"listw"} object to a sparse matrix as defined in the pkg{spam} package, using \code{listw2sn()}.
+\code{"listw"} spatial weights object. \code{sn2listw()} is the inverse function to \code{listw2sn()}, creating a \code{"listw"} object from a \code{"spatial neighbour"} object. The \code{as.spam.listw} method converts a \code{"listw"} object to a sparse matrix as defined in the \pkg{spam} package, using \code{listw2sn()}.
 }
 \usage{
 listw2sn(listw)

@@ -10,8 +10,8 @@ used to speed the computation of the Jacobian in spatial SAR model estimation:
 
 \deqn{\log(\det[I - \rho W]) = \log\prod_{i=1}^{n}(1 - \rho \lambda_i)}
 
-where $W$ is the n by n spatial weights matrix, and $\lambda_i$ are the
-eigenvalues of $W$.
+where \eqn{W}{W} is the n by n spatial weights matrix, and \eqn{\lambda_i}{lambda[i]} are the
+eigenvalues of \eqn{W}{W}.
 }
 \usage{
 eigenw(listw, quiet=TRUE)

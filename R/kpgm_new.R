@@ -18,12 +18,12 @@
 #    for lambda, then finds results with spatially weighted least squares
 #    and finds LL using Matrix functions
 # Value:
-# an S3 "kpglsar" object
+# an S3 "gmsar" object
 
 GMerrorsar <- function(#W, y, X, 
 	formula, data = list(), listw, na.action=na.fail, 
-	zero.policy=FALSE, return_LL=TRUE, control=list(), verbose=FALSE,
-	sparse_method="Matrix") {
+	zero.policy=FALSE, return_LL=TRUE, method="Nelder-Mead", 
+        control=list(), pars, verbose=FALSE, sparse_method="Matrix") {
 #	ols <- lm(I(y) ~ I(X) - 1)
 	mt <- terms(formula, data = data)
 	mf <- lm(formula, data, na.action=na.action, method="model.frame")
@@ -36,7 +36,7 @@ GMerrorsar <- function(#W, y, X,
 	if (!inherits(listw, "listw")) stop("No neighbourhood list")
 	can.sim <- as.logical(NA)
 	if (listw$style %in% c("W", "S")) 
-		can.sim <- spdep:::can.be.simmed(listw)
+		can.sim <- can.be.simmed(listw)
 
 	y <- model.extract(mf, "response")
 	if (any(is.na(y))) stop("NAs in dependent variable")
@@ -55,14 +55,26 @@ GMerrorsar <- function(#W, y, X,
 		x <- x[,-nacoef]
 	}
 	ols <- lm(y ~ x - 1)
-	ubase <- residuals(ols)
-	scorr <- c(crossprod(lag.listw(listw, ubase, zero.policy=zero.policy), 
-		ubase) / crossprod(ubase, ubase))
-	pars <- c(scorr, deviance(ols)/df.residual(ols))
+	if (missing(pars)) {
+ 	    ubase <- residuals(ols)
+	    scorr <- c(crossprod(lag.listw(listw, ubase,
+                zero.policy=zero.policy), ubase) / crossprod(ubase, ubase))
+            scorr <- scorr / (sum(unlist(listw$weights)) / length(ubase))
+            pars <- c(scorr, deviance(ols)/df.residual(ols))
+        }
+        if (length(pars) !=2 || !is.numeric(pars))
+            stop("invalid starting parameter values")
 	vv <- .kpwuwu(listw, residuals(ols), zero.policy=zero.policy)
 #	nlsres <- nlm(.kpgm, pars, print.level=print.level, gradtol=gradtol, steptol=steptol, iterlim=iterlim, v=vv, verbose=verbose)
 #	lambda <- nlsres$estimate[1]
-	optres <- optim(pars, .kpgm, control=control, v=vv, verbose=verbose)
+        if (method == "nlminb")
+            optres <- nlminb(pars, .kpgm, v=vv, verbose=verbose,
+               control=control)
+        else 
+	    optres <- optim(pars, .kpgm, v=vv, verbose=verbose,
+                method=method, control=control)
+        if (optres$convergence != 0)
+            warning(paste("convergence failure:", optres$message))
 	lambda <- optres$par[1]
 	names(lambda) <- "lambda"
 
@@ -149,7 +161,8 @@ GMerrorsar <- function(#W, y, X,
 		s2=s2, SSE=SSE, parameters=(m+2), lm.model=ols, 
 		call=call, residuals=r, lm.target=lm.target,
 		fitted.values=fit, formula=formula, aliased=aliased,
-		zero.policy=zero.policy, LL=LL, vv=vv), class=c("gmsar"))
+		zero.policy=zero.policy, LL=LL, vv=vv, optres=optres,
+                pars=pars), class=c("gmsar"))
 	if (zero.policy) {
 		zero.regs <- attr(listw$neighbours, 
 			"region.id")[which(card(listw$neighbours) == 0)]
@@ -342,9 +355,11 @@ print.summary.gmsar <- function(x, digits = max(5, .Options$digits - 3),
 
 .kpwuwu <- function(W, u, zero.policy=FALSE) {
 	n <- length(u)
-	tt <- matrix(0,n,1)
-	for (i in 1:n) {tt[i] <- sum(W$weights[[i]]^2) }
-	trwpw <- sum(tt)
+# Gianfranco Piras 081119 
+        trwpw <- sum(unlist(W$weights)^2)
+#	tt <- matrix(0,n,1)
+#	for (i in 1:n) {tt[i] <- sum(W$weights[[i]]^2) }
+#	trwpw <- sum(tt)
 	wu <- lag.listw(W, u, zero.policy=zero.policy)
 	wwu <- lag.listw(W, wu, zero.policy=zero.policy)
     	uu <- crossprod(u,u)

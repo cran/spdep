@@ -1,212 +1,234 @@
+2009-01-02 19:08  rsbivand
+
+	* ChangeLog, R/utils.R, man/lag.listw.Rd, src/lagw.c: fix NAs in
+	  lag.listw
+
+2008-11-25 20:29  rsbivand
+
+	* DESCRIPTION, R/localmoran.exact.R, R/moran.exact.R,
+	  man/lm.morantest.exact.Rd, man/localmoran.exact.Rd: substitute
+	  Normal for exact for out of domain II
+
+2008-11-23 02:02  rsbivand
+
+	* DESCRIPTION, R/moran.exact.R, R/spautolm.R, R/weights-utils.R:
+	  SMA revisions
+
+2008-11-19 22:54  rsbivand
+
+	* DESCRIPTION, R/kpgm_new.R, man/GMerrorsar.Rd: GM revisions
+
+2008-11-10 20:02  rsbivand
+
+	* R/prunecost.R: fix drop bug in ssw
+
+2008-11-10 18:21  rsbivand
+
+	* DESCRIPTION: fix drop bug in ssw
+
+2008-11-10 18:18  rsbivand
+
+	* R/prunecost.R: fix drop bug in ssw
+
+2008-10-25 15:34  rsbivand
+
+	* ChangeLog, inst/ChangeLog: changelog
+
 2008-10-24 11:16  rsbivand
 
-	* g/DESCRIPTION, g/NAMESPACE, g/R/apleplot.R, g/man/aple.plot.Rd:
-	  local aple
+	* DESCRIPTION, NAMESPACE, R/apleplot.R, man/aple.plot.Rd: local
+	  aple
 
 2008-10-12 14:13  rsbivand
 
-	* g/ChangeLog, g/inst/ChangeLog: changelog
+	* ChangeLog, inst/ChangeLog: changelog
 
 2008-10-12 14:12  rsbivand
 
-	* g/ChangeLog, g/DESCRIPTION, g/INDEX, g/NAMESPACE, g/R/apleplot.R,
-	  g/inst/ChangeLog, g/man/aple.Rd, g/man/aple.plot.Rd: adding aple
+	* ChangeLog, DESCRIPTION, INDEX, NAMESPACE, R/apleplot.R,
+	  inst/ChangeLog, man/aple.Rd, man/aple.plot.Rd: adding aple
 
 2008-10-11 12:19  rsbivand
 
-	* g/R/aple.R, g/R/aple.mc.R, g/data/wheat.txt,
-	  g/inst/etc/shapes/wheat.dbf, g/inst/etc/shapes/wheat.shp,
-	  g/inst/etc/shapes/wheat.shx, g/man/aple.Rd, g/man/aple.mc.Rd,
-	  g/man/wheat.Rd: adding aple
+	* R/aple.R, R/aple.mc.R, data/wheat.txt, inst/etc/shapes/wheat.dbf,
+	  inst/etc/shapes/wheat.shp, inst/etc/shapes/wheat.shx,
+	  man/aple.Rd, man/aple.mc.Rd, man/wheat.Rd: adding aple
 
 2008-10-11 12:17  rsbivand
 
-	* g/ChangeLog, g/DESCRIPTION, g/INDEX, g/NAMESPACE,
-	  g/inst/ChangeLog: adding aple
+	* ChangeLog, DESCRIPTION, INDEX, NAMESPACE, inst/ChangeLog: adding
+	  aple
 
 2008-10-03 06:20  rsbivand
 
-	* g/man/aggregate.nb.Rd: aggregate.nb, edit.nb
+	* man/aggregate.nb.Rd: aggregate.nb, edit.nb
 
 2008-10-02 21:17  rsbivand
 
-	* g/ChangeLog, g/inst/ChangeLog: merging SKATER regionalisation
+	* ChangeLog, inst/ChangeLog: merging SKATER regionalisation
 	  functions
 
 2008-10-02 21:16  rsbivand
 
-	* g/ChangeLog, g/inst/ChangeLog: merging SKATER regionalisation
+	* ChangeLog, inst/ChangeLog: merging SKATER regionalisation
 	  functions
 
 2008-10-02 21:14  rsbivand
 
-	* g/R/mstree.R, g/R/nbcosts.R, g/R/plot.mst.R, g/R/plot.skater.R,
-	  g/R/prunecost.R, g/R/prunemst.R, g/R/skater.R,
-	  g/inst/etc/shapes/bhicv.dbf, g/inst/etc/shapes/bhicv.shp,
-	  g/inst/etc/shapes/bhicv.shx, g/man/bhicv.Rd, g/man/mstree.Rd,
-	  g/man/nbcosts.Rd, g/man/plot.mst.Rd, g/man/plot.skater.Rd,
-	  g/man/prunecost.Rd, g/man/prunemst.Rd, g/man/skater.Rd,
-	  g/man/ssw.Rd, g/src/skater.c: merging SKATER regionalisation
-	  functions
+	* R/mstree.R, R/nbcosts.R, R/plot.mst.R, R/plot.skater.R,
+	  R/prunecost.R, R/prunemst.R, R/skater.R,
+	  inst/etc/shapes/bhicv.dbf, inst/etc/shapes/bhicv.shp,
+	  inst/etc/shapes/bhicv.shx, man/bhicv.Rd, man/mstree.Rd,
+	  man/nbcosts.Rd, man/plot.mst.Rd, man/plot.skater.Rd,
+	  man/prunecost.Rd, man/prunemst.Rd, man/skater.Rd, man/ssw.Rd,
+	  src/skater.c: merging SKATER regionalisation functions
 
 2008-10-02 21:09  rsbivand
 
-	* g/ChangeLog, g/DESCRIPTION, g/NAMESPACE, g/R/edit.nb.R,
-	  g/R/plot.nb.R, g/R/weights-utils.R, g/inst/ChangeLog,
-	  g/man/plot.nb.Rd: aggregate.nb, edit.nb
+	* ChangeLog, DESCRIPTION, NAMESPACE, R/edit.nb.R, R/plot.nb.R,
+	  R/weights-utils.R, inst/ChangeLog, man/plot.nb.Rd: aggregate.nb,
+	  edit.nb
 
 2008-09-18 12:21  rsbivand
 
-	* g/DESCRIPTION, g/inst/doc/sids.Rnw: vignette
+	* DESCRIPTION, inst/doc/sids.Rnw: vignette
 
 2008-09-18 07:18  rsbivand
 
-	* g/DESCRIPTION, g/R/nb2mat.R, g/inst/doc/sids.Rnw: vignette
-	  (FIXME), double mat2listw
+	* DESCRIPTION, R/nb2mat.R, inst/doc/sids.Rnw: vignette (FIXME),
+	  double mat2listw
 
 2008-08-14 12:55  rsbivand
 
-	* g/inst/doc/sids.Rnw, g/man/spautolm.Rd: mdata in spautolm help
-	  file
+	* inst/doc/sids.Rnw, man/spautolm.Rd: mdata in spautolm help file
 
 2008-06-27 09:56  rsbivand
 
-	* g/ChangeLog, g/inst/ChangeLog: truncation point in exact Moran
+	* ChangeLog, inst/ChangeLog: truncation point in exact Moran
 
 2008-06-27 09:40  rsbivand
 
-	* g/DESCRIPTION, g/R/localmoran.exact.R, g/R/moran.exact.R,
-	  g/R/moran.exact.alt.R, g/man/lm.morantest.exact.Rd,
-	  g/man/localmoran.exact.Rd: truncation point in exact Moran
+	* DESCRIPTION, R/localmoran.exact.R, R/moran.exact.R,
+	  R/moran.exact.alt.R, man/lm.morantest.exact.Rd,
+	  man/localmoran.exact.Rd: truncation point in exact Moran
 
 2008-06-19 04:08  rsbivand
 
-	* g/man/SpatialFiltering.Rd: link
+	* man/SpatialFiltering.Rd: link
 
 2008-06-03 13:56  rsbivand
 
-	* g/DESCRIPTION, g/R/EBI.R, g/R/droplinks.R, g/R/edit.nb.R,
-	  g/R/localmoran.exact.R, g/R/moran.exact.alt.R,
-	  g/R/mtlocalmoran.R, g/R/nb2listw.R, g/R/p.adjustSP.R,
-	  g/R/read.gal.R, g/R/subset.nb.R: changed class test to inherits
-	  for nb
+	* DESCRIPTION, R/EBI.R, R/droplinks.R, R/edit.nb.R,
+	  R/localmoran.exact.R, R/moran.exact.alt.R, R/mtlocalmoran.R,
+	  R/nb2listw.R, R/p.adjustSP.R, R/read.gal.R, R/subset.nb.R:
+	  changed class test to inherits for nb
 
 2008-05-25 21:09  rsbivand
 
-	* g/R/nb2listw.R: tidy spam similar
+	* R/nb2listw.R: tidy spam similar
 
 2008-05-24 19:56  rsbivand
 
-	* g/DESCRIPTION, g/R/error.spsarlm.R, g/R/kpgm_new.R,
-	  g/R/lag.spsarlm.R, g/R/listw2Matrix.R, g/R/listw2sn.R,
-	  g/R/nb2listw.R, g/R/spautolm.R: listw2U and similar.listw in
-	  Matrix and spam
+	* DESCRIPTION, R/error.spsarlm.R, R/kpgm_new.R, R/lag.spsarlm.R,
+	  R/listw2Matrix.R, R/listw2sn.R, R/nb2listw.R, R/spautolm.R:
+	  listw2U and similar.listw in Matrix and spam
 
 2008-05-24 09:06  rsbivand
 
-	* g/R/listw2Matrix.R: first notes on listw2U in Matrix
+	* R/listw2Matrix.R: first notes on listw2U in Matrix
 
 2008-05-14 20:24  rsbivand
 
-	* g/inst/ChangeLog: removed try() on Matrix logdet; arg to
-	  localmoran
+	* inst/ChangeLog: removed try() on Matrix logdet; arg to localmoran
 
 2008-05-14 20:24  rsbivand
 
-	* g/ChangeLog: removed try() on Matrix logdet; arg to localmoran
+	* ChangeLog: removed try() on Matrix logdet; arg to localmoran
 
 2008-05-14 20:21  rsbivand
 
-	* g/svn2cl.xsl: removed try() on Matrix logdet; arg to localmoran
+	* svn2cl.xsl: removed try() on Matrix logdet; arg to localmoran
 
 2008-05-14 20:20  rsbivand
 
-	* g/inst/ChangeLog: removed try() on Matrix logdet; arg to
-	  localmoran
+	* inst/ChangeLog: removed try() on Matrix logdet; arg to localmoran
 
 2008-05-14 20:19  rsbivand
 
-	* g/inst/ChangeLog: removed try() on Matrix logdet; arg to
-	  localmoran
+	* inst/ChangeLog: removed try() on Matrix logdet; arg to localmoran
 
 2008-05-14 20:18  rsbivand
 
-	* g/ChangeLog, g/Changelog, g/DESCRIPTION, g/R/localmoran.R,
-	  g/man/localmoran.Rd, g/oChangelog: removed try() on Matrix
-	  logdet; arg to localmoran
+	* ChangeLog, Changelog, DESCRIPTION, R/localmoran.R,
+	  man/localmoran.Rd, oChangelog: removed try() on Matrix logdet;
+	  arg to localmoran
 
 2008-04-27 16:57  rsbivand
 
-	* g/DESCRIPTION, g/R/spautolm.R, g/man/spautolm.Rd:
+	* DESCRIPTION, R/spautolm.R, man/spautolm.Rd:
 
 2008-04-26 20:46  rsbivand
 
-	* g/Changelog, g/DESCRIPTION, g/INDEX, g/LICENCE, g/NAMESPACE,
-	  g/data, g/inst, g/src:
+	* Changelog, DESCRIPTION, INDEX, LICENCE, NAMESPACE, data, inst,
+	  src:
 
 2008-04-26 20:45  rsbivand
 
-	* g/man/COL.OLD.Rd, g/man/EBImoran.mc.Rd, g/man/EBest.Rd,
-	  g/man/EBlocal.Rd, g/man/GMerrorsar.Rd, g/man/LR.sarlm.Rd,
-	  g/man/ME.Rd, g/man/NY_data.Rd, g/man/SpatialFiltering.Rd,
-	  g/man/afcon.Rd, g/man/airdist.Rd, g/man/anova.sarlm.Rd,
-	  g/man/as_dgRMatrix_listw.Rd, g/man/auckland.Rd,
-	  g/man/autocov_dist.Rd, g/man/baltimore.Rd, g/man/boston.Rd,
-	  g/man/bptest.sarlm.Rd, g/man/card.Rd, g/man/cell2nb.Rd,
-	  g/man/choynowski.Rd, g/man/columbus.Rd, g/man/compon.Rd,
-	  g/man/diffnb.Rd, g/man/dnearneigh.Rd, g/man/droplinks.Rd,
-	  g/man/edit.nb.Rd, g/man/eigenw.Rd, g/man/eire.Rd,
-	  g/man/errorsarlm.Rd, g/man/geary.Rd, g/man/geary.mc.Rd,
-	  g/man/geary.test.Rd, g/man/getisord.Rd, g/man/globalG.test.Rd,
-	  g/man/graphneigh.Rd, g/man/hopkins.Rd, g/man/huddersfield.Rd,
-	  g/man/include.self.Rd, g/man/invIrM.Rd, g/man/joincount.mc.Rd,
-	  g/man/joincount.multi.Rd, g/man/joincount.test.Rd,
-	  g/man/knearneigh.Rd, g/man/knn2nb.Rd, g/man/lag.listw.Rd,
-	  g/man/lagsarlm.Rd, g/man/listw2sn.Rd, g/man/lm.LMtests.Rd,
-	  g/man/lm.morantest.Rd, g/man/lm.morantest.exact.Rd,
-	  g/man/lm.morantest.sad.Rd, g/man/localG.Rd, g/man/localmoran.Rd,
-	  g/man/localmoran.exact.Rd, g/man/localmoran.sad.Rd,
-	  g/man/mat2listw.Rd, g/man/moran.Rd, g/man/moran.mc.Rd,
-	  g/man/moran.plot.Rd, g/man/moran.test.Rd, g/man/nb2WB.Rd,
-	  g/man/nb2blocknb.Rd, g/man/nb2lines.Rd, g/man/nb2listw.Rd,
-	  g/man/nb2mat.Rd, g/man/nbdists.Rd, g/man/nblag.Rd,
-	  g/man/nboperations.Rd, g/man/nc.sids.Rd, g/man/p.adjustSP.Rd,
-	  g/man/plot.nb.Rd, g/man/poly2nb.Rd, g/man/predict.sarlm.Rd,
-	  g/man/probmap.Rd, g/man/read.gal.Rd, g/man/read.gwt2nb.Rd,
-	  g/man/residuals.sarlm.Rd, g/man/set.spChkOption.Rd,
-	  g/man/similar.listw.Rd, g/man/sp.correlogram.Rd,
-	  g/man/sp.mantel.mc.Rd, g/man/spautolm.Rd, g/man/spdep.Rd,
-	  g/man/spweights.constants.Rd, g/man/stsls.Rd,
-	  g/man/subset.listw.Rd, g/man/subset.nb.Rd, g/man/summary.nb.Rd,
-	  g/man/summary.sarlm.Rd, g/man/testnb.Rd, g/man/tri2nb.Rd,
-	  g/man/used.cars.Rd, g/man/write.nb.gal.Rd:
+	* man/COL.OLD.Rd, man/EBImoran.mc.Rd, man/EBest.Rd, man/EBlocal.Rd,
+	  man/GMerrorsar.Rd, man/LR.sarlm.Rd, man/ME.Rd, man/NY_data.Rd,
+	  man/SpatialFiltering.Rd, man/afcon.Rd, man/airdist.Rd,
+	  man/anova.sarlm.Rd, man/as_dgRMatrix_listw.Rd, man/auckland.Rd,
+	  man/autocov_dist.Rd, man/baltimore.Rd, man/boston.Rd,
+	  man/bptest.sarlm.Rd, man/card.Rd, man/cell2nb.Rd,
+	  man/choynowski.Rd, man/columbus.Rd, man/compon.Rd, man/diffnb.Rd,
+	  man/dnearneigh.Rd, man/droplinks.Rd, man/edit.nb.Rd,
+	  man/eigenw.Rd, man/eire.Rd, man/errorsarlm.Rd, man/geary.Rd,
+	  man/geary.mc.Rd, man/geary.test.Rd, man/getisord.Rd,
+	  man/globalG.test.Rd, man/graphneigh.Rd, man/hopkins.Rd,
+	  man/huddersfield.Rd, man/include.self.Rd, man/invIrM.Rd,
+	  man/joincount.mc.Rd, man/joincount.multi.Rd,
+	  man/joincount.test.Rd, man/knearneigh.Rd, man/knn2nb.Rd,
+	  man/lag.listw.Rd, man/lagsarlm.Rd, man/listw2sn.Rd,
+	  man/lm.LMtests.Rd, man/lm.morantest.Rd,
+	  man/lm.morantest.exact.Rd, man/lm.morantest.sad.Rd,
+	  man/localG.Rd, man/localmoran.Rd, man/localmoran.exact.Rd,
+	  man/localmoran.sad.Rd, man/mat2listw.Rd, man/moran.Rd,
+	  man/moran.mc.Rd, man/moran.plot.Rd, man/moran.test.Rd,
+	  man/nb2WB.Rd, man/nb2blocknb.Rd, man/nb2lines.Rd,
+	  man/nb2listw.Rd, man/nb2mat.Rd, man/nbdists.Rd, man/nblag.Rd,
+	  man/nboperations.Rd, man/nc.sids.Rd, man/p.adjustSP.Rd,
+	  man/plot.nb.Rd, man/poly2nb.Rd, man/predict.sarlm.Rd,
+	  man/probmap.Rd, man/read.gal.Rd, man/read.gwt2nb.Rd,
+	  man/residuals.sarlm.Rd, man/set.spChkOption.Rd,
+	  man/similar.listw.Rd, man/sp.correlogram.Rd, man/sp.mantel.mc.Rd,
+	  man/spautolm.Rd, man/spdep.Rd, man/spweights.constants.Rd,
+	  man/stsls.Rd, man/subset.listw.Rd, man/subset.nb.Rd,
+	  man/summary.nb.Rd, man/summary.sarlm.Rd, man/testnb.Rd,
+	  man/tri2nb.Rd, man/used.cars.Rd, man/write.nb.gal.Rd:
 
 2008-04-26 19:50  rsbivand
 
-	* g/R/AAA.R, g/R/EBI.R, g/R/LR.spsarlm.R, g/R/ME.R,
-	  g/R/SpatialFiltering.R, g/R/airdist.R, g/R/anova.sarlm.R,
-	  g/R/autocov.R, g/R/bptest.sarlm.R, g/R/card.R,
-	  g/R/cellneighbours.R, g/R/choynowski.R, g/R/components.R,
-	  g/R/diffnb.R, g/R/dnearneigh.R, g/R/droplinks.R, g/R/edit.nb.R,
-	  g/R/eigenw.R, g/R/error.spsarlm.R, g/R/gabrielneigh.R,
-	  g/R/geary.R, g/R/globalG.R, g/R/graph2nb.R, g/R/jc.R,
-	  g/R/knearneigh.R, g/R/knn2nb.R, g/R/kpgm_new.R,
-	  g/R/lag.spsarlm.R, g/R/listw2Matrix.R, g/R/listw2sn.R,
-	  g/R/lm.LMtests.R, g/R/lm.morantest.R, g/R/localG.R,
-	  g/R/localmoran.R, g/R/localmoran.exact.R, g/R/moran.R,
-	  g/R/moran.exact.R, g/R/moran.exact.alt.R, g/R/moran.plot.R,
-	  g/R/mtlocalmoran.R, g/R/mtmoran.R, g/R/nb2blocknb.R,
-	  g/R/nb2lines.R, g/R/nb2listw.R, g/R/nb2mat.R, g/R/nbdists.R,
-	  g/R/nblag.R, g/R/nboperations.R, g/R/p.adjustSP.R, g/R/plot.nb.R,
-	  g/R/poly2nb.R, g/R/read.gal.R, g/R/read.gwt2nb.R, g/R/relneigh.R,
-	  g/R/s2sls.R, g/R/sarlm.R, g/R/soi.R, g/R/sp.correlogram.R,
-	  g/R/sp.mantel.R, g/R/spChkOption.R, g/R/spautolm.R,
-	  g/R/subset.nb.R, g/R/summary.nb.R, g/R/summary.spsarlm.R,
-	  g/R/tri2nb.R, g/R/utils.R, g/R/weights-utils.R:
+	* R/AAA.R, R/EBI.R, R/LR.spsarlm.R, R/ME.R, R/SpatialFiltering.R,
+	  R/airdist.R, R/anova.sarlm.R, R/autocov.R, R/bptest.sarlm.R,
+	  R/card.R, R/cellneighbours.R, R/choynowski.R, R/components.R,
+	  R/diffnb.R, R/dnearneigh.R, R/droplinks.R, R/edit.nb.R,
+	  R/eigenw.R, R/error.spsarlm.R, R/gabrielneigh.R, R/geary.R,
+	  R/globalG.R, R/graph2nb.R, R/jc.R, R/knearneigh.R, R/knn2nb.R,
+	  R/kpgm_new.R, R/lag.spsarlm.R, R/listw2Matrix.R, R/listw2sn.R,
+	  R/lm.LMtests.R, R/lm.morantest.R, R/localG.R, R/localmoran.R,
+	  R/localmoran.exact.R, R/moran.R, R/moran.exact.R,
+	  R/moran.exact.alt.R, R/moran.plot.R, R/mtlocalmoran.R,
+	  R/mtmoran.R, R/nb2blocknb.R, R/nb2lines.R, R/nb2listw.R,
+	  R/nb2mat.R, R/nbdists.R, R/nblag.R, R/nboperations.R,
+	  R/p.adjustSP.R, R/plot.nb.R, R/poly2nb.R, R/read.gal.R,
+	  R/read.gwt2nb.R, R/relneigh.R, R/s2sls.R, R/sarlm.R, R/soi.R,
+	  R/sp.correlogram.R, R/sp.mantel.R, R/spChkOption.R, R/spautolm.R,
+	  R/subset.nb.R, R/summary.nb.R, R/summary.spsarlm.R, R/tri2nb.R,
+	  R/utils.R, R/weights-utils.R:
 
 2007-06-25 10:38  stefan7th
 
-	* ADME, g, g/R, g/man, w, w/index.php: Email in Readme changed
+	* ., R, man: Email in Readme changed
 
 2008-04-22 09:17  rsbivand
 

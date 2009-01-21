@@ -40,6 +40,7 @@ must be one of greater (default), less or two.sided.}
   \item{method}{a character string giving the method used.}
   \item{alternative}{a character string describing the alternative hypothesis.}
   \item{gamma}{eigenvalues (excluding zero values)}
+  \item{oType}{usually set to "E"}
   \item{data.name}{a character string giving the name(s) of the data.}
   \item{df}{degrees of freedom}
 }

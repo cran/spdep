@@ -16,8 +16,8 @@ function \code{graph2nb} converts a graph
 object into a neighbour list. The plot functions plot the graph objects.
 }
 \usage{
-gabrielneigh(coords)
-relativeneigh(coords)
+gabrielneigh(coords, nnmult=3)
+relativeneigh(coords, nnmult=3)
 %beta.skel(coords,beta)
 soi.graph(tri.nb, coords)
 graph2nb(gob, row.names=NULL,sym=FALSE)
@@ -27,6 +27,7 @@ plot.relative(x, show.points=FALSE, add=FALSE, linecol=par(col),...)
 
 \arguments{
   \item{coords}{matrix of region point coordinates}
+  \item{nnmult}{scaling factor for memory allocation, default 3; if higher values are required, the function will exit with an error; example below thanks to Dan Putler}
   \item{tri.nb}{a neighbor list created from tri2nb}
 %  \item{beta}{the parameter for a beta skeleton}
   \item{gob}{a graph object created from any of the graph funtions}
@@ -120,5 +121,11 @@ plot(columbus, border="grey")
 plot(col.soi.nb, coords, add=TRUE)
 title(main="Sphere of Influence Graph")
 par(mfrow=c(1,1))
+dx <- rep(0.25*0:4,5)
+dy <- c(rep(0,5),rep(0.25,5),rep(0.5,5), rep(0.75,5),rep(1,5))
+m <- cbind(c(dx, dx, 3+dx, 3+dx), c(dy, 3+dy, dy, 3+dy))
+try(res <- gabrielneigh(m))
+res <- gabrielneigh(m, nnmult=4)
+summary(graph2nb(res))
 }
 \keyword{spatial}

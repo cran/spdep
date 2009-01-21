@@ -8,7 +8,7 @@ lag and mixed models of the form:
 
 \deqn{y = \rho W y + X \beta + \varepsilon}{y = rho W y + X beta + e}
 
-where $\rho$ is found by \code{optimize()} first, and $\beta$ and other parameters by generalized least squares subsequently (one-dimensional search using optim performs badly on some platforms). In the mixed model, the spatially lagged independent variables are added to X.
+where \eqn{\rho}{rho} is found by \code{optimize()} first, and \eqn{\beta}{beta} and other parameters by generalized least squares subsequently (one-dimensional search using optim performs badly on some platforms). In the mixed model, the spatially lagged independent variables are added to X.
 }
 \usage{
 lagsarlm(formula, data=list(), listw, na.action=na.fail,
@@ -43,11 +43,11 @@ neighbours, if FALSE (default) assign NA - causing \code{lagsarlm()} to terminat
 % nnzlmax=100000, tmpmax=25000)}
 }
 \details{
-  The asymptotic standard error of $\rho$ is only computed when
+  The asymptotic standard error of \eqn{\rho}{rho} is only computed when
 method=eigen, because the full matrix operations involved would be costly
 for large n typically associated with the choice of method="spam" or "Matrix". The
 same applies to the coefficient covariance matrix. Taken as the
-asymptotic matrix from the literature, it is typically badly scaled, and with the elements involving rho being very small,
+asymptotic matrix from the literature, it is typically badly scaled, and with the elements involving \eqn{\rho}{rho} being very small,
 while other parts of the matrix can be very large (often many orders
 of magnitude in difference). It often happens that the \code{tol.solve}
 argument needs to be set to a smaller value than the default, or the RHS variables can be centred or reduced in range.
@@ -69,7 +69,7 @@ variable in making predictions for the fitting data.
   \item{s2}{GLS residual variance}
   \item{SSE}{sum of squared GLS errors}
   \item{parameters}{number of parameters estimated}
-  \item{lm.model}{the \code{lm} object returned when estimating for $\rho=0$}
+  \item{lm.model}{the \code{lm} object returned when estimating for \eqn{\rho=0}{rho=0}}
   \item{method}{the method used to calculate the Jacobian}
   \item{call}{the call used to create this object}
   \item{residuals}{GLS residuals}
@@ -82,13 +82,13 @@ variable in making predictions for the fitting data.
 models estimated dropping each of the independent variables in turn, used
 in the summary function as a substitute for variable coefficient
 significance tests}
-  \item{rho.se}{if ase=TRUE, the asymptotic standard error of $\rho$}
+  \item{rho.se}{if ase=TRUE, the asymptotic standard error of \eqn{\rho}{rho}}
   \item{LMtest}{if ase=TRUE, the Lagrange Multiplier test for the absence
 of spatial autocorrelation in the lag model residuals}
   \item{zero.policy}{zero.policy for this model}
   \item{na.action}{(possibly) named vector of excluded or omitted observations if non-default na.action argument used}
 
-The internal sar.lag.mixed.* functions return the value of the log likelihood function at $\rho$.
+The internal sar.lag.mixed.* functions return the value of the log likelihood function at \eqn{\rho}{rho}.
 
 }
 \references{Cliff, A. D., Ord, J. K. 1981 \emph{Spatial processes}, Pion;

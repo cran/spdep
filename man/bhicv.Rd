@@ -10,7 +10,7 @@
 
 \format{
   A shape polygon object with seven variables:
-
+  \describe{
   \item{id}{The identificator}
   \item{Name}{Name of city}
   \item{Population}{The population of city}
@@ -18,6 +18,7 @@
   \item{ELCI}{Education Life Condition Index}
   \item{CLCI}{Children Life Condition Index}
   \item{ELCI}{Economic Life Condition Index}
+  }
 }
 %- maybe also 'usage' for other objects documented here.
 %%\format{}

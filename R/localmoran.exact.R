@@ -89,14 +89,17 @@ localmoran.exact <- function(model, select, nb, glist = NULL, style = "W",
 
 print.localmoranex <- function(x, ...) {
     extract <- function(x, i) {x[[i]]}
-    regnames <- sapply(x, extract, 9)
+    regnames <- sapply(x, extract, 10)
     est <- sapply(x, extract, 3)
     sad <- sapply(x, extract, 1)
     pval <- sapply(x, extract, 2)
+    oT <- sapply(x, extract, 7)
     res <- as.matrix(cbind(est, sad, pval))
     rownames(res) <- regnames
     colnames(res) <- c("Local Morans I", "Exact SD", "Pr. (exact)")
     print(res, ...)
+    if (any(oT != "E")) warning(paste("Normal reported for:",
+        paste(which(oT != "E"), collapse=", ")), call.=FALSE)
     invisible(res)
 }
 
@@ -134,6 +137,8 @@ as.data.frame.localmoranex <- function(x, row.names=NULL, optional=FALSE, ...) {
         "Skewness", "Kurtosis", "Minimum", "Maximum")
     rownames(res) <- regnames
     res <- as.data.frame(res)
+    extract <- function(x, i) {x[[i]]}
+    res$oT <- sapply(x, extract, 7)
     res
 }
 

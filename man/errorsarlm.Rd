@@ -10,7 +10,7 @@ error models of the form:
 
 \deqn{y = X \beta + u, u = \lambda W u + \varepsilon}{y = X beta + u, u = lambda W u + e}
 
-where $\lambda$ is found by \code{optimize()} first, and $\beta$ and other parameters by generalized least squares subsequently (one-dimensional search using optim performs badly on some platforms).
+where \eqn{\lambda}{lambda} is found by \code{optimize()} first, and \eqn{\beta}{beta} and other parameters by generalized least squares subsequently (one-dimensional search using optim performs badly on some platforms).
 }
 \usage{
 errorsarlm(formula, data=list(), listw, na.action=na.fail,
@@ -44,12 +44,12 @@ neighbours, if FALSE (default) assign NA - causing \code{errorsarlm()} to termin
 % nnzlmax=100000, tmpmax=25000)}
 }
 \details{
-The asymptotic standard error of $\lambda$ is only computed when
+The asymptotic standard error of \eqn{\lambda}{lambda} is only computed when
 method=eigen, because the full matrix operations involved would be costly
 for large n typically associated with the choice of method="spam" or
 "Matrix".  The same applies to the coefficient covariance matrix. Taken
 as the asymptotic matrix from the literature, it is typically badly
-scaled, being block-diagonal, and with the elements involving lambda
+scaled, being block-diagonal, and with the elements involving \eqn{\lambda}{lambda}
 being very small, while other parts of the matrix can be very large
 (often many orders of magnitude in difference). It often happens that
 the \code{tol.solve} argument needs to be set to a smaller value than
@@ -73,7 +73,7 @@ standard errors)}
   \item{s2}{GLS residual variance}
   \item{SSE}{sum of squared GLS errors}
   \item{parameters}{number of parameters estimated}
-  \item{lm.model}{the \code{lm} object returned when estimating for $\lambda=0$}
+  \item{lm.model}{the \code{lm} object returned when estimating for \eqn{\lambda=0}{lambda=0}}
   \item{method}{the method used to calculate the Jacobian}
   \item{call}{the call used to create this object}
   \item{residuals}{GLS residuals}
@@ -82,13 +82,13 @@ standard errors)}
   \item{ase}{TRUE if method=eigen}
   \item{formula}{model formula}
   \item{se.fit}{Not used yet}
-  \item{lambda.se}{if ase=TRUE, the asymptotic standard error of $\lambda$}
+  \item{lambda.se}{if ase=TRUE, the asymptotic standard error of \eqn{\lambda}{lambda}}
   \item{LMtest}{NULL for this model}
   \item{zero.policy}{zero.policy for this model}
   \item{na.action}{(possibly) named vector of excluded or omitted observations if non-default na.action argument used}
   \item{aliased}{if not NULL, details of aliased variables}
 
-The internal sar.error.* functions return the value of the log likelihood function at $\lambda$.
+The internal sar.error.* functions return the value of the log likelihood function at \eqn{\lambda}{lambda}.
 }
 \references{Cliff, A. D., Ord, J. K. 1981 \emph{Spatial processes}, Pion;
 Ord, J. K. 1975 Estimation methods for models of spatial interaction,
