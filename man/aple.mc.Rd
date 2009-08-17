@@ -6,13 +6,14 @@
   A permutation bootstrap test for the approximate profile-likelihood estimator (APLE).
 }
 \usage{
-aple.mc(x, listw, nsim)
+aple.mc(x, listw, nsim, override_similarity_check=FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{a zero-mean detrended continuous variable}
   \item{listw}{a \code{listw} object from for example \code{nb2listw}}
   \item{nsim}{number of simulations}
+  \item{override\_similarity\_check}{default FALSE, if TRUE - typically for row-standardised weights with asymmetric underlying general weights - similarity is not checked}
 }
 
 \value{

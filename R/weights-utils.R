@@ -72,7 +72,7 @@ is.selfneighbour <- function(nb) {
 
 # Copyright 2001-7 by Nicholas Lewin-Koh and Roger Bivand
 
-make.sym.nb <- function(nb){
+old.make.sym.nb <- function(nb){
 	if(!inherits(nb, "nb")) stop("Not neighbours list")
 	if (is.symmetric.nb(nb, FALSE, TRUE)) {
 		res <- nb
@@ -98,6 +98,28 @@ make.sym.nb <- function(nb){
         	class(res) <- "nb"
 	}
 	res
+}
+
+# Copyright 2009 by Bjarke Christensen and Roger Bivand
+
+make.sym.nb <- function (nb)
+{
+    if (!inherits(nb, "nb"))
+        stop("Not neighbours list")
+    if (any(card(nb) == 0)) return(old.make.sym.nb(nb))
+    res <- nb
+    if (!is.symmetric.nb(nb, FALSE, TRUE)) {
+      for (i in 1:length(res)) {
+#Which of observation i's neighbors have i amongst _its_ neighbors?
+        refersback <- sapply(res[res[[i]]], function(x) i %in% x)
+#Add i to the neighborhood of those of i's neighbors who don't refer back
+        res[ res[[i]][!refersback] ] <- lapply(res[ res[[i]][!refersback]],
+          function(x) sort(c(i, x)))
+      }
+      attributes(res) <- attributes(res)[!(names(attributes(res))=='knn-k')]
+      attr(res, "sym") <- TRUE
+    }
+    res
 }
 
 # Idea due to Roberto Patuelli

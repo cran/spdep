@@ -1,29 +1,35 @@
 Package: spdep
-Version: 0.4-34
-Date: 2009-01-21
+Version: 0.4-36
+Date: 2009-08-17
 Title: Spatial dependence: weighting schemes, statistics and models
 Encoding: latin1
-Author: Roger Bivand <Roger.Bivand@nhh.no>, with contributions by Luc Anselin,
-  Renato Assunçaõ, Olaf Berke, Andrew Bernat, Marilia Carvalho, 
-  Yongwan Chun, Carsten Dormann, Stéphane Dray, Rein Halbersma, 
-  Elias Krainski, Nicholas Lewin-Koh, Hongfei Li, Jielai Ma, Giovanni Millo, 
-  Werner Mueller, Hisaji Ono, Pedro Peres-Neto, Markus Reder,
-  Michael Tiefelsdorf, and Danlin Yu.
+Author: Roger Bivand <Roger.Bivand@nhh.no>, with contributions by Luc
+        Anselin, Renato Assunção, Olaf Berke, Andrew Bernat, Marilia
+        Carvalho, Yongwan Chun, Bjarke Christensen, Carsten Dormann,
+        Stéphane Dray, Rein Halbersma, Elias Krainski, Nicholas
+        Lewin-Koh, Hongfei Li, Jielai Ma, Giovanni Millo, Werner
+        Mueller, Hisaji Ono, Pedro Peres-Neto, Markus Reder, Michael
+        Tiefelsdorf, and Danlin Yu.
 Maintainer: Roger Bivand <Roger.Bivand@nhh.no>
-Depends: R (>= 2.4.0), methods, tripack, sp (>= 0.9), maptools (>= 0.5-4), boot, spam(>= 0.13-1), Matrix (>= 0.999375-9)
+Depends: R (>= 2.4.0), methods, tripack, sp (>= 0.9), maptools (>=
+        0.5-4), boot, spam(>= 0.13-1), Matrix (>= 0.999375-9)
 Description: A collection of functions to create spatial weights matrix
-  objects from polygon contiguities, from point patterns by distance and
-  tesselations, for summarising these objects, and for permitting their
-  use in spatial data analysis, including regional aggregation by minimum
-  spanning tree; a collection of tests for spatial autocorrelation,
-  including global Moran's I, APLE, Geary's C, Hubert/Mantel general cross
-  product statistic, Empirical Bayes estimates and Assunção/Reis Index,
-  Getis/Ord G and multicoloured join count statistics, local Moran's I and
-  Getis/Ord G, saddlepoint approximations  and exact tests for global and
-  local Moran's I; and functions for estimating spatial simultaneous
-  autoregressive (SAR) lag and error models, weighted and unweighted SAR
-  and CAR spatial regression models, semi-parametric and Moran eigenvector
-  spatial filtering, GM SAR error models, and generalized spatial two stage
-  least squares models.
+        objects from polygon contiguities, from point patterns by
+        distance and tesselations, for summarising these objects, and
+        for permitting their use in spatial data analysis, including
+        regional aggregation by minimum spanning tree; a collection of
+        tests for spatial autocorrelation, including global Moran's I,
+        APLE, Geary's C, Hubert/Mantel general cross product statistic,
+        Empirical Bayes estimates and Assunção/Reis Index, Getis/Ord G
+        and multicoloured join count statistics, local Moran's I and
+        Getis/Ord G, saddlepoint approximations and exact tests for
+        global and local Moran's I; and functions for estimating
+        spatial simultaneous autoregressive (SAR) lag and error models,
+        weighted and unweighted SAR and CAR spatial regression models,
+        semi-parametric and Moran eigenvector spatial filtering, GM SAR
+        error models, and generalized spatial two stage least squares
+        models.
 License: GPL (>= 2)
-Packaged: Wed Jan 21 11:23:01 2009; rsb
+Packaged: 2009-08-17 13:38:06 UTC; rsb
+Repository: CRAN
+Date/Publication: 2009-08-19 08:16:13

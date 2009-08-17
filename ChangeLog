@@ -1,3 +1,75 @@
+2009-08-17 13:26  rsbivand
+
+	* DESCRIPTION, inst/doc/00Index.dcf, inst/doc/CO69.Rnw,
+	  inst/doc/sids.Rnw, inst/etc/misc/geary_eire.txt,
+	  inst/etc/misc/raw_grass_borders.RData,
+	  inst/etc/misc/unstand_sn.txt, man/lm.morantest.sad.Rd,
+	  man/localmoran.sad.Rd: adding Cliff & Ord 1969 vignette
+
+2009-08-09 17:47  rsbivand
+
+	* inst/ChangeLog: speedup for make.sym.nb when all observations
+	  have neighbours
+
+2009-08-09 17:47  rsbivand
+
+	* ChangeLog: speedup for make.sym.nb when all observations have
+	  neighbours
+
+2009-08-09 14:39  rsbivand
+
+	* DESCRIPTION, NAMESPACE, R/weights-utils.R, man/testnb.Rd: speedup
+	  for make.sym.nb when all observations have neighbours
+
+2009-06-29 12:32  rsbivand
+
+	* ChangeLog, inst/ChangeLog: aple similarity check override
+
+2009-06-29 12:30  rsbivand
+
+	* ChangeLog, R/aple.R: aple similarity check override
+
+2009-06-29 12:26  rsbivand
+
+	* R/aple.R, R/aple.mc.R, R/apleplot.R, man/aple.Rd, man/aple.mc.Rd,
+	  man/aple.plot.Rd, man/moran.test.Rd: Geary reversal
+
+2009-06-09 16:36  rsbivand
+
+	* R/geary.R: Geary's C standard deviate
+
+2009-06-09 16:26  rsbivand
+
+	* R/geary.R, man/geary.test.Rd: Geary's C standard deviate
+
+2009-06-09 14:41  rsbivand
+
+	* DESCRIPTION, R/geary.R, man/geary.test.Rd: Geary's C standard
+	  deviate
+
+2009-04-27 19:28  rsbivand
+
+	* R/sarlm.R: predict sarlm details
+
+2009-02-27 12:10  rsbivand
+
+	* R/moran.exact.R, R/mtmoran.R: first zero eiegenvalue in
+	  lm.morantest.*
+
+2009-01-21 12:24  rsbivand
+
+	* ChangeLog, inst/ChangeLog: gabriel/relative memory overruns; new
+	  parser help file changes
+
+2009-01-21 10:31  rsbivand
+
+	* ChangeLog, DESCRIPTION, R/gabrielneigh.R, R/relneigh.R,
+	  inst/ChangeLog, man/GMerrorsar.Rd, man/bhicv.Rd, man/eigenw.Rd,
+	  man/errorsarlm.Rd, man/graphneigh.Rd, man/lagsarlm.Rd,
+	  man/listw2sn.Rd, man/lm.LMtests.Rd, man/nblag.Rd,
+	  man/spautolm.Rd, src/gabriel.c, src/relative.c: gabriel/relative
+	  memory overruns; new parser help file changes
+
 2009-01-02 19:08  rsbivand
 
 	* ChangeLog, R/utils.R, man/lag.listw.Rd, src/lagw.c: fix NAs in

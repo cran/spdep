@@ -3,6 +3,7 @@
 \alias{is.symmetric.nb}
 \alias{sym.attr.nb}
 \alias{make.sym.nb}
+\alias{old.make.sym.nb}
 \alias{is.symmetric.glist}
 
 \title{Test a neighbours list for symmetry}
@@ -17,6 +18,7 @@ attribute if needed, and \code{make.sym.nb} makes a non-symmetric list symmetric
 is.symmetric.nb(nb, verbose = TRUE, force = FALSE)
 sym.attr.nb(nb)
 make.sym.nb(nb)
+old.make.sym.nb(nb)
 is.symmetric.glist(nb, glist)
 }
 
@@ -28,6 +30,10 @@ is.symmetric.glist(nb, glist)
 }
 \value{
 TRUE if symmetric, FALSE if not; is.symmetric.glist returns a value with an attribute, "d", indicating for failed symmetry the largest failing value.
+}
+
+\note{
+A new version of \code{make.sym.nb} by Bjarke Christensen is now included. The older version has been renamed \code{old.make.sym.nb}, and their comparison constitutes a nice demonstration of vectorising speedup using \code{sapply} and \code{lapply} rather than loops. When any no-neighbour observations are present, \code{old.make.sym.nb} is used.
 }
 
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}

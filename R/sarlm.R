@@ -105,6 +105,8 @@ predict.sarlm <- function(object, newdata=NULL, listw=NULL,
 # resolved problem of missing response column in newdata reported by
 # Christine N. Meynard, 060201
 			mf <- model.frame(mt, newdata)
+			if (dim(mf)[1] != length(listw$neighbours))
+			    stop("missing values in newdata")
 			X <- model.matrix(mt, mf)
 			trend <- X %*% B
 			raw.sig <- invIrW(listw, object$rho) %*% trend

@@ -1,4 +1,4 @@
-# Copyright 2001-3 by Roger Bivand 
+# Copyright 2001-9 by Roger Bivand 
 #
 
 
@@ -25,7 +25,7 @@ geary.intern <- function(x, listw, n, zero.policy, type="geary") {
 }
 
 geary.test <- function(x, listw, randomisation=TRUE, zero.policy=FALSE,
-    alternative="less", spChk=NULL, adjust.n=TRUE) {
+    alternative="greater", spChk=NULL, adjust.n=TRUE) {
 	alternative <- match.arg(alternative, c("less", "greater", "two.sided"))
 	if(!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
@@ -54,7 +54,9 @@ geary.test <- function(x, listw, randomisation=TRUE, zero.policy=FALSE,
 	} else {
 		VC <- ((2*wc$S1 + wc$S2)*wc$n1 - 4*S02) / (2*(n + 1)*S02)
 	}
-	ZC <- (C - EC) / sqrt(VC)
+#	ZC <- (C - EC) / sqrt(VC)
+# order changed 090609 RSB (C&O 1973, p. 21)
+	ZC <- (EC - C) / sqrt(VC)
 	statistic <- ZC
 	names(statistic) <- "Geary C statistic standard deviate"
 	PrC <- NA
@@ -74,7 +76,9 @@ geary.test <- function(x, listw, randomisation=TRUE, zero.policy=FALSE,
 	data.name <- paste(deparse(substitute(x)), "\nweights:",
 	    deparse(substitute(listw)), "\n")
 	res <- list(statistic=statistic, p.value=PrC, estimate=vec, 
-	    alternative=alternative, method=method, data.name=data.name)
+	    alternative=ifelse(alternative == "two.sided", alternative, 
+	    paste("Expectation", alternative, "than statistic")), 
+	    method=method, data.name=data.name)
 	class(res) <- "htest"
 	res
 }

@@ -7,13 +7,14 @@
   A scatterplot decomposition of the approximate profile-likelihood estimator, and a local APLE based on the list of vectors returned by the scatterplot function.
 }
 \usage{
-aple.plot(x, listw, do.plot=TRUE, ...)
-localAple(x, listw)
+aple.plot(x, listw, override_similarity_check=FALSE, do.plot=TRUE, ...)
+localAple(x, listw, override_similarity_check=FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{a zero-mean detrended continuous variable}
   \item{listw}{a \code{listw} object from for example \code{nb2listw}}
+  \item{override\_similarity\_check}{default FALSE, if TRUE - typically for row-standardised weights with asymmetric underlying general weights - similarity is not checked}
   \item{do.plot}{default TRUE: should a scatterplot be drawn}
   \item{\dots}{other arguments to be passed to \code{plot}}
 }

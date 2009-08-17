@@ -34,7 +34,7 @@ export(EBImoran.mc, probmap, choynowski, EBest, EBlocal, LR.sarlm,
 	write.sn2dat, read.dat2listw, nb2blocknb, p.adjustSP,
 #	asMatrixCsrListw, asMatrixCsrI, asMatrixCsrIrW, asListwMatrixCsr, 
 	is.symmetric.glist, similar.listw, nb2lines, listw2lines, df2sn, 
-	plot.listw, aggregate.nb)
+	plot.listw, aggregate.nb, old.make.sym.nb)
 
 export(spautolm, residuals.spautolm, deviance.spautolm, coef.spautolm, 
 	fitted.spautolm, print.spautolm, summary.spautolm, LR1.spautolm, 

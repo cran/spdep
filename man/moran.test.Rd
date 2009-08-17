@@ -31,10 +31,11 @@ A list with class \code{htest} containing the following components:
   \item{method}{a character string giving the assumption used for calculating the standard deviate.}
   \item{data.name}{a character string giving the name(s) of the data.}
 }
-\note{Var(I) is taken from Goodchild's CATMOG 47,
+\note{Var(I) is taken from Cliff and Ord (1969, p. 28), and 
+Goodchild's CATMOG 47 (1986),
 see also Upton & Fingleton (1985) p. 171; it agrees with SpaceStat,
-see Tutorial workbook Chapter 22; VI is as given by Cliff and Ord minus the
-square of EI. The derivation of the test (Cliff and Ord, 1981, p. 18) assumes that the weights matrix is symmetric. For inherently non-symmetric matrices, such as k-nearest neighbour matrices, \code{listw2U()} can be used to make the matrix symmetric.
+see Tutorial workbook Chapter 22; VI is the second crude moment minus the
+square of the first crude moment. The derivation of the test (Cliff and Ord, 1981, p. 18) assumes that the weights matrix is symmetric. For inherently non-symmetric matrices, such as k-nearest neighbour matrices, \code{listw2U()} can be used to make the matrix symmetric.
 }
 
 \references{Cliff, A. D., Ord, J. K. 1981 Spatial processes, Pion, p. 21.}

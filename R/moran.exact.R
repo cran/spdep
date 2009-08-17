@@ -47,8 +47,10 @@ lm.morantest.exact <- function(model, listw, zero.policy = FALSE,
         if (length(idxpos) != p)
             warning("number of zero eigenvalues greater than number of variables")
         idxpos <- idxpos[1] - 1
-        if (idxpos < 1) stop("invalid first zero eigenvalue index")
-        gamma <- evalue[1:idxpos]
+	if (idxpos < 1) {
+            warning("first eigenvalue index zero")
+	    gamma <- c()
+	} else gamma <- evalue[1:idxpos]
         gamma <- c(gamma, evalue[(idxpos+1+p):N])
         res <- exactMoran(I, gamma, alternative=alternative, type="Global",
             useTP=useTP, truncErr=truncErr, zeroTreat=zeroTreat)
