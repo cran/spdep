@@ -1,7 +1,7 @@
-preAple <- function(x, listw) {
+preAple <- function(x, listw, override_similarity_check=FALSE) {
     stopifnot(isTRUE(all.equal(mean(x), 0.0)))
-    if (listw$style %in% c("W", "S")) {
-        can.sim <- spdep:::can.be.simmed(listw)
+    if (listw$style %in% c("W", "S") && !override_similarity_check) {
+        can.sim <- can.be.simmed(listw)
         eig <- eigenw(similar.listw(listw))
     } else {
         can.sim <- FALSE
@@ -27,8 +27,9 @@ inAple <- function(x, pre) {
     res
 }
 
-aple <- function(x, listw) {
-    pre <- preAple(x=x, listw=listw)
+aple <- function(x, listw, override_similarity_check=FALSE) {
+    pre <- preAple(x=x, listw=listw,
+        override_similarity_check=override_similarity_check)
     res <- inAple(x=x, pre=pre)
     res
 }

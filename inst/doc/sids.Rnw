@@ -726,8 +726,8 @@ Cressie, N., Read, T.~R.~C., 1989.
 \newblock {Biometrical Journal},
 \newblock 31 (6), {699--719}.
 
-\bibitem[\protect\citeauthoryear{Gómez Rubio, Ferrándiz and López}{Gómez Rubio, Ferrándiz and López}{2003}]{gomez-rubio+ferrandiz+lopez:2003}
-Gómez Rubio, V., Ferrándiz, J., López, A., 2003
+\bibitem[\protect\citeauthoryear{G\'{o}mez Rubio, Ferr\'{a}ndiz and L\'{o}pez}{G\'{o}mez Rubio, Ferr\'{a}ndiz and L\'{o}pez}{2003}]{gomez-rubio+ferrandiz+lopez:2003}
+G\'{o}mez Rubio, V., Ferr\'{a}ndiz, J., L\'{o}pez, A., 2003
 \newblock {Detecting Disease Clusters with \RR}.
 \newblock {In: Hornik, K., Leisch, F., Zeilis, A. (Eds), Proceedings of the 3rd International Workshop on Distributed Statistical Computing, Vienna, Austria},
 \newblock 15 pp., {(\url{http://www.ci.tuwien.ac.at/Conferences/DSC-2003/Proceedings/GomezRubioEtAl.pdf})}.

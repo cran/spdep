@@ -48,8 +48,10 @@ lm.morantest.sad <- function (model, listw, zero.policy = FALSE,
         if (length(idxpos) != p)
             warning("number of zero eigenvalues greater than number of variables")
         idxpos <- idxpos[1] - 1
-        if (idxpos < 1) stop("invalid first zero eigenvalue index")
-        tau <- evalue[1:idxpos]
+	if (idxpos < 1) {
+            warning("first eigenvalue index zero")
+	    tau <- c()
+	} else tau <- evalue[1:idxpos]
         tau <- c(tau, evalue[(idxpos+1+p):N])
         mres <- moranSad(tau, I, tol, maxiter, tol.bounds,
             alternative=alternative, type="Global")

@@ -62,8 +62,7 @@ therefore only be used with care when n is large.
 
 \references{Tiefelsdorf, M. 2002 The Saddlepoint approximation of Moran's I 
 and local Moran's Ii reference distributions and their numerical evaluation. 
-Geographical Analysis, forthcoming; see also Tiefelsdorf's SPSS code:
-\url{http://geog-www.sbs.ohio-state.edu/faculty/tiefelsdorf/GeoStat.htm}.}
+Geographical Analysis, 34, pp. 187--206.}
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 
 \seealso{\code{\link{lm.morantest}}}

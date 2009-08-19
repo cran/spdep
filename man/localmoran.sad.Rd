@@ -98,8 +98,7 @@ A list with class \code{localmoransad} containing "select" lists, each with
 }
 \references{Tiefelsdorf, M. 2002 The Saddlepoint approximation of Moran's I 
 and local Moran's Ii reference distributions and their numerical evaluation. 
-Geographical Analysis, 34, pp. 187--206; see also Tiefelsdorf's SPSS code:
-\url{http://geog-www.sbs.ohio-state.edu/faculty/tiefelsdorf/GeoStat.htm}.}
+Geographical Analysis, 34, pp. 187--206.}
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 
 \seealso{\code{\link{localmoran}}, \code{\link{lm.morantest}},
