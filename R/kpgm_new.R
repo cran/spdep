@@ -146,7 +146,9 @@ GMerrorsar <- function(#W, y, X,
 			  Jacobian <- determinant((I - lambda * csrw), 
 			    logarithm=TRUE)$modulus
 			} else if (sparse_method == "Matrix") {
-			  Jacobian <- determinant(I - lambda * csrw,
+                             .f <- if (package_version(packageDescription(
+                                 "Matrix")$Version) > "0.999375-30") 2 else 1
+			  Jacobian <- .f * determinant(I - lambda * csrw,
  			    logarithm=TRUE)$modulus
 			}
 			gc(FALSE)

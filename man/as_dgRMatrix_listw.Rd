@@ -1,6 +1,5 @@
 \name{as_dgRMatrix_listw}
 \alias{as_dgRMatrix_listw}
-\alias{as_dgRMatrix_listw}
 \alias{as_dsTMatrix_listw}
 \alias{as_dsCMatrix_I}
 \alias{as_dsCMatrix_IrW}
@@ -43,7 +42,9 @@ sum(log(1 - rho * eigenw(listw_NY)))
 n <- dim(W)[1]
 nW <- - W
 nChol <- Cholesky(nW, Imult=8)
-n * log(rho) + c(determinant(update(nChol, nW, 1/rho))$modulus)
+.f <- if(package_version(packageDescription("Matrix")$Version) >
+           "0.999375-30") 2 else 1
+n * log(rho) + (.f * c(determinant(update(nChol, nW, 1/rho))$modulus))
 rho <- seq(0.01, 0.1, 0.01)
 n * log(rho) + Matrix:::ldetL2up(nChol, nW, 1/rho)
 }

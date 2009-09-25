@@ -1,6 +1,6 @@
-# Copyright 2005-8 by Roger Bivand
+# Copyright 2005-9 by Roger Bivand
 spautolm <- function(formula, data = list(), listw, weights,
-    na.action=na.fail, verbose=FALSE, tol.opt=.Machine$double.eps^(2/3),
+    na.action, verbose=FALSE, tol.opt=.Machine$double.eps^(2/3),
     family="SAR", method="full", interval=c(-1,0.999), zero.policy=FALSE,
 #    cholAlloc=NULL, 
     super=NULL, Matrix_intern=TRUE, tol.solve=.Machine$double.eps,
@@ -44,7 +44,8 @@ spautolm <- function(formula, data = list(), listw, weights,
     names(aliased) <- substr(cn, 2, nchar(cn))
     if (any(aliased)) {
         nacoef <- which(aliased)
-	x <- x[,-nacoef]
+# bug x for X Bjarke Christensen 090924
+	X <- X[,-nacoef]
     }
     can.sim <- as.logical(NA)
     if (listw$style %in% c("W", "S")) 
@@ -315,6 +316,8 @@ spautolm <- function(formula, data = list(), listw, weights,
     SSE <- .SPAR.fit(lambda=lambda, Y=Y, X=X, n=n, W=W, weights=weights,
         I=I, family=family, out=FALSE, tol.solve=tol.solve)
     s2 <- SSE/n
+    .f <- if (package_version(packageDescription("Matrix")$Version) >
+           "0.999375-30") 2 else 1
     if (isTRUE(all.equal(lambda, 0))) {
         Jacobian <- lambda
     } else {
@@ -331,7 +334,7 @@ spautolm <- function(formula, data = list(), listw, weights,
                 if (class(detTRY) == "try-error") {
                     Jacobian <- NaN
                 } else {
-                    Jacobian <- n * log(lambda) + detTRY
+                    Jacobian <- n * log(lambda) + (.f * detTRY)
                 }
             } else {
                 if (Matrix_intern) 
@@ -343,7 +346,7 @@ spautolm <- function(formula, data = list(), listw, weights,
                 if (class(detTRY) == "try-error") {
                     Jacobian <- NaN
                 } else {
-                    Jacobian <- n * log(-(lambda)) + detTRY
+                    Jacobian <- n * log(-(lambda)) + (.f * detTRY)
                 }
             }
         }
@@ -425,13 +428,13 @@ print.spautolm <- function(x, ...) {
 residuals.spautolm <- function(object, ...) {
 	if (is.null(object$na.action))
 		object$fit$residuals
-	else napredict(object$na.action, object$residuals)
+	else napredict(object$na.action, object$fit$residuals)
 }
 
 fitted.spautolm <- function(object, ...) {
 	if (is.null(object$na.action))
 		object$fit$fitted.values
-	else napredict(object$na.action, object$fitted.values)
+	else napredict(object$na.action, object$fit$fitted.values)
 }
 
 deviance.spautolm <- function(object, ...) {

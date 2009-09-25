@@ -65,6 +65,37 @@ invIrW <- function(listw, rho, method="solve", feasible=NULL) {
 	res
 }
 
+powerWeights <- function(W, rho, order=250, X, tol=.Machine$double.eps^(3/5)) {
+    n <- dim(W)[1]
+    dX <- dim(X)
+    if (dX[1] == n) side <- "R"
+    else if (dX[2] == n) side <- "L"
+    else stop("W and X non-conformant")
+    aW <- rho*W
+    if (side == "R") last <- aW %*% X
+    else last <- X %*% aW
+    acc <- X + last
+    conv <- FALSE
+    iter <- 1
+    while (iter < order) {
+        if (side == "R") {
+            last <- aW %*% last
+            acc <- acc + last
+        } else {
+            last <- last %*% aW
+            acc <- acc + last
+        }
+        iter <- iter+1
+        if (mean(as(last, "matrix")) < tol) {
+            conv <- TRUE
+            break
+        }
+    }
+    if (!conv) warning("not converged within order iterations")
+    acc
+}
+
+
 mat2listw <- function(x, row.names=NULL) {
 	if (!is.matrix(x)) stop("x is not a matrix")
 	n <- nrow(x)
