@@ -41,7 +41,9 @@ globalG.test            test for spatial autocorrelation
 GMerrorsar              Spatial simultaneous autoregressive error model
                         estimation by GMM
 hopkins                 Hopkins burnt savanna herb remains
+house                   Lucas county OH housing
 huddersfield            Prevalence of respiratory symptoms
+impacts.sarlm           Impacts in spatial lag models
 include.self            Include self in neighbours list
 intersect.nb            Set operations on neighborhood objects
 invIrM                  Compute SAR generating operator
@@ -126,6 +128,7 @@ summary.nb              Print and summary function for neighbours and
                         weights lists
 summary.sarlm           summary method for class sarlm
 tri2nb                  Neighbours list from tri object
+trW                     Spatial weights matrix powers traces
 used.cars               US 1960 used car prices
 wheat                   Mercer and Hall wheat yield data
 write.nb.gal            Write a neighbours list as a GAL lattice file

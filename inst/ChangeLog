@@ -1,3 +1,203 @@
+2009-09-25 12:55  rsbivand
+
+	* DESCRIPTION, R/error.spsarlm.R, R/lag.spsarlm.R,
+	  man/errorsarlm.Rd, man/lagsarlm.Rd: lambda standard error for
+	  large data sets
+
+2009-09-25 12:43  rsbivand
+
+	* ChangeLog, inst/ChangeLog: lambda standard error for large data
+	  sets
+
+2009-09-25 12:42  rsbivand
+
+	* ChangeLog, inst/ChangeLog: lambda standard error for large data
+	  sets
+
+2009-09-25 12:42  rsbivand
+
+	* R/error.hessian.R: lambda standard error for large data sets
+
+2009-09-24 19:21  rsbivand
+
+	* ChangeLog, inst/ChangeLog: lambda standard error for large data
+	  sets
+
+2009-09-24 19:20  rsbivand
+
+	* man/impacts.sarlm.Rd: lambda standard error for large data sets
+
+2009-09-24 19:09  rsbivand
+
+	* ChangeLog, inst/ChangeLog: lambda standard error for large data
+	  sets
+
+2009-09-24 19:04  rsbivand
+
+	* R/error.spsarlm.R, R/lag.spsarlm.R, R/spautolm.R,
+	  R/summary.spsarlm.R, man/errorsarlm.Rd, man/lagsarlm.Rd: lambda
+	  standard error for large data sets
+
+2009-09-24 14:54  rsbivand
+
+	* DESCRIPTION, R/error.spsarlm.R, man/errorsarlm.Rd, man/invIrM.Rd:
+	  lambda standard error for large data sets
+
+2009-09-24 08:46  rsbivand
+
+	* DESCRIPTION, NAMESPACE, R/error.spsarlm.R, R/nb2mat.R,
+	  R/summary.spsarlm.R, man/LR.sarlm.Rd, man/errorsarlm.Rd,
+	  man/invIrM.Rd: spatial Hausman for large data sets
+
+2009-09-23 07:32  rsbivand
+
+	* ChangeLog, inst/ChangeLog: added spatial Hausman test for error
+	  model
+
+2009-09-23 07:31  rsbivand
+
+	* DESCRIPTION, NAMESPACE, R/error.spsarlm.R, R/summary.spsarlm.R,
+	  man/LR.sarlm.Rd, man/summary.sarlm.Rd: added spatial Hausman test
+	  for error model
+
+2009-09-22 16:56  rsbivand
+
+	* ChangeLog, inst/ChangeLog: fix no intercept bug
+
+2009-09-22 16:55  rsbivand
+
+	* R/impacts.R: fix no intercept bug
+
+2009-09-22 09:18  rsbivand
+
+	* man/lagsarlm.Rd: mixed approximate/asymptotic Hessian
+
+2009-09-22 08:38  rsbivand
+
+	* DESCRIPTION, R/impacts.R, R/lag.hessian.R, R/lag.spsarlm.R,
+	  man/impacts.sarlm.Rd, man/lagsarlm.Rd: mixed
+	  approximate/asymptotic Hessian
+
+2009-09-20 18:35  rsbivand
+
+	* ChangeLog, inst/ChangeLog: mixed approximate/asymptotic Hessian
+
+2009-09-20 18:34  rsbivand
+
+	* DESCRIPTION, R/lag.spsarlm.R, R/summary.spsarlm.R,
+	  man/summary.sarlm.Rd: mixed approximate/asymptotic Hessian
+
+2009-09-19 19:49  rsbivand
+
+	* ChangeLog, inst/ChangeLog: add house data set
+
+2009-09-19 19:48  rsbivand
+
+	* man/impacts.sarlm.Rd, man/lagsarlm.Rd: add house data set
+
+2009-09-19 19:18  rsbivand
+
+	* ChangeLog, inst/ChangeLog: add house data set
+
+2009-09-19 19:16  rsbivand
+
+	* data/house.RData, man/house.Rd: add house data set
+
+2009-09-19 18:45  rsbivand
+
+	* ChangeLog, inst/ChangeLog: mixed approximate/asymptotic Hessian
+
+2009-09-19 18:44  rsbivand
+
+	* man/lagsarlm.Rd: mixed approximate/asymptotic Hessian
+
+2009-09-19 16:17  rsbivand
+
+	* ChangeLog, inst/ChangeLog: mixed approximate/asymptotic Hessian
+
+2009-09-19 16:15  rsbivand
+
+	* DESCRIPTION, R/error.spsarlm.R, R/lag.hessian.R, R/lag.spsarlm.R,
+	  R/summary.spsarlm.R, man/as_dgRMatrix_listw.Rd,
+	  man/errorsarlm.Rd, man/lagsarlm.Rd, man/summary.sarlm.Rd: mixed
+	  approximate/asymptotic Hessian
+
+2009-09-14 14:06  rsbivand
+
+	* R/summary.spsarlm.R: impacts for lag and mixed spatial
+	  regressions
+
+2009-09-14 13:31  rsbivand
+
+	* R/summary.spsarlm.R: impacts for lag and mixed spatial
+	  regressions
+
+2009-09-14 13:10  rsbivand
+
+	* R/summary.spsarlm.R: impacts for lag and mixed spatial
+	  regressions
+
+2009-09-14 12:32  rsbivand
+
+	* R/lag.spsarlm.R, R/summary.spsarlm.R, man/lagsarlm.Rd: impacts
+	  for lag and mixed spatial regressions
+
+2009-09-14 08:26  rsbivand
+
+	* ChangeLog, inst/ChangeLog: impacts for lag and mixed spatial
+	  regressions
+
+2009-09-14 08:24  rsbivand
+
+	* DESCRIPTION, R/lag.spsarlm.R, R/summary.spsarlm.R,
+	  man/impacts.sarlm.Rd, man/lagsarlm.Rd: impacts for lag and mixed
+	  spatial regressions
+
+2009-09-13 19:42  rsbivand
+
+	* R/error.spsarlm.R, R/kpgm_new.R, R/lag.hessian.R,
+	  R/lag.spsarlm.R, R/spautolm.R, man/as_dgRMatrix_listw.Rd,
+	  man/impacts.sarlm.Rd: impacts for lag and mixed spatial
+	  regressions
+
+2009-09-13 17:42  rsbivand
+
+	* R/impacts.R, R/lag.hessian.R, R/lag.spsarlm.R,
+	  man/impacts.sarlm.Rd, man/lagsarlm.Rd: impacts for lag and mixed
+	  spatial regressions
+
+2009-09-12 21:15  rsbivand
+
+	* DESCRIPTION, R/impacts.R, R/lag.hessian.R, R/lag.spsarlm.R,
+	  man/impacts.sarlm.Rd, man/lagsarlm.Rd: impacts for lag and mixed
+	  spatial regressions
+
+2009-09-12 11:54  rsbivand
+
+	* ChangeLog, inst/ChangeLog: impacts for lag and mixed spatial
+	  regressions
+
+2009-09-12 11:52  rsbivand
+
+	* NAMESPACE, R/impacts.R, R/lag.spsarlm.R, man/impacts.sarlm.Rd,
+	  man/trW.Rd: impacts for lag and mixed spatial regressions
+
+2009-09-11 19:45  rsbivand
+
+	* DESCRIPTION, NAMESPACE, R/impacts.R, R/lag.spsarlm.R: impacts for
+	  lag and mixed spatial regressions
+
+2009-09-06 10:04  rsbivand
+
+	* ChangeLog, inst/ChangeLog: fix bugs in residuals.spautolm for
+	  non-NULL na.act
+
+2009-09-06 10:02  rsbivand
+
+	* ChangeLog, R/error.spsarlm.R, R/lag.spsarlm.R, R/spautolm.R,
+	  man/errorsarlm.Rd, man/lagsarlm.Rd, man/spautolm.Rd: fix bugs in
+	  residuals.spautolm for non-NULL na.act
+
 2009-08-17 13:26  rsbivand
 
 	* DESCRIPTION, inst/doc/00Index.dcf, inst/doc/CO69.Rnw,

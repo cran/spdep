@@ -18,7 +18,7 @@
 }
 \usage{
 spautolm(formula, data = list(), listw, weights,
- na.action=na.fail, verbose = FALSE, tol.opt = .Machine$double.eps^(2/3),
+ na.action, verbose = FALSE, tol.opt = .Machine$double.eps^(2/3),
  family = "SAR", method="full", interval=c(-1,0.999),
  zero.policy = FALSE, super=NULL, Matrix_intern=TRUE, %cholAlloc=NULL, 
  tol.solve=.Machine$double.eps, find_interval=FALSE, llprof=NULL)
@@ -31,7 +31,7 @@ of model specification are given for \code{lm()}}
 By default the variables are taken from the environment which the function 
 is called.}
   \item{listw}{a \code{listw} object created for example by \code{nb2listw}}
-  \item{na.action}{a function (default \code{na.fail}), can also be \code{na.omit} or \code{na.exclude} with consequences for residuals and fitted values - in these cases the weights list will be subsetted to remove NAs in the data. Note that only weights lists created without using the glist argument to \code{nb2listw} may be subsetted.}
+  \item{na.action}{a function (default \code{options("na.action")}), can also be \code{na.omit} or \code{na.exclude} with consequences for residuals and fitted values - in these cases the weights list will be subsetted to remove NAs in the data. Note that only weights lists created without using the glist argument to \code{nb2listw} may be subsetted.}
   \item{weights}{an optional vector of weights to be used in the fitting process}
   \item{verbose}{default=FALSE; if TRUE, reports function values during optimization.}
   \item{tol.opt}{the desired accuracy of the optimization - passed to \code{optimize()}}

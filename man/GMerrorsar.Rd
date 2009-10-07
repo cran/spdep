@@ -90,6 +90,9 @@ summary(esar1f)
 esar1gm <- GMerrorsar(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
  data=nydata, listw=listw_NY)
 summary(esar1gm)
+esar1gm1 <- GMerrorsar(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
+ data=nydata, listw=listw_NY, method="nlminb")
+summary(esar1gm1)
 }
 \keyword{spatial}
 
