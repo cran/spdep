@@ -89,6 +89,7 @@ summary(impacts.sarlm(mobj2, tr=trMatc, R=1000), zstats=TRUE, short=TRUE)
 mobj3 <- lagsarlm(CRIME ~ INC + HOVAL, columbus, listw, type="mixed", 
 method="spam", fdHess=TRUE)
 summary(impacts.sarlm(mobj3, tr=trMatc, R=1000), zstats=TRUE, short=TRUE)
+\dontrun{
 data(boston)
 Wb <- as(as_dgRMatrix_listw(nb2listw(boston.soi)), "CsparseMatrix")
 trMatb <- trW(Wb, type="mult")
@@ -111,6 +112,7 @@ mobj <- lagsarlm(form, house, nb2listw(LO_nb), type="mixed",
 summary(mobj)
 moobj <- impacts.sarlm(mobj, tr=trMat, R=1000)
 summary(moobj, zstats=TRUE, short=TRUE)
+}
 }
 \keyword{spatial}
 

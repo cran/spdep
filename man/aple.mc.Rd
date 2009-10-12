@@ -24,11 +24,13 @@ aple.mc(x, listw, nsim, override_similarity_check=FALSE)
 
 \seealso{\code{\link{aple}}, \code{\link[boot]{boot}}}
 \examples{
+\dontrun{
 example(aple)
 boot_out <- aple.mc(scale(wheat$yield_detrend, scale=FALSE),
  nb2listw(nbr12, style="W"), nsim=500)
 plot(boot_out)
 boot_out
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

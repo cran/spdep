@@ -1,5 +1,5 @@
 Package: spdep
-Version: 0.4-47
+Version: 0.4-49
 Date: 2009-10-12
 Title: Spatial dependence: weighting schemes, statistics and models
 Encoding: latin1
@@ -31,6 +31,6 @@ Description: A collection of functions to create spatial weights matrix
         eigenvector spatial filtering, GM SAR error models, and
         generalized spatial two stage least squares models.
 License: GPL (>= 2)
-Packaged: 2009-10-12 11:11:50 UTC; rsb
+Packaged: 2009-10-12 19:35:24 UTC; rsb
 Repository: CRAN
-Date/Publication: 2009-10-12 12:29:32
+Date/Publication: 2009-10-13 08:20:54

@@ -611,7 +611,7 @@ weights specifications and both parametric and permutation bootstrap
 takes quite a lot of time.
 
 \begin{footnotesize}
-<<echo=TRUE,eval=TRUE>>= 
+<<echo=TRUE,eval=FALSE>>= 
 system.time({
 MoranNb <- lapply(vars, function(x) f_bpara(x=eire_ge1[[x]], nsim=nsim, listw=nb_B))
 MoranRb <- lapply(vars, function(x) f_bperm(x=eire_ge1[[x]], nsim=nsim, listw=nb_B))
@@ -620,6 +620,28 @@ Prop_unstdRb  <- lapply(vars, function(x) f_bperm(x=eire_ge1[[x]], nsim=nsim, li
 Prop_stdNb  <- lapply(vars, function(x) f_bpara(x=eire_ge1[[x]], nsim=nsim, listw=lw_std))
 Prop_stdRb  <- lapply(vars, function(x) f_bperm(x=eire_ge1[[x]], nsim=nsim, listw=lw_std))
 })
+@
+<<echo=FALSE,eval=FALSE>>= 
+zzz <- system.time({
+MoranNb <- lapply(vars, function(x) f_bpara(x=eire_ge1[[x]], nsim=nsim, listw=nb_B))
+MoranRb <- lapply(vars, function(x) f_bperm(x=eire_ge1[[x]], nsim=nsim, listw=nb_B))
+Prop_unstdNb  <- lapply(vars, function(x) f_bpara(x=eire_ge1[[x]], nsim=nsim, listw=lw_unstand))
+Prop_unstdRb  <- lapply(vars, function(x) f_bperm(x=eire_ge1[[x]], nsim=nsim, listw=lw_unstand))
+Prop_stdNb  <- lapply(vars, function(x) f_bpara(x=eire_ge1[[x]], nsim=nsim, listw=lw_std))
+Prop_stdRb  <- lapply(vars, function(x) f_bperm(x=eire_ge1[[x]], nsim=nsim, listw=lw_std))
+})
+res <- lapply(c("MoranNb", "MoranRb", "Prop_unstdNb", "Prop_unstdRb", "Prop_stdNb", "Prop_stdRb"), function(x) sapply(get(x), function(y) (y$t0 - mean(y$t))/sd(y$t)))
+res <- t(do.call("rbind", res))
+colnames(res) <- c("MoranNb", "MoranRb", "Prop_unstdNb", "Prop_unstdRb", "Prop_stdNb", "Prop_stdRb")
+rownames(res) <- vars
+save(zzz, res, file="backstore/boot_res.RData")
+@
+<<echo=FALSE,eval=TRUE>>=
+bsfn <- system.file("doc/backstore/boot_res.RData", package="spdep")
+load(bsfn)
+zzz
+@
+<<echo=TRUE,eval=FALSE>>= 
 res <- lapply(c("MoranNb", "MoranRb", "Prop_unstdNb", "Prop_unstdRb", "Prop_stdNb", "Prop_stdRb"), function(x) sapply(get(x), function(y) (y$t0 - mean(y$t))/sd(y$t)))
 res <- t(do.call("rbind", res))
 colnames(res) <- c("MoranNb", "MoranRb", "Prop_unstdNb", "Prop_unstdRb", "Prop_stdNb", "Prop_stdRb")
