@@ -15,7 +15,8 @@ trW <- function(W, m=100, p=50, type="mult") {
         xx <- x
         for (i in 1:m) {
             xx <- W %*% xx
-            tr[i] <- sum(apply(x * as.matrix(xx), 2, mean))
+            tr[i] <- sum(apply(x * as.matrix(xx), 2,  function(y) sum(y)/p))
+# mean replaced by sum(y)/p 091012, 0.4-47
         }
         tr[1] <- 0.0
         tr[2] <- sum(t(W) * W)

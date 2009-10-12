@@ -33,6 +33,7 @@ trMat <- trW(W, type="mult")
 str(trMat)
 trMC <- trW(W, type="MC")
 str(trMC)
+plot(trMat, trMC)
 }
 \keyword{spatial}
 
