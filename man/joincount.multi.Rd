@@ -34,10 +34,12 @@ A matrix with class \code{jcmulti} with row and column names for observed and ex
 \seealso{\code{\link{joincount.test}}}
 
 \examples{
+\dontrun{
 data(oldcol)
 HICRIME <- cut(COL.OLD$CRIME, breaks=c(0,35,80), labels=c("low","high"))
 names(HICRIME) <- rownames(COL.OLD)
 joincount.multi(HICRIME, nb2listw(COL.nb, style="B"))
+}
 data(hopkins)
 image(1:32, 1:32, hopkins[5:36,36:5], breaks=c(-0.5, 3.5, 20),
  col=c("white", "black"))
@@ -52,9 +54,11 @@ hopkins4.f <- factor(hopkins4)
 table(hopkins4.f)
 joincount.multi(hopkins4.f, nb2listw(hopkins.rook.nb, style="B"))
 cat("replicates Upton & Fingleton table 3.4 (p. 166)\n")
+\dontrun{
 joincount.multi(hopkins4.f, nb2listw(hopkins.bishop.nb, style="B"))
 cat("replicates Upton & Fingleton table 3.6 (p. 168)\n")
 joincount.multi(hopkins4.f, nb2listw(hopkins.queen.nb, style="B"))
 cat("replicates Upton & Fingleton table 3.7 (p. 169)\n")
+}
 }
 \keyword{spatial}

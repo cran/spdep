@@ -45,6 +45,7 @@ An object of class \code{ME_res}:
 \seealso{\code{\link{SpatialFiltering}}, \code{\link[stats]{glm}}}
 
 \examples{
+\dontrun{
 example(columbus)
 lmbase <- lm(CRIME ~ INC + HOVAL, data=columbus)
 lagcol <- SpatialFiltering(CRIME ~ 1, ~ INC + HOVAL, data=columbus,
@@ -89,6 +90,7 @@ MEbinom1 <- ME(c(hopkins_part) ~ 1, family="binomial",
 glmME <- glm(c(hopkins_part) ~ 1 + fitted(MEbinom1), family="binomial")
 anova(glmME, test="Chisq")
 anova(glmbase, glmME, test="Chisq")
+}
 }
 \keyword{spatial}
 

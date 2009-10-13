@@ -104,6 +104,7 @@ summary(esar1f)
 system.time(esar1M <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
  data=nydata, listw=listw_NY, family="SAR", method="Matrix", verbose=TRUE))
 summary(esar1M)
+\dontrun{
 system.time(esar1M <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
  data=nydata, listw=listw_NY, family="SAR", method="Matrix", verbose=TRUE,
  super=FALSE))
@@ -153,7 +154,6 @@ summary(ecar1wM)
 ecar1ws <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
  listw=listw_NY, weights=POP8, family="CAR", method="spam")
 summary(ecar1ws)
-\dontrun{
 example(nc.sids)
 ft.SID74 <- sqrt(1000)*(sqrt(nc.sids$SID74/nc.sids$BIR74) + sqrt((nc.sids$SID74+1)/nc.sids$BIR74))
 lm_nc <- lm(ft.SID74 ~ 1)
@@ -207,7 +207,6 @@ ecarIVaw <- spautolm(ft.SID74 ~ ft.NWBIR74, data=mdata.4,
 summary(ecarIVaw)
 nc.sids$fitIV <- append(fitted.values(ecarIVaw), NA, outl-1)
 spplot(nc.sids, c("fitIV"), cuts=12) # Cressie 1993, p. 565
-}
 data(oldcol)
 COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb, style="W"))
@@ -220,7 +219,7 @@ gp1 <- spautolm(log(CMEDV) ~ CRIM + ZN + INDUS + CHAS + I(NOX^2)
  + I(RM^2) + AGE + log(DIS) + log(RAD) + TAX + PTRATIO + B + log(LSTAT), 
  data=boston.c, nb2listw(boston.soi), family="SMA")
 summary(gp1)
-
+}
 }
 \keyword{spatial}
 

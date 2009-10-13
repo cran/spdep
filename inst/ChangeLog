@@ -1,3 +1,27 @@
+2009-10-12 19:21  rsbivand
+
+	* DESCRIPTION,
+	  inst/doc/CO69.Rnw, inst/doc/backstore/boot_res.RData: reduce
+	  check time use by thinning examples
+
+2009-10-12 18:57  rsbivand
+
+	* ChangeLog,
+	  inst/ChangeLog: reduce check time use by thinning examples
+
+2009-10-12 18:55  rsbivand
+
+	* DESCRIPTION,
+	  inst/doc/CO69.Rnw, inst/doc/backstore,
+	  inst/doc/backstore/boot_res.RData, man/ME.Rd, man/aple.mc.Rd,
+	  man/aple.plot.Rd, man/impacts.sarlm.Rd, man/joincount.multi.Rd,
+	  man/spautolm.Rd: reduce check time use by thinning examples
+
+2009-10-12 11:08  rsbivand
+
+	* ChangeLog,
+	  inst/ChangeLog: bug fix in trW for MC method
+
 2009-10-12 11:02  rsbivand
 
 	* DESCRIPTION,
