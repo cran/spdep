@@ -1,4 +1,4 @@
-# Copyright 2001-7 by Roger Bivand, Markus Reder and Werner Mueller
+# Copyright 2001-9 by Roger Bivand, Markus Reder and Werner Mueller
 #
 
 

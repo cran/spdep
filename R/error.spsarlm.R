@@ -120,11 +120,20 @@ errorsarlm <- function(formula, data = list(), listw, na.action,
 	    	    similar <- TRUE
 		} else csrw <- as_dsTMatrix_listw(listw)
 		csrw <- as(csrw, "CsparseMatrix")
+		Imult <- 2
+		if (listw$style == "B") {
+                    Imult <- ceiling((2/3)*max(apply(W, 1, sum)))
+		    interval <- c(-0.5, +0.25)
+		} else interval <- c(-1.2, +1)
+                nW <- - csrw
+		pChol <- Cholesky(csrw, super=FALSE, Imult = Imult)
+		nChol <- Cholesky(nW, super=FALSE, Imult = Imult)
                 W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
         	I <- as_dsCMatrix_I(n)
 		opt <- optimize(sar.error.f.M, interval=interval, 
 			maximum=TRUE, tol=tol.opt, csrw=csrw, I=I, y=y, wy=wy, 
-			x=x, WX=WX, n=n, quiet=quiet)
+			x=x, WX=WX, n=n, nW=nW, nChol=nChol, pChol=pChol,
+                        quiet=quiet)
 		lambda <- opt$maximum
 		names(lambda) <- "lambda"
 		LL <- opt$objective
@@ -187,7 +196,7 @@ errorsarlm <- function(formula, data = list(), listw, na.action,
                 if (fdHess && method == "Matrix") {
                     coefs <- c(lambda, coef.lambda)
                     fdHess <- getVmate_Matrix(coefs, y, x, wy, WX, n, I, csrw,
-                        s2, trs, tol.solve=tol.solve,
+                        nW, nChol, pChol, s2, trs, tol.solve=tol.solve,
                         optim=optimHess)
                     if (is.null(trs)) {
                         rownames(fdHess) <- colnames(fdHess) <- 
@@ -203,7 +212,7 @@ errorsarlm <- function(formula, data = list(), listw, na.action,
                 } else if (fdHess && method == "spam") {
                     coefs <- c(lambda, coef.lambda)
                     fdHess <- getVmate_spam(coefs, y, x, wy, WX, n, csrw, I,
-                        s2, trs, tol.solve=1.0e-10, optim=optimHess)
+                        s2, trs, tol.solve=tol.solve, optim=optimHess)
                     if (is.null(trs)) {
                         rownames(fdHess) <- colnames(fdHess) <- 
                             c("lambda", colnames(x))
@@ -291,16 +300,26 @@ sar.error.f.sp <- function(lambda, csrw, I, y, wy, x, WX, n, quiet) {
 	ret
 }
 
-sar.error.f.M <- function(lambda, csrw, I, y, wy, x, WX, n, quiet) {
+sar.error.f.M <- function(lambda, csrw, I, y, wy, x, WX, n, nW, nChol,
+        pChol, quiet) {
 	yl <- y - lambda*wy
 	xl <- x - lambda*WX
 	xl.q <- qr.Q(qr(xl))
 	xl.q.yl <- t(xl.q) %*% yl
 	SSE <- t(yl) %*% yl - t(xl.q.yl) %*% xl.q.yl
 	s2 <- SSE/n
+        a <- -.Machine$double.eps^(1/2)
+        b <- .Machine$double.eps^(1/2)
         .f <- if (package_version(packageDescription("Matrix")$Version) >
            "0.999375-30") 2 else 1
-	Jacobian <- .f * determinant(I - lambda * csrw, logarithm=TRUE)$modulus
+
+        Jacobian <- ifelse(lambda > b, n * log(lambda) +
+            (.f * c(determinant(update(nChol, nW, 1/lambda))$modulus)),
+            ifelse(lambda < a, n* log(-(lambda)) + 
+            (.f * c(determinant(update(pChol, csrw, 1/(-lambda)))$modulus)),
+            0.0))
+
+#	Jacobian <- determinant(I - lambda * csrw, logarithm=TRUE)$modulus
 	ret <- (Jacobian -
 		((n/2)*log(2*pi)) - (n/2)*log(s2) - (1/(2*(s2)))*SSE)
 	if (!quiet) cat("lambda:", lambda, " function:", ret, " Jacobian:", Jacobian, " SSE:", SSE, "\n")

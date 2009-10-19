@@ -9,7 +9,7 @@
   Methods used for presenting the results of estimating spatial SAR models.
 }
 \usage{
-summary.sarlm(object, correlation = FALSE, Nagelkerke = FALSE, ...)
+summary.sarlm(object, correlation = FALSE, Nagelkerke = FALSE, Hausman=FALSE, ...)
 print.sarlm(x, ...)
 print.summary.sarlm(x, digits = max(5, .Options$digits - 3),
 	signif.stars = FALSE, ...)
@@ -19,6 +19,7 @@ print.summary.sarlm(x, digits = max(5, .Options$digits - 3),
   \item{object}{\code{sarlm} object from \code{lagsarlm} or \code{errorsarlm}}
   \item{correlation}{logical; if 'TRUE', the correlation matrix of the estimated parameters including sigma is returned and printed (default=FALSE)}
   \item{Nagelkerke}{if TRUE, the Nagelkerke pseudo R-squared is reported}
+  \item{Hausman}{if TRUE, the results of the Hausman test for error models are reported}
   \item{x}{\code{sarlm} object from \code{lagsarlm} or \code{errorsarlm} in
 \code{print.sarlm}, summary object from \code{summary.sarlm} for 
 \code{print.summary.sarlm}}
@@ -61,5 +62,8 @@ summary(COL.mix.eig, correlation=TRUE, Nagelkerke=TRUE)
 COL.mix.M <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb), type="mixed", method="Matrix")
 summary(COL.mix.M, correlation=TRUE, Nagelkerke=TRUE)
+COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
+  nb2listw(COL.nb, style="W"), method="eigen")
+summary(COL.errW.eig, correlation=TRUE, Nagelkerke=TRUE, Hausman=TRUE)
 }
 \keyword{spatial}
