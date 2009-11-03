@@ -72,7 +72,7 @@ read.gwt2nb <- function(file, region.id=NULL) {
 	res
 }
 
-write.sn2gwt <- function(sn, file, shpfile=NULL, ind=NULL) {
+write.sn2gwt <- function(sn, file, shpfile=NULL, ind=NULL, useInd=FALSE, legacy=FALSE) {
 	if(!inherits(sn, "spatial.neighbour")) 
 	    stop("not a spatial.neighbour object")
 	n <- attr(sn, "n")
@@ -81,16 +81,28 @@ write.sn2gwt <- function(sn, file, shpfile=NULL, ind=NULL) {
 		tmp <- attr(sn, "GeoDa")$shpfile
 		if (is.null(tmp)) shpfile <- "unknown"
 		else shpfile <- tmp
-	}
+	} else {
+            stopifnot(is.character(shpfile))
+            stopifnot(length(shpfile) == 1)
+        }
 	if (is.null(ind)) {
 		tmp <- attr(sn, "GeoDa")$ind
 		if (is.null(tmp)) ind <- "unknown"
 		else ind <- tmp
-	}
+	} else {
+            stopifnot(is.character(ind))
+            stopifnot(length(ind) == 1)
+        }
+        if (useInd) {
+            rid <- attr(sn, "region.id")
+            sn$from <- rid[sn$from]
+            sn$to <- rid[sn$to]
+        }
 	con <- file(file, open="w")
-	writeLines(paste("0", n, shpfile, ind, sep=" "), con)
+	if (legacy) writeLines(format(n), con)
+        else writeLines(paste("0", n, shpfile, ind, sep=" "), con)
 	write.table(as.data.frame(sn), file=con, append=TRUE,
-		row.names=FALSE, col.names=FALSE)
+		row.names=FALSE, col.names=FALSE, quote=FALSE)
 	close(con)
 }
 

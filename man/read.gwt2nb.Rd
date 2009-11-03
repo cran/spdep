@@ -11,7 +11,7 @@
 }
 \usage{
 read.gwt2nb(file, region.id=NULL)
-write.sn2gwt(sn, file, shpfile=NULL, ind=NULL)
+write.sn2gwt(sn, file, shpfile=NULL, ind=NULL, useInd=FALSE, legacy=FALSE)
 read.dat2listw(file)
 write.sn2dat(sn, file)
 }
@@ -20,8 +20,10 @@ write.sn2dat(sn, file)
   \item{file}{name of file with weights data}
   \item{region.id}{region IDs}
   \item{sn}{a \code{spatial.neighbour} object}
-  \item{shpfile}{Shapefile name taken from GWT file for this dataset}
-  \item{ind}{region id indicator variable name}
+  \item{shpfile}{character string: if not given Shapefile name taken from GWT file for this dataset}
+  \item{ind}{character string: region id indicator field name}
+  \item{useInd}{default FALSE, if TRUE, write \code{region.id} attribute ID key tags to output file (use in OpenGeoDa will depend on the shapefile having the field named in the \code{ind} argument matching the exported tags)}
+  \item{legacy}{default FALSE; if TRUE, header has single field with number of observations only}
 }
 \details{
  Now attempts to honour the region.id argument given when reading GWT files. 

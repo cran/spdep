@@ -58,13 +58,15 @@ errorsarlm <- function(formula, data = list(), listw, na.action,
 		nacoef <- which(aliased)
 		x <- x[,-nacoef]
 	}
-	LL_null_lm <- logLik(lm(y ~ 1))
+        LL_null_lm <- NULL
+	if ("(Intercept)" %in% colnames(x)) LL_null_lm <- logLik(lm(y ~ 1))
 	m <- NCOL(x)
 	xcolnames <- colnames(x)
 	K <- ifelse(xcolnames[1] == "(Intercept)", 2, 1)
 	if (any(is.na(wy)))
 	    stop("NAs in lagged dependent variable")
-	if (m > 1) {
+# added no intercept Guillaume Blanchet 091103
+	if (m > 1 || (m == 1 && K == 1)) {
 	    WX <- matrix(nrow=n,ncol=(m-(K-1)))
 	    for (k in K:m) {
 		wx <- lag.listw(listw, x[,k], zero.policy=zero.policy)

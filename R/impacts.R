@@ -25,7 +25,7 @@ trW <- function(W, m=100, p=50, type="mult") {
 }
 
 impacts.sarlm <- function(obj, ..., tr, R=NULL, listw=NULL, useHESS=NULL,
-  tol=1e-6, empirical=FALSE) {
+  tol=1e-6, empirical=FALSE, Q=NULL) {
     if (obj$type == "error")
         stop("impact measures only for lag and spatial Durbin models")
     if (!is.null(obj$listw_style) && obj$listw_style != "W") 
@@ -92,6 +92,12 @@ impacts.sarlm <- function(obj, ..., tr, R=NULL, listw=NULL, useHESS=NULL,
             T <- rbind(T, tr/n)
         }
         res <- lagImpacts(T, g, P)
+        if (!is.null(Q)) {
+            if (!is.numeric(Q) || length(Q) > 1) stop("Invalid Q argument")
+            if (Q > length(tr)) stop("Q larger than length of tr")
+            Qres <- lagDistrImpacts(T, g, P, q=as.integer(Q))
+            attr(res, "Qres") <- Qres
+        }
         if (!is.null(R)) {
             if (usingHESS && !obj$insert) {
                 mu <- c(rho, beta)
@@ -129,7 +135,12 @@ impacts.sarlm <- function(obj, ..., tr, R=NULL, listw=NULL, useHESS=NULL,
                     if (p %% 2 != 0) stop("non-matched coefficient pairs")
                     P <- cbind(b1[1:(p/2)], b1[((p/2)+1):p])
                 }
-                lagImpacts(T, g, P)
+                res <- lagImpacts(T, g, P)
+                if (!is.null(Q)) {
+                    Qres <- lagDistrImpacts(T, g, P, q=as.integer(Q))
+                    attr(res, "Qres") <- Qres
+                }
+                res
             }
             sres <- apply(samples, 1, processSample, irho=irho,
                 drop2beta=drop2beta)
@@ -139,8 +150,23 @@ impacts.sarlm <- function(obj, ..., tr, R=NULL, listw=NULL, useHESS=NULL,
             colnames(direct) <- bnames
             colnames(indirect) <- bnames
             colnames(total) <- bnames
-            res <- list(res=res, sres=list(direct=direct,
-                indirect=indirect, total=total))
+            ssres <- list(direct=direct, indirect=indirect, total=total)
+            if (!is.null(Q)) {
+                Qdirect <- as.mcmc(t(sapply(sres, function(x)
+                    attr(x, "Qres")$direct)))
+                Qindirect <- as.mcmc(t(sapply(sres, function(x) 
+                    attr(x, "Qres")$indirect)))
+                Qtotal <- as.mcmc(t(sapply(sres, function(x) 
+                    attr(x, "Qres")$total)))
+                Qnames <- c(sapply(bnames, function(x) 
+                    paste(x, 1:Q, sep="__Q")))
+                colnames(Qdirect) <- Qnames
+                colnames(Qindirect) <- Qnames
+                colnames(Qtotal) <- Qnames
+                Qmcmc <- list(direct=Qdirect, indirect=Qindirect, total=Qtotal)
+                attr(ssres, "Qmcmc") <- Qmcmc
+            }
+            res <- list(res=res, sres=ssres)
         }
         attr(res, "method") <- "trace"
     } else {
@@ -200,6 +226,7 @@ impacts.sarlm <- function(obj, ..., tr, R=NULL, listw=NULL, useHESS=NULL,
     attr(res, "insert") <- obj$insert
     attr(res, "type") <- obj$type
     attr(res, "bnames") <- bnames
+    attr(res, "haveQ") <- !is.null(Q)
     class(res) <- "sarlmImpact"
     res
 }
@@ -212,6 +239,15 @@ lagImpacts <- function(T, g, P) {
     names(direct) <- names(total)
     list(direct=direct, indirect=indirect, total=total)
 }
+
+lagDistrImpacts <- function(T, g, P, q=10) {
+    PT <- P %*% T
+    direct <- apply(PT, 1, function(x) x * g)[1:q, ]
+    total <- t(sapply(g, function(x) apply(P, 1, sum)*x))[1:q, ]
+    indirect <- total - direct
+    list(direct=direct, indirect=indirect, total=total)
+}
+
 
 lagImpactsExact <- function(SW, P, n) {
     direct <- sapply(P, function(x) sum(diag(x*SW))/n)
@@ -234,7 +270,7 @@ mixedImpactsExact <- function(SW, P, n, listw) {
     list(direct=direct, indirect=indirect, total=total)
 }
 
-sarlmImpactMat <- function(x) {
+sarlmImpactMat <- function(x, reportQ=NULL) {
     if (is.null(x$res)) {
         direct <- x$direct
         indirect <- x$indirect
@@ -247,31 +283,72 @@ sarlmImpactMat <- function(x) {
     mat <- cbind(direct, indirect, total)
     colnames(mat) <- c("Direct", "Indirect", "Total")
     rownames(mat) <- attr(x, "bnames")
+    if (!is.null(reportQ) && reportQ) {
+        if (is.null(x$res)) {
+            Qobj <- attr(x, "Qres")
+        } else {
+            Qobj <- attr(x$res, "Qres")
+        }
+        if (is.null(Qobj)) warning("No impact components to report")
+        else {
+            colnames(Qobj$direct) <- attr(x, "bnames")
+            colnames(Qobj$indirect) <- attr(x, "bnames")
+            colnames(Qobj$total) <- attr(x, "bnames")
+            attr(mat, "Qobj") <- Qobj
+        }
+    }
     mat
 }
 
 
-print.sarlmImpact <- function(x, ...) {
-    mat <- sarlmImpactMat(x)
+print.sarlmImpact <- function(x, ..., reportQ=NULL) {
+    mat <- sarlmImpactMat(x, reportQ=reportQ)
+    Qobj <- attr(mat, "Qobj")
     cat("Impact measures (", attr(x, "type"), ", ", attr(x, "method"), "):\n", sep="")
-    
+    attr(mat, "Qobj") <- NULL
     print(mat)
+    if (!is.null(reportQ) && reportQ) {
+        if (is.null(Qobj)) warning("No impact components to report")
+        else {
+            cat("=================================\nImpact components\n")
+            print(Qobj)
+        }
+    }
     invisible(x)
 }
 
-summary.sarlmImpact <- function(object, ..., zstats=FALSE, short=FALSE) {
+summary.sarlmImpact <- function(object, ..., zstats=FALSE, short=FALSE, reportQ=NULL) {
     if (is.null(object$sres)) stop("summary method unavailable")
     direct_sum <- summary(object$sres$direct)
     indirect_sum <- summary(object$sres$indirect)
     total_sum <- summary(object$sres$total)
+    Qmcmc <- NULL
+    if (!is.null(attr(object$sres, "Qmcmc")) && reportQ) {
+        Qdirect_sum <- summary(attr(object$sres, "Qmcmc")$direct)
+        Qindirect_sum <- summary(attr(object$sres, "Qmcmc")$indirect)
+        Qtotal_sum <- summary(attr(object$sres, "Qmcmc")$total)
+        Qmcmc <- list(Qdirect_sum=Qdirect_sum, Qindirect_sum=Qindirect_sum,
+           Qtotal_sum=Qtotal_sum)
+    }
     lres <- list(direct_sum=direct_sum, indirect_sum=indirect_sum,
         total_sum=total_sum)
-    res <- c(object, lres)
+    res <- c(object, lres, Qmcmc)
     if (zstats) {
         zmat <- sapply(lres, function(x) x$statistics[,1]/x$statistics[,2])
         colnames(zmat) <- c("Direct", "Indirect", "Total")
         pzmat <- 2*(1-pnorm(abs(zmat)))
         res <- c(res, list(zmat=zmat, pzmat=pzmat))
+        if (!is.null(Qmcmc) && reportQ) {
+            Qzmats <- lapply(Qmcmc, function(x) {
+                Qm <- matrix(x$statistics[,1]/x$statistics[,2],
+                    ncol=length(attr(object, "bnames")))
+                colnames(Qm) <- attr(object, "bnames")
+                Qm
+            })
+            names(Qzmats) <- c("Direct", "Indirect", "Total")
+            Qpzmats <- lapply(Qzmats, function(x) 2*(1-pnorm(abs(x))))
+            res <- c(res, list(Qzmats=Qzmats, Qpzmats=Qpzmats))
+        }
     }
     attr(res, "useHESS") <- attr(object, "useHESS")
     attr(res, "bnames") <- attr(object, "bnames")
@@ -279,15 +356,26 @@ summary.sarlmImpact <- function(object, ..., zstats=FALSE, short=FALSE) {
     attr(res, "insert") <- attr(object, "insert")
     attr(res, "type") <- attr(object, "type")
     attr(res, "short") <- short
+    attr(res, "reportQ") <- reportQ
     class(res) <- "summary.sarlmImpact"
     res
 }
 
 print.summary.sarlmImpact <- function(x, ...) {
-    mat <- sarlmImpactMat(x)
+    reportQ <- attr(x, "reportQ")
+    mat <- sarlmImpactMat(x, reportQ)
+    Qobj <- attr(mat, "Qobj")
+    attr(mat, "Qobj") <- NULL
     cat("Impact measures (", attr(x, "type"), ", ", attr(x, "method"),
         "):\n", sep="")
     print(mat)
+    if (!is.null(reportQ) && reportQ) {
+        if (is.null(Qobj)) warning("No impact components to report")
+        else {
+            cat("=================================\nImpact components\n")
+            print(Qobj)
+        }
+    }
     cat("========================================================\n")
     tp <- ifelse(attr(x, "useHESS"), ifelse(attr(x, "insert"), "mixed Hessian approximation", "numerical Hessian approximation"), "asymptotic")
     cat("Simulation results (", tp, " variance matrix):\n", sep="")
@@ -300,6 +388,17 @@ print.summary.sarlmImpact <- function(x, ...) {
         cat("========================================================\n")
         cat("Total:\n")
         print(x$total_sum)
+        if (!is.null(reportQ) && reportQ && !is.null(x$Qdirect_sum)) {
+            cat("========================================================\n")
+            cat("Direct impact components:\n")
+            print(x$Qdirect_sum)
+            cat("========================================================\n")
+            cat("Indirect impact components:\n")
+            print(x$Qindirect_sum)
+            cat("========================================================\n")
+            cat("Total impact components:\n")
+            print(x$Qtotal_sum)
+        }
     }
     if (!is.null(x$zmat)) {
         cat("========================================================\n")
@@ -311,6 +410,14 @@ print.summary.sarlmImpact <- function(x, ...) {
         xx <- apply(x$pzmat, 2, format.pval)
         rownames(xx) <- attr(x, "bnames")
         print(xx, quote=FALSE)
+        if (!is.null(x$Qzmats)) {
+            cat("========================================================\n")
+            cat("Simulated impact components z-values:\n")
+            print(x$Qzmats)
+            cat("\nSimulated impact components p-values:\n")
+            xx <- lapply(x$Qpzmats, function(y) apply(y, 2, format.pval))
+            print(xx, quote=FALSE)
+        }
     }
     invisible(x)
 }
