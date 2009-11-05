@@ -9,10 +9,10 @@
 \title{Impacts in spatial lag models}
 \description{The calculation of impacts for spatial lag and spatial Durbin models is needed in order to interpret the regression coefficients correctly, because of the spillovers between the terms in these data generation processes (unlike the spatial error model).}
 \usage{
-impacts.sarlm(obj, \dots, tr, R = NULL, listw = NULL, useHESS = NULL, tol = 1e-06, empirical = FALSE)
+impacts.sarlm(obj, \dots, tr, R = NULL, listw = NULL, useHESS = NULL, tol = 1e-06, empirical = FALSE, Q=NULL)
 \method{plot}{sarlmImpact}(x, ..., choice="direct", trace=FALSE, density=TRUE)
-\method{print}{sarlmImpact}(x, ...)
-\method{summary}{sarlmImpact}(object, ..., zstats=FALSE, short=FALSE)
+\method{print}{sarlmImpact}(x, ..., reportQ=NULL)
+\method{summary}{sarlmImpact}(object, ..., zstats=FALSE, short=FALSE, reportQ=NULL)
 \method{HPDinterval}{sarlmImpact}(obj, prob = 0.95, ..., choice="direct")
 }
 \arguments{
@@ -24,6 +24,8 @@ impacts.sarlm(obj, \dots, tr, R = NULL, listw = NULL, useHESS = NULL, tol = 1e-0
   \item{useHESS}{Use the Hessian approximation (if available) even if the asymptotic coefficient covariance matrix is available; used for comparing methods}
   \item{tol}{Argument passed to \code{mvrnorm}: tolerance (relative to largest variance) for numerical lack of positive-definiteness in the coefficient covariance matrix}
   \item{empirical}{Argument passed to \code{mvrnorm} (default FALSE): if true, the coefficients and their covariance matrix specify the empirical not population mean and covariance matrix}
+  \item{Q}{default NULL, else an integer number of cumulative power series impacts to calculate if \code{tr} is given}
+  \item{reportQ}{default NULL; if TRUE and \code{Q} given as an argument to \code{impacts.sarlm}, report impact components}
   \item{x, object}{sarlmImpact objects created by \code{impacts.sarlm}}
   \item{zstats}{default FALSE, if TRUE, also return z-values and p-values for the impacts based on the simulations}
   \item{short}{default FALSE, if TRUE passed to the print summary method to omit printing of the mcmc summaries}
@@ -37,7 +39,10 @@ impacts.sarlm(obj, \dots, tr, R = NULL, listw = NULL, useHESS = NULL, tol = 1e-0
 
 If \code{R} is given, simulations will be used to create distributions for the impact measures, provided that the fitted model object contains a coefficient covariance matrix. At present, this is only the case for the default eigenvalue method in \code{lagsarlm}, which provides an analytical covariance matrix, but alternatives will be provided for sparse matrix methods in the near future.
 
-The simulations are stored as \code{mcmc} objects as defined in the \pkg{coda} package. The simulated values of the coefficients are checked to see that the spatial coefficient remains within its valid interval --- draws outside the interval are discarded.}
+The simulations are stored as \code{mcmc} objects as defined in the \pkg{coda} package. The simulated values of the coefficients are checked to see that the spatial coefficient remains within its valid interval --- draws outside the interval are discarded.
+
+When \code{Q} and \code{tr} are given, addition impact component results are provided for each step in the traces of powers of the weights matrix up to and including the \code{Q}'th power. This increases computing time because the output object is substantially increased in size in proportion to the size of \code{Q}.
+}
 
 \value{
 An object of class sarlmImpact.
@@ -46,11 +51,12 @@ If no simulation is carried out, the object returned is a list with:
 \item{direct}{numeric vector}
 \item{indirect}{numeric vector}
 \item{total}{numeric vector}
+and a matching \code{Qres} list attribute if \code{Q} was given.
 
 If simulation is carried out, the object returned is a list with:
 
-\item{res}{a list with three components as for the non-simulation case}
-\item{sres}{a list with three \code{mcmc} matrices, for the direct, indirect and total impacts}
+\item{res}{a list with three components as for the non-simulation case, with a matching \code{Qres} list attribute if \code{Q} was given}
+\item{sres}{a list with three \code{mcmc} matrices, for the direct, indirect and total impacts with a matching \code{Qmcmc} list attribute if \code{Q} was given}
 }
 
 \references{LeSage J and RK Pace (2009) Introduction to Spatial Econometrics. CRC Press, Boca Raton, pp. 33--42, 114--115; LeSage J and MM Fischer (2008) Spatial growth regressions: model specification, estimation and interpretation. Spatial Economic Analysis 3 (3), pp. 275--304.}
@@ -73,11 +79,13 @@ trMC <- trW(W, type="MC")
 impacts.sarlm(lobj, listw=listw)
 impacts.sarlm(lobj, tr=trMatc)
 impacts.sarlm(lobj, tr=trMC)
-summary(impacts.sarlm(lobj, tr=trMatc, R=1000), zstats=TRUE)
+lobjIQ5 <- impacts.sarlm(lobj, tr=trMatc, R=200, Q=5)
+summary(lobjIQ5, zstats=TRUE, short=TRUE, reportQ=TRUE)
 impacts.sarlm(mobj, listw=listw)
 impacts.sarlm(mobj, tr=trMatc)
 impacts.sarlm(mobj, tr=trMC)
-summary(impacts.sarlm(mobj, tr=trMatc, R=1000), zstats=TRUE)
+summary(impacts.sarlm(mobj, tr=trMatc, R=200), zstats=TRUE)
+\dontrun{
 mobj1 <- lagsarlm(CRIME ~ INC + HOVAL, columbus, listw, type="mixed", 
 method="Matrix", fdHess=TRUE)
 summary(mobj1)
@@ -89,7 +97,6 @@ summary(impacts.sarlm(mobj2, tr=trMatc, R=1000), zstats=TRUE, short=TRUE)
 mobj3 <- lagsarlm(CRIME ~ INC + HOVAL, columbus, listw, type="mixed", 
 method="spam", fdHess=TRUE)
 summary(impacts.sarlm(mobj3, tr=trMatc, R=1000), zstats=TRUE, short=TRUE)
-\dontrun{
 data(boston)
 Wb <- as(as_dgRMatrix_listw(nb2listw(boston.soi)), "CsparseMatrix")
 trMatb <- trW(Wb, type="mult")

@@ -48,6 +48,7 @@ The function returns an object of class \code{nb} with a list of integer vectors
 \seealso{\code{\link{knn2nb}}, \code{\link{dnearneigh}}, \code{\link{cell2nb}}, \code{\link{tri2nb}}, \code{\link{poly2nb}}}
 
 \examples{
+\dontrun{
 data(boston)
 summary(as.vector(table(boston.c$TOWN)))
 townaggr <- aggregate(boston.utm, list(town=boston.c$TOWN), mean)
@@ -64,6 +65,7 @@ plot(block.nb, boston.utm)
 points(boston.utm, pch=18, col="lightgreen")
 moran.test(boston.c$CMEDV, nb2listw(boston.soi))
 moran.test(boston.c$CMEDV, nb2listw(block.nb))
+}
 }
 \keyword{spatial}
 

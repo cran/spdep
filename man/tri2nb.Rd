@@ -3,7 +3,7 @@
 \alias{tri2nb}
 \title{Neighbours list from tri object}
 \description{
-The function uses the \code{tripack} package to convert a matrix of
+The function uses the \code{deldir} package to convert a matrix of
 two-dimensional coordinates into a neighbours list of class \code{nb}
 with a list of integer vectors containing neighbour region number
 ids. 
@@ -37,7 +37,6 @@ The function returns an object of class \code{nb} with a list of integer vectors
 \seealso{\code{\link{knn2nb}}, \code{\link{dnearneigh}}, \code{\link{cell2nb}}}
 
 \examples{
-require(tripack)
 example(columbus)
 coords <- coordinates(columbus)
 ind <- sapply(slot(columbus, "polygons"), function(x) slot(x, "ID"))

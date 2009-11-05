@@ -71,6 +71,7 @@ lines(density(res8), col="pink")
 legend(c(-0.02, 0.01), c(7, 25),
  legend=c("0.0", "0.2", "0.4", "0.6", "0.8", "0.9"),
  col=c("black", "brown", "green", "orange", "pink", "red"), lty=1, bty="n")
+\dontrun{
 x <- matrix(rnorm(length(nb7rt)), ncol=1)
 system.time(e <- invIrM(nb7rt, rho=0.9, method="chol", feasible=TRUE) \%*\% x)
 system.time(e <- invIrM(nb7rt, rho=0.9, method="chol", feasible=NULL) \%*\% x)
@@ -87,5 +88,6 @@ system.time(ee <- powerWeights(W, rho=0.3, X=x))
 str(as(ee, "matrix"))
 obj <- errorsarlm(as(ee, "matrix")[,1] ~ 1, listw=nb2listw(nb60rt), method="Matrix")
 coefficients(obj)
+}
 }
 \keyword{spatial}
