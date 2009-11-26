@@ -8,7 +8,10 @@ importFrom(MASS, mvrnorm)
 
 importFrom(coda, as.mcmc, HPDinterval)
 
-import(spam)
+importClassesFrom(spam, spam)
+importMethodsFrom(spam, Math, Math2)
+importFrom(spam, validspamobject)
+
 import(Matrix)
 
 export(EBImoran.mc, probmap, choynowski, EBest, EBlocal, LR.sarlm, 
