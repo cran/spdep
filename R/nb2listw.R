@@ -258,8 +258,9 @@ nb2WB <- function(nb)
 {
 # class to inherits Jari Oksanen 080603
   	if (!inherits(nb, "nb")) stop("not a neighbours list")
+        num <- card(nb)
+        if (any(num == 0)) nb[num == 0] <- NULL
         adj <- unlist(nb)
-        num <- unlist(lapply(nb, length))
         weights <- rep(1, sum(num))
 
         list(adj=adj, weights=weights, num=num)
@@ -268,8 +269,9 @@ nb2WB <- function(nb)
 listw2WB <- function(listw)
 {
 	if (!inherits(listw, "listw")) stop("not listw class object")
+        num <- card(listw$neighbours)
+        if (any(num == 0)) listw$neighbours[num == 0] <- NULL
         adj <- unlist(listw$neighbours)
-        num <- unlist(lapply(listw$neighbours, length))
         weights <- unlist(listw$weights)
 
         list(adj=adj, weights=weights, num=num)

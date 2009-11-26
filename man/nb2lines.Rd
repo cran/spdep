@@ -36,7 +36,7 @@ df2sn(df, i="i", i_ID="i_ID", j="j", wt="wt")
 \note{Original idea due to Gidske Leknes Andersen, Department of Biology, University of Bergen, Norway}
 
  
-\seealso{\code{\link{sn2listw}}, \code{\link[maptools]{write.linelistShape}}}
+\seealso{\code{\link{sn2listw}}, \code{\link[maptools]{readShapeLines}}}
 
 \examples{
 example(columbus)
