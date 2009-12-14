@@ -1,7 +1,7 @@
 # Copyright 2006 by Luc Anselin and Roger Bivand
-
+# modified by Gianfranco Piras on December 11, 2009 (added the argument legacy)
 stsls <- function(formula, data = list(), listw, zero.policy=FALSE,
-	na.action=na.fail, robust=FALSE) {
+	na.action=na.fail, robust=FALSE, legacy=FALSE) {
 
 
     	if (!inherits(listw, "listw")) 
@@ -49,9 +49,11 @@ stsls <- function(formula, data = list(), listw, zero.policy=FALSE,
 	}
 	if (listw$style == "W") colnames(WX) <- xcolnames[-1]
 
-    	result <- tsls(y=y, yend=Wy, X=X, Zinst=WX, robust=robust)
+    	result <- tsls(y=y, yend=Wy, X=X, Zinst=WX, robust=robust, legacy=legacy)
 	result$zero.policy <- zero.policy
 	result$robust <- robust
+	result$legacy <- legacy
+        result$listw_style <- listw$style
 	result$call <- match.call()
 	class(result) <- "stsls"
 	result
@@ -111,7 +113,8 @@ print.summary.stsls <- function(x, digits = max(5, .Options$digits - 3),
 		na.print="NA")
     	correl <- x$correlation
     	cat("\n")
-	if (x$robust) cat("Asymptotic robust residual variance: ")
+        if (x$robust && x$legacy) cat("Asymptotic robust residual variance: ")
+#	if (x$legacy) cat("Asymptotic robust residual variance: ")
 	else cat("Residual variance (sigma squared): ")
 	cat(format(signif(x$sse/x$df, digits)), ", (sigma: ", 
 		format(signif(sqrt(x$sse/x$df), digits)), ")\n", sep="")
@@ -247,7 +250,7 @@ htsls <- function(y,Z,Q,e) {
 #   s2: residual variance (using degrees of freedom N-K)
 #   residuals: observed y - predicted y, to be used in diagnostics
 
-tsls <- function(y,yend,X,Zinst,robust=FALSE) {
+tsls <- function(y,yend,X,Zinst,robust=FALSE, legacy=FALSE) {
 #	colnames(X) <- c("CONSTANT",colnames(X)[2:ncol(X)])
 	Q <- cbind(X,Zinst)
 	Z <- cbind(yend,X)
@@ -264,7 +267,22 @@ tsls <- function(y,yend,X,Zinst,robust=FALSE) {
 	yp <- Z %*% biv
 	biv <- biv[,1,drop=TRUE]
 	e <- y - yp
-	if (robust) {result <- htsls(y,Z,Q,e)
+	if (robust) {
+		if (legacy){		
+		result <- htsls(y,Z,Q,e)
+		}
+		else{
+	   sse <- c(crossprod(e,e))		
+		ZoZ<-crossprod(Z,(Z*as.numeric(e^2)))
+		varb<-ZpZpi%*%ZoZ%*%ZpZpi
+	   
+	   result <- list(coefficients=biv,
+		var=varb,
+		sse=sse,
+	        residuals=c(e),
+		df=df)
+
+			}
 	} else {	
 	    sse <- c(crossprod(e,e))
     	    s2 <- sse / df

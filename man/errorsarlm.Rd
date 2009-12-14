@@ -87,10 +87,10 @@ standard errors)}
   \item{aliased}{if not NULL, details of aliased variables}
   \item{LLNullLlm}{Log-likelihood of the null linear model}
   \item{Hcov}{Spatial DGP covariance matrix for Hausman test if available}
-  \item{interval}{}
-  \item{fdHess}{}
-  \item{optimHess}{}
-  \item{insert}{}
+  \item{interval}{line search interval}
+  \item{fdHess}{finite difference Hessian}
+  \item{optimHess}{\code{optim} or \code{fdHess} used}
+  \item{insert}{logical; is TRUE, asymptotic values inserted in fdHess where feasible}
   \item{zero.policy}{zero.policy for this model}
   \item{na.action}{(possibly) named vector of excluded or omitted observations if non-default na.action argument used}
 
