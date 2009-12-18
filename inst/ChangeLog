@@ -1,3 +1,41 @@
+2009-12-15 17:16  rsbivand
+
+	* R/impacts.R: convert impacts to method, provide sarlm and stsls
+	  methods
+
+2009-12-15 08:40  rsbivand
+
+	* ChangeLog, inst/ChangeLog: adding Hausman test for GMerrorsar
+
+2009-12-15 08:39  rsbivand
+
+	* NAMESPACE, R/kpgm_new.R, R/summary.spsarlm.R, man/GMerrorsar.Rd,
+	  man/LR.sarlm.Rd, man/errorsarlm.Rd, man/summary.sarlm.Rd: adding
+	  Hausman test for GMerrorsar
+
+2009-12-14 20:01  rsbivand
+
+	* ChangeLog, inst/ChangeLog: convert impacts to method, provide
+	  sarlm and stsls methods
+
+2009-12-14 19:59  rsbivand
+
+	* DESCRIPTION, NAMESPACE, R/impacts.R, R/s2sls.R,
+	  man/impacts.sarlm.Rd, man/lagsarlm.Rd: convert impacts to method,
+	  provide sarlm and stsls methods
+
+2009-12-12 09:51  rsbivand
+
+	* ChangeLog, inst/ChangeLog: updating stsls
+
+2009-12-12 09:50  rsbivand
+
+	* DESCRIPTION, NAMESPACE, R/s2sls.R, man/stsls.Rd: updating stsls
+
+2009-11-26 14:32  rsbivand
+
+	* ChangeLog, inst/ChangeLog: NAMESPACE cleaning
+
 2009-11-26 14:31  rsbivand
 
 	* ChangeLog, DESCRIPTION, NAMESPACE, inst/ChangeLog: NAMESPACE

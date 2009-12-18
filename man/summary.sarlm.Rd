@@ -9,9 +9,9 @@
   Methods used for presenting the results of estimating spatial SAR models.
 }
 \usage{
-summary.sarlm(object, correlation = FALSE, Nagelkerke = FALSE, Hausman=FALSE, ...)
-print.sarlm(x, ...)
-print.summary.sarlm(x, digits = max(5, .Options$digits - 3),
+\method{summary}{sarlm}(object, correlation = FALSE, Nagelkerke = FALSE, Hausman=FALSE, ...)
+\method{print}{sarlm}(x, ...)
+\method{print}{summary.sarlm}(x, digits = max(5, .Options$digits - 3),
 	signif.stars = FALSE, ...)
 }
 %- maybe also `usage' for other objects documented here.

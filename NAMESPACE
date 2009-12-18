@@ -8,11 +8,11 @@ importFrom(MASS, mvrnorm)
 
 importFrom(coda, as.mcmc, HPDinterval)
 
+import(Matrix)
+
 importClassesFrom(spam, spam)
 importMethodsFrom(spam, Math, Math2)
 importFrom(spam, validspamobject)
-
-import(Matrix)
 
 export(EBImoran.mc, probmap, choynowski, EBest, EBlocal, LR.sarlm, 
 	LR1.sarlm, Wald1.sarlm, airdist, card, rookcell, 
@@ -41,7 +41,7 @@ export(EBImoran.mc, probmap, choynowski, EBest, EBlocal, LR.sarlm,
 	write.sn2dat, read.dat2listw, nb2blocknb, p.adjustSP,
 #	asMatrixCsrListw, asMatrixCsrI, asMatrixCsrIrW, asListwMatrixCsr, 
 	is.symmetric.glist, similar.listw, nb2lines, listw2lines, df2sn, 
-	plot.listw, aggregate.nb, old.make.sym.nb, Hausman.sarlm)
+	plot.listw, aggregate.nb, old.make.sym.nb, Hausman.test)
 
 export(spautolm, residuals.spautolm, deviance.spautolm, coef.spautolm, 
 	fitted.spautolm, print.spautolm, summary.spautolm, LR1.spautolm, 
@@ -63,7 +63,7 @@ export(mstree, nbcosts, nbcost, plot.mst, plot.skater, prunecost, ssw, prunemst,
 
 export(aple, aple.mc, aple.plot, localAple)
 
-export(trW, impacts.sarlm, print.sarlmImpact, summary.sarlmImpact, print.summary.sarlmImpact, plot.sarlmImpact, HPDinterval.sarlmImpact)
+export(trW, impacts)
 
 import(maptools)
 
@@ -113,6 +113,8 @@ S3method(fitted, sarlm)
 S3method(logLik, sarlm)
 S3method(anova, sarlm)
 S3method(predict, sarlm)
+S3method(impacts, sarlm)
+S3method(Hausman.test, sarlm)
 
 S3method(print, summary.sarlm)
 S3method(print, sarlm.pred)
@@ -134,6 +136,7 @@ S3method(fitted, gmsar)
 S3method(print, gmsar)
 S3method(summary, gmsar)
 S3method(logLik, gmsar)
+S3method(Hausman.test, gmsar)
 
 S3method(print, summary.gmsar)
 
@@ -147,15 +150,16 @@ S3method(deviance, stsls)
 S3method(coef, stsls)
 S3method(print, stsls)
 S3method(summary, stsls)
+S3method(impacts, stsls)
 
 S3method(print, summary.stsls)
 
 S3method(plot, mst)
 S3method(plot, skater)
 
-S3method(print, sarlmImpact)
-S3method(plot, sarlmImpact)
-S3method(summary, sarlmImpact)
-S3method(HPDinterval, sarlmImpact)
-S3method(print, summary.sarlmImpact)
+S3method(print, lagImpact)
+S3method(plot, lagImpact)
+S3method(summary, lagImpact)
+S3method(HPDinterval, lagImpact)
+S3method(print, summary.lagImpact)
 

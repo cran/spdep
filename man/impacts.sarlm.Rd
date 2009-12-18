@@ -1,22 +1,25 @@
-\name{impacts.sarlm}
+\name{impacts}
 \Rdversion{1.1}
+\alias{impacts}
 \alias{impacts.sarlm}
-\alias{plot.sarlmImpact}
-\alias{print.sarlmImpact}
-\alias{summary.sarlmImpact}
-\alias{print.summary.sarlmImpact}
-\alias{HPDinterval.sarlmImpact}
+\alias{impacts.stsls}
+\alias{plot.lagImpact}
+\alias{print.lagImpact}
+\alias{summary.lagImpact}
+\alias{print.summary.lagImpact}
+\alias{HPDinterval.lagImpact}
 \title{Impacts in spatial lag models}
 \description{The calculation of impacts for spatial lag and spatial Durbin models is needed in order to interpret the regression coefficients correctly, because of the spillovers between the terms in these data generation processes (unlike the spatial error model).}
 \usage{
-impacts.sarlm(obj, \dots, tr, R = NULL, listw = NULL, useHESS = NULL, tol = 1e-06, empirical = FALSE, Q=NULL)
-\method{plot}{sarlmImpact}(x, ..., choice="direct", trace=FALSE, density=TRUE)
-\method{print}{sarlmImpact}(x, ..., reportQ=NULL)
-\method{summary}{sarlmImpact}(object, ..., zstats=FALSE, short=FALSE, reportQ=NULL)
-\method{HPDinterval}{sarlmImpact}(obj, prob = 0.95, ..., choice="direct")
+\method{impacts}{sarlm}(obj, \dots, tr, R = NULL, listw = NULL, useHESS = NULL, tol = 1e-06, empirical = FALSE, Q=NULL)
+\method{impacts}{stsls}(obj, \dots, tr, R = NULL, listw = NULL, tol = 1e-06, empirical = FALSE, Q=NULL)
+\method{plot}{lagImpact}(x, ..., choice="direct", trace=FALSE, density=TRUE)
+\method{print}{lagImpact}(x, ..., reportQ=NULL)
+\method{summary}{lagImpact}(object, ..., zstats=FALSE, short=FALSE, reportQ=NULL)
+\method{HPDinterval}{lagImpact}(obj, prob = 0.95, ..., choice="direct")
 }
 \arguments{
-  \item{obj}{A sarlm spatial regression object created by \code{lagsarlm}; in \code{HPDinterval.sarlmImpact}, a sarlmImpact object}
+  \item{obj}{A sarlm spatial regression object created by \code{lagsarlm}; in \code{HPDinterval.lagImpact}, a lagImpact object}
   \item{\dots}{Arguments passed through to methods in the \pkg{coda} package}
   \item{tr}{A vector of traces of powers of the spatial weights matrix created using \code{trW}, for approximate impact measures; if not given, \code{listw} must be given for exact measures (for small to moderate spatial weights matrices); the traces must be for the same spatial weights as were used in fitting the spatial regression}
   \item{R}{If given, simulations are used to compute distributions for the impact measures, returned as \code{mcmc} objects}
@@ -25,8 +28,8 @@ impacts.sarlm(obj, \dots, tr, R = NULL, listw = NULL, useHESS = NULL, tol = 1e-0
   \item{tol}{Argument passed to \code{mvrnorm}: tolerance (relative to largest variance) for numerical lack of positive-definiteness in the coefficient covariance matrix}
   \item{empirical}{Argument passed to \code{mvrnorm} (default FALSE): if true, the coefficients and their covariance matrix specify the empirical not population mean and covariance matrix}
   \item{Q}{default NULL, else an integer number of cumulative power series impacts to calculate if \code{tr} is given}
-  \item{reportQ}{default NULL; if TRUE and \code{Q} given as an argument to \code{impacts.sarlm}, report impact components}
-  \item{x, object}{sarlmImpact objects created by \code{impacts.sarlm}}
+  \item{reportQ}{default NULL; if TRUE and \code{Q} given as an argument to \code{impacts}, report impact components}
+  \item{x, object}{lagImpact objects created by \code{impacts} methods}
   \item{zstats}{default FALSE, if TRUE, also return z-values and p-values for the impacts based on the simulations}
   \item{short}{default FALSE, if TRUE passed to the print summary method to omit printing of the mcmc summaries}
   \item{choice}{One of three impacts: direct, indirect, or total}
@@ -45,7 +48,7 @@ When \code{Q} and \code{tr} are given, addition impact component results are pro
 }
 
 \value{
-An object of class sarlmImpact.
+An object of class lagImpact.
 
 If no simulation is carried out, the object returned is a list with:
 \item{direct}{numeric vector}
@@ -76,27 +79,34 @@ summary(mobj)
 W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
 trMatc <- trW(W, type="mult")
 trMC <- trW(W, type="MC")
-impacts.sarlm(lobj, listw=listw)
-impacts.sarlm(lobj, tr=trMatc)
-impacts.sarlm(lobj, tr=trMC)
-lobjIQ5 <- impacts.sarlm(lobj, tr=trMatc, R=200, Q=5)
+impacts(lobj, listw=listw)
+impacts(lobj, tr=trMatc)
+impacts(lobj, tr=trMC)
+lobj1 <- stsls(CRIME ~ INC + HOVAL, columbus, listw)
+loobj1 <- impacts(lobj1, tr=trMatc, R=200)
+summary(loobj1, zstats=TRUE, short=TRUE)
+lobj1r <- stsls(CRIME ~ INC + HOVAL, columbus, listw, robust=TRUE)
+loobj1r <- impacts(lobj1r, tr=trMatc, R=200)
+summary(loobj1r, zstats=TRUE, short=TRUE)
+lobjIQ5 <- impacts(lobj, tr=trMatc, R=200, Q=5)
+summary(lobjIQ5, zstats=TRUE, short=TRUE)
 summary(lobjIQ5, zstats=TRUE, short=TRUE, reportQ=TRUE)
-impacts.sarlm(mobj, listw=listw)
-impacts.sarlm(mobj, tr=trMatc)
-impacts.sarlm(mobj, tr=trMC)
-summary(impacts.sarlm(mobj, tr=trMatc, R=200), zstats=TRUE)
+impacts(mobj, listw=listw)
+impacts(mobj, tr=trMatc)
+impacts(mobj, tr=trMC)
+summary(impacts(mobj, tr=trMatc, R=200), zstats=TRUE)
 \dontrun{
 mobj1 <- lagsarlm(CRIME ~ INC + HOVAL, columbus, listw, type="mixed", 
 method="Matrix", fdHess=TRUE)
 summary(mobj1)
-summary(impacts.sarlm(mobj1, tr=trMatc, R=1000), zstats=TRUE, short=TRUE)
-summary(impacts.sarlm(mobj, tr=trMatc, R=1000), zstats=TRUE, short=TRUE)
+summary(impacts(mobj1, tr=trMatc, R=1000), zstats=TRUE, short=TRUE)
+summary(impacts(mobj, tr=trMatc, R=1000), zstats=TRUE, short=TRUE)
 mobj2 <- lagsarlm(CRIME ~ INC + HOVAL, columbus, listw, type="mixed", 
 method="Matrix", fdHess=TRUE, optimHess=TRUE)
-summary(impacts.sarlm(mobj2, tr=trMatc, R=1000), zstats=TRUE, short=TRUE)
+summary(impacts(mobj2, tr=trMatc, R=1000), zstats=TRUE, short=TRUE)
 mobj3 <- lagsarlm(CRIME ~ INC + HOVAL, columbus, listw, type="mixed", 
 method="spam", fdHess=TRUE)
-summary(impacts.sarlm(mobj3, tr=trMatc, R=1000), zstats=TRUE, short=TRUE)
+summary(impacts(mobj3, tr=trMatc, R=1000), zstats=TRUE, short=TRUE)
 data(boston)
 Wb <- as(as_dgRMatrix_listw(nb2listw(boston.soi)), "CsparseMatrix")
 trMatb <- trW(Wb, type="mult")
@@ -105,19 +115,23 @@ I(RM^2) +  AGE + log(DIS) + log(RAD) + TAX + PTRATIO + B + log(LSTAT),
 data=boston.c, nb2listw(boston.soi), type="mixed", method="Matrix", 
 fdHess=TRUE, trs=trMatb)
 summary(gp2mMi)
-summary(impacts.sarlm(gp2mMi, tr=trMatb, R=1000), zstats=TRUE, short=TRUE)
+summary(impacts(gp2mMi, tr=trMatb, R=1000), zstats=TRUE, short=TRUE)
 data(house)
+lw <- nb2listw(LO_nb)
 form <- formula(log(price) ~ age + I(age^2) + I(age^3) + log(lotsize) +
    rooms + log(TLA) + beds + syear)
-lobj <- lagsarlm(form, house, nb2listw(LO_nb), method="Matrix",
+lobj <- lagsarlm(form, house, lw, method="Matrix",
  fdHess=TRUE, trs=trMat)
 summary(lobj)
-loobj <- impacts.sarlm(lobj, tr=trMat, R=1000)
+loobj <- impacts(lobj, tr=trMat, R=1000)
 summary(loobj, zstats=TRUE, short=TRUE)
-mobj <- lagsarlm(form, house, nb2listw(LO_nb), type="mixed",
+lobj1 <- stsls(form, house, lw)
+loobj1 <- impacts(lobj1, tr=trMat, R=1000)
+summary(loobj1, zstats=TRUE, short=TRUE)
+mobj <- lagsarlm(form, house, lw, type="mixed",
  method="Matrix", fdHess=TRUE, trs=trMat)
 summary(mobj)
-moobj <- impacts.sarlm(mobj, tr=trMat, R=1000)
+moobj <- impacts(mobj, tr=trMat, R=1000)
 summary(moobj, zstats=TRUE, short=TRUE)
 }
 }

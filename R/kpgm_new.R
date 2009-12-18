@@ -22,8 +22,9 @@
 
 GMerrorsar <- function(#W, y, X, 
 	formula, data = list(), listw, na.action=na.fail, 
-	zero.policy=FALSE, return_LL=TRUE, method="Nelder-Mead", 
-        control=list(), pars, verbose=FALSE, sparse_method="Matrix") {
+	zero.policy=FALSE, return_LL=FALSE, method="nlminb", 
+        control=list(), pars, verbose=FALSE, sparse_method="Matrix",
+        returnHcov=FALSE, pWOrder=250, tol.Hcov=1.0e-10) {
 #	ols <- lm(I(y) ~ I(X) - 1)
 	mt <- terms(formula, data = data)
 	mf <- lm(formula, data, na.action=na.action, method="model.frame")
@@ -157,6 +158,21 @@ GMerrorsar <- function(#W, y, X,
 				(1/(2*(s2)))*SSE)
 		}
 	}
+        Hcov <- NULL
+        if (returnHcov) {
+            W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
+            pp <- ols$rank
+            p1 <- 1L:pp
+            R <- chol2inv(ols$qr$qr[p1, p1, drop = FALSE])
+            B <- tcrossprod(R, x)
+            B <- as(powerWeights(W=W, rho=lambda, order=pWOrder,
+                X=B, tol=tol.Hcov), "matrix")
+            C <- x %*% R
+            C <- as(powerWeights(W=t(W), rho=lambda, order=pWOrder,
+                X=C, tol=tol.Hcov), "matrix")
+            Hcov <- B %*% C
+            attr(Hcov, "method") <- "Matrix"
+        }
 
 	ret <- structure(list(lambda=lambda,
 		coefficients=coef.lambda, rest.se=rest.se, 
@@ -164,7 +180,7 @@ GMerrorsar <- function(#W, y, X,
 		call=call, residuals=r, lm.target=lm.target,
 		fitted.values=fit, formula=formula, aliased=aliased,
 		zero.policy=zero.policy, LL=LL, vv=vv, optres=optres,
-                pars=pars), class=c("gmsar"))
+                pars=pars, Hcov=Hcov), class=c("gmsar"))
 	if (zero.policy) {
 		zero.regs <- attr(listw$neighbours, 
 			"region.id")[which(card(listw$neighbours) == 0)]
@@ -212,7 +228,7 @@ print.gmsar <- function(x, ...)
 	invisible(x)
 }
 
-summary.gmsar <- function(object, correlation = FALSE, ...)
+summary.gmsar <- function(object, correlation = FALSE, Hausman=FALSE, ...)
 {
 	object$coeftitle <- "(GM standard errors)"
 	object$Coef <- cbind(object$coefficients, object$rest.se, 
@@ -223,6 +239,9 @@ summary.gmsar <- function(object, correlation = FALSE, ...)
 	if (is.null(object$LL)) object$LR1 <- NULL
 	else object$LR1 <- LR1.gmsar(object)
 	rownames(object$Coef) <- names(object$coefficients)
+        if (Hausman && !is.null(object$Hcov)) {
+                object$Haus <- Hausman.test(object)
+        }
 
 	structure(object, class=c("summary.gmsar", class(object)))
 }
@@ -309,6 +328,12 @@ print.summary.gmsar <- function(x, digits = max(5, .Options$digits - 3),
 	if (!is.null(res)) cat("AIC: ", format(signif(AIC(x), digits)), 
 		", (AIC for lm: ", format(signif(AIC(x$lm.model), digits)),
 		")\n", sep="")
+	if (!is.null(x$Haus)) {
+	    cat("Hausman test: ", format(signif(x$Haus$statistic, 
+		digits)), ", df: ", format(x$Haus$parameter),
+                       ", p-value: ", format.pval(x$Haus$p.value, digits),
+                       "\n", sep="")
+	}
     	cat("\n")
         invisible(x)
 }

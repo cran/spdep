@@ -24,71 +24,65 @@ trW <- function(W, m=100, p=50, type="mult") {
     tr
 }
 
-impacts.sarlm <- function(obj, ..., tr, R=NULL, listw=NULL, useHESS=NULL,
+impacts <- function(obj, ...)
+    UseMethod("impacts", obj)
+
+impacts.stsls <- function(obj, ..., tr=NULL, R=NULL, listw=NULL,
   tol=1e-6, empirical=FALSE, Q=NULL) {
-    if (obj$type == "error")
-        stop("impact measures only for lag and spatial Durbin models")
     if (!is.null(obj$listw_style) && obj$listw_style != "W") 
         stop("Only row-standardised weights supported")
-    rho <- obj$rho
-    beta <- obj$coefficients
-    s2 <- obj$s2
-    usingHESS <- NULL
-    if (!is.null(R)) {
-        resvar <- obj$resvar
-        usingHESS <- FALSE
-        irho <- 2
-        drop2beta <- 1:2
-        if (is.logical(resvar)) {
-            fdHess <- obj$fdHess
-            if (is.logical(fdHess)) 
-                stop("coefficient covariance matrix not available")
-            usingHESS <- TRUE
-            if (!obj$insert) {
-                irho <- 1
-                drop2beta <- 1
-            }
-        }
-        if (!is.null(useHESS) && useHESS) {
-            fdHess <- obj$fdHess
-            if (is.logical(fdHess)) 
-                stop("Hessian matrix not available")
-            usingHESS <- TRUE
-            if (!obj$insert) {
-                irho <- 1
-                drop2beta <- 1
-            }
-        }
-        interval <- obj$interval
-        if (is.null(interval)) interval <- c(-1,0.999)
-    }
+    rho <- obj$coefficients[1]
+    beta <- obj$coefficients[-1]
     icept <- grep("(Intercept)", names(beta))
     iicept <- length(icept) > 0
-    if (obj$type == "lag") {
-      if (iicept) {
+    if (iicept) {
         P <- matrix(beta[-icept], ncol=1)
         bnames <- names(beta[-icept])
-      } else {
+    } else {
         P <- matrix(beta, ncol=1)
         bnames <- names(beta)
-      }
-    } else if (obj$type == "mixed") {
-      if (iicept) {
-        b1 <- beta[-icept]
-      } else {
-        b1 <- beta
-      }
-      p <- length(b1)
-      if (p %% 2 != 0) stop("non-matched coefficient pairs")
-      P <- cbind(b1[1:(p/2)], b1[((p/2)+1):p])
-      bnames <- names(b1[1:(p/2)])
     }
-    n <- length(obj$fitted.values)
+    p <- length(beta)
+    n <- length(obj$residuals)
+    mu <- c(rho, beta)
+    Sigma <- obj$var
+    irho <- 1
+    drop2beta <- 1
+    res <- intImpacts(rho=rho, beta=beta, P=P, n=n, mu=mu, Sigma=Sigma,
+        irho=irho, drop2beta=drop2beta, bnames=bnames, interval=NULL,
+        type="lag", tr=tr, R=R, listw=listw, tol=tol, empirical=empirical,
+        Q=Q, icept=icept, iicept=iicept, p=p)
+    attr(res, "iClass") <- class(obj)
+    res
+}
+
+intImpacts <- function(rho, beta, P, n, mu, Sigma, irho, drop2beta, bnames,
+    interval, type, tr, R, listw, tol, empirical, Q, icept, iicept, p) {
+    if (is.null(listw) && is.null(tr))
+        stop("either tr or listw must be given")
     if (is.null(listw)) {
+
+        lagImpacts <- function(T, g, P) {
+            PT <- P %*% T
+            direct <- apply(apply(PT, 1, function(x) x*g), 2, sum)
+            total <- c(apply(P, 1, sum) * sum(g))
+            indirect <- total - direct
+            names(direct) <- names(total)
+            list(direct=direct, indirect=indirect, total=total)
+        }
+
+        lagDistrImpacts <- function(T, g, P, q=10) {
+            PT <- P %*% T
+            direct <- apply(PT, 1, function(x) x * g)[1:q, ]
+            total <- t(sapply(g, function(x) apply(P, 1, sum)*x))[1:q, ]
+            indirect <- total - direct
+            list(direct=direct, indirect=indirect, total=total)
+        }
+
         q <- length(tr)-1
         g <- rho^(0:q)
         T <- matrix(c(1, tr[-(q+1)]/n), nrow=1)
-        if (obj$type == "mixed") {
+        if (type == "mixed") {
             T <- rbind(T, tr/n)
         }
         res <- lagImpacts(T, g, P)
@@ -99,33 +93,23 @@ impacts.sarlm <- function(obj, ..., tr, R=NULL, listw=NULL, useHESS=NULL,
             attr(res, "Qres") <- Qres
         }
         if (!is.null(R)) {
-            if (usingHESS && !obj$insert) {
-                mu <- c(rho, beta)
-                samples <- mvrnorm(n=R, mu=mu, Sigma=fdHess, tol=tol,
-                    empirical=empirical)
-            } else {
-                mu <- c(s2, rho, beta)
-                if (usingHESS) {
-                    samples <- mvrnorm(n=R, mu=mu, Sigma=fdHess, tol=tol,
-                        empirical=empirical)
-                } else {
-                    samples <- mvrnorm(n=R, mu=mu, Sigma=resvar, tol=tol,
-                        empirical=empirical)
-                }
+            samples <- mvrnorm(n=R, mu=mu, Sigma=Sigma, tol=tol,
+                empirical=empirical)
+            if (!is.null(interval)) {
+                check <- ((samples[,irho] > interval[1]) & 
+                    (samples[,irho] < interval[2]))
+                if (any(!check)) samples <- samples[check,]
             }
-            check <- ((samples[,irho] > interval[1]) & 
-                (samples[,irho] < interval[2]))
-            if (any(!check)) samples <- samples[check,]
             processSample <- function(x, irho, drop2beta) {
                 g <- x[irho]^(0:q)
                 beta <- x[-drop2beta]
-                if (obj$type == "lag") {
+                if (type == "lag") {
                   if (iicept) {
                     P <- matrix(beta[-icept], ncol=1)
                   } else {
                     P <- matrix(beta, ncol=1)
                   }
-                } else if (obj$type == "mixed") {
+                } else if (type == "mixed") {
                     if (iicept) {
                       b1 <- beta[-icept]
                     } else {
@@ -170,37 +154,47 @@ impacts.sarlm <- function(obj, ..., tr, R=NULL, listw=NULL, useHESS=NULL,
         }
         attr(res, "method") <- "trace"
     } else {
-        SW <- invIrW(listw, rho)
-        if (obj$type == "lag") res <- lagImpactsExact(SW, P, n)
-        else if (obj$type == "mixed") res <- mixedImpactsExact(SW, P, n, listw)
-        if (!is.null(R)) {
-            if (usingHESS && !obj$insert) {
-                mu <- c(rho, beta)
-                samples <- mvrnorm(n=R, mu=mu, Sigma=fdHess, tol=tol,
-                    empirical=empirical)
-            } else {
-                mu <- c(s2, rho, beta)
-                if (usingHESS) {
-                    samples <- mvrnorm(n=R, mu=mu, Sigma=fdHess, tol=tol,
-                        empirical=empirical)
-                } else {
-                    samples <- mvrnorm(n=R, mu=mu, Sigma=resvar, tol=tol,
-                        empirical=empirical)
-                }
+        lagImpactsExact <- function(SW, P, n) {
+            direct <- sapply(P, function(x) sum(diag(x*SW))/n)
+            total <- sapply(P, function(x) sum(x*SW)/n)
+            indirect <- total - direct
+            list(direct=direct, indirect=indirect, total=total)
+        }
+
+        mixedImpactsExact <- function(SW, P, n, listw) {
+            p <- dim(P)[1]
+            direct <- numeric(p)
+            total <- numeric(p)
+            W <- listw2mat(listw)
+            for (i in 1:p) {
+                SWr <- SW %*% (P[i,1]*diag(n) + P[i,2]*W)
+                direct[i] <- sum(diag(SWr))/n
+                total[i] <- sum(SWr)/n
             }
-            check <- ((samples[,irho] > interval[1]) & 
-                (samples[,irho] < interval[2]))
-            if (any(!check)) samples <- samples[check,]
+            indirect <- total - direct
+            list(direct=direct, indirect=indirect, total=total)
+        }
+        SW <- invIrW(listw, rho)
+        if (type == "lag") res <- lagImpactsExact(SW, P, n)
+        else if (type == "mixed") res <- mixedImpactsExact(SW, P, n, listw)
+        if (!is.null(R)) {
+            samples <- mvrnorm(n=R, mu=mu, Sigma=Sigma, tol=tol,
+                empirical=empirical)
+            if (!is.null(interval)) {
+                check <- ((samples[,irho] > interval[1]) & 
+                    (samples[,irho] < interval[2]))
+                if (any(!check)) samples <- samples[check,]
+            }
             processXSample <- function(x, drop2beta) {
                 beta <- x[-drop2beta]
-                if (obj$type == "lag") {
+                if (type == "lag") {
                     if (iicept) {
                       P <- matrix(beta[-icept], ncol=1)
                     } else {
                       P <- matrix(beta, ncol=1)
                     }
                     return(lagImpactsExact(SW, P, n))
-                } else if (obj$type == "mixed") {
+                } else if (type == "mixed") {
                     if (iicept) {
                         b1 <- beta[-icept]
                     } else {
@@ -222,55 +216,101 @@ impacts.sarlm <- function(obj, ..., tr, R=NULL, listw=NULL, useHESS=NULL,
         }
         attr(res, "method") <- "exact"
     }
-    attr(res, "useHESS") <- usingHESS
-    attr(res, "insert") <- obj$insert
-    attr(res, "type") <- obj$type
+    attr(res, "type") <- type
     attr(res, "bnames") <- bnames
     attr(res, "haveQ") <- !is.null(Q)
-    class(res) <- "sarlmImpact"
+    class(res) <- "lagImpact"
     res
 }
 
-lagImpacts <- function(T, g, P) {
-    PT <- P %*% T
-    direct <- apply(apply(PT, 1, function(x) x*g), 2, sum)
-    total <- c(apply(P, 1, sum) * sum(g))
-    indirect <- total - direct
-    names(direct) <- names(total)
-    list(direct=direct, indirect=indirect, total=total)
-}
-
-lagDistrImpacts <- function(T, g, P, q=10) {
-    PT <- P %*% T
-    direct <- apply(PT, 1, function(x) x * g)[1:q, ]
-    total <- t(sapply(g, function(x) apply(P, 1, sum)*x))[1:q, ]
-    indirect <- total - direct
-    list(direct=direct, indirect=indirect, total=total)
-}
-
-
-lagImpactsExact <- function(SW, P, n) {
-    direct <- sapply(P, function(x) sum(diag(x*SW))/n)
-    total <- sapply(P, function(x) sum(x*SW)/n)
-    indirect <- total - direct
-    list(direct=direct, indirect=indirect, total=total)
-}
-
-mixedImpactsExact <- function(SW, P, n, listw) {
-    p <- dim(P)[1]
-    direct <- numeric(p)
-    total <- numeric(p)
-    W <- listw2mat(listw)
-    for (i in 1:p) {
-        SWr <- SW %*% (P[i,1]*diag(n) + P[i,2]*W)
-        direct[i] <- sum(diag(SWr))/n
-        total[i] <- sum(SWr)/n
+impacts.sarlm <- function(obj, ..., tr=NULL, R=NULL, listw=NULL, useHESS=NULL,
+  tol=1e-6, empirical=FALSE, Q=NULL) {
+    if (obj$type == "error")
+        stop("impact measures only for lag and spatial Durbin models")
+    if (!is.null(obj$listw_style) && obj$listw_style != "W") 
+        stop("Only row-standardised weights supported")
+    rho <- obj$rho
+    beta <- obj$coefficients
+    s2 <- obj$s2
+    usingHESS <- NULL
+    iNsert <- obj$insert
+    if (!is.null(R)) {
+        resvar <- obj$resvar
+        usingHESS <- FALSE
+        irho <- 2
+        drop2beta <- 1:2
+        if (is.logical(resvar)) {
+            fdHess <- obj$fdHess
+            if (is.logical(fdHess)) 
+                stop("coefficient covariance matrix not available")
+            usingHESS <- TRUE
+            if (!iNsert) {
+                irho <- 1
+                drop2beta <- 1
+            }
+        }
+        if (!is.null(useHESS) && useHESS) {
+            fdHess <- obj$fdHess
+            if (is.logical(fdHess)) 
+                stop("Hessian matrix not available")
+            usingHESS <- TRUE
+            if (!iNsert) {
+                irho <- 1
+                drop2beta <- 1
+            }
+        }
+        interval <- obj$interval
+        if (is.null(interval)) interval <- c(-1,0.999)
     }
-    indirect <- total - direct
-    list(direct=direct, indirect=indirect, total=total)
+    icept <- grep("(Intercept)", names(beta))
+    iicept <- length(icept) > 0
+    if (obj$type == "lag") {
+      if (iicept) {
+        P <- matrix(beta[-icept], ncol=1)
+        bnames <- names(beta[-icept])
+      } else {
+        P <- matrix(beta, ncol=1)
+        bnames <- names(beta)
+      }
+      p <- length(beta)
+    } else if (obj$type == "mixed") {
+      if (iicept) {
+        b1 <- beta[-icept]
+      } else {
+        b1 <- beta
+      }
+      p <- length(b1)
+      if (p %% 2 != 0) stop("non-matched coefficient pairs")
+      P <- cbind(b1[1:(p/2)], b1[((p/2)+1):p])
+      bnames <- names(b1[1:(p/2)])
+    }
+    n <- length(obj$residuals)
+    mu <- NULL
+    Sigma <- NULL
+    if (!is.null(R)) {
+        if (usingHESS && !iNsert) {
+            mu <- c(rho, beta)
+            Sigma <- fdHess
+        } else {
+            mu <- c(s2, rho, beta)
+            if (usingHESS) {
+                Sigma <- fdHess
+            } else {
+                Sigma <- resvar
+            }
+        }
+    }
+    res <- intImpacts(rho=rho, beta=beta, P=P, n=n, mu=mu, Sigma=Sigma,
+        irho=irho, drop2beta=drop2beta, bnames=bnames, interval=interval,
+        type=obj$type, tr=tr, R=R, listw=listw, tol=tol, empirical=empirical,
+        Q=Q, icept=icept, iicept=iicept, p=p)
+    attr(res, "useHESS") <- usingHESS
+    attr(res, "insert") <- iNsert
+    attr(res, "iClass") <- class(obj)
+    res
 }
 
-sarlmImpactMat <- function(x, reportQ=NULL) {
+lagImpactMat <- function(x, reportQ=NULL) {
     if (is.null(x$res)) {
         direct <- x$direct
         indirect <- x$indirect
@@ -301,8 +341,8 @@ sarlmImpactMat <- function(x, reportQ=NULL) {
 }
 
 
-print.sarlmImpact <- function(x, ..., reportQ=NULL) {
-    mat <- sarlmImpactMat(x, reportQ=reportQ)
+print.lagImpact <- function(x, ..., reportQ=NULL) {
+    mat <- lagImpactMat(x, reportQ=reportQ)
     Qobj <- attr(mat, "Qobj")
     cat("Impact measures (", attr(x, "type"), ", ", attr(x, "method"), "):\n", sep="")
     attr(mat, "Qobj") <- NULL
@@ -317,13 +357,13 @@ print.sarlmImpact <- function(x, ..., reportQ=NULL) {
     invisible(x)
 }
 
-summary.sarlmImpact <- function(object, ..., zstats=FALSE, short=FALSE, reportQ=NULL) {
+summary.lagImpact <- function(object, ..., zstats=FALSE, short=FALSE, reportQ=NULL) {
     if (is.null(object$sres)) stop("summary method unavailable")
     direct_sum <- summary(object$sres$direct)
     indirect_sum <- summary(object$sres$indirect)
     total_sum <- summary(object$sres$total)
     Qmcmc <- NULL
-    if (!is.null(attr(object$sres, "Qmcmc")) && reportQ) {
+    if (!is.null(attr(object$sres, "Qmcmc")) && !is.null(reportQ) && reportQ) {
         Qdirect_sum <- summary(attr(object$sres, "Qmcmc")$direct)
         Qindirect_sum <- summary(attr(object$sres, "Qmcmc")$indirect)
         Qtotal_sum <- summary(attr(object$sres, "Qmcmc")$total)
@@ -338,7 +378,7 @@ summary.sarlmImpact <- function(object, ..., zstats=FALSE, short=FALSE, reportQ=
         colnames(zmat) <- c("Direct", "Indirect", "Total")
         pzmat <- 2*(1-pnorm(abs(zmat)))
         res <- c(res, list(zmat=zmat, pzmat=pzmat))
-        if (!is.null(Qmcmc) && reportQ) {
+        if (!is.null(Qmcmc) && !is.null(reportQ) && reportQ) {
             Qzmats <- lapply(Qmcmc, function(x) {
                 Qm <- matrix(x$statistics[,1]/x$statistics[,2],
                     ncol=length(attr(object, "bnames")))
@@ -357,13 +397,20 @@ summary.sarlmImpact <- function(object, ..., zstats=FALSE, short=FALSE, reportQ=
     attr(res, "type") <- attr(object, "type")
     attr(res, "short") <- short
     attr(res, "reportQ") <- reportQ
-    class(res) <- "summary.sarlmImpact"
+    tp <- NULL
+    if (attr(object, "iClass") == "sarlm") tp <- ifelse(attr(object,
+       "useHESS"), ifelse(attr(object, "insert"),
+       "mixed Hessian approximation", "numerical Hessian approximation"),
+       "asymptotic")
+    else if (attr(object, "iClass") == "stsls") tp <- "asymptotic IV"
+    attr(res, "tp") <- tp
+    class(res) <- "summary.lagImpact"
     res
 }
 
-print.summary.sarlmImpact <- function(x, ...) {
+print.summary.lagImpact <- function(x, ...) {
     reportQ <- attr(x, "reportQ")
-    mat <- sarlmImpactMat(x, reportQ)
+    mat <- lagImpactMat(x, reportQ)
     Qobj <- attr(mat, "Qobj")
     attr(mat, "Qobj") <- NULL
     cat("Impact measures (", attr(x, "type"), ", ", attr(x, "method"),
@@ -377,8 +424,8 @@ print.summary.sarlmImpact <- function(x, ...) {
         }
     }
     cat("========================================================\n")
-    tp <- ifelse(attr(x, "useHESS"), ifelse(attr(x, "insert"), "mixed Hessian approximation", "numerical Hessian approximation"), "asymptotic")
-    cat("Simulation results (", tp, " variance matrix):\n", sep="")
+
+    cat("Simulation results (", attr(x, "tp"), " variance matrix):\n", sep="")
     if (!attr(x, "short")) {
         cat("Direct:\n")
         print(x$direct_sum)
@@ -422,14 +469,14 @@ print.summary.sarlmImpact <- function(x, ...) {
     invisible(x)
 }
 
-plot.sarlmImpact <- function(x, ..., choice="direct", trace=FALSE,
+plot.lagImpact <- function(x, ..., choice="direct", trace=FALSE,
     density=TRUE) {
     if (is.null(x$sres)) stop("plot method unavailable")
     plot(x$sres[[choice]], trace=trace, density=density, sub=choice)
     invisible(x)
 }
 
-HPDinterval.sarlmImpact <- function(obj, prob = 0.95, ..., choice="direct") {
+HPDinterval.lagImpact <- function(obj, prob = 0.95, ..., choice="direct") {
     if (is.null(obj$sres)) stop("HPDinterval method unavailable")
     res <- HPDinterval(obj$sres[[choice]], prob=prob)
     res

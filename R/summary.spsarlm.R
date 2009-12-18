@@ -68,7 +68,7 @@ summary.sarlm <- function(object, correlation = FALSE, Nagelkerke=FALSE,
             if (!is.null(nk)) object$NK <- nk
         }
         if (Hausman && object$type == "error" && !is.null(object$Hcov)) {
-                object$Haus <- Hausman.sarlm(object)
+                object$Haus <- Hausman.test(object)
         }
 	if (object$type == "error") {
 		object$Wald1 <- Wald1.sarlm(object)
@@ -175,11 +175,43 @@ Wald1.sarlm <- function(object) {
 
 }
 
-Hausman.sarlm <- function(object, tol=NULL) {
+Hausman.test <- function(object, ...)
+    UseMethod("Hausman.test", object)
+
+Hausman.test.sarlm <- function(object, ..., tol=NULL) {
     if (!inherits(object, "sarlm")) stop("not a sarlm object")
     if (object$type != "error") stop("not a spatial error model")
     fmeth <- ifelse(object$method != "eigen", "(approximate)", "(asymptotic)") 
     if (is.null(object$Hcov)) stop("Vo not available")
+    s2 <- object$s2
+    Vo <- s2 * object$Hcov
+    Vs <- s2 * summary.lm(object$lm.target, corr = FALSE)$cov.unscaled
+    d <- coef(object$lm.model) - coef(object$lm.target)
+    if (!is.null(tol)) VV <- try(solve((Vo - Vs), tol=tol))
+    else VV <- try(solve(Vo - Vs))
+    if (class(VV) == "try.error") {
+        warning("(Vo - Vs) inversion failure")
+        return(NULL)
+    }
+    statistic <- t(d) %*% VV %*% d
+    attr(statistic, "names") <- "Hausman test"
+    parameter <- length(d)
+    attr(parameter, "names") <- "df"
+    p.value <- 1 - pchisq(abs(statistic), parameter)
+    method <- paste("Spatial Hausman test", fmeth)
+    data.name <- strwrap(deparse(object$formula), exdent=4)
+    if (length(data.name) > 1) 
+        data.name <- paste(data.name, collapse="\n    ")
+    res <- list(statistic = statistic, parameter = parameter, 
+        p.value = p.value, method = method, data.name=data.name)
+    class(res) <- "htest"
+    res
+}
+
+Hausman.test.gmsar <- function(object, ..., tol=NULL) {
+    if (!inherits(object, "gmsar")) stop("not a gmsar object")
+    if (is.null(object$Hcov)) stop("Vo not available")
+    fmeth <- "(approximate)"
     s2 <- object$s2
     Vo <- s2 * object$Hcov
     Vs <- s2 * summary.lm(object$lm.target, corr = FALSE)$cov.unscaled

@@ -132,7 +132,7 @@ COL.lag.eig1$fdHess
 system.time(COL.lag.M <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb), method="Matrix", quiet=FALSE))
 summary(COL.lag.M)
-impacts.sarlm(COL.lag.M, listw=nb2listw(COL.nb))
+impacts(COL.lag.M, listw=nb2listw(COL.nb))
 system.time(COL.lag.M <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb), method="Matrix", quiet=FALSE, withLL=TRUE))
 summary(COL.lag.M)
