@@ -23,7 +23,7 @@ skater(edges, data, ncuts, crit, vec.crit, method = c("euclidean",
   \item{vec.crit}{A vector for evaluating critera.}
   \item{method}{Character for declare the distance method.
      For "euclidean", "maximum", "manhattan", "canberra",
-     "binary" and "minkowisk", see \code{\link{dist}} for details,
+     "binary" and "minkowski", see \code{\link{dist}} for details,
      because this function as used to compute the distance.
      If \code{method="mahalanobis"}, the mahalanobis distance
      is computed between neighbour areas.

@@ -17,7 +17,7 @@ ssw(data, id, method = c("euclidean", "maximum",
   \item{id}{Node index to compute the cost}
   \item{method}{Character for declare the distance method. 
      For "euclidean", "maximum", "manhattan", "canberra", 
-     "binary" and "minkowisk", see \code{\link{dist}} for details, 
+     "binary" and "minkowski", see \code{\link{dist}} for details, 
      because this function as used to compute the distance.
      If \code{method="mahalanobis"}, the mahalanobis distance
      is computed between neighbour areas.

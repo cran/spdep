@@ -1,9 +1,9 @@
 % Copyright 2002-8 by Roger S. Bivand
 \name{globalG.test}
 \alias{globalG.test}
-\title{ test for spatial autocorrelation}
+\title{Global G test for spatial autocorrelation}
 \description{
- .
+The global G statistic for spatial autocorrelation, complementing the local Gi LISA measures: \code{\link{localG}}.
 }
 \usage{
 globalG.test(x, listw, zero.policy=FALSE, alternative="greater",
@@ -11,7 +11,7 @@ globalG.test(x, listw, zero.policy=FALSE, alternative="greater",
 }
 \arguments{
   \item{x}{a numeric vector the same length as the neighbours list in listw}
-  \item{listw}{a \code{listw} object created for example by \code{nb2listw}}
+  \item{listw}{a \code{listw} object created for example by \code{nb2listw}; if a sequence of distance bands is to be used, it is recommended that the weights style be binary (one of \code{c("B", "C", "U")}).}
   \item{zero.policy}{if TRUE assign zero to the lagged value of zones without neighbours, if FALSE assign NA}
   \item{alternative}{a character string specifying the alternative hypothesis, must be one of "greater" (default), "less" or "two.sided".}
   \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
