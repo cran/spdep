@@ -37,13 +37,13 @@ geary                   Compute Geary's C
 geary.mc                Permutation test for Geary's C statistic
 geary.test              Geary's C test for spatial autocorrelation
 getisord                Getis-Ord remote sensing example data
-globalG.test            test for spatial autocorrelation
+globalG.test            Global G test for spatial autocorrelation
 GMerrorsar              Spatial simultaneous autoregressive error model
                         estimation by GMM
 hopkins                 Hopkins burnt savanna herb remains
 house                   Lucas county OH housing
 huddersfield            Prevalence of respiratory symptoms
-impacts.sarlm           Impacts in spatial lag models
+impacts                 Impacts in spatial lag models
 include.self            Include self in neighbours list
 intersect.nb            Set operations on neighborhood objects
 invIrM                  Compute SAR generating operator
@@ -56,6 +56,7 @@ joincount.test          BB join count statistic for k-coloured factors
 knearneigh              K nearest neighbours for spatial weights
 knn2nb                  Neighbours list from knn object
 lag.listw               Spatial lag of a numeric vector
+lagmess                 Matrix exponential spatial lag model
 lagsarlm                Spatial simultaneous autoregressive lag model
                         estimation
 listw2sn                Spatial neighbour sparse representation

@@ -292,8 +292,8 @@ print.summary.sarlm <- function(x, digits = max(5, .Options$digits - 3),
 		}
 	} else {
 		cat("\nRho: ", format(signif(x$rho, digits)), 
-                    ", LR test value:", format(signif(res$statistic, digits)),
-		    ", p-value:", format.pval(res$p.value, digits), "\n",
+                    ", LR test value: ", format(signif(res$statistic, digits)),
+		    ", p-value: ", format.pval(res$p.value, digits), "\n",
                     sep="")
                 if (!is.null(x$rho.se)) {
                   pref <- ifelse(x$ase, "Asymptotic",

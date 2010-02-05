@@ -2,6 +2,10 @@ useDynLib(spdep)
 
 importFrom(stats, model.matrix, model.response, aggregate)
 
+importFrom(stats, optimize, optim)
+
+importFrom(nlme, fdHess)
+
 importFrom(boot, boot)
 
 importFrom(MASS, mvrnorm)
@@ -63,7 +67,7 @@ export(mstree, nbcosts, nbcost, plot.mst, plot.skater, prunecost, ssw, prunemst,
 
 export(aple, aple.mc, aple.plot, localAple)
 
-export(trW, impacts)
+export(trW, impacts, lagmess)
 
 import(maptools)
 
@@ -162,4 +166,13 @@ S3method(plot, lagImpact)
 S3method(summary, lagImpact)
 S3method(HPDinterval, lagImpact)
 S3method(print, summary.lagImpact)
+
+S3method(print, lagmess)
+S3method(summary, lagmess)
+S3method(print, summary.lagmess)
+S3method(residuals, lagmess)
+S3method(deviance, lagmess)
+S3method(coef, lagmess)
+S3method(fitted, lagmess)
+S3method(logLik, lagmess)
 

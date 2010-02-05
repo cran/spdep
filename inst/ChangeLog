@@ -1,3 +1,18 @@
+2010-02-03 13:47  rsbivand
+
+	* DESCRIPTION, INDEX, NAMESPACE, R/mess.R, R/summary.spsarlm.R,
+	  man/lagmess.Rd: adding MESS function
+
+2010-01-28 12:24  rsbivand
+
+	* DESCRIPTION, R/globalG.R, man/globalG.test.Rd, man/skater.Rd,
+	  man/ssw.Rd: global G warning not error for non-binary weights
+
+2009-12-15 17:16  rsbivand
+
+	* ChangeLog, inst/ChangeLog: convert impacts to method, provide
+	  sarlm and stsls methods
+
 2009-12-15 17:16  rsbivand
 
 	* R/impacts.R: convert impacts to method, provide sarlm and stsls
