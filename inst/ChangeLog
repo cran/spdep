@@ -1,3 +1,11 @@
+2010-02-24 18:29  rsbivand
+
+	* DESCRIPTION, R/error.spsarlm.R: errorsarlm resvar bugfix
+
+2010-02-03 13:49  rsbivand
+
+	* ChangeLog, inst/ChangeLog: adding MESS function
+
 2010-02-03 13:47  rsbivand
 
 	* DESCRIPTION, INDEX, NAMESPACE, R/mess.R, R/summary.spsarlm.R,

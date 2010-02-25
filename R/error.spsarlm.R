@@ -1,4 +1,4 @@
-# Copyright 1998-2009 by Roger Bivand (non-W styles Rein Halbersma)
+# Copyright 1998-2010 by Roger Bivand (non-W styles Rein Halbersma)
 #
 
 errorsarlm <- function(formula, data = list(), listw, na.action, 
@@ -164,8 +164,10 @@ errorsarlm <- function(formula, data = list(), listw, na.action,
 		asyvar[1,1] <- n / (2*(s2^2))
 		asyvar[2,1] <- asyvar[1,2] <- tr(WA) / s2
 		asyvar[2,2] <- tr(WA %*% WA) + tr(t(WA) %*% WA)
-		asyvar[3:(p+2),3:(p+2)] <- s2*(t(x - lambda*WX) %*% 
-			(x - lambda*WX))
+# bug found 100224 German Muchnik Izon
+#		asyvar[3:(p+2),3:(p+2)] <- s2*(t(x - lambda*WX) %*% 
+		asyvar[3:(p+2),3:(p+2)] <- t(x - lambda*WX) %*% 
+			(x - lambda*WX)
 		asyvar1 <- solve(asyvar, tol=tol.solve)
 		rownames(asyvar1) <- colnames(asyvar1) <- 
 			c("sigma", "lambda", xcolnames)
