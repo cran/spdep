@@ -3,7 +3,7 @@
 #
 
 localmoran.sad <- function (model, select, nb, glist = NULL, style = "W",
-    zero.policy = FALSE, alternative = "greater", spChk=NULL, 
+    zero.policy = NULL, alternative = "greater", spChk=NULL, 
     resfun=weighted.residuals,
     save.Vi = FALSE, tol = .Machine$double.eps^0.5,
     maxiter = 1000, tol.bounds=0.0001, save.M=FALSE, Omega=NULL) {
@@ -11,6 +11,9 @@ localmoran.sad <- function (model, select, nb, glist = NULL, style = "W",
 # class to inherits Jari Oksanen 080603
     if (!inherits(nb, "nb"))
         stop(paste(deparse(substitute(nb)), "not an nb object"))
+        if (is.null(zero.policy))
+            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+        stopifnot(is.logical(zero.policy))
     n <- length(nb)
     dmc <- deparse(model$call)
     if (!inherits(model, "lm"))

@@ -7,7 +7,7 @@
   The function implements Tiefelsdorf's exact global Moran's I test.
 }
 \usage{
-lm.morantest.exact(model, listw, zero.policy = FALSE, alternative = "greater", spChk = NULL, resfun = weighted.residuals, zero.tol = 1e-07, Omega=NULL, save.M=NULL, save.U=NULL, useTP=FALSE, truncErr=1e-6, zeroTreat=0.1)
+lm.morantest.exact(model, listw, zero.policy = NULL, alternative = "greater", spChk = NULL, resfun = weighted.residuals, zero.tol = 1e-07, Omega=NULL, save.M=NULL, save.U=NULL, useTP=FALSE, truncErr=1e-6, zeroTreat=0.1)
 \method{print}{moranex}(x, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -15,7 +15,7 @@ lm.morantest.exact(model, listw, zero.policy = FALSE, alternative = "greater", s
   \item{model}{an object of class \code{lm} returned by \code{lm}; weights
 may be specified in the \code{lm} fit, but offsets should not be used}
   \item{listw}{a \code{listw} object created for example by \code{nb2listw}}
-  \item{zero.policy}{if TRUE assign zero to the lagged value of zones without
+  \item{zero.policy}{default NULL, use global option value; if TRUE assign zero to the lagged value of zones without
 neighbours, if FALSE assign NA}
   \item{alternative}{a character string specifying the alternative hypothesis,
 must be one of greater (default), less or two.sided.}

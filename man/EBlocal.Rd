@@ -6,14 +6,14 @@
   The function computes local empirical Bayes estimates for rates "shrunk" to a neighbourhood mean for neighbourhoods given by the \code{nb} neighbourhood list.
 }
 \usage{
-EBlocal(ri, ni, nb, zero.policy = FALSE, spChk = NULL, geoda=FALSE)
+EBlocal(ri, ni, nb, zero.policy = NULL, spChk = NULL, geoda=FALSE)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
   \item{ri}{a numeric vector of counts of cases the same length as the neighbours list in nb}
   \item{ni}{a numeric vector of populations at risk the same length as the neighbours list in nb}
   \item{nb}{a \code{nb} object of neighbour relationships}
-  \item{zero.policy}{if TRUE assign zero to the lagged value of zones without neighbours, if FALSE assign NA}
+  \item{zero.policy}{default NULL, use global option value; if TRUE assign zero to the lagged value of zones without neighbours, if FALSE assign NA}
   \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
  \item{geoda}{default=FALSE, following Marshall's algorithm as interpreted by Bailey and Gatrell, pp. 305-307, and exercise 8.2, pp. 328-330 for the definition of phi; TRUE for the definition of phi used in GeoDa (see discussion on OpenSpace mailing list June 2003: http://agec221.agecon.uiuc.edu/pipermail/openspace/2003-June/thread.html)}
 }

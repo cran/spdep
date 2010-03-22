@@ -14,8 +14,11 @@
 # Roger Bivand 28.11.2005
 # Upgrade to sp classes February 2007
 
-autocov_dist <- function(z, xy, nbs=1, type="inverse", zero.policy=FALSE,
+autocov_dist <- function(z, xy, nbs=1, type="inverse", zero.policy=NULL,
    style="W", longlat=NULL) {
+        if (is.null(zero.policy))
+            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+        stopifnot(is.logical(zero.policy))
    if (type=="one") expo <- 0
    if (type=="inverse") expo <- 1
    if (type=="inverse.squared") expo <- 2

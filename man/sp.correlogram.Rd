@@ -10,7 +10,7 @@ print and plot helper functions.
 }
 \usage{
 sp.correlogram(neighbours, var, order = 1, method = "corr",
- style = "W", randomisation = TRUE, zero.policy = FALSE, spChk=NULL)
+ style = "W", randomisation = TRUE, zero.policy = NULL, spChk=NULL)
 plot.spcor(x, main, ylab, ylim, ...)
 print.spcor(x, p.adj.method="none", ...)
 }
@@ -22,7 +22,7 @@ print.spcor(x, p.adj.method="none", ...)
   \item{method}{"corr" for correlation, "I" for Moran's I}
   \item{style}{\code{style} can take values W, B, C, and S}
   \item{randomisation}{variance of I calculated under the assumption of randomisation, if FALSE normality}
-  \item{zero.policy}{If FALSE stop with error for any empty neighbour sets, 
+  \item{zero.policy}{default NULL, use global option value; if FALSE stop with error for any empty neighbour sets, 
 if TRUE permit the weights list to be formed with zero-length weights vectors}
   \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
   \item{x}{an object from \code{sp.correlogram()} of class \code{spcor}}

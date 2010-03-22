@@ -35,7 +35,10 @@ fitted.sarlm <- function(object, ...) {
 }
 
 predict.sarlm <- function(object, newdata=NULL, listw=NULL, 
-	zero.policy=FALSE, ...) {
+	zero.policy=NULL, ...) {
+        if (is.null(zero.policy))
+            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+        stopifnot(is.logical(zero.policy))
 	if (is.null(newdata)) {
 		res <- fitted.values(object)
 		X <- model.matrix(terms(object$lm.model), 

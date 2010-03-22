@@ -1,15 +1,50 @@
-# Copyright 2003 by Roger Bivand 
+# Copyright 2003-2010 by Roger Bivand 
 
 set.spChkOption <- function(check) {
 	if (!is.logical(check)) stop ("logical argument required")
-	res <- get("spChkID", env = .spChkOption)
-	assign("spChkID", check, env = .spChkOption)
+	res <- get("spChkID", env = .spdepOptions)
+	assign("spChkID", check, env = .spdepOptions)
 	res
 }
 
 get.spChkOption <- function() {
-	get("spChkID", env = .spChkOption)
+	get("spChkID", env = .spdepOptions)
 }
+
+set.VerboseOption <- function(check) {
+	if (!is.logical(check)) stop ("logical argument required")
+	res <- get("verbose", env = .spdepOptions)
+	assign("verbose", check, env = .spdepOptions)
+	res
+}
+
+get.VerboseOption <- function() {
+	get("verbose", env = .spdepOptions)
+}
+
+set.ZeroPolicyOption <- function(check) {
+	if (!is.logical(check)) stop ("logical argument required")
+	res <- get("zero.policy", env = .spdepOptions)
+	assign("zero.policy", check, env = .spdepOptions)
+	res
+}
+
+get.ZeroPolicyOption <- function() {
+	get("zero.policy", env = .spdepOptions)
+}
+
+set.ClusterOption <- function(cl) {
+	if (!is.null(cl)) 
+            if (!inherits(cl, "cluster")) 
+                stop ("cluster required")
+	assign("cl", cl, env = .spdepOptions)
+        invisible(NULL)
+}
+
+get.ClusterOption  <- function() {
+	get("cl", env = .spdepOptions)
+}
+
 
 chkIDs <- function (x, listw) 
 {

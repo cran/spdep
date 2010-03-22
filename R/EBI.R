@@ -2,8 +2,11 @@
 # Addition of Martuzzi and Elliott Copyright 2006 Olaf Berke and Roger Bivand
 #
 
-EBImoran <- function (z, listw, nn, S0, zero.policy = FALSE) 
+EBImoran <- function (z, listw, nn, S0, zero.policy = NULL) 
 {
+        if (is.null(zero.policy))
+            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+        stopifnot(is.logical(zero.policy))
     zm <- mean(z)
     zz <- sum((z - zm)^2)
     lz <- lag.listw(listw, z, zero.policy = zero.policy)
@@ -11,9 +14,13 @@ EBImoran <- function (z, listw, nn, S0, zero.policy = FALSE)
     res <- EBI
     res
 }
-EBImoran.mc <- function (n, x, listw, nsim, zero.policy = FALSE,
- alternative = "greater", spChk = NULL) 
+
+EBImoran.mc <- function (n, x, listw, nsim, zero.policy = NULL,
+ alternative = "greater", spChk = NULL, return_boot=FALSE) 
 {
+        if (is.null(zero.policy))
+            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+        stopifnot(is.logical(zero.policy))
     alternative <- match.arg(alternative, c("greater", "less"))
     if (!inherits(listw, "listw")) 
         stop(paste(deparse(substitute(listw)), "is not a listw object"))
@@ -41,6 +48,25 @@ EBImoran.mc <- function (n, x, listw, nsim, zero.policy = FALSE,
     v <- a + (b/x)
     v[v < 0] <- b/x
     z <- (p - b)/sqrt(v)
+    if (return_boot) {
+            EBI_boot <- function(var, i, ...) {
+                var <- var[i]
+                return(EBImoran(z=var, ...))
+            }
+            cl <- get("cl", env = .spdepOptions)
+            if (!is.null(cl) && length(cl) > 1) {
+                nnsim <- boot_wrapper_in(cl, nsim)
+                lres <- clusterCall(cl, boot, z, statistic=EBI_boot, R=nnsim,
+                    sim="permutation", listw=listw, nn=m, S0=S0,
+                    zero.policy=zero.policy)
+                res <- boot_wrapper_out(lres, match.call())
+            } else {
+                res <- boot(z, statistic=EBI_boot, R=nsim,
+                    sim="permutation", listw=listw, nn=m, S0=S0, 
+                    zero.policy=zero.policy)
+            }
+            return(res)
+    }
     res <- numeric(length = nsim + 1)
     for (i in 1:nsim) res[i] <- EBImoran(sample(z), listw, m, 
         S0, zero.policy)
@@ -155,8 +181,11 @@ EBest <- function(n, x, family="poisson") {
 #result
 #}
 
-EBlocal <- function(ri, ni, nb, zero.policy = FALSE,
+EBlocal <- function(ri, ni, nb, zero.policy = NULL,
     spChk = NULL, geoda = FALSE) {
+        if (is.null(zero.policy))
+            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+        stopifnot(is.logical(zero.policy))
 # class to inherits Jari Oksanen 080603
     if (!inherits(nb, "nb")) 
         stop(paste(deparse(substitute(nb)), "is not an nb object"))

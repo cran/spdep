@@ -1,7 +1,10 @@
 # Copyright 2001-5 by Roger Bivand 
 #
 
-moran <- function(x, listw, n, S0, zero.policy=FALSE, NAOK=FALSE) {
+moran <- function(x, listw, n, S0, zero.policy=NULL, NAOK=FALSE) {
+        if (is.null(zero.policy))
+            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+        stopifnot(is.logical(zero.policy))
 	n1 <- length(listw$neighbours)
 	x <- c(x)
 	if (n1 != length(x)) stop("objects of different length")
@@ -16,7 +19,7 @@ moran <- function(x, listw, n, S0, zero.policy=FALSE, NAOK=FALSE) {
 	res
 }
 
-moran.test <- function(x, listw, randomisation=TRUE, zero.policy=FALSE,
+moran.test <- function(x, listw, randomisation=TRUE, zero.policy=NULL,
 	alternative="greater", rank = FALSE, na.action=na.fail, spChk=NULL, 
 	adjust.n=TRUE) {
 	alternative <- match.arg(alternative, c("greater", "less", "two.sided"))
@@ -24,6 +27,9 @@ moran.test <- function(x, listw, randomisation=TRUE, zero.policy=FALSE,
 		"is not a listw object"))
 	if (!is.numeric(x)) stop(paste(deparse(substitute(x)),
 		"is not a numeric vector"))
+        if (is.null(zero.policy))
+            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+        stopifnot(is.logical(zero.policy))
 	if (is.null(spChk)) spChk <- get.spChkOption()
 	if (spChk && !chkIDs(x, listw))
 		stop("Check of data and weights ID integrity failed")
@@ -83,13 +89,17 @@ moran.test <- function(x, listw, randomisation=TRUE, zero.policy=FALSE,
 	res
 }
 
-moran.mc <- function(x, listw, nsim, zero.policy=FALSE,
-	alternative="greater", na.action=na.fail, spChk=NULL) {
+moran.mc <- function(x, listw, nsim, zero.policy=NULL,
+	alternative="greater", na.action=na.fail, spChk=NULL,
+        return_boot=FALSE) {
 	alternative <- match.arg(alternative, c("greater", "less"))
 	if(!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
 	if(!is.numeric(x)) stop(paste(deparse(substitute(x)),
 		"is not a numeric vector"))
+        if (is.null(zero.policy))
+            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+        stopifnot(is.logical(zero.policy))
 	if(missing(nsim)) stop("nsim must be given")
 	if (is.null(spChk)) spChk <- get.spChkOption()
 	if (spChk && !chkIDs(x, listw))
@@ -115,6 +125,25 @@ moran.mc <- function(x, listw, nsim, zero.policy=FALSE,
 	if (nsim < 1) stop("nsim too small")
 	
 	S0 <- Szero(listw)
+        if (return_boot) {
+            moran_boot <- function(var, i, ...) {
+                var <- var[i]
+                return(moran(x=var, ...)$I)
+            }
+            cl <- get("cl", env = .spdepOptions)
+            if (!is.null(cl) && length(cl) > 1) {
+                nnsim <- boot_wrapper_in(cl, nsim)
+                lres <- clusterCall(cl, boot, x, statistic=moran_boot,
+                    R=nnsim, sim="permutation", listw=listw, n=n,
+                    S0=S0, zero.policy=zero.policy)
+                res <- boot_wrapper_out(lres, match.call())
+            } else {
+                res <- boot(x, statistic=moran_boot, R=nsim,
+                    sim="permutation", listw=listw, n=n, S0=S0, 
+                    zero.policy=zero.policy)
+            }
+            return(res)
+        }
 	res <- numeric(length=nsim+1)
 	for (i in 1:nsim) res[i] <- moran(sample(x), listw, n, S0,
 	    zero.policy)$I

@@ -1,11 +1,16 @@
 # Copyright 2001 by Roger Bivand 
 #
 
-moran.plot <- function(x, listw, zero.policy=FALSE, spChk=NULL,
- labels=NULL, xlab=NULL, ylab=NULL, quiet=FALSE, ...)
+moran.plot <- function(x, listw, zero.policy=NULL, spChk=NULL,
+ labels=NULL, xlab=NULL, ylab=NULL, quiet=NULL, ...)
 {
 	if (!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
+        if (is.null(quiet)) quiet <- !get("verbose", env = .spdepOptions)
+        stopifnot(is.logical(quiet))
+        if (is.null(zero.policy))
+            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+        stopifnot(is.logical(zero.policy))
 	xname <- deparse(substitute(x))
 	if (!is.numeric(x)) stop(paste(xname, "is not a numeric vector"))
 	if (any(is.na(x))) stop("NA in X")

@@ -13,9 +13,9 @@ the link lengths are also printed. Print and summary functions are also availabl
 \usage{
 summary.nb(object, coords=NULL, longlat = NULL, scale = 1, ...)
 print.nb(x, ...)
-summary.listw(object, coords, longlat, zero.policy = FALSE,
+summary.listw(object, coords, longlat, zero.policy = NULL,
  scale = 1, ...)
-print.listw(x, zero.policy = FALSE, ...)
+print.listw(x, zero.policy = NULL, ...)
 }
 
 \arguments{
@@ -24,7 +24,7 @@ print.listw(x, zero.policy = FALSE, ...)
   \item{longlat}{TRUE if point coordinates are longitude-latitude decimal degrees, in which case distances are measured in kilometers; if coords is a SpatialPoints object, the value is taken from the object itself}
   \item{...}{additional arguments affecting the output produced}
   \item{x}{an object of class \code{nb}}
-  \item{zero.policy}{If FALSE stop with error for any empty neighbour sets}
+  \item{zero.policy}{default NULL, use global option value; if FALSE stop with error for any empty neighbour sets}
   \item{scale}{passed through to \code{stem()} for control of plot length}
 }
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}

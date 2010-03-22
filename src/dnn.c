@@ -4,14 +4,7 @@
  *  and written by Roger Bivand (C) 2001-3
  */
 
-#include <R.h>
-#include <Rdefines.h>
-#include <Rmath.h>
-#include <R_ext/Applic.h>
-#define ROFFSET 1
-
-void gcdist(double *lon1, double *lon2, double *lat1, double *lat2, 
-		double *dist);
+#include "spdep.h"
 
 SEXP
 dnearneigh(SEXP din1, SEXP din2, SEXP pnte, SEXP p, SEXP test, SEXP lonlat)

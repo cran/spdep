@@ -9,8 +9,8 @@
  \code{localmoran.exact} provides exact local Moran's Ii tests under the null hypothesis, while \code{localmoran.exact.alt} provides exact local Moran's Ii tests under the alternative hypothesis. In this case, the model may be a fitted model returned by \code{errorsarlm} from which the covariance matrix is retrieved, or the covariance matrix can be passed through the \code{Omega=} argument.
 }
 \usage{
-localmoran.exact(model, select, nb, glist = NULL, style = "W", zero.policy = FALSE, alternative = "greater", spChk = NULL, resfun = weighted.residuals, save.Vi = FALSE, useTP=FALSE, truncErr=1e-6, zeroTreat=0.1)
-localmoran.exact.alt(model, select, nb, glist = NULL, style = "W", zero.policy = FALSE, alternative = "greater", spChk = NULL, resfun = weighted.residuals, Omega = NULL, save.Vi = FALSE, save.M = FALSE, useTP=FALSE, truncErr=1e-6, zeroTreat=0.1)
+localmoran.exact(model, select, nb, glist = NULL, style = "W", zero.policy = NULL, alternative = "greater", spChk = NULL, resfun = weighted.residuals, save.Vi = FALSE, useTP=FALSE, truncErr=1e-6, zeroTreat=0.1)
+localmoran.exact.alt(model, select, nb, glist = NULL, style = "W", zero.policy = NULL, alternative = "greater", spChk = NULL, resfun = weighted.residuals, Omega = NULL, save.Vi = FALSE, save.M = FALSE, useTP=FALSE, truncErr=1e-6, zeroTreat=0.1)
 \method{print}{localmoranex}(x, \dots)
 \method{as.data.frame}{localmoranex}(x, row.names=NULL, optional=FALSE, \dots)
 }
@@ -21,7 +21,7 @@ localmoran.exact.alt(model, select, nb, glist = NULL, style = "W", zero.policy =
   \item{nb}{a list of neighbours of class \code{nb}}
   \item{glist}{a list of general weights corresponding to neighbours}
   \item{style}{can take values W, B, C, and S}
-  \item{zero.policy}{if TRUE assign zero to the lagged value of zones without
+  \item{zero.policy}{default NULL, use global option value; if TRUE assign zero to the lagged value of zones without
 neighbours, if FALSE assign NA}
   \item{alternative}{a character string specifying the alternative hypothesis,
 must be one of greater (default), less or two.sided.}
@@ -72,7 +72,8 @@ e.lm <- lm(OWNCONS ~ ROADACC, data=eire)
 localmoran.sad(e.lm, nb=eire.nb)
 localmoran.exact(e.lm, nb=eire.nb)
 localmoran.exact(e.lm, nb=eire.nb, useTP=TRUE)
-e.errorsar <- errorsarlm(OWNCONS ~ ROADACC, data=eire, listw=nb2listw(eire.nb))
+e.errorsar <- errorsarlm(OWNCONS ~ ROADACC, data=eire,
+ listw=nb2listw(eire.nb))
 localmoran.exact.alt(e.errorsar$lm.target, nb=eire.nb)
 Omega <- invIrW(nb2listw(eire.nb), rho=0.6)
 Omega1 <- tcrossprod(Omega)

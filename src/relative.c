@@ -1,8 +1,7 @@
 /* Copyright 2001 by Nicholas Lewin-Koh. */
 
 
-#include <R.h>
-#include <Rmath.h>
+#include "spdep.h"
 
 
 static double distance(double x1, double y1, double x2, double y2){

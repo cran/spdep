@@ -1,10 +1,12 @@
-# Copyright 2001-8 by Roger Bivand 
+# Copyright 2001-10 by Roger Bivand 
 #
 
 
-is.symmetric.nb <- function(nb, verbose=TRUE, force=FALSE)
+is.symmetric.nb <- function(nb, verbose=NULL, force=FALSE)
 {
 	if(!inherits(nb, "nb")) stop("Not neighbours list")
+        if (is.null(verbose)) verbose <- get("verbose", env = .spdepOptions)
+        stopifnot(is.logical(verbose))
 	nbsym <- attr(nb, "sym")
 	if(!is.null(nbsym)) res <- nbsym
 	if(force || is.null(nbsym)) {

@@ -13,8 +13,8 @@ Moran (\eqn{C_{ij} = z_i z_j}{C(i,j) = z(i)*z(j)}), Geary
 permutation test.
 }
 \usage{
-sp.mantel.mc(var, listw, nsim, type = "moran", zero.policy = FALSE,
- alternative = "greater", spChk=NULL)
+sp.mantel.mc(var, listw, nsim, type = "moran", zero.policy = NULL,
+ alternative = "greater", spChk=NULL, return_boot=FALSE)
 plot.mc.sim(x, xlim, xlab, main, sub, ..., ptype="density")
 }
 %- maybe also `usage' for other objects documented here.
@@ -23,11 +23,12 @@ plot.mc.sim(x, xlim, xlab, main, sub, ..., ptype="density")
   \item{listw}{a \code{listw} object created for example by \code{nb2listw}}
   \item{nsim}{number of permutations}
   \item{type}{"moran", "geary" or "sokal" criteria for similarity}
-  \item{zero.policy}{if TRUE assign zero to the lagged value of zones without 
+  \item{zero.policy}{default NULL, use global option value; if TRUE assign zero to the lagged value of zones without 
   neighbours, if FALSE assign NA}
   \item{alternative}{a character string specifying the alternative hypothesis, 
   must be one of "greater" (default), or "less".}
   \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
+  \item{return_boot}{return an object of class \code{boot} from the equivalent permutation bootstrap rather than an object of class \code{htest}}
   \item{x}{the object to be plotted}
   \item{xlim}{the range of the x axis}
   \item{xlab}{a title for the x axis}

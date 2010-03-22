@@ -2,11 +2,14 @@
 #
 
 sp.correlogram <- function (neighbours, var, order = 1, method = "corr", 
-    style = "W", randomisation = TRUE, zero.policy = FALSE, spChk = NULL) {
+    style = "W", randomisation = TRUE, zero.policy = NULL, spChk = NULL) {
     if (class(neighbours) != "nb") 
         stop("not a neighbours list")
     if (any(is.na(var))) 
         stop("no NAs permitted in variable")
+        if (is.null(zero.policy))
+            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+        stopifnot(is.logical(zero.policy))
     if (is.null(spChk)) 
         spChk <- get.spChkOption()
     if (spChk && !chkIDs(var, nb2listw(neighbours, zero.policy = zero.policy))) 

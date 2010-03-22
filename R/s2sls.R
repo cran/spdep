@@ -1,12 +1,16 @@
 # Copyright 2006 by Luc Anselin and Roger Bivand
 # modified by Gianfranco Piras on December 11, 2009 (added the argument legacy)
-stsls <- function(formula, data = list(), listw, zero.policy=FALSE,
-	na.action=na.fail, robust=FALSE, legacy=FALSE) {
+# and on March 12, 2010 (added the argument W2X)
+stsls <- function(formula, data = list(), listw, zero.policy=NULL,
+	na.action=na.fail, robust=FALSE, legacy=FALSE, W2X=TRUE) {
 
 
     	if (!inherits(listw, "listw")) 
         	stop("No neighbourhood list")
 
+        if (is.null(zero.policy))
+            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+        stopifnot(is.logical(zero.policy))
     	mt <- terms(formula, data = data)
     	mf <- lm(formula, data, na.action=na.action, method="model.frame")
     	na.act <- attr(mf, "na.action")
@@ -30,26 +34,37 @@ stsls <- function(formula, data = list(), listw, zero.policy=FALSE,
 	xcolnames <- colnames(X)
 	K <- ifelse(xcolnames[1] == "(Intercept)", 2, 1)
 	if (m > 1) {
-	    WX <- matrix(nrow=n,ncol=(m-(K-1)))
+	    WX <- matrix(nrow=n, ncol=(m-(K-1)))
+	    if(W2X) WWX <- matrix(nrow = n, ncol = ncol(WX) ) 
 	    for (k in K:m) {
 		wx <- lag.listw(listw, X[,k], zero.policy=zero.policy)
+                if(W2X) wwx <- lag.listw(listw, wx, zero.policy = zero.policy)
 		if (any(is.na(wx)))
 		    stop("NAs in lagged independent variable")
 		WX[,(k-(K-1))] <- wx
+		if(W2X) WWX[, (k - (K - 1))] <- wwx		
 	    }
+            if(W2X) inst <- cbind(WX, WWX)
+            else inst <- WX
 	}
 	if (K == 2 && listw$style != "W") {
 # modified to meet other styles, email from Rein Halbersma
 		wx1 <- as.double(rep(1, n))
 		wx <- lag.listw(listw, wx1, zero.policy=zero.policy)
-		if (m > 1) WX <- cbind(wx, WX)
-		else WX <- matrix(wx, nrow=n, ncol=1)
-		colnames(WX) <- xcolnames
+		if(W2X) wwx <- lag.listw(listw, wx, zero.policy=zero.policy)
+                if (m > 1) {
+                    inst <- cbind(wx, inst)
+                    if(W2X) inst <- cbind(wwx, inst)
+		} else {
+                    inst <- matrix(wx, nrow=n, ncol=1)
+                    if(W2X) inst <- cbind(inst, wwx)
+                }
+#		colnames(inst) <- xcolnames
 
 	}
-	if (listw$style == "W") colnames(WX) <- xcolnames[-1]
+#	if (listw$style == "W") colnames(WX) <- xcolnames[-1]
 
-    	result <- tsls(y=y, yend=Wy, X=X, Zinst=WX, robust=robust, legacy=legacy)
+    result <- tsls(y=y, yend=Wy, X=X, Zinst=inst, robust=robust, legacy=legacy)
 	result$zero.policy <- zero.policy
 	result$robust <- robust
 	result$legacy <- legacy

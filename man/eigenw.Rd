@@ -14,12 +14,12 @@ where \eqn{W}{W} is the n by n spatial weights matrix, and \eqn{\lambda_i}{lambd
 eigenvalues of \eqn{W}{W}.
 }
 \usage{
-eigenw(listw, quiet=TRUE)
+eigenw(listw, quiet=NULL)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
   \item{listw}{a \code{listw} object created for example by \code{nb2listw}}
-  \item{quiet}{set to FALSE for short summary}
+  \item{quiet}{default NULL, use global !verbose option value; set to FALSE for short summary}
 }
 
 \value{

@@ -21,7 +21,7 @@ approximation - is based on the randomisation assumption.
 }
 \usage{
 localmoran.sad(model, select, nb, glist=NULL, style="W",
- zero.policy=FALSE, alternative="greater", spChk=NULL,
+ zero.policy=NULL, alternative="greater", spChk=NULL,
  resfun=weighted.residuals, save.Vi=FALSE,
  tol = .Machine$double.eps^0.5, maxiter = 1000, tol.bounds=0.0001,
  save.M=FALSE, Omega = NULL)
@@ -29,7 +29,7 @@ localmoran.sad(model, select, nb, glist=NULL, style="W",
 print.localmoransad(x, ...)
 summary.localmoransad(object, ...)
 print.summary.localmoransad(x, ...)
-listw2star(listw, ireg, style, n, D, a, zero.policy=FALSE)
+listw2star(listw, ireg, style, n, D, a, zero.policy=NULL)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
@@ -38,7 +38,7 @@ listw2star(listw, ireg, style, n, D, a, zero.policy=FALSE)
   \item{nb}{a list of neighbours of class \code{nb}}
   \item{glist}{a list of general weights corresponding to neighbours}
   \item{style}{can take values W, B, C, and S}
-  \item{zero.policy}{if TRUE assign zero to the lagged value of zones without
+  \item{zero.policy}{default NULL, use global option value; if TRUE assign zero to the lagged value of zones without
 neighbours, if FALSE assign NA}
   \item{alternative}{a character string specifying the alternative hypothesis,
 must be one of greater (default), less or two.sided.}

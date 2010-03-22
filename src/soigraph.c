@@ -6,8 +6,7 @@
 * (1998). Copyright for those subroutines remains his.
 ****/
 
-#include <R.h>
-#include <Rmath.h>
+#include "spdep.h"
 
 
 #define	X 0

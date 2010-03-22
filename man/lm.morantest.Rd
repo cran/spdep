@@ -7,7 +7,7 @@
   Moran's I test for spatial autocorrelation in residuals from an estimated linear model (\code{lm()}). The helper function \code{listw2U()} constructs a weights list object corresponding to the sparse matrix \eqn{\frac{1}{2} ( \mathbf{W} + \mathbf{W}'}{1/2 (W + W')}
 }
 \usage{
-lm.morantest(model, listw, zero.policy=FALSE, alternative = "greater",
+lm.morantest(model, listw, zero.policy=NULL, alternative = "greater",
  spChk=NULL, resfun=weighted.residuals, naSubset=TRUE)
 listw2U(listw)
 }
@@ -15,7 +15,7 @@ listw2U(listw)
   \item{model}{an object of class \code{lm} returned by \code{lm}; weights
 may be specified in the \code{lm} fit, but offsets should not be used}
   \item{listw}{a \code{listw} object created for example by \code{nb2listw}}
-  \item{zero.policy}{if TRUE assign zero to the lagged value of zones without
+  \item{zero.policy}{default NULL, use global option value; if TRUE assign zero to the lagged value of zones without
 neighbours, if FALSE assign NA}
   \item{alternative}{a character string specifying the alternative hypothesis,
 must be one of "greater" (default), "less" or "two.sided".}

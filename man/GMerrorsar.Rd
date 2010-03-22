@@ -16,8 +16,8 @@
 }
 \usage{
 GMerrorsar(formula, data = list(), listw, na.action = na.fail,
- zero.policy = FALSE, return_LL = FALSE, method="nlminb", 
- control = list(), pars, verbose=FALSE, sparse_method="Matrix",
+ zero.policy = NULL, return_LL = FALSE, method="nlminb", 
+ control = list(), pars, verbose=NULL, sparse_method="Matrix",
  returnHcov=FALSE, pWOrder=250, tol.Hcov=1.0e-10)
 \method{summary}{gmsar}(object, correlation = FALSE, Hausman=FALSE, ...)
 }
@@ -30,13 +30,13 @@ By default the variables are taken from the environment which the function
 is called.}
   \item{listw}{a \code{listw} object created for example by \code{nb2listw}}
   \item{na.action}{a function (default \code{na.fail}), can also be \code{na.omit} or \code{na.exclude} with consequences for residuals and fitted values - in these cases the weights list will be subsetted to remove NAs in the data. It may be necessary to set zero.policy to TRUE because this subsetting may create no-neighbour observations. Note that only weights lists created without using the glist argument to \code{nb2listw} may be subsetted.}
-  \item{zero.policy}{if TRUE assign zero to the lagged value of zones without 
+  \item{zero.policy}{default NULL, use global option value; if TRUE assign zero to the lagged value of zones without 
 neighbours, if FALSE (default) assign NA - causing \code{GMerrorsar()} to terminate with an error}
   \item{return_LL}{default FALSE, if TRUE, try to calculate the log likelihood of the function for the fitted model values --- see details}
   \item{method}{default \code{"nlminb"}, or optionally a method passed to \code{optim} to use an alternative optimizer}
   \item{control}{A list of control parameters. See details in \code{\link[stats]{optim}} or \code{\link[stats]{nlminb}}.}
   \item{pars}{starting values for \eqn{\lambda}{lambda} and \eqn{\sigma^2}{sigma squared} for GMM optimisation, if missing (default), approximated from initial OLS model as the autocorrelation coefficient corrected for weights style and model sigma squared}
-  \item{verbose}{default=FALSE; if TRUE, reports function values during optimization.}
+  \item{verbose}{default NULL, use global option value; if TRUE, reports function values during optimization.}
   \item{sparse_method}{default "Matrix", can also be "spam" to use spam package objects for finding the Jacobian}
   \item{returnHcov}{default FALSE, return the Vo matrix for a spatial Hausman test}
   \item{tol.Hcov}{the tolerance for computing the Vo matrix (default=1.0e-10)}

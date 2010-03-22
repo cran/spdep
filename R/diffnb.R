@@ -2,9 +2,11 @@
 #
 
 
-diffnb <- function(x, y, verbose=TRUE) {
+diffnb <- function(x, y, verbose=NULL) {
 	if (!inherits(x, "nb")) stop("not a neighbours list")
 	if (!inherits(y, "nb")) stop("not a neighbours list")
+        if (is.null(verbose)) verbose <- get("verbose", env = .spdepOptions)
+        stopifnot(is.logical(verbose))
 	n <- length(x)
 	if (n < 1) stop("non-positive length of x")
 	if(n != length(y)) stop("lengths differ")

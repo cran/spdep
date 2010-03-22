@@ -1,11 +1,14 @@
 # Copyright 2001-3 by Roger Bivand 
 #
 
-localG <- function(x, listw, zero.policy=FALSE, spChk=NULL) {
+localG <- function(x, listw, zero.policy=NULL, spChk=NULL) {
 	if (!inherits(listw, "listw"))
 		stop(paste(deparse(substitute(listw)), "is not a listw object"))
 	if (!is.numeric(x))
 		stop(paste(deparse(substitute(x)), "is not a numeric vector"))
+        if (is.null(zero.policy))
+            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+        stopifnot(is.logical(zero.policy))
 	if (any(is.na(x))) stop(paste("NA in ", deparse(substitute(x))))
 	n <- length(listw$neighbours)
 	if (n != length(x))stop("Different numbers of observations")

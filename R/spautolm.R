@@ -1,14 +1,25 @@
-# Copyright 2005-9 by Roger Bivand
+# Copyright 2005-2010 by Roger Bivand
 spautolm <- function(formula, data = list(), listw, weights,
-    na.action, verbose=FALSE, tol.opt=.Machine$double.eps^(2/3),
-    family="SAR", method="full", interval=c(-1,0.999), zero.policy=FALSE,
-#    cholAlloc=NULL, 
-    super=NULL, Matrix_intern=TRUE, tol.solve=.Machine$double.eps,
-    find_interval=FALSE, llprof=NULL) 
-{
+    na.action, family="SAR", method="full", verbose=NULL,
+    interval=NULL, zero.policy=NULL, tol.solve=.Machine$double.eps, llprof=NULL,
+    control=list()) {
+    timings <- list()
+    .ptime_start <- proc.time()
+    con <- list(tol.opt=.Machine$double.eps^(2/3), 
+       Imult=2, super=FALSE, cheb_q=5, MC_p=16, MC_m=30)
+    nmsC <- names(con)
+    con[(namc <- names(control))] <- control
+    if (length(noNms <- namc[!namc %in% nmsC])) 
+        warning("unknown names in control: ", paste(noNms, collapse = ", "))
     if (!inherits(listw, "listw")) 
         stop("No neighbourhood list")
+    if (is.null(verbose)) verbose <- get("verbose", env = .spdepOptions)
+    stopifnot(is.logical(verbose))
+        if (is.null(zero.policy))
+            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+        stopifnot(is.logical(zero.policy))
 
+    if (family == "SMA" && method != "full") stop("SMA only for full method")
     mf <- match.call(expand.dots = FALSE)
     m <- match(c("formula", "data", "weights", "na.action"), names(mf), 0)
     mf <- mf[c(1, m)]
@@ -47,227 +58,163 @@ spautolm <- function(formula, data = list(), listw, weights,
 # bug x for X Bjarke Christensen 090924
 	X <- X[,-nacoef]
     }
-    can.sim <- as.logical(NA)
+    can.sim <- FALSE
     if (listw$style %in% c("W", "S")) 
 	can.sim <- can.be.simmed(listw)
 
     sum_lw <- sum(log(weights))
-    if (!is.null(llprof) && method != "full" && length(llprof) == 1)
-        stop("sequence of values required for llprof")
+    env <- new.env(parent=globalenv())
+    assign("Y", Y, envir=env)
+    assign("X", X, envir=env)
+    assign("n", n, envir=env)
+    assign("weights", weights, envir=env)
+    assign("can.sim", can.sim, envir=env)
+    assign("family", family, envir=env)
+    assign("method", method, envir=env)
+    assign("verbose", verbose, envir=env)
+    assign("listw", listw, envir=env)
+    assign("sum_lw", sum_lw, envir=env)
+    timings[["set_up"]] <- proc.time() - .ptime_start
+    .ptime_start <- proc.time()
+
+
     if (method == "full") {
+        eigen_setup(env)
+        er <- get("eig.range", envir=env)
+        if (is.null(interval)) 
+            interval <- c(er[1]+.Machine$double.eps, 
+                er[2]-.Machine$double.eps)
+# fix SMA bounds
+	if (family == "SMA") interval <- -rev(interval)
 # spatial weights matrix
         W <- listw2mat(listw)
 	attr(W, "dimnames") <- NULL
         if (family == "CAR") if (!isTRUE(all.equal(W, t(W))))
 	    warning("Non-symmetric spatial weights in CAR model")
-# range for line search
-        eig <- eigen(diag(sqrt(weights)) %*% W %*% diag(sqrt(1/weights)), 
-            only.values =TRUE)$values
-        if (is.complex(eig)) eig.range <- 1/range(Re(eig))
-        else eig.range <- 1/range(eig)
-# fix SMA bounds
-	full_lower <- eig.range[1]+.Machine$double.eps
-	full_upper <- eig.range[2]-.Machine$double.eps
-	if (family == "SMA") {
-	    full_lower <- -(eig.range[2]-.Machine$double.eps)
-	    full_upper <- -(eig.range[1]+.Machine$double.eps)
-	}
         I <- diag(n)
-# do line search
-        dweights <- diag(weights)
-        if (!is.null(llprof)) {
-            if (length(llprof) == 1)
-                llprof <- seq(full_lower,
-                    full_upper, length.out=llprof)
-            ll_prof <- numeric(length(llprof))
-            for (i in seq(along=llprof)) ll_prof[i] <- .opt.fit.full(
-                llprof[i], Y=Y, X=X, n=n, W=W, eig=eig, I=I,
-                weights=dweights, sum_lw=sum_lw, family=family,
-                verbose=verbose, tol.solve=tol.solve)
-        }
-        opt <- optimize(.opt.fit.full, lower=full_lower,
-            upper=full_upper, maximum=TRUE,
-            tol = tol.opt, Y=Y, X=X, n=n, W=W, eig=eig, I=I,
-            weights=dweights, sum_lw=sum_lw, family=family,
-            verbose=verbose, tol.solve=tol.solve)
-        lambda <- opt$maximum
-        names(lambda) <- "lambda"
-        LL <- opt$objective
-# get GLS coefficients
-        fit <- .SPAR.fit(lambda=lambda, Y=Y, X=X, n=n, W=W, I=I,
-            weights=diag(weights), family=family, out=TRUE,
-		tol.solve=tol.solve)
-# create residuals and fitted values (Cressie 1993, p. 564)
-	fit$signal_trend <- drop(X %*% fit$coefficients)
-	fit$signal_stochastic <- drop(lambda * W %*% (Y - fit$signal_trend))
-	fit$fitted.values <- fit$signal_trend + fit$signal_stochastic
-	fit$residuals <- drop(Y - fit$fitted.values)
-# get null LL
-        LL0 <- .opt.fit.full(lambda=0, Y=Y, X=X, n=n, W=W, eig=eig, I=I,
-            weights=diag(weights), sum_lw=sum_lw, family=family, verbose=FALSE,
-		tol.solve=tol.solve)
+        Sweights <- diag(weights)
+        assign("W", W, envir=env)
+        assign("I", I, envir=env)
+        assign("Sweights", Sweights, envir=env)
     }  else if (method == "Matrix") {
-        if (family == "SMA") stop("SMA only for full method")
         if (listw$style %in% c("W", "S") && !can.sim)
         stop("Matrix method requires symmetric weights")
         if (listw$style %in% c("B", "C") && 
  	    !(is.symmetric.glist(listw$neighbours, listw$weights)))
 	    stop("Matrix method requires symmetric weights")
         if (listw$style == "U") stop("U style not permitted, use C")
-        I <- as_dsCMatrix_I(n)
-	W <- as_dgRMatrix_listw(listw)
-	W <- as(W, "CsparseMatrix")
+	W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
         if (family == "CAR") if (!isTRUE(all.equal(W, t(W))))
 	    warning("Non-symmetric spatial weights in CAR model")
-# Jacobian only from symmetric W_J, W can be asymmetric though
-        if (listw$style %in% c("W", "S") & can.sim) {
-	    W_J <- listw2U_Matrix(similar.listw_Matrix(listw))
-#	    similar <- TRUE
-	} else W_J <- as_dsTMatrix_listw(listw)
-	W_J <- as(W_J, "CsparseMatrix")
-	if (!is.null(super)) {
-		if (!is.logical(super)) stop("super must be logical")
-		Imult <- 2
-		if (listw$style == "B") {
-                    Imult <- ceiling((2/3)*max(apply(W_J, 1, sum)))
-		    interval <- c(-0.5, +0.25)
-		} else interval <- c(-2, +1)
-                nW_J <- - W_J
-		if (super) {
-                    super <- !super
-                    warning("super=TRUE not yet working")
-                }
-		pChol <- Cholesky(W_J, super=super, Imult = Imult)
-		nChol <- Cholesky(nW_J, super=super, Imult = Imult)
-                if (find_interval && Matrix_intern) {
-		  ns1 <- last <- 10
-		  plambda1 <- seq(sqrt(.Machine$double.eps), interval[2],
-                    length.out=ns1)
-		
-		  while (last >= ns1) {
-                   pdet1 <- Matrix:::ldetL2up(nChol, nW_J, 1/plambda1)
-		   wp1 <- which(is.finite(pdet1))
-		   last <- wp1[length(wp1)]
-		   if (last == ns1) plambda1 <- seq(interval[2], 
-		       1.5*interval[2], length.out=ns1)
-		  }
-                  lwp1n <- plambda1[last]
-                  lwp2n <- plambda1[last+1]
-		  plambda2 <- seq(lwp2n, lwp1n, length.out=ns1)
-                  pdet2 <- Matrix:::ldetL2up(nChol, nW_J, 1/plambda2)
-		  wp2 <- which(is.finite(pdet2))
-                  lwp2n <- plambda2[wp2[length(wp2)]]
-		
-		  nlambda1 <- seq(interval[1], -sqrt(.Machine$double.eps),
-                    length.out=ns1)
-		
-		  first <- 1
-		  while (first == 1) {
-                   ndet1 <- Matrix:::ldetL2up(pChol, W_J, 1/(-nlambda1))
-		   wn1 <- which(is.finite(ndet1))
-		   first <- wn1[1]
-		   if (first == 1) plambda1 <- seq(1.5*interval[1], 
-			interval[1], length.out=ns1)
-		  }
-
-                  lwn1n <- nlambda1[wn1[1]]
-                  lwn2n <- nlambda1[wn1[1]-1]
-		  nlambda2 <- seq(lwn2n, lwn1n, length.out=ns1)
-                  ndet2 <- Matrix:::ldetL2up(pChol, W_J, 1/(-nlambda2))
-		  wn2 <- which(is.finite(ndet2))
-                  lwn2n <- nlambda2[wn2[1]]
-		  interval <- c(lwn2n, lwp2n)
-		  if (verbose) cat("using interval:", interval, "\n")
-                }
-	}
-	else nW_J <- pChol <- nChol <- NULL
-#	gc(FALSE)
-#        Sweights <- as(Diagonal(x=weights), "sparseMatrix")
+        assign("W", W, envir=env)
+        Imult <- con$Imult
+        if (is.null(interval)) {
+	    if (listw$style == "B") {
+                Imult <- ceiling((2/3)*max(sapply(listw$weights, sum)))
+                interval <- c(-0.5, +0.25)
+            } else interval <- c(-1, 0.999)
+        }
+# FIXME
+        Matrix_setup(env, Imult, con$super)
+        I <- as_dsCMatrix_I(n)
+        assign("I", I, envir=env)
         Sweights <- as(as(Diagonal(x=weights), "symmetricMatrix"), 
 	    "CsparseMatrix")
-# do line search
-        if (!is.null(llprof)) {
-            ll_prof <- numeric(length(llprof))
-            for (i in seq(along=llprof)) ll_prof[i] <- .opt.fit.Matrix(
-                llprof[i], Y=Y, X=X, n=n, W=W, W_J=W_J, I=I,
-                weights=Sweights, sum_lw=sum_lw, family=family,
-                verbose=verbose, tol.solve=tol.solve, super=super, nW_J=nW_J,
-                pChol=pChol, nChol=nChol, Matrix_intern=Matrix_intern)
-        }
-        opt <- optimize(.opt.fit.Matrix, lower=interval[1],
-            upper=interval[2], maximum=TRUE,
-            tol = tol.opt, Y=Y, X=X, n=n, W=W, W_J=W_J, I=I,
-            weights=Sweights, sum_lw=sum_lw, family=family,
-            verbose=verbose, tol.solve=tol.solve, super=super, nW_J=nW_J,
-            pChol=pChol, nChol=nChol, Matrix_intern=Matrix_intern)
-        lambda <- opt$maximum
-        names(lambda) <- "lambda"
-        LL <- opt$objective
-# get GLS coefficients
-        fit <- .SPAR.fit(lambda=lambda, Y=Y, X=X, n=n, W=W, I=I,
-            weights=Sweights, family=family, out=TRUE, tol.solve=tol.solve)
-# create residuals and fitted values (Cressie 1993, p. 564)
-	fit$signal_trend <- drop(X %*% fit$coefficients)
-	fit$signal_stochastic <- drop(lambda * W %*% (Y - fit$signal_trend))
-	fit$fitted.values <- fit$signal_trend + fit$signal_stochastic
-	fit$residuals <- drop(Y - fit$fitted.values)
-# get null LL
-        LL0 <- .opt.fit.Matrix(lambda=as.numeric(0), Y=Y, X=X, n=n, W=W,
-            W_J=W_J, I=I, weights=Sweights, sum_lw=sum_lw, family=family,
-            verbose=verbose, tol.solve=tol.solve, super=super, nW_J=nW_J,
-                pChol=pChol, nChol=nChol, Matrix_intern=Matrix_intern)
-#        weights <- diag(Sweights)
+        assign("Sweights", Sweights, envir=env)
+
     }  else if (method == "spam") {
-        if (family == "SMA") stop("SMA only for full method")
         if (listw$style %in% c("W", "S") && !can.sim)
         stop("spam method requires symmetric weights")
         if (listw$style %in% c("B", "C", "U") && 
  	    !(is.symmetric.glist(listw$neighbours, listw$weights)))
 	    stop("spam method requires symmetric weights")
-        I <- diag.spam(1, n, n)
 	W <- as.spam.listw(listw)
         if (family == "CAR") if (!isTRUE(all.equal(W, t(W))))
 	    warning("Non-symmetric spatial weights in CAR model")
+        assign("W", W, envir=env)
 # Jacobian only from symmetric W_J, W can be asymmetric though
-        if (listw$style %in% c("W", "S") & can.sim) {
-	    W_J <- listw2U_spam(similar.listw_spam(listw))
-#	    similar <- TRUE
-	} else W_J <- W
-#	gc(FALSE)
+        spam_setup(env)
         Sweights <- diag.spam(x=weights, n, n)
-# do line search
-        if (!is.null(llprof)) {
-            ll_prof <- numeric(length(llprof))
-            for (i in seq(along=llprof)) ll_prof[i] <- .opt.fit.spam(
-                llprof[i], Y=Y, X=X, n=n, W=W, W_J=W_J, I=I,
-                weights=Sweights, sum_lw=sum_lw, family=family,
-                verbose=verbose, tol.solve=tol.solve)
+        assign("Sweights", Sweights, envir=env)
+        if (is.null(interval)) interval <- c(-1, 0.999)
+    } else if (method == "LU") {
+        LU_setup(env)
+        W <- get("W", envir=env)
+        Sweights <- as(as(Diagonal(x=weights), "symmetricMatrix"), 
+	    "CsparseMatrix")
+        assign("Sweights", Sweights, envir=env)
+        if (is.null(interval)) interval <- c(-1,0.999)
+    } else if (method == "MC") {
+	if (!listw$style %in% c("W"))
+	    stop("MC method requires row-standardised weights")
+        mcdet_setup(env, p=con$MC_p, m=con$MC_m)
+        I <- as_dsCMatrix_I(n)
+        assign("I", I, envir=env)
+        Sweights <- as(as(Diagonal(x=weights), "symmetricMatrix"), 
+	    "CsparseMatrix")
+        assign("Sweights", Sweights, envir=env)
+        W <- get("W", envir=env)
+        if (is.null(interval)) interval <- c(-1,0.999)
+    } else if (method == "Chebyshev") {
+	if (listw$style %in% c("W", "S") && !can.sim)
+	    stop("Chebyshev method requires symmetric weights")
+	if (listw$style %in% c("B", "C", "U") && 
+	    !(is.symmetric.glist(listw$neighbours, listw$weights)))
+	        stop("Chebyshev method requires symmetric weights")
+        cheb_setup(env, q=con$cheb_q)
+        I <- as_dsCMatrix_I(n)
+        assign("I", I, envir=env)
+        Sweights <- as(as(Diagonal(x=weights), "symmetricMatrix"), 
+	    "CsparseMatrix")
+        assign("Sweights", Sweights, envir=env)
+        W <- get("W", envir=env)
+        if (is.null(interval)) {
+ 	    if (listw$style == "B") interval <- c(-0.5, +0.25)
+            else interval <- c(-1,0.999)
         }
-        opt <- optimize(.opt.fit.spam, lower=interval[1],
-            upper=interval[2], maximum=TRUE,
-            tol = tol.opt, Y=Y, X=X, n=n, W=W, W_J=W_J, I=I,
-            weights=Sweights, sum_lw=sum_lw, family=family,
-            verbose=verbose, tol.solve=tol.solve)
-        lambda <- opt$maximum
-        names(lambda) <- "lambda"
-        LL <- opt$objective
-# get GLS coefficients
-        fit <- .SPAR.fit(lambda=lambda, Y=Y, X=X, n=n, W=W, I=I,
-            weights=Sweights, family=family, out=TRUE, tol.solve=tol.solve)
-# create residuals and fitted values (Cressie 1993, p. 564)
-	fit$signal_trend <- drop(X %*% fit$coefficients)
-	fit$signal_stochastic <- drop(lambda * W %*% (Y - fit$signal_trend))
-	fit$fitted.values <- fit$signal_trend + fit$signal_stochastic
-	fit$residuals <- drop(Y - fit$fitted.values)
-# get null LL
-        LL0 <- .opt.fit.spam(lambda=as.numeric(0), Y=Y, X=X, n=n, W=W,
-            W_J=W_J, I=I, weights=Sweights, sum_lw=sum_lw, family=family,
-            verbose=verbose, tol.solve=tol.solve)
-#        weights <- diag(Sweights)
     } else stop("unknown method")
+
+    nm <- paste(method, "set_up", sep="_")
+    timings[[nm]] <- proc.time() - .ptime_start
+    .ptime_start <- proc.time()
+
+    if (!is.null(llprof)) {
+        if (length(llprof) == 1)
+            llprof <- seq(interval[1], interval[2], length.out=llprof)
+        ll_prof <- numeric(length(llprof))
+        for (i in seq(along=llprof)) 
+            ll_prof[i] <- .opt.fit(llprof[i], env=env, tol.solve=tol.solve)
+        nm <- paste(method, "profile", sep="_")
+        timings[[nm]] <- proc.time() - .ptime_start
+        .ptime_start <- proc.time()
+    }
+
+    opt <- optimize(.opt.fit, interval=interval, maximum=TRUE,
+        tol = con$tol.opt, env=env, tol.solve=tol.solve)
+    lambda <- opt$maximum
+    names(lambda) <- "lambda"
+    LL <- opt$objective
+    nm <- paste(method, "opt", sep="_")
+    timings[[nm]] <- proc.time() - .ptime_start
+    .ptime_start <- proc.time()
+
+# get GLS coefficients
+    fit <- .SPAR.fit(lambda=lambda, env, out=TRUE, tol.solve=tol.solve)
+# create residuals and fitted values (Cressie 1993, p. 564)
+    fit$signal_trend <- drop(X %*% fit$coefficients)
+    fit$signal_stochastic <- drop(lambda * W %*% (Y - fit$signal_trend))
+    fit$fitted.values <- fit$signal_trend + fit$signal_stochastic
+    fit$residuals <- drop(Y - fit$fitted.values)
+
+# get null LL
+    LL0 <- .opt.fit(lambda=0, env, tol.solve=tol.solve)
+
+    nm <- paste(method, "output", sep="_")
+    timings[[nm]] <- proc.time() - .ptime_start
     res <- list(fit=fit, lambda=lambda, LL=LL, LL0=LL0, call=match.call(),
         parameters=(ncol(X)+2), aliased=aliased, method=method,
-        zero.policy=zero.policy, weights=weights)
+        zero.policy=zero.policy, weights=weights, interval=interval,
+        timings=do.call("rbind", timings)[, c(1, 3)])
     if (!is.null(na.act))
 	res$na.action <- na.act
     if (is.null(llprof)) res$llprof <- llprof
@@ -285,110 +232,36 @@ spautolm <- function(formula, data = list(), listw, weights,
     res
 }
 
-.opt.fit.full <- function(lambda, Y, X, n, W, eig, I, weights, sum_lw,
-    family="SAR", verbose=TRUE, tol.solve=.Machine$double.eps) {
+.opt.fit <- function(lambda, env, tol.solve=.Machine$double.eps) {
 # fitting function called from optimize()
-#    IlW <- diag(n) - lambda * W
-    SSE <- .SPAR.fit(lambda=lambda, Y=Y, X=X, n=n, W=W, weights=weights,
-        I=I, family=family, out=FALSE, tol.solve=tol.solve)
+    SSE <- .SPAR.fit(lambda=lambda, env=env, out=FALSE, tol.solve=tol.solve)
+    n <- get("n", envir=env)
     s2 <- SSE/n
-    if (family == "SMA") {
-        if (is.complex(eig)) detIlW <- Re(prod(1/(1 + lambda * eig))) 
-        else detIlW <- prod(1/(1 + lambda * eig))
-        ldet <- log(detIlW)
-    } else {
-        if (is.complex(eig)) detIlW <- Re(prod(1 - lambda*eig)) 
-        else detIlW <- prod(1 - lambda*eig)
-        ldet <- (1/ifelse((length(grep("CAR", family)) != 0), 2, 1)) * 
-            log(detIlW)
-    }
-    ret <- (ldet + (1/2)*sum_lw - ((n/2)*log(2*pi)) - (n/2)*log(s2) - 
-        (1/(2*(s2)))*SSE)
-    if (verbose)  cat("lambda:", lambda, "function:", ret, "Jacobian", log(detIlW), "SSE", SSE, "\n")
+    ldet <- do_ldet(lambda, env)
+    det <- ifelse(get("family", envir=env) == "CAR", 0.5*ldet, ldet)
+    ret <- (det + (1/2)*get("sum_lw", envir=env) - ((n/2)*log(2*pi)) - 
+        (n/2)*log(s2) - (1/(2*(s2)))*SSE)
+    if (get("verbose", envir=env))  cat("lambda:", lambda, "function:", ret, "Jacobian", ldet, "SSE", SSE, "\n")
     ret
 }
 
 
-.opt.fit.Matrix <- function(lambda, Y, X, n, W, W_J, I, weights, sum_lw,
-    family="SAR", verbose=TRUE, tol.solve=.Machine$double.eps, 
-    super=NULL, nW_J=NULL, pChol=NULL, nChol=NULL, Matrix_intern=FALSE) {
-# fitting function called from optimize()
-    SSE <- .SPAR.fit(lambda=lambda, Y=Y, X=X, n=n, W=W, weights=weights,
-        I=I, family=family, out=FALSE, tol.solve=tol.solve)
-    s2 <- SSE/n
-    .f <- if (package_version(packageDescription("Matrix")$Version) >
-           "0.999375-30") 2 else 1
-    if (isTRUE(all.equal(lambda, 0))) {
-        Jacobian <- lambda
-    } else {
-        if (is.null(super))
-            Jacobian <- determinant(I - lambda * W_J, logarithm=TRUE)$modulus
-        else {
-            if (lambda > 0) {
-                if (Matrix_intern) 
-                    detTRY <- try(Matrix:::ldetL2up(nChol, nW_J, 1/lambda),
-                        silent=TRUE)
-                else
-                    detTRY <- try(c(determinant(update(nChol, nW_J, 
-                        1/lambda))$modulus), silent=TRUE)
-                if (class(detTRY) == "try-error") {
-                    Jacobian <- NaN
-                } else {
-                    Jacobian <- n * log(lambda) + (.f * detTRY)
-                }
-            } else {
-                if (Matrix_intern) 
-                    detTRY <- try(Matrix:::ldetL2up(pChol, W_J, 1/(-lambda)),
-                        silent=TRUE)
-                else
-                    detTRY <- try(c(determinant(update(pChol, W_J, 
-                        1/(-lambda)))$modulus), silent=TRUE)
-                if (class(detTRY) == "try-error") {
-                    Jacobian <- NaN
-                } else {
-                    Jacobian <- n * log(-(lambda)) + (.f * detTRY)
-                }
-            }
-        }
-    }
-    ret <- ((1/ifelse((length(grep("CAR", family)) != 0), 2, 1))*Jacobian +
-	(1/2)*sum_lw - ((n/2)*log(2*pi)) - (n/2)*log(s2) - (1/(2*(s2)))*SSE)
-    if (verbose)  cat("lambda:", lambda, "function", ret, "Jacobian", Jacobian, "SSE", SSE, "\n")
-    ret
-}
-
-.opt.fit.spam <- function(lambda, Y, X, n, W, W_J, I, weights, sum_lw,
-    family="SAR", verbose=TRUE, tol.solve=.Machine$double.eps) {
-# fitting function called from optimize()
-    SSE <- .SPAR.fit(lambda=lambda, Y=Y, X=X, n=n, W=W, weights=weights,
-        I=I, family=family, out=FALSE, tol.solve=tol.solve)
-    s2 <- SSE/n
-    J1 <- try(determinant((I - lambda * W_J), logarithm=TRUE)$modulus,
-        silent=TRUE)
-    if (class(J1) == "try-error") {
-        Jacobian <- NA
-    } else {
-        Jacobian <- J1
-    }
-#    gc(FALSE)
-    ret <- ((1/ifelse((length(grep("CAR", family)) != 0), 2, 1))*Jacobian +
-	(1/2)*sum_lw - ((n/2)*log(2*pi)) - (n/2)*log(s2) - (1/(2*(s2)))*SSE)
-    if (verbose)  cat("lambda:", lambda, "function", ret, "Jacobian", Jacobian, "SSE", SSE, "\n")
-    ret
-}
-
-.SPAR.fit <- function(lambda, Y, X, n, W, weights, I, family,
-    out=FALSE, tol.solve=.Machine$double.eps) {
-    dmmf <- eval(parse(text=family))
-    if (family == "SMA") IlW <- dmmf((I + lambda * W), weights)
-    else IlW <- dmmf((I - lambda * W), weights)
-    imat <- base:::solve(t(X) %*% as.matrix(IlW %*% X), tol=tol.solve)
-    coef <- crossprod(imat, t(X) %*% as.matrix(IlW %*% Y))
+.SPAR.fit <- function(lambda, env, out=FALSE, tol.solve=.Machine$double.eps) {
+    dmmf <- eval(parse(text=get("family", envir=env)))
+    if (get("family", envir=env) == "SMA") IlW <- dmmf((get("I", envir=env) + 
+        lambda * get("W", envir=env)), get("Sweights", envir=env))
+    else IlW <- dmmf((get("I", envir=env) - lambda * get("W", envir=env)), 
+        get("Sweights", envir=env))
+    X <- get("X", envir=env)
+    Y <- get("Y", envir=env)
+    imat <- base:::solve(crossprod(X, as.matrix(IlW %*% X)), tol=tol.solve)
+    coef <- crossprod(imat, crossprod(X, as.matrix(IlW %*% Y)))
     fitted <- X %*% coef
     residuals <- Y - fitted
-    SSE <- c(t(residuals) %*% as.matrix(IlW %*% residuals))
+    SSE <- c(crossprod(residuals, as.matrix(IlW %*% residuals)))
     if (!out) return(SSE)
 
+    n <- get("n", envir=env)
     s2 <- SSE/n
 #    var <- s2 * diag(imat)
     coef <- c(coef)

@@ -1,6 +1,6 @@
 # Copyright (c) 2007-2008 Markus Reder and Roger Bivand
 
-lm.morantest.exact <- function(model, listw, zero.policy = FALSE, 
+lm.morantest.exact <- function(model, listw, zero.policy = NULL, 
     alternative = "greater", spChk=NULL, resfun=weighted.residuals, 
     zero.tol=1.0e-7, Omega=NULL, save.M=NULL, save.U=NULL, useTP=FALSE,
     truncErr=1e-6, zeroTreat=0.1) 
@@ -9,6 +9,9 @@ lm.morantest.exact <- function(model, listw, zero.policy = FALSE,
         stop(paste(deparse(substitute(listw)), "is not a listw object"))
     if (!inherits(model, "lm")) 
         stop(paste(deparse(substitute(model)), "not an lm object"))
+        if (is.null(zero.policy))
+            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+        stopifnot(is.logical(zero.policy))
     N <- length(listw$neighbours)
     u <- resfun(model)
     if (N != length(u)) 

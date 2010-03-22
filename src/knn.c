@@ -4,8 +4,7 @@
  *  and written by Roger Bivand (C) 2001-3
  */
 
-#include <R.h>
-#include <Rmath.h>
+#include "spdep.h"
 
 #define DOUBLE_XMAX DBL_MAX
 
@@ -14,8 +13,6 @@
 #define MAX_TIES 1000
 /* Not worth doing this dynamically -- limits k + # ties + fence, in fact */
 
-void gcdist(double *lon1, double *lon2, double *lat1, double *lat2, 
-		double *dist);
 
 void
 knearneigh(int *kin, int *pnte, int *p, double *test, int *res, double *dists,

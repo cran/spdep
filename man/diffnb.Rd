@@ -6,12 +6,12 @@
 The function finds differences between lists of neighbours, returning a \code{nb} neighbour list of those found
 }
 \usage{
-diffnb(x, y, verbose=TRUE)
+diffnb(x, y, verbose=NULL)
 }
 \arguments{
   \item{x}{an object of class \code{nb}}
   \item{y}{an object of class \code{nb}}
-  \item{verbose}{report regions ids taken from object attribute "region.id" with differences}
+  \item{verbose}{default NULL, use global option value; report regions ids taken from object attribute "region.id" with differences}
 }
 
 \value{

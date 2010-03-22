@@ -1,3 +1,137 @@
+2010-03-22 11:09  rsbivand
+
+	* R/spautolm.R, inst/doc/sids.Rnw, man/spautolm.Rd: spautolm
+	  rewritten to use shared code
+
+2010-03-22 10:32  rsbivand
+
+	* ChangeLog, inst/ChangeLog: spautolm rewritten to use shared code
+
+2010-03-22 10:31  rsbivand
+
+	* DESCRIPTION, R/error.spsarlm.R, R/jacobian.R, R/lag.spsarlm.R,
+	  R/spautolm.R, inst/doc/sids.Rnw, man/errorsarlm.Rd,
+	  man/lagsarlm.Rd, man/spautolm.Rd: spautolm rewritten to use
+	  shared code
+
+2010-03-19 20:58  rsbivand
+
+	* ChangeLog, inst/ChangeLog: adding some cluster awareness
+
+2010-03-19 20:57  rsbivand
+
+	* R/impacts.R: adding some cluster awareness
+
+2010-03-19 20:13  rsbivand
+
+	* ChangeLog, inst/ChangeLog: adding some cluster awareness
+
+2010-03-19 20:12  rsbivand
+
+	* DESCRIPTION, NAMESPACE, R/EBI.R, R/aple.mc.R, R/geary.R,
+	  R/impacts.R, R/moran.R, R/sp.mantel.R, R/spChkOption.R,
+	  man/EBImoran.mc.Rd, man/aple.mc.Rd, man/geary.mc.Rd,
+	  man/localmoran.exact.Rd, man/moran.mc.Rd, man/set.spChkOption.Rd,
+	  man/sp.mantel.mc.Rd: adding some cluster awareness
+
+2010-03-18 19:21  rsbivand
+
+	* ChangeLog, inst/ChangeLog: modularising ML code, adding Jacobian
+	  methods
+
+2010-03-18 19:20  rsbivand
+
+	* DESCRIPTION, R/error.hessian.R, R/error.spsarlm.R, R/jacobian.R,
+	  R/lag.hessian.R, R/lag.spsarlm.R, man/boston.Rd,
+	  man/errorsarlm.Rd, man/lagsarlm.Rd, man/used.cars.Rd, src/init.c:
+	  modularising ML code, adding Jacobian methods
+
+2010-03-17 21:00  rsbivand
+
+	* DESCRIPTION, R/error.hessian.R, R/error.spsarlm.R, R/impacts.R,
+	  R/lag.hessian.R, R/lag.spsarlm.R, man/lagsarlm.Rd, src/card.c,
+	  src/dfs_ncomp.c, src/dnn.c, src/gabriel.c, src/gearyw.c,
+	  src/gsymtest.c, src/init.c, src/insiders.c, src/jc.c, src/knn.c,
+	  src/lagw.c, src/listw2Matrix.c, src/listw2sn.c, src/ml_sse.c,
+	  src/nbdists.c, src/polypoly.c, src/relative.c, src/skater.c,
+	  src/soigraph.c, src/spdep.h, src/symtest.c: sse C code; impacts
+	  cluster
+
+2010-03-16 13:46  rsbivand
+
+	* ChangeLog, inst/ChangeLog: timing and other changes to lag, error
+	  and impact calculations
+
+2010-03-16 13:46  rsbivand
+
+	* ChangeLog, inst/ChangeLog: timing and other changes to lag, error
+	  and impact calculations
+
+2010-03-16 13:36  rsbivand
+
+	* R/AAA.R, R/error.hessian.R, R/error.spsarlm.R, R/impacts.R,
+	  R/lag.hessian.R, R/lag.spsarlm.R, R/nb2mat.R,
+	  R/summary.spsarlm.R, data/elect80.rda, man/elect80.Rd,
+	  man/errorsarlm.Rd, man/lagsarlm.Rd, man/stsls.Rd, src/Makevars,
+	  src/ml_sse.c: timing and other changes to lag, error and impact
+	  calculations
+
+2010-03-13 11:16  rsbivand
+
+	* ChangeLog, inst/ChangeLog: tidy stsls
+
+2010-03-13 11:15  rsbivand
+
+	* R/s2sls., R/s2sls.R, man/stsls.Rd: tidy stsls
+
+2010-03-12 22:12  gpiras
+
+	* man/stsls.Rd: add stsls help including the new argument W2X
+
+2010-03-12 22:11  gpiras
+
+	* man/stsls.Rd: remove stsls help
+
+2010-03-12 22:07  gpiras
+
+	* R/s2sls.: Add the argument W2X to stsls
+
+2010-03-12 22:05  gpiras
+
+	* R/s2sls.R: remove stsls
+
+2010-03-12 15:31  rsbivand
+
+	* DESCRIPTION, R/AAA.R, R/EBI.R, R/ME.R, R/SpatialFiltering.R,
+	  R/autocov.R, R/diffnb.R, R/eigenw.R, R/error.spsarlm.R,
+	  R/geary.R, R/globalG.R, R/impacts.R, R/jc.R, R/kpgm_new.R,
+	  R/lag.spsarlm.R, R/lm.LMtests.R, R/lm.morantest.R, R/localG.R,
+	  R/localmoran.R, R/localmoran.exact.R, R/mess.R, R/moran.R,
+	  R/moran.exact.R, R/moran.exact.alt.R, R/moran.plot.R,
+	  R/mtlocalmoran.R, R/mtmoran.R, R/nb2listw.R, R/nb2mat.R,
+	  R/s2sls.R, R/sarlm.R, R/sp.correlogram.R, R/sp.mantel.R,
+	  R/spChkOption.R, R/spautolm.R, R/subset.nb.R, R/summary.nb.R,
+	  R/utils.R, R/weights-utils.R, man/EBImoran.mc.Rd, man/EBlocal.Rd,
+	  man/GMerrorsar.Rd, man/ME.Rd, man/SpatialFiltering.Rd,
+	  man/autocov_dist.Rd, man/diffnb.Rd, man/eigenw.Rd,
+	  man/errorsarlm.Rd, man/geary.Rd, man/geary.mc.Rd,
+	  man/geary.test.Rd, man/globalG.test.Rd, man/joincount.test.Rd,
+	  man/lag.listw.Rd, man/lagmess.Rd, man/lagsarlm.Rd,
+	  man/lm.LMtests.Rd, man/lm.morantest.Rd,
+	  man/lm.morantest.exact.Rd, man/lm.morantest.sad.Rd,
+	  man/localG.Rd, man/localmoran.Rd, man/localmoran.exact.Rd,
+	  man/localmoran.sad.Rd, man/moran.Rd, man/moran.mc.Rd,
+	  man/moran.plot.Rd, man/moran.test.Rd, man/nb2listw.Rd,
+	  man/nb2mat.Rd, man/predict.sarlm.Rd, man/set.spChkOption.Rd,
+	  man/sp.correlogram.Rd, man/sp.mantel.mc.Rd, man/spautolm.Rd,
+	  man/spweights.constants.Rd, man/stsls.Rd, man/subset.listw.Rd,
+	  man/summary.nb.Rd, man/testnb.Rd: moving verbose/quiet and
+	  zero.policy to global options
+
+2010-02-24 18:29  rsbivand
+
+	* ChangeLog, inst/ChangeLog: errorsarlm resvar bugfix
+
 2010-02-24 18:29  rsbivand
 
 	* DESCRIPTION, R/error.spsarlm.R: errorsarlm resvar bugfix

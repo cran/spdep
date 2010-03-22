@@ -1,13 +1,6 @@
 /* Copyright 2000-3 by Roger S. Bivand. */
 
-#include <R.h>
-#include <Rmath.h>
-#include <Rdefines.h>
-#include <R_ext/Applic.h>
-#define ROFFSET 1
-
-void gcdist(double *lon1, double *lon2, double *lat1, double *lat2, 
-		double *dist);
+#include "spdep.h"
 
 SEXP nbdists(SEXP nb, SEXP x, SEXP np, SEXP dim, SEXP lonlat)
 {
