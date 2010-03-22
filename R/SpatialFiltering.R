@@ -1,7 +1,7 @@
 SpatialFiltering <- function (formula, lagformula, data=list(), nb,
- glist=NULL, style="C", zero.policy=FALSE, tol=0.1, zerovalue = 0.0001,
+ glist=NULL, style="C", zero.policy=NULL, tol=0.1, zerovalue = 0.0001,
  ExactEV=FALSE, symmetric=TRUE, alpha=NULL, alternative="two.sided",
- verbose=TRUE) {
+ verbose=NULL) {
 #
 # tol: tolerance value for convergence of spatial filtering (Moran's I).
 # The search for eigenvector terminates, once the residual
@@ -37,6 +37,11 @@ SpatialFiltering <- function (formula, lagformula, data=list(), nb,
     
     if (missing(nb)) stop("Neighbour list argument missing")
     if (missing(formula)) stop("Formula argument missing")
+    if (is.null(verbose)) verbose <- get("verbose", env = .spdepOptions)
+    stopifnot(is.logical(verbose))
+        if (is.null(zero.policy))
+            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+        stopifnot(is.logical(zero.policy))
     lw <- nb2listw(nb, glist=glist, style=style, zero.policy=zero.policy)
     if (symmetric) lw <- listw2U(lw)
     S <- listw2mat(lw)

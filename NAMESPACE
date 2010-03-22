@@ -47,6 +47,9 @@ export(EBImoran.mc, probmap, choynowski, EBest, EBlocal, LR.sarlm,
 	is.symmetric.glist, similar.listw, nb2lines, listw2lines, df2sn, 
 	plot.listw, aggregate.nb, old.make.sym.nb, Hausman.test)
 
+export(set.VerboseOption, get.VerboseOption, set.ZeroPolicyOption, 
+        get.ZeroPolicyOption, set.ClusterOption, get.ClusterOption)
+
 export(spautolm, residuals.spautolm, deviance.spautolm, coef.spautolm, 
 	fitted.spautolm, print.spautolm, summary.spautolm, LR1.spautolm, 
 	logLik.spautolm, print.summary.spautolm, autocov_dist, GMerrorsar, 

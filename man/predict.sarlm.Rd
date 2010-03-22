@@ -13,7 +13,7 @@ trend, signal, and noise --- see reference.
 }
 \usage{
 predict.sarlm(object, newdata = NULL, listw = NULL,
- zero.policy = FALSE, ...)
+ zero.policy = NULL, ...)
 print.sarlm.pred(x, ...)
 }
 %- maybe also `usage' for other objects documented here.
@@ -23,7 +23,7 @@ print.sarlm.pred(x, ...)
   \item{newdata}{Data frame in which to predict --- if NULL, predictions are
 for the data on which the model was fitted}
   \item{listw}{a \code{listw} object created for example by \code{nb2listw}}
-  \item{zero.policy}{if TRUE assign zero to the lagged value of zones without 
+  \item{zero.policy}{default NULL, use global option value; if TRUE assign zero to the lagged value of zones without 
 neighbours, if FALSE (default) assign NA - causing \code{lagsarlm()} to 
 terminate with an error}
   \item{x}{the object to be printed}

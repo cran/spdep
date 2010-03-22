@@ -12,7 +12,7 @@
 \title{Matrix exponential spatial lag model}
 \description{The function fits a matrix exponential spatial lag model, using \code{optim} to find the value of \code{alpha}, the spatial coefficient.}
 \usage{
-lagmess(formula, data = list(), listw, zero.policy = FALSE, na.action = na.fail, q = 10, start = -2.5, control=list(), method="BFGS", verbose=FALSE)
+lagmess(formula, data = list(), listw, zero.policy = NULL, na.action = na.fail, q = 10, start = -2.5, control=list(), method="BFGS", verbose=NULL)
 \method{summary}{lagmess}(object, ...)
 \method{print}{lagmess}(x, ...)
 \method{print}{summary.lagmess}(x, digits = max(5, .Options$digits - 3),
@@ -31,14 +31,14 @@ of model specification are given for \code{lm()}}
 By default the variables are taken from the environment which the function 
 is called.}
   \item{listw}{a \code{listw} object created for example by \code{nb2listw}}
-  \item{zero.policy}{if TRUE assign zero to the lagged value of zones without 
-neighbours, if FALSE (default) assign NA - causing \code{lagsarlm()} to terminate with an error}
+  \item{zero.policy}{default NULL, use global option value; if TRUE assign zero to the lagged value of zones without 
+neighbours, if FALSE assign NA - causing \code{lagmess()} to terminate with an error}
   \item{na.action}{a function (default \code{options("na.action")}), can also be \code{na.omit} or \code{na.exclude} with consequences for residuals and fitted values - in these cases the weights list will be subsetted to remove NAs in the data. It may be necessary to set zero.policy to TRUE because this subsetting may create no-neighbour observations. Note that only weights lists created without using the glist argument to \code{nb2listw} may be subsetted.}
   \item{q}{default 10; number of powers of the spatial weights to use}
   \item{start}{starting value for numerical optimization, should be a small negative number}
   \item{control}{control parameters passed to \code{optim}}
   \item{method}{default \code{BFGS}, method passed to \code{optim}}
-  \item{verbose}{default FALSE, if TRUE report function values during optimization}
+  \item{verbose}{default NULL, use global option value; if TRUE report function values during optimization}
   \item{x,object}{Objects of classes \code{lagmess} or \code{summary.lagmess} to be passed to methods}
   \item{digits}{the number of significant digits to use when printing}
   \item{signif.stars}{logical. If TRUE, "significance stars" are printed
@@ -69,7 +69,7 @@ The function returns an object of class \code{lagmess} with components:
   \item{nullLL}{the log likelihood of the aspatial model for the same data}
 }
 
-\references{     J. P. LeSage and R. K. Pace (2007) A matrix exponential specification. Journal of Econometrics, 140, 190-214; J. P. LeSage and R. K. Pace (2009) Introduction to Spatial Econometrics. CRC Press, Chapter 9.}
+\references{J. P. LeSage and R. K. Pace (2007) A matrix exponential specification. Journal of Econometrics, 140, 190-214; J. P. LeSage and R. K. Pace (2009) Introduction to Spatial Econometrics. CRC Press, Chapter 9.}
 
 \author{Roger Bivand \email{Roger.Bivand@nhh.no} and Eric Blankmeyer}
 

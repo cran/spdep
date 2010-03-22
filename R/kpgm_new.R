@@ -22,10 +22,15 @@
 
 GMerrorsar <- function(#W, y, X, 
 	formula, data = list(), listw, na.action=na.fail, 
-	zero.policy=FALSE, return_LL=FALSE, method="nlminb", 
-        control=list(), pars, verbose=FALSE, sparse_method="Matrix",
+	zero.policy=NULL, return_LL=FALSE, method="nlminb", 
+        control=list(), pars, verbose=NULL, sparse_method="Matrix",
         returnHcov=FALSE, pWOrder=250, tol.Hcov=1.0e-10) {
 #	ols <- lm(I(y) ~ I(X) - 1)
+        if (is.null(verbose)) verbose <- get("verbose", env = .spdepOptions)
+        stopifnot(is.logical(verbose))
+        if (is.null(zero.policy))
+            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+        stopifnot(is.logical(zero.policy))
 	mt <- terms(formula, data = data)
 	mf <- lm(formula, data, na.action=na.action, method="model.frame")
 	na.act <- attr(mf, "na.action")

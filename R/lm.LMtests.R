@@ -1,7 +1,7 @@
 # Copyright 2001-7 by Roger Bivand 
 #
 
-lm.LMtests <- function(model, listw, zero.policy=FALSE, test="LMerr",
+lm.LMtests <- function(model, listw, zero.policy=NULL, test="LMerr",
 	spChk=NULL, naSubset=TRUE) {
 
 	if (class(model) == "lm") na.act <- model$na.action
@@ -11,6 +11,9 @@ lm.LMtests <- function(model, listw, zero.policy=FALSE, test="LMerr",
 
 	if (!inherits(listw, "listw")) stop(paste(listw_name,
 		"is not a listw object"))
+        if (is.null(zero.policy))
+            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+        stopifnot(is.logical(zero.policy))
 	if (!is.null(na.act) && naSubset) {
 	    subset <- !(1:length(listw$neighbours) %in% na.act)
 	    listw <- subset(listw, subset, zero.policy=zero.policy)

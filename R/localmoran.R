@@ -1,11 +1,14 @@
 # Copyright 2001-8 by Roger Bivand
 #
 
-localmoran <- function(x, listw, zero.policy=FALSE, na.action=na.fail, 
+localmoran <- function(x, listw, zero.policy=NULL, na.action=na.fail, 
 	alternative = "greater", p.adjust.method="none", mlvar=TRUE,
 	spChk=NULL) {
 	if (!inherits(listw, "listw"))
 		stop(paste(deparse(substitute(listw)), "is not a listw object"))
+        if (is.null(zero.policy))
+            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+        stopifnot(is.logical(zero.policy))
 	if (!is.null(attr(listw$neighbours, "self.included")) &&
 		attr(listw$neighbours, "self.included"))
 		stop("Self included among neighbours")

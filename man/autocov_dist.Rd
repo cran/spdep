@@ -6,7 +6,7 @@
   Calculates the autocovariate to be used in autonormal, autopoisson or autologistic regression. Three distance-weighting schemes are available.
 }
 \usage{
-autocov_dist(z, xy, nbs = 1, type = "inverse", zero.policy = FALSE,
+autocov_dist(z, xy, nbs = 1, type = "inverse", zero.policy = NULL,
  style = "W", longlat=NULL)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -15,7 +15,7 @@ autocov_dist(z, xy, nbs = 1, type = "inverse", zero.policy = FALSE,
   \item{xy}{a matrix of coordinates or a SpatialPoints object}
   \item{nbs}{neighbourhood radius; default is 1}
   \item{type}{the weighting scheme: "one" gives equal weight to all data points in the neighbourhood; "inverse" (the default) weights by inverse distance; "inverse.squared" weights by the square of "inverse"}
-  \item{zero.policy}{If FALSE stop with error for any empty neighbour sets, if TRUE permit the weights list to be formed with zero-length weights vectors}
+  \item{zero.policy}{default NULL, use global option value; if FALSE stop with error for any empty neighbour sets, if TRUE permit the weights list to be formed with zero-length weights vectors}
   \item{style}{style' can take values W, B, C, U, and S; W gives mean values for neighbours}
   \item{longlat}{TRUE if point coordinates are longitude-latitude decimal, in which case distances are measured in kilometers; if xy is a SpatialPoints object, the value is taken from the object itself}
 }

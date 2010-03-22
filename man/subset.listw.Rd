@@ -5,13 +5,13 @@
 \description{
   The function subsets a spatial weights list, retaining objects for which the subset argument vector is TRUE. At present it will only subset non-general weights lists (that is those created by \code{nb2listw} with \code{glist=NULL}).}
 \usage{
-subset.listw(x, subset, zero.policy = FALSE, ...)
+subset.listw(x, subset, zero.policy = NULL, ...)
 }
 
 \arguments{
   \item{x}{an object of class \code{listw}}
   \item{subset}{logical expression}
-  \item{zero.policy}{If FALSE stop with error for any empty neighbour sets, if TRUE permit the weights list to be formed with zero-length weights vectors - passed through to \code{nb2listw}}
+  \item{zero.policy}{default NULL, use global option value; if FALSE stop with error for any empty neighbour sets, if TRUE permit the weights list to be formed with zero-length weights vectors - passed through to \code{nb2listw}}
   \item{\dots}{generic function pass-through}
 }
 \value{

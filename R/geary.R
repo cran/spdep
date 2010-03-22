@@ -2,7 +2,10 @@
 #
 
 
-geary <- function(x, listw, n, n1, S0, zero.policy=FALSE) {
+geary <- function(x, listw, n, n1, S0, zero.policy=NULL) {
+        if (is.null(zero.policy))
+            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+        stopifnot(is.logical(zero.policy))
 	z <- scale(x, scale=FALSE)
 	zz <- sum(z^2)
 	K <- (n*sum(z^4))/(zz^2)
@@ -12,7 +15,10 @@ geary <- function(x, listw, n, n1, S0, zero.policy=FALSE) {
 	res
 }
 
-geary.intern <- function(x, listw, n, zero.policy, type="geary") {
+geary.intern <- function(x, listw, n, zero.policy=NULL, type="geary") {
+        if (is.null(zero.policy))
+            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+        stopifnot(is.logical(zero.policy))
 	cardnb <- card(listw$neighbours)
 	if (type == "geary") ft <- TRUE
 	else if (type == "sokal") ft <- FALSE
@@ -24,8 +30,11 @@ geary.intern <- function(x, listw, n, zero.policy, type="geary") {
 	res
 }
 
-geary.test <- function(x, listw, randomisation=TRUE, zero.policy=FALSE,
+geary.test <- function(x, listw, randomisation=TRUE, zero.policy=NULL,
     alternative="greater", spChk=NULL, adjust.n=TRUE) {
+        if (is.null(zero.policy))
+            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+        stopifnot(is.logical(zero.policy))
 	alternative <- match.arg(alternative, c("less", "greater", "two.sided"))
 	if(!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
@@ -83,8 +92,11 @@ geary.test <- function(x, listw, randomisation=TRUE, zero.policy=FALSE,
 	res
 }
 
-geary.mc <- function(x, listw, nsim, zero.policy=FALSE,
-	alternative="less", spChk=NULL, adjust.n=TRUE) {
+geary.mc <- function(x, listw, nsim, zero.policy=NULL,
+	alternative="less", spChk=NULL, adjust.n=TRUE, return_boot=FALSE) {
+        if (is.null(zero.policy))
+            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+        stopifnot(is.logical(zero.policy))
 	alternative <- match.arg(alternative, c("less", "greater"))
 	if(!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
@@ -101,6 +113,25 @@ geary.mc <- function(x, listw, nsim, zero.policy=FALSE,
         if (gamres) stop("nsim too large for this number of observations")
 	if (nsim < 1) stop("non-positive nsim")
 	wc <- spweights.constants(listw, zero.policy, adjust.n=adjust.n)
+        if (return_boot) {
+            geary_boot <- function(var, i, ...) {
+                var <- var[i]
+                return(geary(x=var, ...)$C)
+            }
+            cl <- get("cl", env = .spdepOptions)
+            if (!is.null(cl) && length(cl) > 1) {
+                nnsim <- boot_wrapper_in(cl, nsim)
+                lres <- clusterCall(cl, boot, x, statistic=geary_boot,
+                    R=nnsim, sim="permutation", listw=listw, n=n, n1=wc$n1,
+                    S0=wc$S0, zero.policy=zero.policy)
+                res <- boot_wrapper_out(lres, match.call())
+            } else {
+                res <- boot(x, statistic=geary_boot, R=nsim,
+                    sim="permutation", listw=listw, n=n, n1=wc$n1, S0=wc$S0, 
+                    zero.policy=zero.policy)
+            }
+            return(res)
+        }
 	res <- numeric(length=nsim+1)
 	for (i in 1:nsim) res[i] <- geary(sample(x), listw, n, wc$n1, wc$S0,
 	    zero.policy)$C

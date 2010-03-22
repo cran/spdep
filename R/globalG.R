@@ -3,8 +3,11 @@
 # General G Statistics
 #
 #
-globalG.test <- function(x, listw, zero.policy=FALSE,
+globalG.test <- function(x, listw, zero.policy=NULL,
 	alternative="greater", spChk=NULL, adjust.n=TRUE) {
+        if (is.null(zero.policy))
+            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+        stopifnot(is.logical(zero.policy))
 	alternative <- match.arg(alternative, c("greater", "less", "two.sided"))
 	if (!inherits(listw, "listw"))
 	stop(paste(deparse(substitute(listw)), "is not a listw object"))

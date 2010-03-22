@@ -36,32 +36,6 @@ summary.sarlm <- function(object, correlation = FALSE, Nagelkerke=FALSE,
 	        rownames(object$Coef) <- names(object$coefficients)
               }
 	}
-	if (!is.null(object$LLs)) {
-		m <- length(object$coefficients)
-		LLs <- numeric(m)
-		LRs <- numeric(m)
-		Pvals <- numeric(m)
-		if (length(object$LLs) == m) {
-			for (i in 1:m) {
-				LLs[i] <- c(object$LLs[[i]])
-				res <- LR.sarlm(object, object$LLs[[i]])
-				LRs[i] <- res$statistic
-				Pvals[i] <- res$p.value
-			}
-		} else {
-			LLs[1] <- LRs[1] <- Pvals[1] <- NA
-			for (i in 1:(m-1)) {
-				LLs[i+1] <- c(object$LLs[[i]])
-				res <- LR.sarlm(object, object$LLs[[i]])
-				LRs[i+1] <- res$statistic
-				Pvals[i+1] <- res$p.value
-			}
-		}
-		object$LLCoef <- cbind(object$coefficients, LLs, LRs, Pvals)
-		colnames(object$LLCoef) <- c("Estimate", "Log likelihood",
-			"LR statistic", "Pr(>|z|)")
-	        rownames(object$LLCoef) <- names(object$coefficients)
-	}
 
         if (Nagelkerke) {
             nk <- NK.sarlm(object)

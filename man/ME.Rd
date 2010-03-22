@@ -8,7 +8,7 @@
   The Moran eigenvector filtering function is intended to remove spatial autocorrelation from the residuals of generalised linear models. It uses brute force eigenvector selection to reach a subset of such vectors to be added to the RHS of the GLM model to reduce residual autocorrelation to below the specified alpha value.}
 \usage{
 ME(formula, data, family = gaussian, weights, offset, listw,
- alpha=0.05, nsim=99, verbose=TRUE, stdev=FALSE)
+ alpha=0.05, nsim=99, verbose=NULL, stdev=FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -21,7 +21,7 @@ ME(formula, data, family = gaussian, weights, offset, listw,
   \item{listw}{a \code{listw} object created for example by \code{nb2listw}}
   \item{alpha}{used as a stopping rule to choose all eigenvectors up to and including the one with a p-value exceeding alpha}
   \item{nsim}{number of permutations for permutation bootstrap for finding p-values}
-  \item{verbose}{if TRUE report eigenvectors selected}
+  \item{verbose}{default NULL, use global option value; if TRUE report eigenvectors selected}
   \item{stdev}{if TRUE, p-value calculated from bootstrap permutation standard deviate using \code{pnorm} with alternative="greater", if FALSE the Hope-type p-value}
 }
 \details{

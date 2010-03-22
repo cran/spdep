@@ -1,7 +1,4 @@
-# include <R.h>
-# include <Rdefines.h>
-
-#define ROFFSET 1
+#include "spdep.h"
 
 int pipbb(double pt1, double pt2, double *bbs);
 

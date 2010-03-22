@@ -3,20 +3,33 @@
 \alias{get.spChkOption}
 \alias{chkIDs}
 \alias{spNamedVec}
+\alias{set.VerboseOption}
+\alias{get.VerboseOption}
+\alias{set.ClusterOption}
+\alias{get.ClusterOption}
+\alias{set.ZeroPolicyOption}
+\alias{get.ZeroPolicyOption}
 %- Also NEED an `\alias' for EACH other topic documented here.
 \title{Control checking of spatial object IDs}
 \description{
-  Provides support for checking the mutual integrity of spatial neighbour weights and spatial data. 
+  Provides support for checking the mutual integrity of spatial neighbour weights and spatial data; similar mechanisms are used for passing global verbose and zero.policy options, and for providing access to a running cluster for embarrassingly parallel tasks. 
 }
 \usage{
 set.spChkOption(check)
 get.spChkOption()
 chkIDs(x, listw)
 spNamedVec(var, data)
+set.VerboseOption(check)
+get.VerboseOption()
+set.ZeroPolicyOption(check)
+get.ZeroPolicyOption()
+set.ClusterOption(cl)
+get.ClusterOption()
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
   \item{check}{a logical value, TRUE or FALSE}
+  \item{cl}{a cluster object created by \code{makeCluster} in \pkg{snow}}
   \item{x}{a vector the same length, or a two-dimensional array, or data frame with the same number of rows as the neighbours list in listw}
   \item{listw}{a \code{listw} object or \code{nb} object inheriting from "nb"}
   \item{var}{a character string or integer value for the column to be selected}

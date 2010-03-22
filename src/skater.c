@@ -1,7 +1,4 @@
-#include <stdio.h>
-#include <math.h>
-#include <R.h>
-#include <Rmath.h>
+#include "spdep.h"
 
 void prunemst(int *e1, int *e2, int *ne, int *gr) {
   int i, j, no1[*ne], id1, id2, n1=1, li=0, ls=1;

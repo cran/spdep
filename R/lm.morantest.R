@@ -1,8 +1,11 @@
 # Copyright 2001-7 by Roger Bivand 
 #
 
-lm.morantest <- function(model, listw, zero.policy=FALSE, 
+lm.morantest <- function(model, listw, zero.policy=NULL, 
 	    alternative = "greater", spChk=NULL, resfun=weighted.residuals,		    naSubset=TRUE) {
+        if (is.null(zero.policy))
+            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+        stopifnot(is.logical(zero.policy))
 	alternative <- match.arg(alternative, c("greater", "less", "two.sided"))
 	listw_name <- deparse(substitute(listw))
 	if (!inherits(listw, "listw")) stop(paste(listw_name,

@@ -30,6 +30,7 @@ EBlocal                 Local Empirical Bayes estimator
 edit.nb                 Interactive editing of neighbours lists
 eigenw                  Spatial weights matrix eigenvalues
 eire                    Eire data sets
+elect80                 1980 Presidential election results
 errorsarlm              Spatial simultaneous autoregressive error model
                         estimation
 gabrielneigh            Graph based spatial weights

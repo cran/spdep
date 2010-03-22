@@ -15,7 +15,7 @@ neighbours, but not for k-nearest neighbours. The helper function
 attribute if needed, and \code{make.sym.nb} makes a non-symmetric list symmetric by adding neighbors. \code{is.symmetric.glist} checks a list of general weights corresponding to neighbours for symmetry for symmetric neighbours.
 }
 \usage{
-is.symmetric.nb(nb, verbose = TRUE, force = FALSE)
+is.symmetric.nb(nb, verbose = NULL, force = FALSE)
 sym.attr.nb(nb)
 make.sym.nb(nb)
 old.make.sym.nb(nb)
@@ -24,7 +24,7 @@ is.symmetric.glist(nb, glist)
 
 \arguments{
   \item{nb}{an object of class \code{nb} with a list of integer vectors containing neighbour region number ids.}
-  \item{verbose}{if TRUE prints non-matching pairs}
+  \item{verbose}{default NULL, use global option value; if TRUE prints non-matching pairs}
   \item{force}{do not respect a neighbours list \code{sym} attribute and test anyway}
   \item{glist}{list of general weights corresponding to neighbours}
 }

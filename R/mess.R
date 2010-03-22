@@ -1,9 +1,14 @@
 # Copyright 2010 by Roger Bivand and Eric Blankmeyer
 
-lagmess <- function(formula, data = list(), listw, zero.policy=FALSE,
+lagmess <- function(formula, data = list(), listw, zero.policy=NULL,
     na.action=na.fail, q=10, start=-2.5, control=list(), method="BFGS",
-    verbose=FALSE) {
+    verbose=NULL) {
     stopifnot(inherits(listw, "listw"))
+    if (is.null(verbose)) verbose <- get("verbose", env = .spdepOptions)
+    stopifnot(is.logical(verbose))
+        if (is.null(zero.policy))
+            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+        stopifnot(is.logical(zero.policy))
     if (listw$style != "W") warning("weights should be row-stochastic")
     mt <- terms(formula, data = data)
     mf <- lm(formula, data, na.action=na.action, method="model.frame")
@@ -38,6 +43,7 @@ lagmess <- function(formula, data = list(), listw, zero.policy=FALSE,
 
     call <- match.call()
     lmobj$call <- call
+
     res <- list(lmobj=lmobj, alpha=alpha, alphase=alphase, rho=rho,
         bestmess=bestmess, q=q, start=start, na.action=na.act,
         nullLL=nullLL)

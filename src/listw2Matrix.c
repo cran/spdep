@@ -1,9 +1,6 @@
 /* Copyright 2006 by Roger S. Bivand. */
 
-#include <R.h>
-#include <Rdefines.h>
-#include <R_ext/Applic.h>
-#define ROFFSET 1
+#include "spdep.h"
 
 SEXP listw2dsT(SEXP nbs, SEXP wts, SEXP card, SEXP ncard2)
 {

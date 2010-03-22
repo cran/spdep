@@ -38,8 +38,11 @@ subset.nb <- function(x, subset, ...) {
 }
 
 
-subset.listw <- function(x, subset, zero.policy=FALSE, ...) {
+subset.listw <- function(x, subset, zero.policy=NULL, ...) {
     if (!inherits(x, "listw")) stop("not a weights list")
+        if (is.null(zero.policy))
+            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+        stopifnot(is.logical(zero.policy))
     if (!is.logical(subset)) stop("subset not a logical vector")
     nb <- x$neighbours
     vlist <- x$weights

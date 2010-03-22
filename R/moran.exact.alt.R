@@ -1,13 +1,16 @@
 # Copyright (c) 2007-2008 Markus Reder and Roger Bivand
 
 localmoran.exact.alt <- function(model, select, nb, glist = NULL, style = "W",
-    zero.policy = FALSE, alternative = "greater", spChk=NULL, 
+    zero.policy = NULL, alternative = "greater", spChk=NULL, 
     resfun=weighted.residuals, Omega=NULL, save.Vi = FALSE, save.M=FALSE,
     useTP=FALSE, truncErr=1e-6, zeroTreat=0.1) {
 # need to impose check on weights TODO!!
 # class to inherits Jari Oksanen 080603
     if (!inherits(nb, "nb"))
         stop(paste(deparse(substitute(nb)), "not an nb object"))
+        if (is.null(zero.policy))
+            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+        stopifnot(is.logical(zero.policy))
 #    if (class(model) != "lm") 
 #        stop(paste(deparse(substitute(model)), "not an lm object"))
     dmc <- deparse(model$call)

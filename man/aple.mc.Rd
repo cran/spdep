@@ -17,7 +17,7 @@ aple.mc(x, listw, nsim, override_similarity_check=FALSE)
 }
 
 \value{
-  A \code{boot} object as reurned by the \code{boot} function.
+  A \code{boot} object as returned by the \code{boot} function.
 }
 \references{Li, H, Calder, C. A. and Cressie N. A. C. (2007) Beyond Moran's I: testing for spatial dependence based on the spatial autoregressive model. Geographical Analysis 39, 357-375.}
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}

@@ -1,7 +1,7 @@
 # Copyright 2002-2008 by Roger Bivand and Michael Tiefelsdorf
 #
 
-lm.morantest.sad <- function (model, listw, zero.policy = FALSE, 
+lm.morantest.sad <- function (model, listw, zero.policy = NULL, 
     alternative = "greater", spChk=NULL, resfun=weighted.residuals, 
     tol = .Machine$double.eps^0.5, maxiter = 1000, tol.bounds=0.0001,
     zero.tol=1.0e-7, Omega=NULL, save.M=NULL, save.U=NULL) 
@@ -10,6 +10,9 @@ lm.morantest.sad <- function (model, listw, zero.policy = FALSE,
         stop(paste(deparse(substitute(listw)), "is not a listw object"))
     if (!inherits(model, "lm")) 
         stop(paste(deparse(substitute(model)), "not an lm object"))
+        if (is.null(zero.policy))
+            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+        stopifnot(is.logical(zero.policy))
     N <- length(listw$neighbours)
     u <- resfun(model)
     if (N != length(u)) 

@@ -1,9 +1,6 @@
 /* Copyright 2000-2 by Roger S. Bivand. */
 
-#include <R.h>
-#include <Rdefines.h>
-#include <R_ext/Applic.h>
-#define ROFFSET 1
+#include "spdep.h"
 
 SEXP card(SEXP nb)
 {

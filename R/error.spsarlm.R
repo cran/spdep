@@ -2,44 +2,40 @@
 #
 
 errorsarlm <- function(formula, data = list(), listw, na.action, 
-	method="eigen", quiet=TRUE, zero.policy=FALSE, interval=c(-1,0.999), 
-	tol.solve=1.0e-10, tol.opt=.Machine$double.eps^0.5,
-        returnHcov=TRUE, pWOrder=250, fdHess=NULL,
-        optimHess=FALSE, trs=NULL) {
+	method="eigen", quiet=NULL, zero.policy=NULL, interval=NULL, 
+	tol.solve=1.0e-10, trs=NULL, control=list()) {
+        timings <- list()
+        .ptime_start <- proc.time()
+        con <- list(tol.opt=.Machine$double.eps^0.5, returnHcov=TRUE,
+            pWOrder=250, fdHess=NULL, optimHess=FALSE, LAPACK=FALSE,
+           compiled_sse=FALSE, Imult=2, cheb_q=5, MC_p=16, MC_m=30,
+           super=FALSE)
+        nmsC <- names(con)
+        con[(namc <- names(control))] <- control
+        if (length(noNms <- namc[!namc %in% nmsC])) 
+            warning("unknown names in control: ", paste(noNms, collapse = ", "))
+        if (is.null(quiet)) quiet <- !get("verbose", env = .spdepOptions)
+        stopifnot(is.logical(quiet))
+        if (is.null(zero.policy))
+            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+        stopifnot(is.logical(zero.policy))
 	mt <- terms(formula, data = data)
 	mf <- lm(formula, data, na.action=na.action, method="model.frame")
 	na.act <- attr(mf, "na.action")
 	if (!inherits(listw, "listw")) stop("No neighbourhood list")
-        if (is.null(fdHess)) fdHess <- method != "eigen"
-        stopifnot(is.logical(fdHess))
-	can.sim <- as.logical(NA)
+        if (is.null(con$fdHess)) con$fdHess <- method != "eigen"
+        stopifnot(is.logical(con$fdHess))
+        stopifnot(is.logical(con$optimHess))
+        stopifnot(is.logical(con$LAPACK))
+        stopifnot(is.logical(con$super))
+        stopifnot(is.logical(con$compiled_sse))
+	can.sim <- FALSE
 	if (listw$style %in% c("W", "S")) 
 		can.sim <- can.be.simmed(listw)
 	if (!is.null(na.act)) {
 	    subset <- !(1:length(listw$neighbours) %in% na.act)
 	    listw <- subset(listw, subset, zero.policy=zero.policy)
 	}
-	if (!quiet) cat(paste("\nSpatial autoregressive error model\n", 
-		"Jacobian calculated using "))
-	switch(method,
-		eigen = if (!quiet) cat("neighbourhood matrix eigenvalues\n"),
-	        Matrix = {
-		    if (listw$style %in% c("W", "S") && !can.sim)
-		    stop("Matrix method requires symmetric weights")
-		    if (listw$style %in% c("B", "C", "U") && 
-			!(is.symmetric.glist(listw$neighbours, listw$weights)))
-		    stop("Matrix method requires symmetric weights")
-		    if (!quiet) cat("sparse matrix techniques using Matrix\n")
-		},
-	        spam = {
-		    if (listw$style %in% c("W", "S") && !can.sim)
-		    stop("spam method requires symmetric weights")
-		    if (listw$style %in% c("B", "C", "U") && 
-			!(is.symmetric.glist(listw$neighbours, listw$weights)))
-		    stop("spam method requires symmetric weights")
-		    if (!quiet) cat("sparse matrix techniques using spam\n")
-		},
-		stop("...\n\nUnknown method\n"))
 	y <- model.response(mf, "numeric")
 	if (any(is.na(y))) stop("NAs in dependent variable")
 	x <- model.matrix(mt, mf)
@@ -84,62 +80,114 @@ errorsarlm <- function(formula, data = list(), listw, na.action,
 	}
 	colnames(WX) <- xcolnames
 	rm(wx)
-	similar <- FALSE
-	if (method == "eigen") {
-		if (!quiet) cat("Computing eigenvalues ...\n")
-		if (listw$style %in% c("W", "S") & can.sim) {
-			eig <- eigenw(similar.listw(listw))
-			similar <- TRUE
-		} else eig <- eigenw(listw)
-		if (!quiet) cat("\n")
-# range inverted 031031, email from Salvati Nicola (and Rein Halbersma)
-		if (is.complex(eig)) eig.range <- 1/range(Re(eig))
-		else eig.range <- 1/range(eig)
-		opt <- optimize(sar.error.f, 
-			lower=eig.range[1]+.Machine$double.eps, 
-			upper=eig.range[2]-.Machine$double.eps, maximum=TRUE,
-			tol=tol.opt, eig=eig, y=y, wy=wy, x=x, WX=WX, 
-			n=n, quiet=quiet)
-		lambda <- opt$maximum
-		names(lambda) <- "lambda"
-		LL <- opt$objective
-	} else if (method == "spam") {
-        	if (listw$style %in% c("W", "S") & can.sim) {
-	    		csrw <- listw2U_spam(similar.listw_spam(listw))
-			    similar <- TRUE
-		} else csrw <- as.spam.listw(listw)
-                W <- as.spam.listw(listw)
-        	I <- diag.spam(1, n, n)
-		opt <- optimize(sar.error.f.sp, interval=interval, 
-			maximum=TRUE, tol=tol.opt, csrw=csrw, I=I, y=y, wy=wy, 
-			x=x, WX=WX, n=n, quiet=quiet)
-		lambda <- opt$maximum
-		names(lambda) <- "lambda"
-		LL <- opt$objective
-	} else if (method == "Matrix") {
-        	if (listw$style %in% c("W", "S") & can.sim) {
-	    	    csrw <- listw2U_Matrix(similar.listw_Matrix(listw))
-	    	    similar <- TRUE
-		} else csrw <- as_dsTMatrix_listw(listw)
-		csrw <- as(csrw, "CsparseMatrix")
-		Imult <- 2
-		if (listw$style == "B") {
-                    Imult <- ceiling((2/3)*max(apply(W, 1, sum)))
-		    interval <- c(-0.5, +0.25)
-		} else interval <- c(-1.2, +1)
-                nW <- - csrw
-		pChol <- Cholesky(csrw, super=FALSE, Imult = Imult)
-		nChol <- Cholesky(nW, super=FALSE, Imult = Imult)
-                W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
-        	I <- as_dsCMatrix_I(n)
-		opt <- optimize(sar.error.f.M, interval=interval, 
-			maximum=TRUE, tol=tol.opt, csrw=csrw, I=I, y=y, wy=wy, 
-			x=x, WX=WX, n=n, nW=nW, nChol=nChol, pChol=pChol,
-                        quiet=quiet)
-		lambda <- opt$maximum
-		names(lambda) <- "lambda"
-		LL <- opt$objective
-	}
+
+        env <- new.env(parent=globalenv())
+        assign("y", y, envir=env)
+        assign("x", x, envir=env)
+        assign("wy", wy, envir=env)
+        assign("WX", WX, envir=env)
+        assign("n", n, envir=env)
+        assign("p", m, envir=env)
+        assign("verbose", !quiet, envir=env)
+        assign("family", "SAR", envir=env)
+        assign("compiled_sse", con$compiled_sse, envir=env)
+        assign("first_time", TRUE, envir=env)
+        assign("LAPACK", con$LAPACK, envir=env)
+        assign("can.sim", can.sim, envir=env)
+        assign("listw", listw, envir=env)
+        assign("similar", FALSE, envir=env)
+        timings[["set_up"]] <- proc.time() - .ptime_start
+        .ptime_start <- proc.time()
+
+	if (!quiet) cat(paste("\nSpatial autoregressive error model\n", 
+		"Jacobian calculated using "))
+	switch(method,
+		eigen = {
+                    if (!quiet) cat("neighbourhood matrix eigenvalues\n")
+                    eigen_setup(env)
+                    er <- get("eig.range", envir=env)
+                    if (is.null(interval)) 
+                        interval <- c(er[1]+.Machine$double.eps, 
+                            er[2]-.Machine$double.eps)
+                },
+	        Matrix = {
+		    if (listw$style %in% c("W", "S") && !can.sim)
+		        stop("Matrix method requires symmetric weights")
+		    if (listw$style %in% c("B", "C", "U") && 
+			!(is.symmetric.glist(listw$neighbours, listw$weights)))
+		        stop("Matrix method requires symmetric weights")
+		    if (!quiet) cat("sparse matrix Cholesky decomposition\n")
+	            Imult <- con$Imult
+                    if (is.null(interval)) {
+	                if (listw$style == "B") {
+                            Imult <- ceiling((2/3) * max(sapply(listw$weights,
+                                sum)))
+	                    interval <- c(-0.5, +0.25)
+	                } else interval <- c(-1, 0.999)
+                    }
+                    Matrix_setup(env, Imult, con$super)
+                    W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
+        	    I <- as_dsCMatrix_I(n)
+		},
+	        spam = {
+		    if (listw$style %in% c("W", "S") && !can.sim)
+		        stop("spam method requires symmetric weights")
+		    if (listw$style %in% c("B", "C", "U") && 
+			!(is.symmetric.glist(listw$neighbours, listw$weights)))
+		        stop("spam method requires symmetric weights")
+		    if (!quiet) cat("sparse matrix Cholesky decomposition\n")
+                    spam_setup(env)
+                    W <- as.spam.listw(get("listw", envir=env))
+                    if (is.null(interval)) interval <- c(-1,0.999)
+		},
+                Chebyshev = {
+		    if (listw$style %in% c("W", "S") && !can.sim)
+		        stop("Chebyshev method requires symmetric weights")
+		    if (listw$style %in% c("B", "C", "U") && 
+			!(is.symmetric.glist(listw$neighbours, listw$weights)))
+		        stop("Chebyshev method requires symmetric weights")
+		    if (!quiet) cat("sparse matrix Chebyshev approximation\n")
+                    cheb_setup(env, q=con$cheb_q)
+                    W <- get("W", envir=env)
+        	    I <- as_dsCMatrix_I(n)
+                    if (is.null(interval)) interval <- c(-1,0.999)
+                },
+                MC = {
+		    if (!listw$style %in% c("W"))
+		        stop("MC method requires row-standardised weights")
+		    if (!quiet) cat("sparse matrix Monte Carlo approximation\n")
+                    mcdet_setup(env, p=con$MC_p, m=con$MC_m)
+                    W <- get("W", envir=env)
+        	    I <- as_dsCMatrix_I(n)
+                    if (is.null(interval)) interval <- c(-1,0.999)
+                },
+                LU = {
+		    if (!quiet) cat("sparse matrix LU decomposition\n")
+                    LU_setup(env)
+                    W <- get("W", envir=env)
+                    I <- get("I", envir=env)
+                    if (is.null(interval)) interval <- c(-1,0.999)
+                },
+		stop("...\n\nUnknown method\n"))
+
+        nm <- paste(method, "set_up", sep="_")
+        timings[[nm]] <- proc.time() - .ptime_start
+        .ptime_start <- proc.time()
+        if (con$compiled_sse) {
+             ptr <- .Call("opt_error_init", PACKAGE="spdep")
+             assign("ptr", ptr, envir=env)
+        }
+	opt <- optimize(sar.error.f, interval=interval, 
+		maximum=TRUE, tol=con$tol.opt, env=env)
+	lambda <- opt$maximum
+	names(lambda) <- "lambda"
+	LL <- opt$objective
+        if (con$compiled_sse) {
+             .Call("opt_error_free", get("ptr", envir=env), PACKAGE="spdep")
+        }
+        nm <- paste(method, "opt", sep="_")
+        timings[[nm]] <- proc.time() - .ptime_start
+        .ptime_start <- proc.time()
 	lm.target <- lm(I(y - lambda*wy) ~ I(x - lambda*WX) - 1)
 	r <- as.vector(residuals(lm.target))
 	fit <- as.vector(y - r)
@@ -155,6 +203,9 @@ errorsarlm <- function(formula, data = list(), listw, na.action,
 	LMtest <- NULL
 	asyvar1 <- FALSE
         Hcov <- NULL
+        timings[["coefs"]] <- proc.time() - .ptime_start
+        .ptime_start <- proc.time()
+        assign("first_time", TRUE, envir=env)
 	if (method == "eigen") {
 		tr <- function(A) sum(diag(A))
 		W <- listw2mat(listw)
@@ -163,17 +214,19 @@ errorsarlm <- function(formula, data = list(), listw, na.action,
 		asyvar <- matrix(0, nrow=2+p, ncol=2+p)
 		asyvar[1,1] <- n / (2*(s2^2))
 		asyvar[2,1] <- asyvar[1,2] <- tr(WA) / s2
-		asyvar[2,2] <- tr(WA %*% WA) + tr(t(WA) %*% WA)
+		asyvar[2,2] <- tr(WA %*% WA) + tr(crossprod(WA))
 # bug found 100224 German Muchnik Izon
 #		asyvar[3:(p+2),3:(p+2)] <- s2*(t(x - lambda*WX) %*% 
-		asyvar[3:(p+2),3:(p+2)] <- t(x - lambda*WX) %*% 
-			(x - lambda*WX)
+                xl <- (x - lambda*WX)
+		asyvar[3:(p+2),3:(p+2)] <- crossprod(xl)
 		asyvar1 <- solve(asyvar, tol=tol.solve)
 		rownames(asyvar1) <- colnames(asyvar1) <- 
 			c("sigma", "lambda", xcolnames)
 		
 		lambda.se <- sqrt(asyvar1[2,2])
-                if (returnHcov) {
+                timings[["eigen_se"]] <- proc.time() - .ptime_start
+                .ptime_start <- proc.time()
+                if (con$returnHcov) {
                     pp <- lm.model$rank
                     p1 <- 1L:pp
                     R <- chol2inv(lm.model$qr$qr[p1, p1, drop = FALSE])
@@ -182,66 +235,54 @@ errorsarlm <- function(formula, data = list(), listw, na.action,
                     C <- A %*% x %*% R
                     Hcov <- B %*% C
                     attr(Hcov, "method") <- method
-                }
-                if (fdHess) {
-                    coefs <- c(lambda, coef.lambda)
-                    fdHess <- getVmate_eig(coefs, y, x, wy, WX, n, eig, s2, trs,
-                       tol.solve=tol.solve, optim=optimHess)
-                    if (is.null(trs)) {
-                        rownames(fdHess) <- colnames(fdHess) <- 
-                            c("lambda", colnames(x))
-                    } else {
-                        rownames(fdHess) <- colnames(fdHess) <- 
-                            c("sigma2", "lambda", colnames(x))
-                    }
+                    timings[["eigen_hcov"]] <- proc.time() - .ptime_start
+                    .ptime_start <- proc.time()
                 }
 		ase <- TRUE
 	} else {
-                if (fdHess && method == "Matrix") {
-                    coefs <- c(lambda, coef.lambda)
-                    fdHess <- getVmate_Matrix(coefs, y, x, wy, WX, n, I, csrw,
-                        nW, nChol, pChol, s2, trs, tol.solve=tol.solve,
-                        optim=optimHess)
-                    if (is.null(trs)) {
-                        rownames(fdHess) <- colnames(fdHess) <- 
-                            c("lambda", colnames(x))
- 		        rest.se <- sqrt(diag(fdHess)[-1])
-		        lambda.se <- sqrt(fdHess[1,1])
-                    } else {
-                        rownames(fdHess) <- colnames(fdHess) <- 
-                            c("sigma2", "lambda", colnames(x))
- 		        rest.se <- sqrt(diag(fdHess)[-c(1,2)])
-		        lambda.se <- sqrt(fdHess[2,2])
-                    }
-                } else if (fdHess && method == "spam") {
-                    coefs <- c(lambda, coef.lambda)
-                    fdHess <- getVmate_spam(coefs, y, x, wy, WX, n, csrw, I,
-                        s2, trs, tol.solve=tol.solve, optim=optimHess)
-                    if (is.null(trs)) {
-                        rownames(fdHess) <- colnames(fdHess) <- 
-                            c("lambda", colnames(x))
- 		        rest.se <- sqrt(diag(fdHess)[-1])
-		        lambda.se <- sqrt(fdHess[1,1])
-                    } else {
-                        rownames(fdHess) <- colnames(fdHess) <- 
-                            c("sigma2", "lambda", colnames(x))
- 		        rest.se <- sqrt(diag(fdHess)[-c(1,2)])
-		        lambda.se <- sqrt(fdHess[2,2])
-                    }
-                }                    
-                if (returnHcov) {
+                if (con$returnHcov) {
                     pp <- lm.model$rank
                     p1 <- 1L:pp
                     R <- chol2inv(lm.model$qr$qr[p1, p1, drop = FALSE])
                     B <- tcrossprod(R, x)
-                    B <- as(powerWeights(W=W, rho=lambda, order=pWOrder,
+                    B1 <- as(powerWeights(W=W, rho=lambda, order=con$pWOrder,
                         X=B, tol=tol.solve), "matrix")
                     C <- x %*% R
-                    C <- as(powerWeights(W=t(W), rho=lambda, order=pWOrder,
+                    C1 <- as(powerWeights(W=t(W), rho=lambda, order=con$pWOrder,
                         X=C, tol=tol.solve), "matrix")
-                    Hcov <- B %*% C
+                    Hcov <- B1 %*% C1
                     attr(Hcov, "method") <- method
+                    timings[["sparse_hcov"]] <- proc.time() - .ptime_start
+                    .ptime_start <- proc.time()
                 }
+        }
+        if (con$fdHess) {
+            coefs <- c(lambda, coef.lambda)
+            if (con$compiled_sse) {
+                ptr <- .Call("hess_error_init", PACKAGE="spdep")
+                assign("ptr", ptr, envir=env)
+            }
+            fdHess <- getVmate(coefs, env, s2, trs, tol.solve=tol.solve,
+                optim=con$optimHess)
+            if (con$compiled_sse) {
+                .Call("hess_error_free", get("ptr", envir=env),
+                    PACKAGE="spdep")
+            }
+            if (is.null(trs)) {
+                rownames(fdHess) <- colnames(fdHess) <- 
+                    c("lambda", colnames(x))
+                if (method != "eigen") {
+                    lambda.se <- sqrt(fdHess[1, 1])
+                }
+            } else {
+                rownames(fdHess) <- colnames(fdHess) <- 
+                    c("sigma2", "lambda", colnames(x))
+                if (method != "eigen") {
+                    lambda.se <- sqrt(fdHess[2, 2])
+                }
+            }
+            nm <- paste(method, "fdHess", sep="_")
+            timings[[nm]] <- proc.time() - .ptime_start
         }
 	call <- match.call()
 	names(r) <- names(y)
@@ -251,11 +292,12 @@ errorsarlm <- function(formula, data = list(), listw, na.action,
 		LL=LL, s2=s2, SSE=SSE, parameters=(m+2), lm.model=lm.model, 
 		method=method, call=call, residuals=r, lm.target=lm.target,
 		opt=opt, fitted.values=fit, ase=ase, formula=formula,
-		se.fit=NULL, resvar=asyvar1, similar=similar,
+		se.fit=NULL, resvar=asyvar1, similar=get("similar", envir=env),
 		lambda.se=lambda.se, LMtest=LMtest, zero.policy=zero.policy, 
 		aliased=aliased, LLNullLlm=LL_null_lm, Hcov=Hcov,
                 interval=interval, fdHess=fdHess,
-                optimHess=optimHess, insert=!is.null(trs)),
+                optimHess=con$optimHess, insert=!is.null(trs),
+                timings=do.call("rbind", timings)[, c(1, 3)]),
                 class=c("sarlm"))
 	if (zero.policy) {
 		zero.regs <- attr(listw$neighbours, 
@@ -268,65 +310,30 @@ errorsarlm <- function(formula, data = list(), listw, na.action,
 	ret
 }
 
-sar.error.f <- function(lambda, eig, y, wy, x, WX, n, quiet)
-{
-	yl <- y - lambda*wy
-	xl <- x - lambda*WX
-	xl.q <- qr.Q(qr(xl))
-	xl.q.yl <- t(xl.q) %*% yl
-	SSE <- t(yl) %*% yl - t(xl.q.yl) %*% xl.q.yl
-	s2 <- SSE/n
-	if (is.complex(eig)) det <- Re(prod(1 - lambda*eig)) 
-	else det <- prod(1 - lambda*eig)
-	ret <- (log(det) - ((n/2)*log(2*pi)) - (n/2)*log(s2) - (1/(2*(s2)))*SSE)
-	if (!quiet) cat("lambda:", lambda, " function:", ret, " Jacobian:", log(det), " SSE:", SSE, "\n")
-	ret
+sar_error_sse <- function(lambda, env) {
+    if (get("compiled_sse", envir=env)) {
+        ft <- get("first_time", envir=env)
+        SSE <- .Call("R_ml_sse_env", env, lambda, PACKAGE="spdep")
+        if (ft) assign("first_time", FALSE, envir=env)
+    } else {
+        yl <- get("y", envir=env) - lambda * get("wy", envir=env)
+        xl <- get("x", envir=env) - lambda * get("WX", envir=env)
+	xl.q <- qr.Q(qr(xl, LAPACK=get("LAPACK", envir=env)))
+	xl.q.yl <- crossprod(xl.q, yl)
+	SSE <- crossprod(yl) - crossprod(xl.q.yl)
+    }
+    SSE
 }
 
-sar.error.f.sp <- function(lambda, csrw, I, y, wy, x, WX, n, quiet) {
-	yl <- y - lambda*wy
-	xl <- x - lambda*WX
-	xl.q <- qr.Q(qr(xl))
-	xl.q.yl <- t(xl.q) %*% yl
-	SSE <- t(yl) %*% yl - t(xl.q.yl) %*% xl.q.yl
-	s2 <- SSE/n
-        J1 <- try(determinant((I - lambda * csrw), logarithm=TRUE)$modulus,
-            silent=TRUE)
-        if (class(J1) == "try-error") {
-        	Jacobian <- NA
-        } else {
-        	Jacobian <- J1
-        }
-#	gc(FALSE)
-	ret <- (Jacobian -
-		((n/2)*log(2*pi)) - (n/2)*log(s2) - (1/(2*(s2)))*SSE)
-	if (!quiet) cat("lambda:", lambda, " function:", ret, " Jacobian:", Jacobian, " SSE:", SSE, "\n")
-	ret
+
+sar.error.f <- function(lambda, env) {
+    SSE <- sar_error_sse(lambda, env)
+    n <- get("n", envir=env)
+    s2 <- SSE/n
+    ldet <- do_ldet(lambda, env)
+    ret <- (ldet - ((n/2)*log(2*pi)) - (n/2)*log(s2) - (1/(2*(s2)))*SSE)
+    if (get("verbose", envir=env)) cat("lambda:", lambda, " function:", ret, " Jacobian:", ldet, " SSE:", SSE, "\n")
+    ret
 }
 
-sar.error.f.M <- function(lambda, csrw, I, y, wy, x, WX, n, nW, nChol,
-        pChol, quiet) {
-	yl <- y - lambda*wy
-	xl <- x - lambda*WX
-	xl.q <- qr.Q(qr(xl))
-	xl.q.yl <- t(xl.q) %*% yl
-	SSE <- t(yl) %*% yl - t(xl.q.yl) %*% xl.q.yl
-	s2 <- SSE/n
-        a <- -.Machine$double.eps^(1/2)
-        b <- .Machine$double.eps^(1/2)
-        .f <- if (package_version(packageDescription("Matrix")$Version) >
-           "0.999375-30") 2 else 1
-
-        Jacobian <- ifelse(lambda > b, n * log(lambda) +
-            (.f * c(determinant(update(nChol, nW, 1/lambda))$modulus)),
-            ifelse(lambda < a, n* log(-(lambda)) + 
-            (.f * c(determinant(update(pChol, csrw, 1/(-lambda)))$modulus)),
-            0.0))
-
-#	Jacobian <- determinant(I - lambda * csrw, logarithm=TRUE)$modulus
-	ret <- (Jacobian -
-		((n/2)*log(2*pi)) - (n/2)*log(s2) - (1/(2*(s2)))*SSE)
-	if (!quiet) cat("lambda:", lambda, " function:", ret, " Jacobian:", Jacobian, " SSE:", SSE, "\n")
-	ret
-}
 

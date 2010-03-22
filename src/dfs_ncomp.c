@@ -1,7 +1,6 @@
 /* Copyright 2001 by Nicholas Lewin-Koh. */
 
-#include<R.h>
-#include<Rinternals.h>
+#include "spdep.h"
 
 #define BLACK 1
 #define WHITE 0

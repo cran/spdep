@@ -18,10 +18,8 @@
 }
 \usage{
 spautolm(formula, data = list(), listw, weights,
- na.action, verbose = FALSE, tol.opt = .Machine$double.eps^(2/3),
- family = "SAR", method="full", interval=c(-1,0.999),
- zero.policy = FALSE, super=NULL, Matrix_intern=TRUE, %cholAlloc=NULL, 
- tol.solve=.Machine$double.eps, find_interval=FALSE, llprof=NULL)
+ na.action, family = "SAR", method="full", verbose = NULL, interval=NULL,
+ zero.policy = NULL, tol.solve=.Machine$double.eps, llprof=NULL, control=list())
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -31,25 +29,19 @@ of model specification are given for \code{lm()}}
 By default the variables are taken from the environment which the function 
 is called.}
   \item{listw}{a \code{listw} object created for example by \code{nb2listw}}
-  \item{na.action}{a function (default \code{options("na.action")}), can also be \code{na.omit} or \code{na.exclude} with consequences for residuals and fitted values - in these cases the weights list will be subsetted to remove NAs in the data. Note that only weights lists created without using the glist argument to \code{nb2listw} may be subsetted.}
   \item{weights}{an optional vector of weights to be used in the fitting process}
-  \item{verbose}{default=FALSE; if TRUE, reports function values during optimization.}
-  \item{tol.opt}{the desired accuracy of the optimization - passed to \code{optimize()}}
+  \item{na.action}{a function (default \code{options("na.action")}), can also be \code{na.omit} or \code{na.exclude} with consequences for residuals and fitted values - in these cases the weights list will be subsetted to remove NAs in the data. Note that only weights lists created without using the glist argument to \code{nb2listw} may be subsetted.}
   \item{family}{character string: either \code{"SAR"} or \code{"CAR"} for simultaneous or conditional autoregressions; \code{"SMA"} for spatial moving average added thanks to Jielai Ma - \code{"SMA"} is only implemented for method=\code{"full"} because it necessarily involves dense matrices}
-  \item{method}{character string: default \code{"full"} for use of full matrices, \code{"Matrix"} or \code{"spam"} for sparse matrices (restricted to spatial weights symmetric or similar to symmetric) using methods in either the Matrix or spam packages. Note that users should change from spam to Matrix}
+  \item{method}{character string: default \code{"full"} for use of full matrices, \code{"Matrix"} or \code{"spam"} for sparse matrices (restricted to spatial weights symmetric or similar to symmetric) using methods in either the Matrix or spam packages. Note that users should change from spam to Matrix. Values of method may also include "LU", which provides an alternative sparse matrix decomposition approach, and the "Chebyshev" and Monte Carlo "MC" approximate log-determinant methods.}
+  \item{verbose}{default NULL, use global option value; if TRUE, reports function values during optimization.}
   \item{interval}{search interval for autoregressive parameter when not using method="eigen"; default is c(-1,0.999), \code{optimize} will reset NA/NaN to a bound and gives a warning when the interval is poorly set; method="Matrix" will attempt to search for an appropriate interval, if find\_interval=TRUE (fails on some platforms)}
-  \item{zero.policy}{Include list of no-neighbour observations in output if TRUE --- otherwise zero.policy is handled within the listw argument}
-  \item{super}{logical argument to \code{\link[Matrix]{Cholesky}}, only used for method="Matrix"; at present only super=FALSE is supported. It should only be used for positive lambda. If NULL, the Cholesky decompisition of the matrix is undertaken at each step.}
-  \item{Matrix_intern}{default TRUE, if FALSE, does not use vectorised Matrix internal function.}
-%  \item{cholAlloc}{control arguments for memory allocation in \code{chol} for
-% sparse matrices in method="SparseM": if NULL, default values are used
-% (larger than SparseM defaults), otherwise a list with elements: nsubmax,
-% nnzlmax, and tmpmax, for example cholAlloc=list(nsubmax=25000,
-% nnzlmax=100000, tmpmax=25000)}
+  \item{zero.policy}{default NULL, use global option value; Include list of no-neighbour observations in output if TRUE --- otherwise zero.policy is handled within the listw argument}
   \item{tol.solve}{the tolerance for detecting linear dependencies in the columns of matrices to be inverted - passed to \code{solve()} (default=double precision machine tolerance). Errors in \code{solve()} may constitute indications of poorly scaled variables: if the variables have scales differing much from the autoregressive coefficient, the values in this matrix may be very different in scale, and inverting such a matrix is analytically possible by definition, but numerically unstable; rescaling the RHS variables alleviates this better than setting tol.solve to a very small value}
-  \item{find_interval}{default FALSE; if TRUE, attempts to find the interval using Matrix internal functions}
-  \item{llprof}{default NULL, can either be an integer for method="full" only, to divide the feasible range into llprof points, or a sequence of values, at which to evaluate the likelihood function}
+  \item{llprof}{default NULL, can either be an integer, to divide the feasible range into llprof points, or a sequence of spatial coefficient values, at which to evaluate the likelihood function}
+ \item{control}{list of extra control arguments - see section below}
 }
+
+
 \details{
   This implementation is based on \code{\link[MASS]{lm.gls}} and \code{\link{errorsarlm}}. In particular, the function does not (yet) prevent asymmetric spatial weights being used with "CAR" family models. It appears that both numerical issues (convergence in particular) and uncertainties about the exact spatial weights matrix used make it difficult to reproduce Cressie and Chan's 1989 results, also given in Cressie 1993.
 
@@ -60,6 +52,19 @@ their spatial lags are used to calculate signal components (Cressie 1993, p. 564
 variable in making predictions for the fitting data.
 
 }
+
+
+\section{Control arguments}{
+\itemize{
+  \item{tol.opt}{the desired accuracy of the optimization - passed to \code{optimize()} (default=\code{.Machine$double.eps^(2/3)}}
+  \item{Imult}{default 2; used for preparing the Cholesky decompositions for updating in the Jacobian function}
+  \item{super}{default FALSE using a simplicial decomposition for the sparse Cholesky decomposition, if TRUE, use a supernodal decomposition}
+  \item{cheb_q}{default 5; highest power of the approximating polynomial for the Chebyshev approximation}
+  \item{MC_p}{default 16; number of random variates}
+  \item{MC_m}{default 30; number of products of random variates matrix and spatial weights matrix}
+}}
+
+
 \value{
   A list object of class \code{spautolm}:
   \item{fit}{a list, with items:
@@ -79,6 +84,11 @@ variable in making predictions for the fitting data.
   \item{call}{the call used to create this object}
   \item{parameters}{number of parameters estimated}
   \item{aliased}{if not NULL, details of aliased variables}
+  \item{method}{Jacobian method chosen}
+  \item{zero.policy}{zero.policy used}
+  \item{weights}{case weights used}
+  \item{interval}{the line search interval used}
+  \item{timings}{processing timings}
   \item{na.action}{(possibly) named vector of excluded or omitted observations if non-default na.action argument used}
   \item{llprof}{if not NULL, a list with components lambda and ll of equal length}
 }
@@ -107,11 +117,7 @@ summary(esar1M)
 \dontrun{
 system.time(esar1M <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
  data=nydata, listw=listw_NY, family="SAR", method="Matrix", verbose=TRUE,
- super=FALSE))
-summary(esar1M)
-system.time(esar1M <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
- data=nydata, listw=listw_NY, family="SAR", method="Matrix", verbose=TRUE,
- super=FALSE, Matrix_intern=TRUE, find_interval=FALSE))
+ control=list(super=TRUE)))
 summary(esar1M)
 system.time(esar1s <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
  data=nydata, listw=listw_NY, family="SAR", method="spam", verbose=TRUE))
@@ -122,21 +128,20 @@ summary(esar1wf)
 system.time(esar1wM <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
  data=nydata, listw=listw_NY, weights=POP8, family="SAR", method="Matrix"))
 summary(esar1wM)
-system.time(esar1wM <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
- data=nydata, listw=listw_NY, weights=POP8, family="SAR", method="Matrix",
- super=FALSE))
-summary(esar1wM)
 esar1ws <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
  listw=listw_NY, weights=POP8, family="SAR", method="spam")
 summary(esar1ws)
+esar1wlu <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
+ listw=listw_NY, weights=POP8, family="SAR", method="LU")
+summary(esar1wlu)
+esar1wch <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
+ listw=listw_NY, weights=POP8, family="SAR", method="Chebyshev")
+summary(esar1wch)
 ecar1f <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
  listw=listw_NY, family="CAR", method="full")
 summary(ecar1f)
 system.time(ecar1M <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
  data=nydata, listw=listw_NY, family="CAR", method="Matrix"))
-summary(ecar1M)
-system.time(ecar1M <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
- data=nydata, listw=listw_NY, family="CAR", method="Matrix", super=FALSE))
 summary(ecar1M)
 ecar1s <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
  listw=listw_NY, family="CAR", method="spam")
@@ -146,10 +151,6 @@ ecar1wf <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
 summary(ecar1wf)
 system.time(ecar1wM <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
  data=nydata, listw=listw_NY, weights=POP8, family="CAR", method="Matrix"))
-summary(ecar1wM)
-system.time(ecar1wM <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
- data=nydata, listw=listw_NY, weights=POP8, family="CAR", method="Matrix",
- super=FALSE))
 summary(ecar1wM)
 ecar1ws <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
  listw=listw_NY, weights=POP8, family="CAR", method="spam")

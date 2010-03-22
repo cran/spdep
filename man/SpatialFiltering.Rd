@@ -8,9 +8,9 @@
   The function selects eigenvectors in a semi-parametric spatial filtering approach to removing spatial dependence from linear models. Selection is by brute force by finding the single eigenvector reducing the standard variate of Moran's I for regression residuals most, and continuing until no candidate eigenvector reduces the value by more than \code{tol}. It returns a summary table from the selection process and a matrix of selected eigenvectors for the specified model.
 }
 \usage{
-SpatialFiltering(formula, lagformula, data, nb, glist = NULL, style = "C",
- zero.policy = FALSE, tol = 0.1, zerovalue = 1e-04, ExactEV = FALSE,
- symmetric = TRUE, alpha=NULL, alternative="two.sided", verbose=TRUE)
+SpatialFiltering(formula, lagformula, data = list(), nb, glist = NULL, style = "C",
+ zero.policy = NULL, tol = 0.1, zerovalue = 1e-04, ExactEV = FALSE,
+ symmetric = TRUE, alpha=NULL, alternative="two.sided", verbose=NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -20,14 +20,14 @@ SpatialFiltering(formula, lagformula, data, nb, glist = NULL, style = "C",
   \item{nb}{an object of class \code{nb}}
   \item{glist}{list of general weights corresponding to neighbours}
   \item{style}{\code{style} can take values W, B, C, U, and S}
-  \item{zero.policy}{If FALSE stop with error for any empty neighbour sets, if TRUE permit the weights list to be formed with zero-length weights vectors}
+  \item{zero.policy}{default NULL, use global option value; if FALSE stop with error for any empty neighbour sets, if TRUE permit the weights list to be formed with zero-length weights vectors}
   \item{tol}{tolerance value for convergence of spatial filtering}
   \item{zerovalue}{eigenvectors with eigenvalues of an absolute value smaller than zerovalue will be excluded in eigenvector search}
   \item{ExactEV}{Set ExactEV=TRUE to use exact expectations and variances rather than the expectation and variance of Moran's I from the previous iteration, default FALSE}
   \item{symmetric}{Should the spatial weights matrix be forced to symmetry, default TRUE}
   \item{alpha}{if not NULL, used instead of the tol= argument as a stopping rule to choose all eigenvectors up to and including the one with a probability value exceeding alpha.}
   \item{alternative}{a character string specifying the alternative hypothesis, must be one of greater, less or two.sided (default).}
-  \item{verbose}{if TRUE report eigenvectors selected}
+  \item{verbose}{default NULL, use global option value; if TRUE report eigenvectors selected}
 }
 \value{
   An \code{SFResult} object, with:

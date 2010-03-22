@@ -12,12 +12,12 @@ a Bonferroni-type test is suggested in the references, where tables of
 critical values may be found (see also details below).
 }
 \usage{
-localG(x, listw, zero.policy=FALSE, spChk=NULL)
+localG(x, listw, zero.policy=NULL, spChk=NULL)
 }
 \arguments{
   \item{x}{a numeric vector the same length as the neighbours list in listw}
   \item{listw}{a \code{listw} object created for example by \code{nb2listw}}
-  \item{zero.policy}{if TRUE assign zero to the lagged value of zones without neighbours, if FALSE assign NA}
+  \item{zero.policy}{default NULL, use global option value; if TRUE assign zero to the lagged value of zones without neighbours, if FALSE assign NA}
   \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
 }
 \details{

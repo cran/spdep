@@ -7,14 +7,14 @@
 The function generates a weights matrix for a neighbours list with spatial weights for the chosen coding scheme.
 }
 \usage{
-nb2mat(neighbours, glist=NULL, style="W", zero.policy=FALSE)
+nb2mat(neighbours, glist=NULL, style="W", zero.policy=NULL)
 listw2mat(listw)
 }
 \arguments{
   \item{neighbours}{an object of class \code{nb}}
   \item{glist}{list of general weights corresponding to neighbours}
   \item{style}{\code{style} can take values W, B, C, and S}
-  \item{zero.policy}{If FALSE stop with error for any empty neighbour sets, if TRUE permit the weights list to be formed with zero-length weights vectors}
+  \item{zero.policy}{default NULL, use global option value; if FALSE stop with error for any empty neighbour sets, if TRUE permit the weights list to be formed with zero-length weights vectors}
   \item{listw}{a \code{listw} object from for example \code{nb2listw}}
 }
 \details{

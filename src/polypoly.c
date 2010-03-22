@@ -1,10 +1,6 @@
 /* Copyright 2004 by Roger S. Bivand. */
 
-#include <R.h>
-#include <Rdefines.h>
-#include <Rmath.h>
-#include <R_ext/Applic.h>
-#define ROFFSET 1
+#include "spdep.h"
 
 SEXP polypoly(SEXP p1, SEXP n01, SEXP p2, SEXP n02, SEXP snap)
 {
