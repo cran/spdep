@@ -56,19 +56,19 @@ variable in making predictions for the fitting data.
 }
 
 \section{Control arguments}{
-\itemize{
-  \item{tol.opt}{the desired accuracy of the optimization - passed to \code{optimize()} (default=square root of double precision machine tolerance, a larger root may be used needed, see help(boston) for an example)}
-  \item{returnHcov}{default TRUE, return the Vo matrix for a spatial Hausman test}
-  \item{pWOrder}{default 250, if returnHcov=TRUE and the method is not \dQuote{eigen}, pass this order to \code{powerWeights} as the power series maximum limit}
-  \item{fdHess}{default NULL, then set to (method != "eigen") internally; use \code{fdHess} to compute an approximate Hessian using finite differences when using sparse matrix methods; used to make a coefficient covariance matrix when the number of observations is large; may be turned off to save resources if need be}
-  \item{optimHess}{default FALSE, use \code{fdHess} from \pkg{nlme}, if TRUE, use \code{optim} to calculate Hessian at optimum}
-  \item{LAPACK}{default FALSE; logical value passed to \code{qr} in the SSE log likelihood function}
-  \item{compiled_sse}{default FALSE; logical value used in the log likelihood function to choose compiled code for computing SSE}
-  \item{Imult}{default 2; used for preparing the Cholesky decompositions for updating in the Jacobian function}
-  \item{super}{default FALSE using a simplicial decomposition for the sparse Cholesky decomposition, if TRUE, use a supernodal decomposition}
-  \item{cheb_q}{default 5; highest power of the approximating polynomial for the Chebyshev approximation}
-  \item{MC_p}{default 16; number of random variates}
-  \item{MC_m}{default 30; number of products of random variates matrix and spatial weights matrix}
+\describe{
+  \item{tol.opt:}{the desired accuracy of the optimization - passed to \code{optimize()} (default=square root of double precision machine tolerance, a larger root may be used needed, see help(boston) for an example)}
+  \item{returnHcov:}{default TRUE, return the Vo matrix for a spatial Hausman test}
+  \item{pWOrder:}{default 250, if returnHcov=TRUE and the method is not \dQuote{eigen}, pass this order to \code{powerWeights} as the power series maximum limit}
+  \item{fdHess:}{default NULL, then set to (method != "eigen") internally; use \code{fdHess} to compute an approximate Hessian using finite differences when using sparse matrix methods; used to make a coefficient covariance matrix when the number of observations is large; may be turned off to save resources if need be}
+  \item{optimHess:}{default FALSE, use \code{fdHess} from \pkg{nlme}, if TRUE, use \code{optim} to calculate Hessian at optimum}
+  \item{LAPACK:}{default FALSE; logical value passed to \code{qr} in the SSE log likelihood function}
+  \item{compiled_sse:}{default FALSE; logical value used in the log likelihood function to choose compiled code for computing SSE}
+  \item{Imult:}{default 2; used for preparing the Cholesky decompositions for updating in the Jacobian function}
+  \item{super:}{default FALSE using a simplicial decomposition for the sparse Cholesky decomposition, if TRUE, use a supernodal decomposition}
+  \item{cheb_q:}{default 5; highest power of the approximating polynomial for the Chebyshev approximation}
+  \item{MC_p:}{default 16; number of random variates}
+  \item{MC_m:}{default 30; number of products of random variates matrix and spatial weights matrix}
 }}
 
 \value{

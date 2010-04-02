@@ -1,3 +1,33 @@
+2010-04-02 10:19  rsbivand
+
+	* DESCRIPTION, man/errorsarlm.Rd, man/lagsarlm.Rd, man/spautolm.Rd:
+	  control list documentation
+
+2010-04-01 14:50  rsbivand
+
+	* R/impacts.R: impacts conflict
+
+2010-04-01 14:05  rsbivand
+
+	* R/moran.plot.R: moran.plot zero.policy issue
+
+2010-03-24 13:40  rsbivand
+
+	* R/impacts.R: fix cluster bloat
+
+2010-03-24 11:58  rsbivand
+
+	* DESCRIPTION, R/impacts.R, man/errorsarlm.Rd, man/lagsarlm.Rd,
+	  man/spautolm.Rd: avoiding cluster bloat
+
+2010-03-22 12:08  rsbivand
+
+	* INDEX: tidy
+
+2010-03-22 11:10  rsbivand
+
+	* ChangeLog, inst/ChangeLog: spautolm rewritten to use shared code
+
 2010-03-22 11:09  rsbivand
 
 	* R/spautolm.R, inst/doc/sids.Rnw, man/spautolm.Rd: spautolm

@@ -29,9 +29,12 @@ moran.plot <- function(x, listw, zero.policy=NULL, spChk=NULL,
 	plot(x, wx, xlab=xlab, ylab=ylab, ...)
 	if (zero.policy) {
 		n0 <- wx == 0.0
-		symbols(x[n0], wx[n0], inches=FALSE, 
-		circles=rep(diff(range(x))/50, length(which(n0))),
-		bg="grey", add=TRUE)
+# bug found 100401 Paulo Grahl
+                if (any(n0)) {
+		    symbols(x[n0], wx[n0], inches=FALSE, 
+		    circles=rep(diff(range(x))/50, length(which(n0))),
+		        bg="grey", add=TRUE)
+                }
 	}
 	xwx.lm <- lm(wx ~ x)
 	abline(xwx.lm)

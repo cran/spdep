@@ -61,6 +61,93 @@ impacts.stsls <- function(obj, ..., tr=NULL, R=NULL, listw=NULL,
     res
 }
 
+lagImpacts <- function(T, g, P) {
+    PT <- P %*% T
+    direct <- apply(apply(PT, 1, function(x) x*g), 2, sum)
+    total <- c(apply(P, 1, sum) * sum(g))
+    indirect <- total - direct
+    names(direct) <- names(total)
+    list(direct=direct, indirect=indirect, total=total)
+}
+
+lagDistrImpacts <- function(T, g, P, q=10) {
+    PT <- P %*% T
+    direct <- apply(PT, 1, function(x) x * g)[1:q, ]
+    total <- t(sapply(g, function(x) apply(P, 1, sum)*x))[1:q, ]
+    indirect <- total - direct
+    list(direct=direct, indirect=indirect, total=total)
+}
+
+processSample <- function(x, irho, drop2beta, type, iicept, icept, T, Q, q) {
+    g <- x[irho]^(0:q)
+    beta <- x[-drop2beta]
+    if (type == "lag") {
+      if (iicept) {
+        P <- matrix(beta[-icept], ncol=1)
+      } else {
+        P <- matrix(beta, ncol=1)
+      }
+    } else if (type == "mixed") {
+        if (iicept) {
+          b1 <- beta[-icept]
+        } else {
+          b1 <- beta
+        }
+        p <- length(b1)
+        if (p %% 2 != 0) stop("non-matched coefficient pairs")
+        P <- cbind(b1[1:(p/2)], b1[((p/2)+1):p])
+    }
+    res <- spdep:::lagImpacts(T, g, P)
+    if (!is.null(Q)) {
+        Qres <- spdep:::lagDistrImpacts(T, g, P, q=as.integer(Q))
+        attr(res, "Qres") <- Qres
+    }
+    res
+}
+
+lagImpactsExact <- function(SW, P, n) {
+    direct <- sapply(P, function(x) sum(diag(x*SW))/n)
+    total <- sapply(P, function(x) sum(x*SW)/n)
+    indirect <- total - direct
+    list(direct=direct, indirect=indirect, total=total)
+}
+
+mixedImpactsExact <- function(SW, P, n, listw) {
+    p <- dim(P)[1]
+    direct <- numeric(p)
+    total <- numeric(p)
+    W <- listw2mat(listw)
+    for (i in 1:p) {
+        SWr <- SW %*% (P[i,1]*diag(n) + P[i,2]*W)
+        direct[i] <- sum(diag(SWr))/n
+        total[i] <- sum(SWr)/n
+    }
+    indirect <- total - direct
+    list(direct=direct, indirect=indirect, total=total)
+}
+
+processXSample <- function(x, drop2beta, type, iicept, icept, SW, n, listw) {
+    beta <- x[-drop2beta]
+    if (type == "lag") {
+        if (iicept) {
+          P <- matrix(beta[-icept], ncol=1)
+        } else {
+          P <- matrix(beta, ncol=1)
+        }
+        return(spdep:::lagImpactsExact(SW, P, n))
+    } else if (type == "mixed") {
+        if (iicept) {
+            b1 <- beta[-icept]
+        } else {
+            b1 <- beta
+        }
+        p <- length(b1)
+        if (p %% 2 != 0) stop("non-matched coefficient pairs")
+        P <- cbind(b1[1:(p/2)], b1[((p/2)+1):p])
+        return(spdep:::mixedImpactsExact(SW, P, n, listw))
+    }
+}
+
 intImpacts <- function(rho, beta, P, n, mu, Sigma, irho, drop2beta, bnames,
     interval, type, tr, R, listw, tol, empirical, Q, icept, iicept, p,
     mess=FALSE) {
@@ -70,22 +157,6 @@ intImpacts <- function(rho, beta, P, n, mu, Sigma, irho, drop2beta, bnames,
     .ptime_start <- proc.time()
     if (is.null(listw)) {
 
-        lagImpacts <- function(T, g, P) {
-            PT <- P %*% T
-            direct <- apply(apply(PT, 1, function(x) x*g), 2, sum)
-            total <- c(apply(P, 1, sum) * sum(g))
-            indirect <- total - direct
-            names(direct) <- names(total)
-            list(direct=direct, indirect=indirect, total=total)
-        }
-
-        lagDistrImpacts <- function(T, g, P, q=10) {
-            PT <- P %*% T
-            direct <- apply(PT, 1, function(x) x * g)[1:q, ]
-            total <- t(sapply(g, function(x) apply(P, 1, sum)*x))[1:q, ]
-            indirect <- total - direct
-            list(direct=direct, indirect=indirect, total=total)
-        }
 
         q <- length(tr)-1
         g <- rho^(0:q)
@@ -113,37 +184,12 @@ intImpacts <- function(rho, beta, P, n, mu, Sigma, irho, drop2beta, bnames,
             }
             timings[["impacts_samples"]] <- proc.time() - .ptime_start
             .ptime_start <- proc.time()
-            processSample <- function(x, irho, drop2beta) {
-                g <- x[irho]^(0:q)
-                beta <- x[-drop2beta]
-                if (type == "lag") {
-                  if (iicept) {
-                    P <- matrix(beta[-icept], ncol=1)
-                  } else {
-                    P <- matrix(beta, ncol=1)
-                  }
-                } else if (type == "mixed") {
-                    if (iicept) {
-                      b1 <- beta[-icept]
-                    } else {
-                      b1 <- beta
-                    }
-                    p <- length(b1)
-                    if (p %% 2 != 0) stop("non-matched coefficient pairs")
-                    P <- cbind(b1[1:(p/2)], b1[((p/2)+1):p])
-                }
-                res <- lagImpacts(T, g, P)
-                if (!is.null(Q)) {
-                    Qres <- lagDistrImpacts(T, g, P, q=as.integer(Q))
-                    attr(res, "Qres") <- Qres
-                }
-                res
-            }
             CL <- get("cl", env = .spdepOptions)
             if (!is.null(CL) && length(CL) > 1) {
                 require(snow)
                 l_sp <- lapply(splitIndices(nrow(samples), length(CL)), 
 		    function(i) samples[i,])
+                clusterEvalQ(CL, library(spdep))
 		clusterExport_l <- function(CL, list) {
                     gets <- function(n, v) {
                         assign(n, v, env = .GlobalEnv)
@@ -153,21 +199,23 @@ intImpacts <- function(rho, beta, P, n, mu, Sigma, irho, drop2beta, bnames,
                         clusterCall(CL, gets, name, get(name))
                     }
 		}
-		clusterExport_l(CL, list("processSample", "irho", "drop2beta",
-                    "Q", "T", "lagImpacts", "lagDistrImpacts", "icept",
-                    "iicept", "type"))
+		clusterExport_l(CL, list("irho", "drop2beta",
+                    "Q", "T", "icept", "iicept", "type", "q"))
                 timings[["cluster_setup"]] <- proc.time() - .ptime_start
                 .ptime_start <- proc.time()
                 lsres <- parLapply(CL, l_sp, function(sp) apply(sp, 1, 
-                    processSample, irho=irho, drop2beta=drop2beta))
-		clusterEvalQ(CL, rm(list=c("processSample", "irho", "drop2beta",
-                    "Q", "T", "lagImpacts", "lagDistrImpacts", "icept",
-                    "iicept", "type")))
+                    spdep:::processSample, irho=irho, drop2beta=drop2beta,
+                    type=type, iicept=iicept, icept=icept, T=T, Q=Q, q=q))
+		clusterEvalQ(CL, rm(list=c("irho", "drop2beta",
+                    "Q", "T", "icept", "iicept", "type", "q")))
+                clusterEvalQ(CL, detach(package:spdep))
                 sres <- do.call("c", lsres)
 
             } else {
+# type, iicept, icept, T, Q
                 sres <- apply(samples, 1, processSample, irho=irho,
-                    drop2beta=drop2beta)
+                    drop2beta=drop2beta, type=type, iicept=iicept,
+                    icept=icept, T=T, Q=Q, q=q)
             }
             timings[["process_samples"]] <- proc.time() - .ptime_start
             .ptime_start <- proc.time()
@@ -198,26 +246,6 @@ intImpacts <- function(rho, beta, P, n, mu, Sigma, irho, drop2beta, bnames,
         }
         attr(res, "method") <- "trace"
     } else {
-        lagImpactsExact <- function(SW, P, n) {
-            direct <- sapply(P, function(x) sum(diag(x*SW))/n)
-            total <- sapply(P, function(x) sum(x*SW)/n)
-            indirect <- total - direct
-            list(direct=direct, indirect=indirect, total=total)
-        }
-
-        mixedImpactsExact <- function(SW, P, n, listw) {
-            p <- dim(P)[1]
-            direct <- numeric(p)
-            total <- numeric(p)
-            W <- listw2mat(listw)
-            for (i in 1:p) {
-                SWr <- SW %*% (P[i,1]*diag(n) + P[i,2]*W)
-                direct[i] <- sum(diag(SWr))/n
-                total[i] <- sum(SWr)/n
-            }
-            indirect <- total - direct
-            list(direct=direct, indirect=indirect, total=total)
-        }
         SW <- invIrW(listw, rho)
         if (type == "lag") res <- lagImpactsExact(SW, P, n)
         else if (type == "mixed") res <- mixedImpactsExact(SW, P, n, listw)
@@ -233,30 +261,13 @@ intImpacts <- function(rho, beta, P, n, mu, Sigma, irho, drop2beta, bnames,
             }
             timings[["impacts_samples"]] <- proc.time() - .ptime_start
             .ptime_start <- proc.time()
-            processXSample <- function(x, drop2beta) {
-                beta <- x[-drop2beta]
-                if (type == "lag") {
-                    if (iicept) {
-                      P <- matrix(beta[-icept], ncol=1)
-                    } else {
-                      P <- matrix(beta, ncol=1)
-                    }
-                    return(lagImpactsExact(SW, P, n))
-                } else if (type == "mixed") {
-                    if (iicept) {
-                        b1 <- beta[-icept]
-                    } else {
-                        b1 <- beta
-                    }
-                    P <- cbind(b1[1:(p/2)], b1[((p/2)+1):p])
-                    return(mixedImpactsExact(SW, P, n, listw))
-                }
-            }
+# type, iicept, icept, SW, n, listw
             CL <- get("cl", env = .spdepOptions)
             if (!is.null(CL) && length(CL) > 1) {
                 require(snow)
                 l_sp <- lapply(splitIndices(nrow(samples), length(CL)), 
 		    function(i) samples[i,])
+                clusterEvalQ(CL, library(spdep))
 		clusterExport_l <- function(CL, list) {
                     gets <- function(n, v) {
                         assign(n, v, env = .GlobalEnv)
@@ -267,22 +278,23 @@ intImpacts <- function(rho, beta, P, n, mu, Sigma, irho, drop2beta, bnames,
                     }
 		}
 
-		clusterExport_l(CL, list("processXSample", "irho", "drop2beta",
-                    "SW", "lagImpactsExact", "mixedImpactsExact", "icept",
+		clusterExport_l(CL, list("irho", "drop2beta", "SW", "icept",
                     "iicept", "type", "listw"))
 
                 timings[["cluster_setup"]] <- proc.time() - .ptime_start
                 .ptime_start <- proc.time()
                 lsres <- parLapply(CL, l_sp, function(sp) apply(sp, 1, 
-                    processXSample, drop2beta=drop2beta))
-		clusterEvalQ(CL, rm(list=c("processXSample", "drop2beta",
-                    "SW", "lagImpactsExact", "mixedImpactsExact", "icept",
-                    "iicept", "type", "listw")))
+                    spdep:::processXSample, drop2beta=drop2beta, type=type,
+                    iicept=iicept, icept=icept, SW=SW, n=n, listw=listw))
+		clusterEvalQ(CL, rm(list=c("drop2beta",
+                    "SW", "icept", "iicept", "type", "listw")))
+                clusterEvalQ(CL, detach(package:spdep))
                 sres <- do.call("c", lsres)
 
             } else {
                 sres <- apply(samples, 1, processXSample,
-                    drop2beta=drop2beta)
+                    drop2beta=drop2beta, type=type, iicept=iicept,
+                    icept=icept, SW=SW, n=n, listw=listw)
             }
             timings[["process_samples"]] <- proc.time() - .ptime_start
             .ptime_start <- proc.time()
