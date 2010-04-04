@@ -19,7 +19,8 @@
 \usage{
 spautolm(formula, data = list(), listw, weights,
  na.action, family = "SAR", method="full", verbose = NULL, interval=NULL,
- zero.policy = NULL, tol.solve=.Machine$double.eps, llprof=NULL, control=list())
+ zero.policy = NULL, tol.solve=.Machine$double.eps, llprof=NULL,
+ control=list())
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -55,13 +56,13 @@ variable in making predictions for the fitting data.
 
 
 \section{Control arguments}{
-\itemize{
-  \item{tol.opt}{the desired accuracy of the optimization - passed to \code{optimize()} (default=\code{.Machine$double.eps^(2/3)}}
-  \item{Imult}{default 2; used for preparing the Cholesky decompositions for updating in the Jacobian function}
-  \item{super}{default FALSE using a simplicial decomposition for the sparse Cholesky decomposition, if TRUE, use a supernodal decomposition}
-  \item{cheb_q}{default 5; highest power of the approximating polynomial for the Chebyshev approximation}
-  \item{MC_p}{default 16; number of random variates}
-  \item{MC_m}{default 30; number of products of random variates matrix and spatial weights matrix}
+\describe{
+  \item{tol.opt:}{the desired accuracy of the optimization - passed to \code{optimize()} (default=\code{.Machine$double.eps^(2/3)})}
+  \item{Imult:}{default 2; used for preparing the Cholesky decompositions for updating in the Jacobian function}
+  \item{super:}{default FALSE using a simplicial decomposition for the sparse Cholesky decomposition, if TRUE, use a supernodal decomposition}
+  \item{cheb_q:}{default 5; highest power of the approximating polynomial for the Chebyshev approximation}
+  \item{MC_p:}{default 16; number of random variates}
+  \item{MC_m:}{default 30; number of products of random variates matrix and spatial weights matrix}
 }}
 
 
