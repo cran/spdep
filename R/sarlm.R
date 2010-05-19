@@ -1,4 +1,4 @@
-# Copyright 2002-4 by Roger Bivand
+# Copyright 2002-10 by Roger Bivand
 #
 
 residuals.sarlm <- function(object, ...) {
@@ -15,8 +15,10 @@ coef.sarlm <- function(object, ...) {
 	ret <- NULL
 #	ret <- sqrt(object$s2)
 #	names(ret) <- "sigma"
-	if(object$type == "error") ret <- c(ret, object$lambda)
-	else ret <- c(ret, object$rho)
+	if (object$type == "error") ret <- c(ret, object$lambda)
+	else if (object$type == "lag" || object$type == "mixed")
+            ret <- c(ret, object$rho)
+        else if (object$type == "sac") ret <- c(ret, object$rho, object$lambda)
 	ret <- c(ret, object$coefficients)
 
 	ret
@@ -39,6 +41,7 @@ predict.sarlm <- function(object, newdata=NULL, listw=NULL,
         if (is.null(zero.policy))
             zero.policy <- get("zeroPolicy", env = .spdepOptions)
         stopifnot(is.logical(zero.policy))
+        if (object$type == "sac") stop("no predict method for sac")
 	if (is.null(newdata)) {
 		res <- fitted.values(object)
 		X <- model.matrix(terms(object$lm.model), 

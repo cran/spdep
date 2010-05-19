@@ -123,6 +123,7 @@ spautolm <- function(formula, data = list(), listw, weights,
         assign("Sweights", Sweights, envir=env)
 
     }  else if (method == "spam") {
+        if (!require(spam)) stop("spam not available")
         if (listw$style %in% c("W", "S") && !can.sim)
         stop("spam method requires symmetric weights")
         if (listw$style %in% c("B", "C", "U") && 
@@ -208,13 +209,14 @@ spautolm <- function(formula, data = list(), listw, weights,
 
 # get null LL
     LL0 <- .opt.fit(lambda=0, env, tol.solve=tol.solve)
-
+# NK null
+    LLNullLlm <- logLik(lm(Y ~ 1, weights=weights))
     nm <- paste(method, "output", sep="_")
     timings[[nm]] <- proc.time() - .ptime_start
     res <- list(fit=fit, lambda=lambda, LL=LL, LL0=LL0, call=match.call(),
         parameters=(ncol(X)+2), aliased=aliased, method=method,
         zero.policy=zero.policy, weights=weights, interval=interval,
-        timings=do.call("rbind", timings)[, c(1, 3)])
+        timings=do.call("rbind", timings)[, c(1, 3)], LLNullLlm=LLNullLlm)
     if (!is.null(na.act))
 	res$na.action <- na.act
     if (is.null(llprof)) res$llprof <- llprof
@@ -349,8 +351,8 @@ LR1.spautolm <- function(object)
 	res
 }
 
-summary.spautolm <- function(object, correlation = FALSE, adj.se=FALSE, ...)
-{
+summary.spautolm <- function(object, correlation = FALSE, adj.se=FALSE,
+ Nagelkerke=FALSE, ...) {
 	N <- object$fit$N
 	adj <- ifelse (adj.se, N/(N-length(object$fit$coefficients)), 1) 
 	object$fit$s2 <- object$fit$s2*adj
@@ -365,6 +367,10 @@ summary.spautolm <- function(object, correlation = FALSE, adj.se=FALSE, ...)
 		2*(1-pnorm(abs(object$fit$coefficients/object$rest.se))))
 	colnames(object$Coef) <- c("Estimate", "Std. Error", 
 		ifelse(adj.se, "t value", "z value"), "Pr(>|z|)")
+        if (Nagelkerke) {
+            nk <- NK.sarlm(object)
+            if (!is.null(nk)) object$NK <- nk
+        }
 	if (correlation) {
 		object$correlation <- diag((diag(object$resvar))
 			^(-1/2)) %*% object$resvar %*% 
@@ -419,6 +425,8 @@ print.summary.spautolm <- function(x, digits = max(5, .Options$digits - 3),
 	cat("Number of observations:", x$fit$N, "\n")
 	cat("Number of parameters estimated:", x$parameters, "\n")
 	cat("AIC: ", format(signif(AIC(x), digits)), "\n", sep="")
+        if (!is.null(x$NK)) cat("Nagelkerke pseudo-R-squared:",
+            format(signif(x$NK, digits)), "\n")
     	correl <- x$correlation
     	if (!is.null(correl)) {
         	p <- NCOL(correl)

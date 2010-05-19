@@ -14,9 +14,9 @@ importFrom(coda, as.mcmc, HPDinterval)
 
 import(Matrix)
 
-importClassesFrom(spam, spam)
-importMethodsFrom(spam, Math, Math2)
-importFrom(spam, validspamobject)
+#importClassesFrom(spam, spam)
+#importMethodsFrom(spam, Math, Math2)
+#importFrom(spam, validspamobject)
 
 export(EBImoran.mc, probmap, choynowski, EBest, EBlocal, LR.sarlm, 
 	LR1.sarlm, Wald1.sarlm, airdist, card, rookcell, 
@@ -48,7 +48,8 @@ export(EBImoran.mc, probmap, choynowski, EBest, EBlocal, LR.sarlm,
 	plot.listw, aggregate.nb, old.make.sym.nb, Hausman.test)
 
 export(set.VerboseOption, get.VerboseOption, set.ZeroPolicyOption, 
-        get.ZeroPolicyOption, set.ClusterOption, get.ClusterOption)
+        get.ZeroPolicyOption, set.ClusterOption, get.ClusterOption,
+        get.rlecuyerSeedOption, set.rlecuyerSeedOption)
 
 export(spautolm, residuals.spautolm, deviance.spautolm, coef.spautolm, 
 	fitted.spautolm, print.spautolm, summary.spautolm, LR1.spautolm, 
@@ -70,7 +71,10 @@ export(mstree, nbcosts, nbcost, plot.mst, plot.skater, prunecost, ssw, prunemst,
 
 export(aple, aple.mc, aple.plot, localAple)
 
-export(trW, impacts, lagmess)
+export(trW, impacts, lagmess, sacsarlm)
+
+export(do_ldet, eigen_setup, mcdet_setup, cheb_setup, spam_setup,
+        Matrix_setup, LU_setup)
 
 import(maptools)
 

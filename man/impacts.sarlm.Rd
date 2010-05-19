@@ -104,9 +104,11 @@ summary(impacts(mobj, tr=trMatc, R=1000), zstats=TRUE, short=TRUE)
 mobj2 <- lagsarlm(CRIME ~ INC + HOVAL, columbus, listw, type="mixed", 
 method="Matrix", fdHess=TRUE, optimHess=TRUE)
 summary(impacts(mobj2, tr=trMatc, R=1000), zstats=TRUE, short=TRUE)
+\dontrun{
 mobj3 <- lagsarlm(CRIME ~ INC + HOVAL, columbus, listw, type="mixed", 
 method="spam", fdHess=TRUE)
 summary(impacts(mobj3, tr=trMatc, R=1000), zstats=TRUE, short=TRUE)
+}
 data(boston)
 Wb <- as(as_dgRMatrix_listw(nb2listw(boston.soi)), "CsparseMatrix")
 trMatb <- trW(Wb, type="mult")

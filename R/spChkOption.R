@@ -24,13 +24,13 @@ get.VerboseOption <- function() {
 
 set.ZeroPolicyOption <- function(check) {
 	if (!is.logical(check)) stop ("logical argument required")
-	res <- get("zero.policy", env = .spdepOptions)
-	assign("zero.policy", check, env = .spdepOptions)
+	res <- get("zeroPolicy", env = .spdepOptions)
+	assign("zeroPolicy", check, env = .spdepOptions)
 	res
 }
 
 get.ZeroPolicyOption <- function() {
-	get("zero.policy", env = .spdepOptions)
+	get("zeroPolicy", env = .spdepOptions)
 }
 
 set.ClusterOption <- function(cl) {
@@ -45,6 +45,16 @@ get.ClusterOption  <- function() {
 	get("cl", env = .spdepOptions)
 }
 
+get.rlecuyerSeedOption  <- function() {
+	get("rlecuyerSeed", env = .spdepOptions)
+}
+
+set.rlecuyerSeedOption  <- function(seed) {
+    if (length(seed) != 6) stop("Six integer values required")
+    if (storage.mode(seed) != integer) seed <- as.integer(seed)
+    assign("rlecuyerSeed", seed, env = .spdepOptions)
+    invisible(NULL)
+}
 
 chkIDs <- function (x, listw) 
 {

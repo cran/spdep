@@ -23,6 +23,7 @@ choynowski              Choynowski probability map values
 columbus                Columbus OH spatial analysis data set
 diffnb                  Differences between neighbours lists
 dnearneigh              Neighbourhood contiguity by distance
+do_ldet                 Spatial regression model Jacobian computations
 droplinks               Drop links in a neighbours list
 EBest                   Global Empirical Bayes estimator
 EBImoran.mc             Permutation test for empirical Bayes index
@@ -82,6 +83,7 @@ moran.mc                Permutation test for Moran's I statistic
 moran.plot              Moran scatterplot
 moran.test              Moran's I test for spatial autocorrelation
 mstree                  Find the minimal spanning tree
+n.comp.nb               Depth First Search on Neighbor Lists
 nb2blocknb              Block up neighbour list for location-less
                         observations
 nb2lines                Use arc-type shapefiles for import and export
@@ -92,7 +94,6 @@ nb2WB                   Output spatial weights for WinBUGS
 nbcosts                 Compute cost of edges
 nbdists                 Spatial link distance measures
 nblag                   Higher order neighbours lists
-n.comp.nb               Depth First Search on Neighbor Lists
 nc.sids                 North Carolina SIDS data
 NY_data                 New York leukemia data
 oldcol                  Columbus OH spatial analysis data set - old
@@ -111,16 +112,18 @@ read.gal                Read a GAL lattice file into a neighbours list
 read.gwt2nb             Read and write spatial neighbour files
 residuals.sarlm         Access functions for spatial simultaneous
                         autoregressive linear model objects
+sacsarlm                Spatial simultaneous autoregressive SAC model
+                        estimation
 set.spChkOption         Control checking of spatial object IDs
 similar.listw           Create symmetric similar weights lists
 skater                  Spatial 'K'luster Analysis by Tree Edge Removal
+sp.correlogram          Spatial correlogram
+sp.mantel.mc            Mantel-Hubert spatial general cross product
+                        statistic
 SpatialFiltering        Semi-parametric spatial filtering
 spautolm                Spatial conditional and simultaneous
                         autoregression model estimation
-sp.correlogram          Spatial correlogram
 spdep                   Return package version number
-sp.mantel.mc            Mantel-Hubert spatial general cross product
-                        statistic
 spweights.constants     Provides constants for spatial weights matrices
 ssw                     Compute the sum of dissimilarity
 stsls                   Generalized spatial two stage least squares

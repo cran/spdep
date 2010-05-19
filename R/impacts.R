@@ -81,7 +81,7 @@ lagDistrImpacts <- function(T, g, P, q=10) {
 processSample <- function(x, irho, drop2beta, type, iicept, icept, T, Q, q) {
     g <- x[irho]^(0:q)
     beta <- x[-drop2beta]
-    if (type == "lag") {
+    if (type == "lag" || type == "sac") {
       if (iicept) {
         P <- matrix(beta[-icept], ncol=1)
       } else {
@@ -128,7 +128,7 @@ mixedImpactsExact <- function(SW, P, n, listw) {
 
 processXSample <- function(x, drop2beta, type, iicept, icept, SW, n, listw) {
     beta <- x[-drop2beta]
-    if (type == "lag") {
+    if (type == "lag" || type == "sac") {
         if (iicept) {
           P <- matrix(beta[-icept], ncol=1)
         } else {
@@ -327,12 +327,13 @@ impacts.lagmess <- function(obj, ..., tr=NULL, R=NULL, listw=NULL,
 impacts.sarlm <- function(obj, ..., tr=NULL, R=NULL, listw=NULL, useHESS=NULL,
   tol=1e-6, empirical=FALSE, Q=NULL) {
     if (obj$type == "error")
-        stop("impact measures only for lag and spatial Durbin models")
+        stop("impact measures not for error models")
     if (!is.null(obj$listw_style) && obj$listw_style != "W") 
         stop("Only row-standardised weights supported")
     rho <- obj$rho
     beta <- obj$coefficients
     s2 <- obj$s2
+    if (obj$type == "sac") lambda <- obj$lambda
     usingHESS <- NULL
     iNsert <- obj$insert
     if (!is.null(R)) {
@@ -340,6 +341,7 @@ impacts.sarlm <- function(obj, ..., tr=NULL, R=NULL, listw=NULL, useHESS=NULL,
         usingHESS <- FALSE
         irho <- 2
         drop2beta <- 1:2
+        if (obj$type == "sac") drop2beta <- c(drop2beta, 3)
         if (is.logical(resvar)) {
             fdHess <- obj$fdHess
             if (is.logical(fdHess)) 
@@ -348,6 +350,7 @@ impacts.sarlm <- function(obj, ..., tr=NULL, R=NULL, listw=NULL, useHESS=NULL,
             if (!iNsert) {
                 irho <- 1
                 drop2beta <- 1
+                if (obj$type == "sac") drop2beta <- c(drop2beta, 2)
             }
         }
         if (!is.null(useHESS) && useHESS) {
@@ -358,6 +361,7 @@ impacts.sarlm <- function(obj, ..., tr=NULL, R=NULL, listw=NULL, useHESS=NULL,
             if (!iNsert) {
                 irho <- 1
                 drop2beta <- 1
+                if (obj$type == "sac") drop2beta <- c(drop2beta, 2)
             }
         }
         interval <- obj$interval
@@ -365,7 +369,7 @@ impacts.sarlm <- function(obj, ..., tr=NULL, R=NULL, listw=NULL, useHESS=NULL,
     }
     icept <- grep("(Intercept)", names(beta))
     iicept <- length(icept) > 0
-    if (obj$type == "lag") {
+    if (obj$type == "lag" || obj$type == "sac") {
       if (iicept) {
         P <- matrix(beta[-icept], ncol=1)
         bnames <- names(beta[-icept])
@@ -391,9 +395,11 @@ impacts.sarlm <- function(obj, ..., tr=NULL, R=NULL, listw=NULL, useHESS=NULL,
     if (!is.null(R)) {
         if (usingHESS && !iNsert) {
             mu <- c(rho, beta)
+            if (obj$type == "sac") mu <- c(rho, lambda, beta)
             Sigma <- fdHess
         } else {
             mu <- c(s2, rho, beta)
+            if (obj$type == "sac") mu <- c(s2, rho, lambda, beta)
             if (usingHESS) {
                 Sigma <- fdHess
             } else {

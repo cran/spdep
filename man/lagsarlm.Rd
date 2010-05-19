@@ -26,7 +26,7 @@ is called.}
   \item{na.action}{a function (default \code{options("na.action")}), can also be \code{na.omit} or \code{na.exclude} with consequences for residuals and fitted values - in these cases the weights list will be subsetted to remove NAs in the data. It may be necessary to set zero.policy to TRUE because this subsetting may create no-neighbour observations. Note that only weights lists created without using the glist argument to \code{nb2listw} may be subsetted.}
   \item{type}{default "lag", may be set to "mixed"; when "mixed", the lagged intercept is dropped for spatial weights style "W", that is row-standardised weights, but otherwise included}
   \item{method}{"eigen" (default) - the Jacobian is computed as the product 
-of (1 - rho*eigenvalue) using \code{eigenw}, and "spam" or "Matrix" for strictly symmetric weights lists of styles "B" and "C", or made symmetric by similarity (Ord, 1975, Appendix C) if possible for styles "W" and "S", using code from the spam or Matrix packages to calculate the determinant.
+of (1 - rho*eigenvalue) using \code{eigenw}, and "spam" or "Matrix" for strictly symmetric weights lists of styles "B" and "C", or made symmetric by similarity (Ord, 1975, Appendix C) if possible for styles "W" and "S", using code from the spam or Matrix packages to calculate the determinant; "LU" provides an alternative sparse matrix decomposition approach. In addition, there are "Chebyshev" and Monte Carlo "MC" approximate log-determinant methods.
 }
   \item{quiet}{default NULL, use !verbose global option value; if FALSE, reports function values during optimization.}
   \item{zero.policy}{default NULL, use global option value; if TRUE assign zero to the lagged value of zones without 
@@ -82,6 +82,7 @@ variable in making predictions for the fitting data.
   \item{call}{the call used to create this object}
   \item{residuals}{GLS residuals}
   \item{lm.target}{the \code{lm} object returned for the GLS fit}
+  \item{opt}{object returned from numerical optimisation}
   \item{fitted.values}{Difference between residuals and response variable}
   \item{se.fit}{Not used yet}
   \item{formula}{model formula}
@@ -140,9 +141,11 @@ system.time(COL.lag.M <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb), method="Matrix", quiet=FALSE))
 summary(COL.lag.M)
 impacts(COL.lag.M, listw=nb2listw(COL.nb))
+\dontrun{
 system.time(COL.lag.sp <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb), method="spam", quiet=FALSE))
 summary(COL.lag.sp)
+}
 COL.lag.B <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb, style="B"))
 summary(COL.lag.B, correlation=TRUE)
