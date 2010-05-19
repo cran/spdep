@@ -148,6 +148,7 @@ similar.listw_Matrix <- function(listw) {
 
 
 similar.listw_spam <- function(listw) {
+        if (!require(spam)) stop("spam not available")
 	nbsym <- attr(listw$neighbours, "sym")
 	if(is.null(nbsym)) nbsym <- is.symmetric.nb(listw$neighbours, FALSE)
 	if (!nbsym) 

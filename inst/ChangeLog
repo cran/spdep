@@ -1,3 +1,106 @@
+2010-05-19 09:46  rsbivand
+
+	* DESCRIPTION, NAMESPACE, R/impacts.R, R/jacobian.R, R/sacsarlm.R,
+	  R/sarlm.R, R/summary.spsarlm.R, man/do_ldet.Rd,
+	  man/errorsarlm.Rd, man/lagsarlm.Rd, man/sacsarlm.Rd, src/lagw.c:
+	  adding SAC/SARAR ML model
+
+2010-05-11 17:51  rsbivand
+
+	* ChangeLog, inst/ChangeLog: Nagelkerke in spautolm summary
+
+2010-05-11 17:50  rsbivand
+
+	* man/spautolm.Rd: Nagelkerke in spautolm summary
+
+2010-05-11 17:32  rsbivand
+
+	* R/spautolm.R, man/spautolm.Rd: Nagelkerke in spautolm summary
+
+2010-05-06 10:34  rsbivand
+
+	* ChangeLog, inst/ChangeLog: poly2nb: use SpatialPolygons instead
+	  of polylist by default
+
+2010-05-06 10:32  rsbivand
+
+	* DESCRIPTION: poly2nb: use SpatialPolygons instead of polylist by
+	  default
+
+2010-05-06 10:22  rsbivand
+
+	* R/poly2nb.R, man/poly2nb.Rd: poly2nb: use SpatialPolygons instead
+	  of polylist by default
+
+2010-05-05 08:44  rsbivand
+
+	* ChangeLog, inst/ChangeLog: pass foundInBox to poly2nb
+
+2010-05-05 08:43  rsbivand
+
+	* R/poly2nb.R, man/poly2nb.Rd: pass foundInBox to poly2nb
+
+2010-05-03 11:27  rsbivand
+
+	* R/poly2nb.R, man/poly2nb.Rd, src/init.c, src/polypoly.c,
+	  src/spdep.h: more poly2nb speedups
+
+2010-04-30 07:06  rsbivand
+
+	* man/do_ldet.Rd: examples for do_ldet
+
+2010-04-29 18:54  rsbivand
+
+	* ChangeLog, inst/ChangeLog: documenting do_ldet
+
+2010-04-29 18:52  rsbivand
+
+	* man/do_ldet.Rd: documenting do_ldet
+
+2010-04-29 18:52  rsbivand
+
+	* NAMESPACE: documenting do_ldet
+
+2010-04-29 14:34  rsbivand
+
+	* R/poly2nb.R, man/poly2nb.Rd, src/polypoly.c: back out of knn for
+	  poly2nb
+
+2010-04-28 08:45  rsbivand
+
+	* R/listw2sn.R: tidy
+
+2010-04-28 08:34  rsbivand
+
+	* DESCRIPTION, INDEX, R/knearneigh.R, R/poly2nb.R,
+	  man/knearneigh.Rd, man/poly2nb.Rd: tidy
+
+2010-04-26 08:34  rsbivand
+
+	* ChangeLog, R/lag.spsarlm.R, R/poly2nb.R, man/poly2nb.Rd: more
+	  poly2nb changes
+
+2010-04-22 02:50  rsbivand
+
+	* DESCRIPTION, R/poly2nb.R, src/init.c, src/polypoly.c,
+	  src/spdep.h: poly2nb speedup
+
+2010-04-21 02:49  rsbivand
+
+	* DESCRIPTION, NAMESPACE, R/AAA.R, R/aple.mc.R, R/spChkOption.R,
+	  man/set.spChkOption.Rd: zeroPolicy problem
+
+2010-04-17 22:18  rsbivand
+
+	* DESCRIPTION, NAMESPACE, R/error.spsarlm.R, R/jacobian.R,
+	  R/kpgm_new.R, R/lag.spsarlm.R, R/listw2sn.R, R/nb2listw.R,
+	  R/spautolm.R, man/impacts.sarlm.Rd, man/lagsarlm.Rd,
+	  man/listw2sn.Rd: spam as suggested
+
+2010-04-02 10:20  rsbivand
+
+	* ChangeLog, inst/ChangeLog: control list documentation
+
 2010-04-02 10:19  rsbivand
 
 	* DESCRIPTION, man/errorsarlm.Rd, man/lagsarlm.Rd, man/spautolm.Rd:

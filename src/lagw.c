@@ -12,8 +12,8 @@ SEXP lagw(SEXP nb, SEXP weights, SEXP x, SEXP card, SEXP zeropolicy,
 
         if (naOK == FALSE) {
             for (i=0; i < n; i++) 
-                if (ISNA(NUMERIC_POINTER(x)[i]))
-                    error("Variable contains missing values");
+                if (!R_FINITE(NUMERIC_POINTER(x)[i]))
+                    error("Variable contains non-finite values");
         }
 
 	for (i=0; i < n; i++) {

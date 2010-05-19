@@ -21,6 +21,8 @@ spautolm(formula, data = list(), listw, weights,
  na.action, family = "SAR", method="full", verbose = NULL, interval=NULL,
  zero.policy = NULL, tol.solve=.Machine$double.eps, llprof=NULL,
  control=list())
+\method{summary}{spautolm}(object, correlation = FALSE, adj.se=FALSE,
+ Nagelkerke=FALSE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -40,6 +42,11 @@ is called.}
   \item{tol.solve}{the tolerance for detecting linear dependencies in the columns of matrices to be inverted - passed to \code{solve()} (default=double precision machine tolerance). Errors in \code{solve()} may constitute indications of poorly scaled variables: if the variables have scales differing much from the autoregressive coefficient, the values in this matrix may be very different in scale, and inverting such a matrix is analytically possible by definition, but numerically unstable; rescaling the RHS variables alleviates this better than setting tol.solve to a very small value}
   \item{llprof}{default NULL, can either be an integer, to divide the feasible range into llprof points, or a sequence of spatial coefficient values, at which to evaluate the likelihood function}
  \item{control}{list of extra control arguments - see section below}
+  \item{object}{\code{spautolm} object from \code{spautolm}}
+  \item{correlation}{logical; if 'TRUE', the correlation matrix of the estimated parameters is returned and printed (default=FALSE)}
+  \item{adj.se}{if TRUE, adjust the coefficient standard errors for the number of fitted coefficients}
+  \item{Nagelkerke}{if TRUE, the Nagelkerke pseudo R-squared is reported}
+  \item{\dots}{further arguments passed to or from other methods}
 }
 
 

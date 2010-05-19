@@ -87,6 +87,7 @@ standard errors)}
   \item{call}{the call used to create this object}
   \item{residuals}{GLS residuals}
   \item{lm.target}{the \code{lm} object returned for the GLS fit}
+  \item{opt}{object returned from numerical optimisation}
   \item{fitted.values}{Difference between residuals and response variable}
   \item{ase}{TRUE if method=eigen}
   \item{formula}{model formula}

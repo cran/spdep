@@ -1,8 +1,12 @@
 # Copyright 2010 by Roger Bivand
 
 # Chebyshev approximation setup and run functions
-cheb_setup <- function(env, q=5) {
-    W <- as(as_dgRMatrix_listw(get("listw", envir=env)), "CsparseMatrix")
+cheb_setup <- function(env, q=5, which=1) {
+    if (which == 1) {
+        W <- as(as_dgRMatrix_listw(get("listw", envir=env)), "CsparseMatrix")
+    } else {
+        W <- as(as_dgRMatrix_listw(get("listw2", envir=env)), "CsparseMatrix")
+    }
 # W a CSparseMatrix object
 # q order
     n <- nrow(W)
@@ -19,16 +23,25 @@ cheb_setup <- function(env, q=5) {
             trT[k] <- sum(diag(T[[k]]))
         }
     }
-    assign("trT", trT, envir=env)
-    assign("W", W, envir=env)
+    if (which == 1) {
+      assign("trT", trT, envir=env)
+      assign("W", W, envir=env)
+    } else {
+      assign("trT2", trT, envir=env)
+      assign("W2", W, envir=env)
+    }
     assign("method", "Chebyshev", envir=env)
     invisible(NULL)
 }
 
-cheb_ldet <- function(alpha, env) {
+cheb_ldet <- function(alpha, env, which=1) {
 # trT output from cheb_setup()
 # alpha spatial coefficient
-    trT <- get("trT", envir=env)
+    if (which == 1) {
+        trT <- get("trT", envir=env)
+    } else {
+        trT <- get("trT2", envir=env)
+    }
     cheb_in <- function(alpha, j, q) {
         res <- (2/(q+1))
         x <- 0.0
@@ -51,8 +64,12 @@ cheb_ldet <- function(alpha, env) {
 }
 
 # MC approximation setup and run functions
-mcdet_setup <- function(env, p=16, m=30) {
-        W <- as(as_dgRMatrix_listw(get("listw", envir=env)), "CsparseMatrix")
+mcdet_setup <- function(env, p=16, m=30, which=1) {
+        if (which == 1) {
+          W <- as(as_dgRMatrix_listw(get("listw", envir=env)), "CsparseMatrix")
+        } else {
+          W <- as(as_dgRMatrix_listw(get("listw2", envir=env)), "CsparseMatrix")
+        }
 # W a CSparseMatrix object
 # p, m given in papers
         n <- dim(W)[1]
@@ -65,16 +82,25 @@ mcdet_setup <- function(env, p=16, m=30) {
         }
         int2 <- apply(x * x, 2, sum)
         clx <- list(m=m, p=p, n=n, int1=int1, int2=int2)
-        assign("clx", clx, envir=env)
-        assign("W", W, envir=env)
+        if (which == 1) {
+            assign("clx", clx, envir=env)
+            assign("W", W, envir=env)
+        } else {
+            assign("clx2", clx, envir=env)
+            assign("W2", W, envir=env)
+        }
         assign("method", "MC", envir=env)
         invisible(NULL)
 }
 
-mcdet_ldet <- function(alpha, env) {
+mcdet_ldet <- function(alpha, env, which=1) {
 # clx output from mcdet_setup()
 # alpha spatial coefficient
-        clx <- get("clx", envir=env)
+        if (which == 1) {
+            clx <- get("clx", envir=env)
+        } else {
+            clx <- get("clx2", envir=env)
+        }
 	vk <- numeric(length=clx$p)
 	for (k in 1:clx$m) {
 		vk <- clx$n*(alpha^k)*(clx$int1[[k]]/k) + vk
@@ -83,72 +109,101 @@ mcdet_ldet <- function(alpha, env) {
 	-mean(v)
 }
 
-eigen_setup <- function(env) {
-	if (get("verbose", envir=env))
-            cat("Computing eigenvalues ...\n")
+eigen_setup <- function(env, which=1) {
+    if (get("verbose", envir=env))
+       cat("Computing eigenvalues ...\n")
+    if (which == 1) {
 	if (get("listw", envir=env)$style %in% c("W", "S") && 
             get("can.sim", envir=env)) {
             eig <- eigen(similar.listw_Matrix(get("listw", envir=env)),
                 only.values=TRUE)$value
 	    assign("similar", TRUE, envir=env)
 	} else eig <- eigenw(get("listw", envir=env))
-	if (get("verbose", envir=env)) cat("\n")
 	if (is.complex(eig)) eig.range <- 1/range(Re(eig))
 	else eig.range <- 1/range(eig)
         assign("eig", eig, envir=env)
         assign("eig.range", eig.range, envir=env)
-        assign("method", "eigen", envir=env)
-        invisible(NULL)
+    } else {
+	if (get("listw2", envir=env)$style %in% c("W", "S") && 
+            get("can.sim2", envir=env)) {
+            eig <- eigen(similar.listw_Matrix(get("listw2", envir=env)),
+                only.values=TRUE)$value
+	    assign("similar2", TRUE, envir=env)
+	} else eig <- eigenw(get("listw2", envir=env))
+        assign("eig2", eig, envir=env)
+    }
+    if (get("verbose", envir=env)) cat("\n")
+    assign("method", "eigen", envir=env)
+    invisible(NULL)
 }
 
-do_ldet <- function(coef, env) {
+do_ldet <- function(coef, env, which=1) {
     method <- get("method", envir=env)
     if (get("family", envir=env) == "SMA") {
-        ldet <- eigen_sma_ldet(coef, env)
+        ldet <- eigen_sma_ldet(coef, env, which=which)
     } else {
         switch(method,
-           eigen = {ldet <- eigen_ldet(coef, env)},
-           spam = {ldet <- spam_ldet(coef, env)},
-           Matrix = {ldet <- Matrix_ldet(coef, env)},
-           Chebyshev = {ldet <- cheb_ldet(coef, env)},
-           MC = {ldet <- mcdet_ldet(coef, env)},
-           LU = {ldet <- LU_ldet(coef, env)},
+           eigen = {ldet <- eigen_ldet(coef, env, which=which)},
+           spam = {ldet <- spam_ldet(coef, env, which=which)},
+           Matrix = {ldet <- Matrix_ldet(coef, env, which=which)},
+           Chebyshev = {ldet <- cheb_ldet(coef, env, which=which)},
+           MC = {ldet <- mcdet_ldet(coef, env, which=which)},
+           LU = {ldet <- LU_ldet(coef, env, which=which)},
            stop("...\n\nUnknown method\n"))
     }
     ldet
 }
 
-eigen_sma_ldet <- function(coef, env) {
+eigen_sma_ldet <- function(coef, env, which=1) {
     eig <- get("eig", envir=env)
     if (is.complex(eig)) det <- sum(log(Re(1/(1 + coef * eig))))
     else det <- sum(log(1/(1 + coef * eig)))
     det
 }
 
-eigen_ldet <- function(coef, env) {
-    eig <- get("eig", envir=env)
+eigen_ldet <- function(coef, env, which=1) {
+    if (which == 1) {
+        eig <- get("eig", envir=env)
+    } else {
+        eig <- get("eig2", envir=env)
+    }
     if (is.complex(eig)) 
         det <- sum(log(1 - coef * Re(eig)))
     else det <- sum(log(1 - coef * eig))
     det
 }
 
-spam_setup <- function(env) {
+spam_setup <- function(env, which=1) {
+    if (!require(spam)) stop("spam not available")
+    if (which == 1) {
         if (get("listw", envir=env)$style %in% c("W", "S") &&
             get("can.sim", envir=env)) {
 	    csrw <- listw2U_spam(similar.listw_spam(get("listw", envir=env)))
 	    assign("similar", TRUE, envir=env)
 	} else csrw <- as.spam.listw(get("listw", envir=env))
-        n <- get("n", envir=env)
-        I <- diag.spam(1, n, n)
         assign("csrw", csrw, envir=env)
-        assign("I", I, envir=env)
-        assign("method", "spam", envir=env)
-        invisible(NULL)
+    } else {
+        if (get("listw2", envir=env)$style %in% c("W", "S") &&
+            get("can.sim2", envir=env)) {
+	    csrw <- listw2U_spam(similar.listw_spam(get("listw2", envir=env)))
+	    assign("similar2", TRUE, envir=env)
+	} else csrw <- as.spam.listw(get("listw2", envir=env))
+        assign("csrw2", csrw, envir=env)
+    }
+    n <- get("n", envir=env)
+    I <- diag.spam(1, n, n)
+    assign("I", I, envir=env)
+    assign("method", "spam", envir=env)
+    invisible(NULL)
 }
 
-spam_ldet <- function(coef, env) {
-    csrw <- get("csrw", envir=env)
+spam_ldet <- function(coef, env, which=1) {
+    if (!require(spam)) stop("spam not available")
+    if (which == 1) {
+        csrw <- get("csrw", envir=env)
+    } else {
+        csrw <- get("csrw2", envir=env)
+    }
     I <- get("I", envir=env)
     J1 <- try(determinant((I - coef * csrw), logarithm=TRUE)$modulus,
         silent=TRUE)
@@ -160,7 +215,8 @@ spam_ldet <- function(coef, env) {
     Jacobian
 }
 
-Matrix_setup <- function(env, Imult, super) {
+Matrix_setup <- function(env, Imult, super, which=1) {
+    if (which == 1) {
         if (get("listw", envir=env)$style %in% c("W", "S") && 
             get("can.sim", envir=env)) {
 	    csrw <- listw2U_Matrix(similar.listw_Matrix(get("listw", 
@@ -175,15 +231,38 @@ Matrix_setup <- function(env, Imult, super) {
         assign("nW", nW, envir=env)
         assign("pChol", pChol, envir=env)
         assign("nChol", nChol, envir=env)
-        assign("method", "Matrix", envir=env)
-        invisible(NULL)
+    } else {
+        if (get("listw2", envir=env)$style %in% c("W", "S") && 
+            get("can.sim2", envir=env)) {
+	    csrw <- listw2U_Matrix(similar.listw_Matrix(get("listw2", 
+                envir=env)))
+	    assign("similar2", TRUE, envir=env)
+	} else csrw <- as_dsTMatrix_listw(get("listw2", envir=env))
+	csrw <- as(csrw, "CsparseMatrix")
+        nW <- - csrw
+	pChol <- Cholesky(csrw, super=super, Imult = Imult)
+	nChol <- Cholesky(nW, super=super, Imult = Imult)
+        assign("csrw2", csrw, envir=env)
+        assign("nW2", nW, envir=env)
+        assign("pChol2", pChol, envir=env)
+        assign("nChol2", nChol, envir=env)
+    }
+    assign("method", "Matrix", envir=env)
+    invisible(NULL)
 }
 
-Matrix_ldet <- function(coef, env) {
-    csrw <- get("csrw", envir=env)
-    nW <- get("nW", envir=env)
-    pChol <- get("pChol", envir=env)
-    nChol <- get("nChol", envir=env)
+Matrix_ldet <- function(coef, env, which=1) {
+    if (which == 1) {
+        csrw <- get("csrw", envir=env)
+        nW <- get("nW", envir=env)
+        pChol <- get("pChol", envir=env)
+        nChol <- get("nChol", envir=env)
+    } else {
+        csrw <- get("csrw2", envir=env)
+        nW <- get("nW2", envir=env)
+        pChol <- get("pChol2", envir=env)
+        nChol <- get("nChol2", envir=env)
+    }
     a <- -.Machine$double.eps^(1/2)
     b <- .Machine$double.eps^(1/2)
     n <- get("n", envir=env)
@@ -198,20 +277,30 @@ Matrix_ldet <- function(coef, env) {
     Jacobian
 }
 
-LU_setup <- function(env) {
+LU_setup <- function(env, which=1) {
+    if (which == 1) {
         W <- as(as_dgRMatrix_listw(get("listw", envir=env)), "CsparseMatrix")
-        I <- as_dsCMatrix_I(get("n", envir=env))
         assign("W", W, envir=env)
-        assign("I", I, envir=env)
-        assign("method", "LU", envir=env)
-        invisible(NULL)
+    } else {
+        W <- as(as_dgRMatrix_listw(get("listw2", envir=env)), "CsparseMatrix")
+        assign("W2", W, envir=env)
+    }
+    I <- as_dsCMatrix_I(get("n", envir=env))
+    assign("I", I, envir=env)
+    assign("method", "LU", envir=env)
+    invisible(NULL)
 }
 
-LU_ldet <- function(coef, env) {
+LU_ldet <- function(coef, env, which=1) {
     I <- get("I", envir=env)
-    W <- get("W", envir=env)
+    if (which == 1) {
+        W <- get("W", envir=env)
+    } else {
+        W <- get("W2", envir=env)
+    }
     LU <- lu(I - coef * W)
     dU <- abs(diag(slot(LU, "U")))
     ldet <- sum(log(dU))
     ldet
 }
+

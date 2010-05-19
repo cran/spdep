@@ -1,20 +1,20 @@
 Package: spdep
-Version: 0.5-4
-Date: 2010-04-02
+Version: 0.5-9
+Date: 2010-05-19
 Title: Spatial dependence: weighting schemes, statistics and models
 Encoding: latin1
-Author: Roger Bivand <Roger.Bivand@nhh.no>, with contributions by Luc
-        Anselin, Renato Assunção, Olaf Berke, Andrew Bernat, Eric
-        Blankmeyer, Marilia Carvalho, Yongwan Chun, Bjarke Christensen,
-        Carsten Dormann, Stéphane Dray, Rein Halbersma, Elias Krainski,
-        Nicholas Lewin-Koh, Hongfei Li, Jielai Ma, Giovanni Millo,
-        Werner Mueller, Hisaji Ono, Pedro Peres-Neto, Gianfranco Piras,
-        Markus Reder, Michael Tiefelsdorf, and Danlin Yu.
+Author: Roger Bivand <Roger.Bivand@nhh.no>, with contributions by Micah
+        Altman, Luc Anselin, Renato Assunção, Olaf Berke, Andrew
+        Bernat, Eric Blankmeyer, Marilia Carvalho, Yongwan Chun, Bjarke
+        Christensen, Carsten Dormann, Stéphane Dray, Rein Halbersma,
+        Elias Krainski, Nicholas Lewin-Koh, Hongfei Li, Jielai Ma,
+        Giovanni Millo, Werner Mueller, Hisaji Ono, Pedro Peres-Neto,
+        Gianfranco Piras, Markus Reder, Michael Tiefelsdorf, and Danlin
+        Yu.
 Maintainer: Roger Bivand <Roger.Bivand@nhh.no>
 Depends: R (>= 2.4.0), methods, sp (>= 0.9), boot, Matrix (>=
-        0.999375-9), MASS, nlme, maptools (>= 0.5-4), deldir, coda,
-        spam(>= 0.13-1)
-Suggests: snow, rlecuyer
+        0.999375-9), MASS, nlme, maptools (>= 0.5-4), deldir, coda
+Suggests: snow, rlecuyer, spam(>= 0.13-1), RANN
 Description: A collection of functions to create spatial weights matrix
         objects from polygon contiguities, from point patterns by
         distance and tesselations, for summarising these objects, and
@@ -32,6 +32,6 @@ Description: A collection of functions to create spatial weights matrix
         eigenvector spatial filtering, GM SAR error models, and
         generalized spatial two stage least squares models.
 License: GPL (>= 2)
-Packaged: 2010-04-02 10:31:53 UTC; rsb
+Packaged: 2010-05-19 10:02:40 UTC; rsb
 Repository: CRAN
-Date/Publication: 2010-04-04 16:01:52
+Date/Publication: 2010-05-19 13:09:49

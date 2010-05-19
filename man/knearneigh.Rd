@@ -6,13 +6,14 @@
 The function returns a matrix with the indices of regions belonging to the set of the k nearest neighbours of each other. If longlat = TRUE, Great Circle distances are used.
 }
 \usage{
-knearneigh(x, k=1, longlat = NULL)
+knearneigh(x, k=1, longlat = NULL, RANN=TRUE)
 }
 
 \arguments{
   \item{x}{matrix of region point coordinates or a SpatialPoints object}
   \item{k}{number of nearest neighbours to be returned}
   \item{longlat}{TRUE if point coordinates are longitude-latitude decimal degrees, in which case distances are measured in kilometers; if x is a SpatialPoints object, the value is taken from the object itself}
+  \item{RANN}{logical value, if the RANN package is available, use for finding k nearest neighbours when longlat is FALSE}
 }
 \details{
 The underlying C code is based on the \code{knn} function in the class package in the VR bundle.

@@ -17,7 +17,8 @@ summary.sarlm <- function(object, correlation = FALSE, Nagelkerke=FALSE,
  Hausman=FALSE, ...)
 {
 	if (object$type == "error" || ((object$type == "lag" || 
-		object$type == "mixed") && object$ase)) {
+		object$type == "mixed" || object$type == "sac")
+                && object$ase)) {
 		object$coeftitle <- "(asymptotic standard errors)"
 		object$Coef <- cbind(object$coefficients, object$rest.se, 
 			object$coefficients/object$rest.se,
@@ -246,14 +247,13 @@ print.summary.sarlm <- function(x, digits = max(5, .Options$digits - 3),
 	}
 #	res <- LR.sarlm(x, x$lm.model)
 	res <- x$LR1
+        pref <- ifelse(x$ase, "Asymptotic", "Approximate (numerical Hessian)")
 	if (x$type == "error") {
 		cat("\nLambda: ", format(signif(x$lambda, digits)),
 			", LR test value: ", format(signif(res$statistic,
                         digits)), ", p-value: ", format.pval(res$p.value,
                         digits), "\n", sep="")
 		if (!is.null(x$lambda.se)) {
-                    pref <- ifelse(x$ase, "Asymptotic",
-                        "Approximate (numerical Hessian)")
 		    cat(pref, " standard error: ", 
 		        format(signif(x$lambda.se, digits)),
 			"\n    z-value: ",format(signif((x$lambda/
@@ -264,14 +264,36 @@ print.summary.sarlm <- function(x, digits = max(5, .Options$digits - 3),
 			digits)), ", p-value: ", format.pval(x$Wald1$p.value, 
 			digits), "\n", sep="")
 		}
-	} else {
+	} else if (x$type == "sac") {
+		cat("\nRho: ", format(signif(x$rho, digits)), "\n",
+                    sep="")
+                if (!is.null(x$rho.se)) {
+		  cat(pref, " standard error: ", 
+			format(signif(x$rho.se, digits)), "\n    z-value: ", 
+			format(signif((x$rho/x$rho.se), digits)),
+			", p-value: ", format.pval(2 * (1 - pnorm(abs(x$rho/
+				x$rho.se))), digits), "\n", sep="")
+                }
+		cat("Lambda: ", format(signif(x$lambda, digits)), "\n", sep="")
+		if (!is.null(x$lambda.se)) {
+                    pref <- ifelse(x$ase, "Asymptotic",
+                        "Approximate (numerical Hessian)")
+		    cat(pref, " standard error: ", 
+		        format(signif(x$lambda.se, digits)),
+			"\n    z-value: ",format(signif((x$lambda/
+				x$lambda.se), digits)),
+			", p-value: ", format.pval(2*(1-pnorm(abs(x$lambda/
+				x$lambda.se))), digits), "\n", sep="")
+                }
+                cat("\nLR test value: ", format(signif(res$statistic, digits)),
+		    ", p-value: ", format.pval(res$p.value, digits), "\n",
+                    sep="")
+        } else {
 		cat("\nRho: ", format(signif(x$rho, digits)), 
                     ", LR test value: ", format(signif(res$statistic, digits)),
 		    ", p-value: ", format.pval(res$p.value, digits), "\n",
                     sep="")
                 if (!is.null(x$rho.se)) {
-                  pref <- ifelse(x$ase, "Asymptotic",
-                    "Approximate (numerical Hessian)")
 		  cat(pref, " standard error: ", 
 			format(signif(x$rho.se, digits)), "\n    z-value: ", 
 			format(signif((x$rho/x$rho.se), digits)),
@@ -303,7 +325,7 @@ print.summary.sarlm <- function(x, digits = max(5, .Options$digits - 3),
                         "\n", sep="")
 		}
         }
-	if (x$type != "error" && x$ase) {
+	if (x$type != "error" && x$type != "sac" && x$ase) {
 		cat("LM test for residual autocorrelation\n")
 		cat("test value: ", format(signif(x$LMtest, digits)),
 			", p-value: ", format.pval((1 - pchisq(x$LMtest, 1)), 

@@ -20,7 +20,10 @@ aple.mc <- function(x, listw, nsim, override_similarity_check=FALSE) {
 boot_wrapper_in <- function(cl, nsim) {
         require(snow)
         require(rlecuyer)
-        clusterSetupRNGstream(cl)
+        rlseed <- get("rlecuyerSeed", env = .spdepOptions)
+        if (storage.mode(rlseed) != integer) rlseed <- as.integer(rlseed)
+        if (length(rlseed) != 6) rlseed <- rep(12345, 6)
+        clusterSetupRNGstream(cl, seed=rlseed)
         clusterEvalQ(cl, library(boot))
         nnsim <- ceiling(nsim/length(cl))
         nnsim

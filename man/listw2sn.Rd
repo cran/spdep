@@ -39,7 +39,9 @@ col.listw$neighbours[[1]]
 col.listw$weights[[1]]
 col.sn <- listw2sn(col.listw)
 str(col.sn)
+\dontrun{
 col.sp <- as.spam.listw(col.listw)
 str(col.sp)
+}
 }
 \keyword{spatial}

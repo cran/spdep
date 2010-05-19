@@ -129,6 +129,7 @@ GMerrorsar <- function(#W, y, X,
 			warning("No log likelihood value available")
 		} else {
 			if (sparse_method == "spam") {
+                          if (!require(spam)) stop("spam not available")
 			  if (listw$style %in% c("W", "S") & can.sim) {
 			    csrw <- listw2U_spam(similar.listw_spam(listw))
 			  } else csrw <- as.spam.listw(listw)

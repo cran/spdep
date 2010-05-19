@@ -17,7 +17,7 @@ lagsarlm <- function(formula, data = list(), listw,
         if (is.null(quiet)) quiet <- !get("verbose", env = .spdepOptions)
         stopifnot(is.logical(quiet))
         if (is.null(zero.policy))
-            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+            zero.policy <- get.ZeroPolicyOption()
         stopifnot(is.logical(zero.policy))
 	mt <- terms(formula, data = data)
 	mf <- lm(formula, data, na.action=na.action, 
@@ -150,6 +150,7 @@ lagsarlm <- function(formula, data = list(), listw,
         	    I <- as_dsCMatrix_I(n)
 		},
 	        spam = {
+                    if (!require(spam)) stop("spam not available")
 		    if (listw$style %in% c("W", "S") && !can.sim)
 		    stop("spam method requires symmetric weights")
 		    if (listw$style %in% c("B", "C", "U") && 
