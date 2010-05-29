@@ -1,3 +1,23 @@
+2010-05-29 13:52  rsbivand
+
+	* DESCRIPTION: tidy
+
+2010-05-22 08:47  rsbivand
+
+	* R/sacsarlm.R: llprof
+
+2010-05-21 16:54  rsbivand
+
+	* DESCRIPTION, R/sacsarlm.R, man/sacsarlm.Rd: sacsar ll profile
+
+2010-05-19 09:59  rsbivand
+
+	* INDEX: adding SAC/SARAR ML model
+
+2010-05-19 09:47  rsbivand
+
+	* ChangeLog, inst/ChangeLog: adding SAC/SARAR ML model
+
 2010-05-19 09:46  rsbivand
 
 	* DESCRIPTION, NAMESPACE, R/impacts.R, R/jacobian.R, R/sacsarlm.R,
