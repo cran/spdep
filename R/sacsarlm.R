@@ -1,12 +1,13 @@
 sacsarlm <- function(formula, data = list(), listw, listw2=NULL, na.action, 
 	method="eigen", quiet=NULL, zero.policy=NULL, 
-	tol.solve=1.0e-10, control=list()) {
+	tol.solve=1.0e-10, llprof=NULL, control=list()) {
         timings <- list()
         .ptime_start <- proc.time()
         con <- list(fdHess=NULL, optimHess=FALSE, LAPACK=FALSE,
            Imult=2, cheb_q=5, MC_p=16, MC_m=30,
            super=FALSE, opt_method="nlminb", opt_control=list(),
-           pars=c(0.0, 0.0), lower=c(-1.0, -1.0), upper=c(1.0, 1.0))
+           pars=c(0.0, 0.0), lower=c(-1.0, -1.0)+.Machine$double.eps^0.5,
+           upper=c(1.0, 1.0)-.Machine$double.eps^0.5)
         nmsC <- names(con)
         con[(namc <- names(control))] <- control
         if (length(noNms <- namc[!namc %in% nmsC])) 
@@ -215,6 +216,23 @@ sacsarlm <- function(formula, data = list(), listw, listw2=NULL, na.action,
         pars <- con$pars
         lower <- con$lower
         upper <- con$upper
+
+        if (!is.null(llprof)) {
+            llrho <- NULL
+            lllambda <- NULL
+            if (length(llprof) == 1) {
+                llrho <- seq(lower[1], upper[1], length.out=llprof)
+                lllambda <- seq(lower[2], upper[2], length.out=llprof)
+                llprof <- as.matrix(expand.grid(llrho, lllambda))
+            }
+            ll_prof <- numeric(nrow(llprof))
+            for (i in 1:nrow(llprof)) 
+                ll_prof[i] <- sacsar.f(llprof[i,], env=env)
+            nm <- paste(method, "profile", sep="_")
+            timings[[nm]] <- proc.time() - .ptime_start
+            .ptime_start <- proc.time()
+        }
+
         if (con$opt_method == "nlminb") {
             optres <- nlminb(pars, sacsar.f, env=env,
                control=con$opt_control, lower=lower, upper=upper)
@@ -325,6 +343,11 @@ sacsarlm <- function(formula, data = list(), listw, listw2=NULL, na.action,
                 optimHess=con$optimHess, insert=FALSE,
                 timings=do.call("rbind", timings)[, c(1, 3)]),
                 class=c("sarlm"))
+        if (is.null(llprof)) ret$llprof <- llprof
+        else {
+            ret$llprof <- list(grd=llprof, ll=ll_prof, xseq=llrho,
+                yseq=lllambda)
+        }
 	if (!is.null(na.act))
 		ret$na.action <- na.act
 	ret
