@@ -230,7 +230,8 @@ print.gmsar <- function(x, ...)
 	cat("\n")
 	cat("\nCoefficients:\n")
 	print(coef(x))
-	cat("\nLog likelihood:", logLik(x), "\n")
+        LL <- logLik(x)
+	if (!is.null(LL)) cat("\nLog likelihood:", LL, "\n")
 	invisible(x)
 }
 
@@ -275,7 +276,7 @@ LR1.gmsar <- function(object)
 
 logLik.gmsar <- function(object, ...) {
 	if (is.null(object$LL)) {
-		warning("Model fitted without LL")
+#		warning("Model fitted without LL")
 		return(NULL)
 	}
 	LL <- c(object$LL)

@@ -265,12 +265,15 @@ lagsarlm <- function(formula, data = list(), listw,
 		AW <- A %*% W
 		zero <- rbind(rep(0,length(coef.rho)))
 		xtawxb <- s2*(t(x) %*% AW %*% x %*% coef.rho)
-		V <- s2*(s2*tr(t(AW) %*% AW) +
-			t(AW %*% x %*% coef.rho) %*%
-			(AW %*% x %*% coef.rho)) + omega*s2^2
+#		V <- s2*(s2*tr(t(AW) %*% AW) +
+#			t(AW %*% x %*% coef.rho) %*%
+#			(AW %*% x %*% coef.rho)) + omega*s2^2
+		V <- s2*(s2*tr(crossprod(AW)) +
+			crossprod(AW %*% x %*% coef.rho)) + omega*s2^2
 		inf1 <- rbind(n/2, s2*tr(AW), t(zero))
 		inf2 <- rbind(s2*tr(AW), V, xtawxb)
-		xtx <- s2*t(x) %*% x
+#		xtx <- s2*t(x) %*% x
+		xtx <- s2*crossprod(x)
 		inf3 <- rbind(zero, t(xtawxb), xtx)
 		inf <- cbind(inf1, inf2, inf3)
 		varb <- (s2^2) * solve(inf, tol=tol.solve)
@@ -278,7 +281,7 @@ lagsarlm <- function(formula, data = list(), listw,
 			c("sigma", "rho", colnames(x))
 		rest.se <- sqrt(diag(varb))[-c(1:2)]
 		rho.se <- sqrt(varb[2,2])
-		TW <- (W %*% W) + (t(W) %*% W)
+		TW <- (W %*% W) + crossprod(W)
 		T22 <- sum(diag(TW))
 		T21A <- sum(diag(TW %*% A))
 		LMtest <- ((t(r) %*% W %*% r)/s2)^2
