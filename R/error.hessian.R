@@ -51,11 +51,15 @@ insert_asye <- function(coefs, env, s2, mat, trs) {
     p2 <- p+2
     omat <- matrix(0, nrow=p2, ncol=p2)
     LX <- get("x", envir=env) - lambda * get("WX", envir=env)
-    omat[3:p2, 3:p2] <- -crossprod(LX)*s2
+#    omat[3:p2, 3:p2] <- -crossprod(LX)*s2
+#    omat[3:p2, 3:p2] <- -crossprod(LX)
+    omat[3:p2, 3:p2] <- -crossprod(LX)/s2
     omat[2, 2] <- mat[1, 1]
     n <- get("n", envir=env)
     omat[1, 1] <- -n/(2*(s2^2))
+#    omat[1, 1] <- -n/(2*(s2))
     omat[1, 2] <- omat[2, 1] <- -trB(lambda, trs)/s2
+#    omat[1, 2] <- omat[2, 1] <- -trB(lambda, trs)
     omat
 }
 

@@ -214,17 +214,21 @@ errorsarlm <- function(formula, data = list(), listw, na.action,
 		WA <- W %*% A
 		asyvar <- matrix(0, nrow=2+p, ncol=2+p)
 		asyvar[1,1] <- n / (2*(s2^2))
+#		asyvar[1,1] <- n / (2*(s2))
 		asyvar[2,1] <- asyvar[1,2] <- tr(WA) / s2
+#		asyvar[2,1] <- asyvar[1,2] <- tr(WA)
 		asyvar[2,2] <- tr(WA %*% WA) + tr(crossprod(WA))
 # bug found 100224 German Muchnik Izon
 #		asyvar[3:(p+2),3:(p+2)] <- s2*(t(x - lambda*WX) %*% 
                 xl <- (x - lambda*WX)
-		asyvar[3:(p+2),3:(p+2)] <- crossprod(xl)
+#		asyvar[3:(p+2),3:(p+2)] <- crossprod(xl)
+		asyvar[3:(p+2),3:(p+2)] <- crossprod(xl)/s2
 		asyvar1 <- solve(asyvar, tol=tol.solve)
 		rownames(asyvar1) <- colnames(asyvar1) <- 
 			c("sigma", "lambda", xcolnames)
 		
 		lambda.se <- sqrt(asyvar1[2,2])
+#		lambda.se <- sqrt(s2*asyvar1[2,2])
                 timings[["eigen_se"]] <- proc.time() - .ptime_start
                 .ptime_start <- proc.time()
                 if (con$returnHcov) {
