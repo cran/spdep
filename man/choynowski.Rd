@@ -1,4 +1,4 @@
-% Copyright 2004 by Roger S. Bivand
+% Copyright 2004-2010 by Roger S. Bivand
 \name{choynowski}
 \alias{choynowski}
 \title{Choynowski probability map values}
@@ -6,7 +6,7 @@
   Calculates Choynowski probability map values.
 }
 \usage{
-choynowski(n, x, row.names=NULL, tol = .Machine$double.eps^0.5)
+choynowski(n, x, row.names=NULL, tol = .Machine$double.eps^0.5, legacy=FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -14,6 +14,7 @@ choynowski(n, x, row.names=NULL, tol = .Machine$double.eps^0.5)
   \item{x}{a numeric vector of populations at risk}
   \item{row.names}{row names passed through to output data frame}
   \item{tol}{accumulate values for observed counts >= expected until value less than tol}
+  \item{legacy}{default FALSE using vectorised alternating side \code{ppois} version, if true use original version written from sources and iterating down to \code{tol}}
 }
 
 \value{
@@ -32,6 +33,17 @@ Interactive Spatial Data Analysis, Harlow: Longman, pp. 300--303.}
 \examples{
 example(auckland)
 res <- choynowski(auckland$M77_85, 9*auckland$Und5_81)
+resl <- choynowski(auckland$M77_85, 9*auckland$Und5_81, legacy=TRUE)
+all.equal(res, resl)
+rt <- sum(auckland$M77_85)/sum(9*auckland$Und5_81)
+ch_ppois_pmap <- numeric(length(auckland$Und5_81))
+side <- c("greater", "less")
+for (i in seq(along=ch_ppois_pmap)) {
+  ch_ppois_pmap[i] <- poisson.test(auckland$M77_85[i], r=rt,
+    T=(9*auckland$Und5_81[i]), alternative=side[(res$type[i]+1)])$p.value
+}
+all.equal(ch_ppois_pmap, res$pmap)
+
 res1 <- probmap(auckland$M77_85, 9*auckland$Und5_81)
 table(abs(res$pmap - res1$pmap) < 0.00001, res$type)
 lt005 <- (res$pmap < 0.05) & (res$type)

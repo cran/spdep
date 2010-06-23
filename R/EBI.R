@@ -96,7 +96,8 @@ EBImoran.mc <- function (n, x, listw, nsim, zero.policy = NULL,
     lres
 }
 
-probmap <- function(n, x, row.names=NULL) {
+probmap <- function(n, x, row.names=NULL, alternative="less") {
+    alternative <- match.arg(alternative, c("greater", "less"))
     if (!is.numeric(x)) 
         stop(paste(deparse(substitute(x)), "is not a numeric vector"))
     if (!is.numeric(n)) 
@@ -115,7 +116,13 @@ probmap <- function(n, x, row.names=NULL) {
     b <- nsum/xsum
     expCount <- x*b
     relRisk <- 100*(n/expCount)
-    pmap <- ppois(n, expCount)
+#    pmap <- ppois(n, expCount, lower.tail=(alternative=="less"))
+    if (alternative == "less") {
+        pmap <- ppois(n, expCount)
+    } else {
+        pmap <- 1 - ppois(n-1, expCount)
+    }
+
     if (is.null(row.names)) 
 	res <- data.frame(raw=p, expCount=expCount, relRisk=relRisk, 
 	pmap=pmap)

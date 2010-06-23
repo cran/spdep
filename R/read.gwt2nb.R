@@ -115,6 +115,8 @@ write.sn2dat <- function(sn, file) {
 
 read.dat2listw <- function(file) {
 	wmat <- read.table(file)
+        stopifnot(ncol(wmat) == 3)
+        stopifnot(is.numeric(wmat[,3]))
 	sn <- wmat[order(wmat[,1]),]
 	IDS <- unique(sn[,1])
 	class(sn) <- c("spatial.neighbour", "data.frame")

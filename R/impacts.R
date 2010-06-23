@@ -58,6 +58,7 @@ impacts.stsls <- function(obj, ..., tr=NULL, R=NULL, listw=NULL,
         type="lag", tr=tr, R=R, listw=listw, tol=tol, empirical=empirical,
         Q=Q, icept=icept, iicept=iicept, p=p)
     attr(res, "iClass") <- class(obj)
+    if (!is.null(obj$robust)) attr(res, "robust") <- obj$robust
     res
 }
 
@@ -505,11 +506,21 @@ summary.lagImpact <- function(object, ..., zstats=FALSE, short=FALSE, reportQ=NU
     attr(res, "short") <- short
     attr(res, "reportQ") <- reportQ
     tp <- NULL
-    if (attr(object, "iClass") == "sarlm") tp <- ifelse(attr(object,
-       "useHESS"), ifelse(attr(object, "insert"),
-       "mixed Hessian approximation", "numerical Hessian approximation"),
-       "asymptotic")
-    else if (attr(object, "iClass") == "stsls") tp <- "asymptotic IV"
+    if ("sarlm" %in% attr(object, "iClass")) {
+       tp <- ifelse(attr(object,
+           "useHESS"), ifelse(attr(object, "insert"),
+           "mixed Hessian approximation", "numerical Hessian approximation"),
+           "asymptotic")
+    } else if ("stsls" %in% attr(object, "iClass")) {
+        tp <- "asymptotic IV"
+        if (!is.null(attr(object, "robust")) && attr(object, "robust"))
+            tp <- "robust IV"
+    }
+    if ("sphet" %in% attr(object, "iClass")) {
+            tp <- "IV HAC"
+            if ("gstsls" %in% attr(object, "iClass")) 
+                tp <- "GSTSLS"
+    }
     attr(res, "tp") <- tp
     class(res) <- "summary.lagImpact"
     res
