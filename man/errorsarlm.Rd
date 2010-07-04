@@ -10,7 +10,7 @@ error models of the form:
 
 \deqn{y = X \beta + u, u = \lambda W u + \varepsilon}{y = X beta + u, u = lambda W u + e}
 
-where \eqn{\lambda}{lambda} is found by \code{optimize()} first, and \eqn{\beta}{beta} and other parameters by generalized least squares subsequently (one-dimensional search using optim performs badly on some platforms).
+where \eqn{\lambda}{lambda} is found by \code{optimize()} first, and \eqn{\beta}{beta} and other parameters by generalized least squares subsequently. With one of the sparse matrix methods, larger numbers of observations can be handled, but the \code{interval=} argument may need be set when the weights are not row-standardised.
 }
 \usage{
 errorsarlm(formula, data=list(), listw, na.action,
@@ -117,11 +117,11 @@ West Virginia University, Morgantown, WV (\url{www.spacestat.com});
 Anselin L, Bera AK (1998) Spatial dependence in linear regression models
 with an introduction to spatial econometrics. In: Ullah A, Giles DEA
 (eds) Handbook of applied economic statistics. Marcel Dekker, New York,
-pp. 237-289; Cressie, N. A. C. 1993 \emph{Statistics for spatial data}, Wiley, New York.}
+pp. 237-289; Cressie, N. A. C. 1993 \emph{Statistics for spatial data}, Wiley, New York; LeSage J and RK Pace (2009) Introduction to Spatial Econometrics. CRC Press, Boca Raton.}
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 
 \seealso{\code{\link{lm}}, \code{\link{lagsarlm}}, \code{\link{similar.listw}}, \code{\link{predict.sarlm}},
-\code{\link{residuals.sarlm}}
+\code{\link{residuals.sarlm}}, \code{\link{do_ldet}}
 }
 
 \examples{

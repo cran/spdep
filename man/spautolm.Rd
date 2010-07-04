@@ -102,11 +102,11 @@ variable in making predictions for the fitting data.
 }
 \references{Cliff, A. D., Ord, J. K. 1981 \emph{Spatial processes}, Pion;
 Ord, J. K. 1975 Estimation methods for models of spatial interaction,
-\emph{Journal of the American Statistical Association}, 70, 120-126; Waller, L. A., Gotway, C. A. 2004 \emph{Applied spatial statistics for public health}, Wiley, Hoboken, NJ, 325-380; Cressie, N. A. C. 1993 \emph{Statistics for spatial data}, Wiley, New York, 548-568; Ripley, B. D. 1981 \emph{Spatial statistics}, Wiley, New York, 88-95.}
+\emph{Journal of the American Statistical Association}, 70, 120-126; Waller, L. A., Gotway, C. A. 2004 \emph{Applied spatial statistics for public health}, Wiley, Hoboken, NJ, 325-380; Cressie, N. A. C. 1993 \emph{Statistics for spatial data}, Wiley, New York, 548-568; Ripley, B. D. 1981 \emph{Spatial statistics}, Wiley, New York, 88-95; LeSage J and RK Pace (2009) Introduction to Spatial Econometrics. CRC Press, Boca Raton.}
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 \note{The standard errors given in Waller and Gotway (2004) are adjusted for the numbers of parameters estimated, and may be reproduced by using the additional argument \code{adj.se=TRUE} in the \code{summary} method. In addition, the function returns fitted values and residuals as given by Cressie (1993) p. 564.}
 
-\seealso{\code{\link[stats]{optimize}}, \code{\link{errorsarlm}}}
+\seealso{\code{\link[stats]{optimize}}, \code{\link{errorsarlm}}, \code{\link{do_ldet}}}
 \examples{
 example(NY_data)
 lm0 <- lm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata)

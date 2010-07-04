@@ -84,7 +84,7 @@ summary.sarlm <- function(object, correlation = FALSE, Nagelkerke=FALSE,
 }
 
 NK.sarlm <- function(obj) {
-     n <- length(obj$residuals)
+     n <- length(residuals(obj))
      nullLL <- obj$LLNullLlm
      if (is.null(nullLL)) return(nullLL)
      c(1 - exp(-(2/n)*(logLik(obj) - nullLL)))

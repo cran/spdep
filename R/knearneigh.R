@@ -9,11 +9,17 @@ knearneigh <- function(x, k=1, longlat=NULL, RANN=TRUE)
  	   && !is.na(is.projected(x)) && !is.projected(x)) {
            longlat <- TRUE
         } else longlat <- FALSE
-        x <- coordinates(x)
+        x <- coordinates(x)[, 1:2]
     } else if (is.null(longlat) || !is.logical(longlat)) longlat <- FALSE
     if (!is.numeric(x)) stop("Data non-numeric")
     if (!is.matrix(x)) stop("Data not in matrix form")
+    stopifnot(ncol(x) == 2)
     if (any(is.na(x))) stop("Data include NAs")
+    if (longlat) {
+        bb <- bbox(x)
+        if (!sp:::.ll_sanity(bb))
+            warning("Coordinates are not geographical: longlat argument wrong")
+    }
     if (!is.double(x)) storage.mode(x) <- "double"
     np <- nrow(x)
     dimension <- ncol(x)

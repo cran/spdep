@@ -17,6 +17,7 @@ tri2nb(coords, row.names = NULL)
 }
 
 \details{
+If coordinates are duplicated, this function cannot be used.
 If the coordinates are from a grid, then they need to be ordered
 such that the first three are not collinear, so that the first triangle
 can be constructed. This can be achieved by randomising the order of

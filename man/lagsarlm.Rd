@@ -8,7 +8,7 @@ lag and mixed models of the form:
 
 \deqn{y = \rho W y + X \beta + \varepsilon}{y = rho W y + X beta + e}
 
-where \eqn{\rho}{rho} is found by \code{optimize()} first, and \eqn{\beta}{beta} and other parameters by generalized least squares subsequently (one-dimensional search using optim performs badly on some platforms). In the mixed model, the spatially lagged independent variables are added to X. Note that interpretation of the fitted coefficients should use impact measures, because of the feedback loops induced by the data generation process for this model.
+where \eqn{\rho}{rho} is found by \code{optimize()} first, and \eqn{\beta}{beta} and other parameters by generalized least squares subsequently (one-dimensional search using optim performs badly on some platforms). In the mixed model, the spatially lagged independent variables are added to X. Note that interpretation of the fitted coefficients should use impact measures, because of the feedback loops induced by the data generation process for this model. With one of the sparse matrix methods, larger numbers of observations can be handled, but the \code{interval=} argument may need be set when the weights are not row-standardised.
 }
 \usage{
 lagsarlm(formula, data = list(), listw, 
@@ -115,14 +115,14 @@ West Virginia University, Morgantown, WV (\url{www.spacestat.com});
 Anselin L, Bera AK (1998) Spatial dependence in linear regression models
 with an introduction to spatial econometrics. In: Ullah A, Giles DEA
 (eds) Handbook of applied economic statistics. Marcel Dekker, New York,
-pp. 237-289; Cressie, N. A. C. 1993 \emph{Statistics for spatial data}, Wiley, New York.}
+pp. 237-289; Cressie, N. A. C. 1993 \emph{Statistics for spatial data}, Wiley, New York; LeSage J and RK Pace (2009) Introduction to Spatial Econometrics. CRC Press, Boca Raton.}
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}, with thanks to Andrew 
 Bernat for contributions to the asymptotic standard error code.}
 
 \seealso{\code{\link{lm}}, \code{\link{errorsarlm}}, 
 \code{\link{eigenw}}, %\code{\link{asMatrixCsrListw}}, 
 \code{\link{predict.sarlm}}, \code{\link{impacts.sarlm}},
-\code{\link{residuals.sarlm}}
+\code{\link{residuals.sarlm}}, \code{\link{do_ldet}}
 }
 
 \examples{

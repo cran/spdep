@@ -1,4 +1,4 @@
-# Copyright 2001-9 by Roger Bivand
+# Copyright 2001-2010 by Roger Bivand
 #
 
 
@@ -20,6 +20,7 @@ tri2nb <- function(coords, row.names = NULL) {
 	    		stop("non-unique row.names given")
     	}
     	if (is.null(row.names)) row.names <- as.character(1:n)
+        stopifnot(!anyDuplicated(coords))
 #	tri <- tri.mesh(x=coords[,1], y=coords[,2])
         tri <- deldir(x=coords[,1], y=coords[,2])
         from <- c(tri$delsgs[,5], tri$delsgs[,6])

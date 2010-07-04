@@ -1,4 +1,4 @@
-# Copyright 2000-7 by Roger S. Bivand. 
+# Copyright 2000-2010 by Roger S. Bivand. 
 # Upgrade to sp classes February 2007
 #
 
@@ -8,11 +8,17 @@ dnearneigh <- function(x, d1, d2, row.names=NULL, longlat=NULL) {
 	 && !is.na(is.projected(x)) && !is.projected(x)) {
          longlat <- TRUE
       } else longlat <- FALSE
-      x <- coordinates(x)
+      x <- coordinates(x)[, 1:2]
    } else if (is.null(longlat) || !is.logical(longlat)) longlat <- FALSE
     if (!is.numeric(x)) stop("Data non-numeric")
     if (!is.matrix(x)) stop("Data not in matrix form")
+    stopifnot(ncol(x) == 2)
     if (any(is.na(x))) stop("Data include NAs")
+    if (longlat) {
+        bb <- bbox(x)
+        if (!sp:::.ll_sanity(bb))
+            warning("Coordinates are not geographical: longlat argument wrong")
+    }
     if (!is.double(x)) storage.mode(x) <- "double"
     np <- nrow(x)
     if (np < 1) stop("non-positive number of rows in x")
