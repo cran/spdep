@@ -180,7 +180,7 @@ GMerrorsar <- function(#W, y, X,
             attr(Hcov, "method") <- "Matrix"
         }
 
-	ret <- structure(list(lambda=lambda,
+	ret <- structure(list(type= "ERROR", lambda=lambda,
 		coefficients=coef.lambda, rest.se=rest.se, 
 		s2=s2, SSE=SSE, parameters=(m+2), lm.model=ols, 
 		call=call, residuals=r, lm.target=lm.target,
@@ -288,61 +288,66 @@ logLik.gmsar <- function(object, ...) {
 	LL
 }
 
-print.summary.gmsar <- function(x, digits = max(5, .Options$digits - 3),
-	signif.stars = FALSE, ...)
-{
-	cat("\nCall:", deparse(x$call),	sep = "", fill=TRUE)
-	cat("\nResiduals:\n")
-	resid <- residuals(x)
-	nam <- c("Min", "1Q", "Median", "3Q", "Max")
-	rq <- if (length(dim(resid)) == 2) 
-		structure(apply(t(resid), 1, quantile), dimnames = list(nam, 
-			dimnames(resid)[[2]]))
-	else structure(quantile(resid), names = nam)
-	print(rq, digits = digits, ...)
-	cat("\nType: GM SAR estimator\n")
-	if (x$zero.policy) {
-		zero.regs <- attr(x, "zero.regs")
-		if (!is.null(zero.regs))
-			cat("Regions with no neighbours included:\n",
-			zero.regs, "\n")
-	}
-	cat("Coefficients:", x$coeftitle, "\n")
-	coefs <- x$Coef
-	if (!is.null(aliased <- x$aliased) && any(x$aliased)){
-		cat("    (", table(aliased)["TRUE"], 
-			" not defined because of singularities)\n", sep = "")
-		cn <- names(aliased)
-		coefs <- matrix(NA, length(aliased), 4, dimnames = list(cn, 
-                	colnames(x$Coef)))
-            	coefs[!aliased, ] <- x$Coef
-	}
-	printCoefmat(coefs, signif.stars=signif.stars, digits=digits,
-		na.print="NA")
 
-	res <- x$LR1
-	cat("\nLambda:", format(signif(x$lambda, digits)))
-	if (!is.null(res)) cat(" LR test value:", format(signif(res$statistic, 
-		digits)), "p-value:", format.pval(res$p.value, digits), "\n")
-	else cat("\n")
-	if (!is.null(x$LL)) 
-		cat("\nLog likelihood:", logLik(x), "for GM model\n")
-	cat("ML residual variance (sigma squared): ", 
-		format(signif(x$s2, digits)), ", (sigma: ", 
-		format(signif(sqrt(x$s2), digits)), ")\n", sep="")
-	cat("Number of observations:", length(x$residuals), "\n")
-	cat("Number of parameters estimated:", x$parameters, "\n")
-	if (!is.null(res)) cat("AIC: ", format(signif(AIC(x), digits)), 
-		", (AIC for lm: ", format(signif(AIC(x$lm.model), digits)),
-		")\n", sep="")
-	if (!is.null(x$Haus)) {
-	    cat("Hausman test: ", format(signif(x$Haus$statistic, 
-		digits)), ", df: ", format(x$Haus$parameter),
-                       ", p-value: ", format.pval(x$Haus$p.value, digits),
-                       "\n", sep="")
-	}
-    	cat("\n")
-        invisible(x)
+
+###modified to acomodate the SARAR model
+print.summary.gmsar<-function (x, digits = max(5, .Options$digits - 3), signif.stars = FALSE, 
+    ...) 
+{
+    cat("\nCall:", deparse(x$call), sep = "", fill = TRUE)
+    cat("\nResiduals:\n")
+    resid <- residuals(x)
+    nam <- c("Min", "1Q", "Median", "3Q", "Max")
+    rq <- if (length(dim(resid)) == 2) 
+        structure(apply(t(resid), 1, quantile), dimnames = list(nam, 
+            dimnames(resid)[[2]]))
+    else structure(quantile(resid), names = nam)
+    print(rq, digits = digits, ...)
+
+if(x$type=="SARAR") cat("\nType: GM SARAR estimator\n")
+  else  cat("\nType: GM SAR estimator\n")
+    if (x$zero.policy) {
+        zero.regs <- attr(x, "zero.regs")
+        if (!is.null(zero.regs)) 
+            cat("Regions with no neighbours included:\n", zero.regs, 
+                "\n")
+    }
+    cat("Coefficients:", x$coeftitle, "\n")
+    coefs <- x$Coef
+    if (!is.null(aliased <- x$aliased) && any(x$aliased)) {
+        cat("    (", table(aliased)["TRUE"], " not defined because of singularities)\n", 
+            sep = "")
+        cn <- names(aliased)
+        coefs <- matrix(NA, length(aliased), 4, dimnames = list(cn, 
+            colnames(x$Coef)))
+        coefs[!aliased, ] <- x$Coef
+    }
+    printCoefmat(coefs, signif.stars = signif.stars, digits = digits, 
+        na.print = "NA")
+    res <- x$LR1
+    cat("\nLambda:", format(signif(x$lambda, digits)))
+    if (!is.null(res)) 
+        cat(" LR test value:", format(signif(res$statistic, digits)), 
+            "p-value:", format.pval(res$p.value, digits), "\n")
+    else cat("\n")
+    if (!is.null(x$LL)){
+    	cat("\nLog likelihood:", logLik(x), "for GM model\n")
+    cat("ML residual variance (sigma squared): ", format(signif(x$s2, 
+        digits)), ", (sigma: ", format(signif(sqrt(x$s2), digits)), 
+        ")\n", sep = "")
+        }
+    cat("Number of observations:", length(x$residuals), "\n")
+    cat("Number of parameters estimated:", x$parameters, "\n")
+    if (!is.null(res)) 
+        cat("AIC: ", format(signif(AIC(x), digits)), ", (AIC for lm: ", 
+            format(signif(AIC(x$lm.model), digits)), ")\n", sep = "")
+    if (!is.null(x$Haus)) {
+        cat("Hausman test: ", format(signif(x$Haus$statistic, 
+            digits)), ", df: ", format(x$Haus$parameter), ", p-value: ", 
+            format.pval(x$Haus$p.value, digits), "\n", sep = "")
+    }
+    cat("\n")
+    invisible(x)
 }
 
 # Copyright 2004 by Luc Anselin
@@ -409,4 +414,139 @@ print.summary.gmsar <- function(x, digits = max(5, .Options$digits - 3),
     	litg <- c(uu,uwpuw,uwu) / n
     	list(bigG=bigG,litg=litg)
 }
+
+####SARAR model
+
+gstsls<-function (formula, data = list(), listw, listw2=NULL, na.action = na.fail, 
+    zero.policy = NULL, pars, control = list(), verbose = NULL, method = "nlminb",
+    robust = FALSE, legacy = FALSE, W2X = TRUE ) 
+{
+	
+	
+	 if (is.null(verbose)) 
+        verbose <- get("verbose", env = .spdepOptions)
+    stopifnot(is.logical(verbose))
+
+    if (is.null(zero.policy)) 
+        zero.policy <- get.ZeroPolicyOption()
+    stopifnot(is.logical(zero.policy))
+
+    if (!inherits(listw, "listw")) 
+        stop("The weights matrix is not a listw object")
+
+    if (is.null(listw2)) 
+        listw2 <- listw
+    else if (!inherits(listw2, "listw")) 
+        stop("No 2nd neighbourhood list")
+
+    mt <- terms(formula, data = data)
+    mf <- lm(formula, data, na.action = na.fail, method = "model.frame")
+    na.act <- attr(mf, "na.action")
+    cl <- match.call()
+    if (!is.null(na.act)) {
+        subset <- !(1:length(listw$neighbours) %in% na.act)
+        subset2 <- !(1:length(listw2$neighbours) %in% na.act)
+        listw <- subset(listw, subset, zero.policy = zero.policy)
+        listw2 <- subset(listw2, subset2, zero.policy = zero.policy)    
+    }
+    
+    
+
+    y <- model.extract(mf, "response")
+    x <- model.matrix(mt, mf)
+    if (length(y) != nrow(x)) 
+        stop("x and y have different length")
+    if (nrow(x) != length(listw$neighbours)) 
+        stop("Input data and weights have different dimension")
+    if (any(is.na(y))) 
+        stop("NAs in dependent variable")
+    if (any(is.na(x))) 
+        stop("NAs in independent variable")
+    n <- nrow(x)
+    k <- ncol(x)
+    xcolnames <- colnames(x)
+    K <- ifelse(xcolnames[1] == "(Intercept)" || all(x[, 1] == 
+        1), 2, 1)
+
+
+        wy <- lag.listw(listw, y, zero.policy = zero.policy)
+        wy <- array(wy, c(length(y), 1))
+        colnames(wy) <- ("Wy")
+        if (any(is.na(wy))) 
+            stop("NAs in spatially lagged dependent variable")
+        if (k > 1) {
+            WX <- matrix(nrow = n, ncol = (k - (K - 1)))
+            WWX <- matrix(nrow = n, ncol = (k - (K - 1)))
+            for (i in K:k) {
+                wx <- lag.listw(listw, x[, i], zero.policy = zero.policy)
+                wwx <- lag.listw(listw, wx, zero.policy = zero.policy)
+                if (any(is.na(wx))) 
+                  stop("NAs in lagged independent variable")
+                WX[, (i - (K - 1))] <- wx
+                WWX[, (i - (K - 1))] <- wwx
+            }
+        }
+
+        instr <- cbind(WX, WWX)
+        firststep <- tsls(y = y, yend = wy, X = x, Zinst = instr, robust = robust, legacy = legacy)
+        ubase <- residuals(firststep)
+
+    if (missing(pars)) {
+    	
+        scorr <- c(crossprod(lag.listw(listw2, ubase, zero.policy = zero.policy), 
+            ubase)/crossprod(ubase, ubase))
+        scorr <- scorr/(sum(unlist(listw2$weights))/length(ubase))
+        
+        pars <- c(scorr, firststep$sse/firststep$df)
+    }
+    if (length(pars) != 2 || !is.numeric(pars)) 
+        stop("invalid starting parameter values")
+    vv <- .kpwuwu(listw2, ubase, zero.policy = zero.policy)
+    if (method == "nlminb") 
+        optres <- nlminb(pars, .kpgm, v = vv, verbose = verbose, 
+            control = control)
+    else optres <- optim(pars, .kpgm, v = vv, verbose = verbose, 
+        method = method, control = control)
+    if (optres$convergence != 0) 
+        warning(paste("convergence failure:", optres$message))
+    lambda <- optres$par[1]
+    names(lambda) <- "lambda"
+
+        w2y <- lag.listw(listw2, y)
+        yt <- y - lambda * w2y
+        xt <- x - lambda * lag.listw(listw2, x)
+        wyt <- wy - lambda * lag.listw(listw2, wy)
+
+        colnames(xt) <- xcolnames
+        colnames(wyt) <- c("Wyt")
+        secstep <- tsls(y = yt, yend = wyt, X = xt, Zinst = instr, robust = robust, legacy = legacy)
+		rho<-secstep$coefficients[1]
+		coef.sac<-secstep$coefficients
+		rest.se <- sqrt(diag(secstep$var))
+		rho.se <- sqrt(diag(secstep$var))[1]
+		s2<-secstep$sse / secstep$df
+		r<- secstep$residuals
+		fit<- y - r
+		SSE<- crossprod(r)
+		
+    call <- match.call()
+
+    ret <- structure(list(type= "SARAR", lambda = lambda, coefficients = coef.sac, 
+        rest.se = rest.se, s2 = s2, SSE = SSE, parameters = (k + 
+            3), lm.model = NULL, call = call, residuals = r, lm.target = NULL, 
+        fitted.values = fit, formula = formula, aliased = NULL, 
+        zero.policy = zero.policy, LL = NULL, vv = vv, optres = optres, 
+        pars = pars, Hcov = NULL), class = c("gmsar"))
+    if (zero.policy) {
+        zero.regs <- attr(listw$neighbours, "region.id")[which(card(listw$neighbours) == 
+            0)]
+        if (length(zero.regs) > 0) 
+            attr(ret, "zero.regs") <- zero.regs
+    }
+        
+    if (!is.null(na.act)) ret$na.action <- na.act
+    ret
+}
+
+
 

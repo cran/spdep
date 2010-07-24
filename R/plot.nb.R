@@ -1,10 +1,11 @@
-# Copyright 2001-8 by Roger Bivand
+# Copyright 2001-2010 by Roger Bivand
 #
 
 
 plot.nb <- function(x, coords, col="black", points=TRUE, add=FALSE, 
 	arrows=FALSE, length=0.1, xlim=NULL, ylim=NULL, ...) {
 	nb <- x
+        stopifnot(length(nb) == nrow(coords))
 	sym <- is.symmetric.nb(nb, verbose = FALSE, force = FALSE)
 	x <- coords[,1]
 	y <- coords[,2]

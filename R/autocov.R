@@ -12,7 +12,7 @@
 # by Carsten F. Dormann, 04.11.2005, carsten.dormann@ufz.de
 # Re-implementation allowing list representation
 # Roger Bivand 28.11.2005
-# Upgrade to sp classes February 2007
+# Upgrade to sp classes February 2007, longlat sanity June 2010
 
 autocov_dist <- function(z, xy, nbs=1, type="inverse", zero.policy=NULL,
    style="W", longlat=NULL) {
@@ -29,6 +29,12 @@ autocov_dist <- function(z, xy, nbs=1, type="inverse", zero.policy=NULL,
       } else longlat <- FALSE
       xy <- coordinates(xy)
    } else if (is.null(longlat) || !is.logical(longlat)) longlat <- FALSE
+   stopifnot(ncol(xy) == 2)
+   if (longlat) {
+        bb <- bbox(xy)
+        if (!sp:::.ll_sanity(bb))
+            warning("Coordinates are not geographical: longlat argument wrong")
+   }
    nb <- dnearneigh(xy, 0, nbs, longlat=longlat)
    if (any(card(nb) == 0)) warning(paste("With value", nbs,
       "some points have no neighbours"))

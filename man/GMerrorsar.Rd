@@ -58,6 +58,7 @@ variable in making predictions for the fitting data.
 }
 \value{
   A list object of class \code{gmsar}
+  \item{type}{"ERROR"}
   \item{lambda}{simultaneous autoregressive error coefficient}
   \item{coefficients}{GMM coefficient estimates}
   \item{rest.se}{GMM coefficient standard errors}
