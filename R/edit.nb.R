@@ -1,4 +1,4 @@
-# Copyright 2001-8 by Roger Bivand and Nicholas Lewin-Koh
+# Copyright 2001-2010 by Roger Bivand and Nicholas Lewin-Koh
 #
 
 edit.nb <- function(name, coords, polys=NULL, ...) {
@@ -20,7 +20,12 @@ edit.nb <- function(name, coords, polys=NULL, ...) {
   plot.new()
   plot.window(xlim = xlim, ylim = ylim, "", asp=1)
   if (!is.null(polys))
-    plot(polys, border="grey", add=TRUE)
+    if (class(polys) == "polylist")
+        maptools:::plot.polylist(polys, border="grey", add=TRUE)
+    else if (inherits(polys, "SpatialPolygons"))
+        plot(polys, border="grey", add=TRUE)
+    else stop("polys of unknown class")
+# bug report Conceicao Ribeiro 100731
   for (i in 1:n) {
     #arrows(x[i],y[i],x[nb[[i]]],y[nb[[i]]],lenght=.08, angle=.15)
 ###
@@ -124,7 +129,10 @@ edit.nb <- function(name, coords, polys=NULL, ...) {
       plot.new()
       plot.window(xlim = xlim, ylim = ylim, "", asp=1)
       if (!is.null(polys))
-        plot(polys, border="grey", add=TRUE)
+        if (class(polys) == "polylist")
+            maptools:::plot.polylist(polys, border="grey", add=TRUE)
+        else if (inherits(polys, "SpatialPolygons"))
+            plot(polys, border="grey", add=TRUE)
       for (i in 1:n) {
         if(nb[[i]][1]!=0 & length(nb[[i]])>0)
           segments(x[i],y[i],x[nb[[i]]],y[nb[[i]]])

@@ -1,4 +1,4 @@
-% Copyright 2001 by Roger S. Bivand
+% Copyright 2001-2010 by Roger S. Bivand
 \name{edit.nb}
 \alias{edit.nb}
 \title{Interactive editing of neighbours lists}
@@ -16,7 +16,7 @@ edit.nb(name, coords, polys=NULL, ...)
 \arguments{
   \item{name}{an object of class \code{nb}}
   \item{coords}{matrix of region point coordinates}
-  \item{polys}{if polygon boundaries supplied, will be used as background}
+  \item{polys}{if polygon boundaries supplied, will be used as background; should inherit from \code{SpatialPolygons} or for backward compatibility be of class polylist}
   \item{...}{further arguments passed to or from other methods}
 }
 \value{
@@ -25,5 +25,15 @@ The function returns an object of class \code{nb} with the edited list of intege
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 
 \seealso{\code{\link{summary.nb}}, \code{\link{plot.nb}}}
+
+\examples{
+\dontrun{
+data(columbus)
+class(polys)
+nnb <- edit.nb(col.gal.nb, coords, polys)
+example(columbus)
+class(columbus)
+nnb1 <- edit.nb(col.gal.nb, coordinates(columbus), columbus)
+}}
 
 \keyword{spatial}
