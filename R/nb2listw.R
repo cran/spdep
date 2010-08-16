@@ -162,6 +162,10 @@ similar.listw_spam <- function(listw) {
 	if (listw$style == "W") {
 		sd <- attr(listw$weights, "comp")$d
 		sd1 <- 1/(sqrt(sd))
+                if (any(!is.finite(sd1))) {
+                    sd1[!is.finite(sd1)] <- 0
+                    warning("non-finite inverse diagonal values set to zero")
+                }
 		sdd <- diag.spam(sd, n, n)
 		sdd1 <- diag.spam(sd1, n, n)
 		sww1 <- sdd %*% sww
@@ -171,6 +175,10 @@ similar.listw_spam <- function(listw) {
 		Q <- attr(listw$weights, "comp")$Q
 		eff.n <- attr(listw$weights, "comp")$eff.n
 		q1 <- 1/(sqrt(q))
+                if (any(!is.finite(q1))) {
+                    sd1[!is.finite(q1)] <- 0
+                    warning("non-finite inverse diagonal values set to zero")
+                }
 		qq <- diag.spam(q, n, n)
 		qq1 <- diag.spam(q1, n, n)
 		ww0 <- (Q/eff.n) * sww
