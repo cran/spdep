@@ -1,3 +1,29 @@
+2010-08-16 16:27  rsbivand
+
+	* DESCRIPTION, NAMESPACE, R/jacobian.R, man/do_ldet.Rd: adding
+	  spam_update method
+
+2010-08-13 11:34  rsbivand
+
+	* R/jacobian.R, R/nb2listw.R: spam similarity safemode relaxation
+
+2010-08-13 00:38  rsbivand
+
+	* R/jacobian.R: spam similarity safemode relaxation
+
+2010-08-13 00:37  rsbivand
+
+	* R/jacobian.R: adding Matrix_J without updating
+
+2010-08-12 21:31  rsbivand
+
+	* DESCRIPTION, NAMESPACE, R/jacobian.R, man/do_ldet.Rd: adding
+	  Matrix_J without updating
+
+2010-07-31 14:08  rsbivand
+
+	* ChangeLog, inst/ChangeLog: retrofit polylist in edit.nb()
+
 2010-07-31 14:08  rsbivand
 
 	* DESCRIPTION, R/edit.nb.R, man/edit.nb.Rd: retrofit polylist in

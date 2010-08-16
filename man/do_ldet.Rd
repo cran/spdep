@@ -4,7 +4,9 @@
 \alias{mcdet_setup}
 \alias{cheb_setup}
 \alias{spam_setup}
+\alias{spam_update_setup}
 \alias{Matrix_setup}
+\alias{Matrix_J_setup}
 \alias{LU_setup}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Spatial regression model Jacobian computations}
@@ -16,8 +18,10 @@ do_ldet(coef, env, which=1)
 cheb_setup(env, q=5, which=1)
 mcdet_setup(env, p=16, m=30, which=1)
 eigen_setup(env, which=1)
-spam_setup(env, which=1)
+spam_setup(env, pivot="MMD", which=1)
+spam_update_setup(env, in_coef=0.1, pivot="MMD", which=1)
 Matrix_setup(env, Imult, super, which=1)
+Matrix_J_setup(env, which=1)
 LU_setup(env, which=1)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -28,6 +32,8 @@ LU_setup(env, which=1)
   \item{q}{Chebyshev approximation order; default in calling spdep functions is 5, here it cannot be missing and does not have a default}
   \item{p}{Monte Carlo approximation number of random normal variables; default calling spdep functions is 16, here it cannot be missing and does not have a default}
   \item{m}{Monte Carlo approximation number of series terms; default in calling spdep functions is 30, here it cannot be missing and does not have a default}
+  \item{pivot}{default \dQuote{MMD}, may also be \dQuote{RCM} for Cholesky decompisition using spam}
+  \item{in_coef}{fill-in initiation coefficient value, default 0.1}
   \item{Imult}{see \code{\link[Matrix]{Cholesky}}; numeric scalar which defaults to zero. The matrix that is decomposed is A+m*I where m is the value of Imult and I is the identity matrix of order ncol(A). Default in calling spdep functions is 2, here it cannot be missing and does not have a default, but is rescaled for binary weights matrices in proportion to the maximim row sum in those calling functions}
   \item{super}{see \code{\link[Matrix]{Cholesky}}; logical scalar indicating is a supernodal decomposition should be created.  The alternative is a simplicial decomposition. Default in calling spdep functions is FALSE, here it cannot be missing and does not have a default.  Setting it to NA leaves the choice to a CHOLMOD-internal heuristic}
 }
@@ -60,6 +66,18 @@ LU_setup(env, which=1)
     \item{method}{string: \dQuote{Matrix}}
   }
 }
+  \item{Matrix_J}{Standard Cholesky decomposition without updating:
+  \describe{
+    \item{listw}{A listw spatial weights object}
+    \item{can.sim}{logical scalar: can the spatial weights be made symmetric by similarity}
+    \item{n}{number of spatial objects}
+  } and assigns to the environment:
+  \describe{
+    \item{csrw}{sparse spatial weights matrix}
+    \item{I}{sparse identity matrix}
+    \item{method}{string: \dQuote{Matrix_J}}
+  }
+}
   \item{spam}{Standard Cholesky decomposition without updating:
   \describe{
     \item{listw}{A listw spatial weights object}
@@ -69,6 +87,20 @@ LU_setup(env, which=1)
   \describe{
     \item{csrw}{sparse spatial weights matrix}
     \item{I}{sparse identity matrix}
+    \item{pivot}{string --- pivot method}
+    \item{method}{string: \dQuote{spam}}
+  }
+}
+  \item{spam_update}{Pre-computed Cholesky decomposition with updating:
+  \describe{
+    \item{listw}{A listw spatial weights object}
+    \item{can.sim}{logical scalar: can the spatial weights be made symmetric by similarity}
+    \item{n}{number of spatial objects}
+  } and assigns to the environment:
+  \describe{
+    \item{csrw}{sparse spatial weights matrix}
+    \item{I}{sparse identity matrix}
+    \item{csrwchol}{A Cholesky decomposition for updating}
     \item{method}{string: \dQuote{spam}}
   }
 }
