@@ -343,6 +343,8 @@ sacsarlm <- function(formula, data = list(), listw, listw2=NULL, na.action,
                 optimHess=con$optimHess, insert=FALSE,
                 timings=do.call("rbind", timings)[, c(1, 3)]),
                 class=c("sarlm"))
+        rm(env)
+        GC <- gc()
         if (is.null(llprof)) ret$llprof <- llprof
         else {
             ret$llprof <- list(grd=llprof, ll=ll_prof, xseq=llrho,

@@ -1,7 +1,7 @@
 # Copyright 2001-2010 by Roger Bivand and Nicholas Lewin-Koh
 #
 
-edit.nb <- function(name, coords, polys=NULL, ...) {
+edit.nb <- function(name, coords, polys=NULL, ..., use_region.id=FALSE) {
   nb <- name
   cnb <- card(nb)
 # class to inherits Jari Oksanen 080603
@@ -10,11 +10,15 @@ edit.nb <- function(name, coords, polys=NULL, ...) {
   cl <- class(nb)
   if (length(cl) > 1) icl <- cl[-match("nb", cl)]
   else icl <- NULL
+  if (missing(coords) && !is.null(polys) &&
+      inherits(polys, "SpatialPolygons")) coords <- coordinates(polys)
   x <- coords[,1]
   y <- coords[,2]
   n <- length(nb)
   row.names <- attr(nb, "region.id")
   if (is.null(row.names)) row.names <- as.character(1:n)
+  labels <- 1:n
+  if (use_region.id) labels <- row.names
   xlim <- range(x)
   ylim <- range(y)
   plot.new()
@@ -47,7 +51,7 @@ edit.nb <- function(name, coords, polys=NULL, ...) {
 ###
   while (finished == "n") {
     cat("Identifying contiguity for deletion ...\n")
-    cand <- identify(x, y, n=2)
+    cand <- identify(x, y, n=2, labels=labels)
     lines(x[cand], y[cand], col="red")
 
     if (.Platform$OS.type == "windows") bringToTop(-1)
@@ -59,12 +63,12 @@ edit.nb <- function(name, coords, polys=NULL, ...) {
         nb[[cand[1]]] <- nb[[cand[1]]][nb[[cand[1]]] != cand[2]]
 				if(length(nb[[cand[1]]]) == 0) {
                                   nb[[cand[1]]] <- as.integer(0)
-                                  cat(cand[1], "is now an island\n")
+                                  cat(labels[cand[1]], "is now an island\n")
 				}
         nb[[cand[2]]] <- nb[[cand[2]]][nb[[cand[2]]] != cand[1]]
         if(length(nb[[cand[2]]]) == 0) {
           nb[[cand[2]]] <- as.integer(0)
-          cat(cand[2], "is now an island\n")
+          cat(labels[cand[2]], "is now an island\n")
         }
 ###
         lines(x[cand], y[cand], col=erase.col)
@@ -73,7 +77,8 @@ edit.nb <- function(name, coords, polys=NULL, ...) {
         edit.segs[[enum]]<-cand
         e.seg.stat<-c(e.seg.stat,0)
 ###
-        cat("deleted contiguity between point", cand[1], "and", cand[2], "\n")
+        cat("deleted contiguity between point", labels[cand[1]], "and",
+            labels[cand[2]], "\n")
       }
 
       #plot.new()
@@ -99,7 +104,7 @@ edit.nb <- function(name, coords, polys=NULL, ...) {
             nb[[cand[2]]] <-
               sort(unique(c(nb[[cand[2]]], cand[1])))
             cat("added contiguity between point",
-                cand[1], "and", cand[2], "\n")
+                labels[cand[1]], "and", labels[cand[2]], "\n")
             additions <- c(additions, paste(cand, collapse="-"))
 ###
             enum<-enum+1

@@ -65,19 +65,20 @@ lag.listw <- function(x, var, zero.policy=NULL, NAOK=FALSE, ...) {
 		"not numeric"))
 	if (!is.logical(NAOK)) stop("NAOK must be logical")
 #	if (any(is.na(x))) stop("NA in X")
+        storage.mode(x) <- "double"
 	n <- length(listw$neighbours)
 	cardnb <- card(listw$neighbours)
 	if (is.null(dim(x))) {
 		if (length(x) != n) stop("object lengths differ")
 		res <- .Call("lagw", listw$neighbours, listw$weights,
-			as.double(x), as.integer(cardnb),
+			x, as.integer(cardnb),
 			as.logical(zero.policy), naok=NAOK, PACKAGE="spdep")
 	} else {
 		if (nrow(x) != n) stop("object lengths differ")
 		res <- matrix(0, nrow=nrow(x), ncol=ncol(x))
 		for (i in 1:ncol(x)) {
 			res[,i] <- .Call("lagw", listw$neighbours,
-				listw$weights, as.double(x[,i]),
+				listw$weights, x[,i],
 				as.integer(cardnb), as.logical(zero.policy),
 				naok=NAOK, PACKAGE="spdep")
 

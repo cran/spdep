@@ -9,7 +9,8 @@ lagsarlm <- function(formula, data = list(), listw,
         .ptime_start <- proc.time()
         con <- list(tol.opt=.Machine$double.eps^0.5,
             fdHess=NULL, optimHess=FALSE, compiled_sse=FALSE, Imult=2,
-            cheb_q=5, MC_p=16, MC_m=30, super=FALSE)
+            cheb_q=5, MC_p=16, MC_m=30, super=NULL, spamPivot="MMD",
+            in_coef=0.1)
         nmsC <- names(con)
         con[(namc <- names(control))] <- control
         if (length(noNms <- namc[!namc %in% nmsC])) 
@@ -145,7 +146,26 @@ lagsarlm <- function(formula, data = list(), listw,
 	                    interval <- c(-0.5, +0.25)
 	                } else interval <- c(-1, 0.999)
                     }
+                    if (is.null(con$super)) con$super <- as.logical(NA)
                     Matrix_setup(env, Imult, con$super)
+                    W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
+        	    I <- as_dsCMatrix_I(n)
+		},
+	        Matrix_J = {
+		    if (listw$style %in% c("W", "S") && !can.sim)
+		    stop("Matrix method requires symmetric weights")
+		    if (listw$style %in% c("B", "C") && 
+			!(is.symmetric.glist(listw$neighbours, listw$weights)))
+		    stop("Matrix method requires symmetric weights")
+                    if (listw$style == "U") stop("U style not permitted, use C")
+		    if (!quiet) cat("sparse matrix Cholesky decomposition\n")
+                    if (is.null(interval)) {
+	                if (listw$style == "B") {
+	                    interval <- c(-0.5, +0.25)
+	                } else interval <- c(-1, 0.999)
+                    }
+                    if (is.null(con$super)) con$super <- FALSE
+                    Matrix_J_setup(env, super=con$super)
                     W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
         	    I <- as_dsCMatrix_I(n)
 		},
@@ -158,6 +178,19 @@ lagsarlm <- function(formula, data = list(), listw,
 		    stop("spam method requires symmetric weights")
 		    if (!quiet) cat("sparse matrix Cholesky decomposition\n")
                     spam_setup(env)
+                    W <- as.spam.listw(get("listw", envir=env))
+                    if (is.null(interval)) interval <- c(-1,0.999)
+		},
+	        spam_update = {
+                    if (!require(spam)) stop("spam not available")
+		    if (listw$style %in% c("W", "S") && !can.sim)
+		    stop("spam method requires symmetric weights")
+		    if (listw$style %in% c("B", "C", "U") && 
+			!(is.symmetric.glist(listw$neighbours, listw$weights)))
+		    stop("spam method requires symmetric weights")
+		    if (!quiet) cat("sparse matrix Cholesky decomposition\n")
+                    spam_update_setup(env, in_coef=con$in_coef,
+                        pivot=con$spamPivot)
                     W <- as.spam.listw(get("listw", envir=env))
                     if (is.null(interval)) interval <- c(-1,0.999)
 		},
@@ -290,6 +323,8 @@ lagsarlm <- function(formula, data = list(), listw,
                 timings[["eigen_se"]] <- proc.time() - .ptime_start
 	}
 	call <- match.call()
+        rm(env)
+        GC <- gc()
 	ret <- structure(list(type=type, rho=rho, 
 		coefficients=coef.rho, rest.se=rest.se, 
 		LL=LL, s2=s2, SSE=SSE, parameters=(m+2), lm.model=lm.null,

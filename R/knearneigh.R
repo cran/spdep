@@ -32,11 +32,12 @@ knearneigh <- function(x, k=1, longlat=NULL, RANN=TRUE)
         res <- list(nn=out, np=np, k=k, dimension=dimension, x=x)
     } else {
         xx <- c(x[,1], x[,2])
+        storage.mode(xx) <- "double"
         nn <- integer(np*k)
         dnn <- double(np*k)
         z <- .C("knearneigh", k=as.integer(k), np=as.integer(np),
             dimension=as.integer(dimension),
-            xx=as.double(xx), nn=as.integer(nn), dnn=as.double(dnn),
+            xx=xx, nn=as.integer(nn), dnn=dnn,
 	    as.integer(longlat), PACKAGE="spdep")
         res <- list(nn=matrix(z$nn, np, k, byrow=TRUE), np=np, k=k,
     	    dimension=dimension, x=x)

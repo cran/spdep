@@ -19,7 +19,7 @@ dnearneigh <- function(x, d1, d2, row.names=NULL, longlat=NULL) {
         if (!sp:::.ll_sanity(bb))
             warning("Coordinates are not geographical: longlat argument wrong")
     }
-    if (!is.double(x)) storage.mode(x) <- "double"
+#    if (!is.double(x)) storage.mode(x) <- "double"
     np <- nrow(x)
     if (np < 1) stop("non-positive number of rows in x")
     if (!is.null(row.names)) {
@@ -38,8 +38,11 @@ dnearneigh <- function(x, d1, d2, row.names=NULL, longlat=NULL) {
 	md <- md + (.Machine$double.eps)^(1/4)
     	if (d2 > sqrt(md)) d2 <- sqrt(md)
     }
-    z <- .Call("dnearneigh", as.double(d1), as.double(d2), as.integer(np),
-        as.integer(dimension), as.double(x), as.integer(longlat), 
+    storage.mode(x) <- "double"
+    storage.mode(d1) <- "double"
+    storage.mode(d2) <- "double"
+    z <- .Call("dnearneigh", d1, d2, as.integer(np),
+        as.integer(dimension), x, as.integer(longlat), 
 	PACKAGE="spdep")
     attr(z[[1]], "region.id") <- row.names
     attr(z[[1]], "call") <- match.call()

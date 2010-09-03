@@ -6,7 +6,8 @@ spautolm <- function(formula, data = list(), listw, weights,
     timings <- list()
     .ptime_start <- proc.time()
     con <- list(tol.opt=.Machine$double.eps^(2/3), 
-       Imult=2, super=FALSE, cheb_q=5, MC_p=16, MC_m=30)
+       Imult=2, super=NULL, cheb_q=5, MC_p=16, MC_m=30, spamPivot="MMD",
+       in_coef=0.1)
     nmsC <- names(con)
     con[(namc <- names(control))] <- control
     if (length(noNms <- namc[!namc %in% nmsC])) 
@@ -115,12 +116,40 @@ spautolm <- function(formula, data = list(), listw, weights,
             } else interval <- c(-1, 0.999)
         }
 # FIXME
+        if (is.null(con$super)) con$super <- as.logical(NA)
         Matrix_setup(env, Imult, con$super)
         I <- as_dsCMatrix_I(n)
         assign("I", I, envir=env)
         Sweights <- as(as(Diagonal(x=weights), "symmetricMatrix"), 
 	    "CsparseMatrix")
         assign("Sweights", Sweights, envir=env)
+    }  else if (method == "Matrix_J") {
+        if (listw$style %in% c("W", "S") && !can.sim)
+        stop("Matrix method requires symmetric weights")
+        if (listw$style %in% c("B", "C") && 
+ 	    !(is.symmetric.glist(listw$neighbours, listw$weights)))
+	    stop("Matrix method requires symmetric weights")
+        if (listw$style == "U") stop("U style not permitted, use C")
+	W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
+        if (family == "CAR") if (!isTRUE(all.equal(W, t(W))))
+	    warning("Non-symmetric spatial weights in CAR model")
+        assign("W", W, envir=env)
+        Imult <- con$Imult
+        if (is.null(interval)) {
+	    if (listw$style == "B") {
+                Imult <- ceiling((2/3)*max(sapply(listw$weights, sum)))
+                interval <- c(-0.5, +0.25)
+            } else interval <- c(-1, 0.999)
+        }
+# FIXME
+        if (is.null(con$super)) con$super <- FALSE
+        Matrix_J_setup(env, super=con$super)
+        I <- as_dsCMatrix_I(n)
+        assign("I", I, envir=env)
+        Sweights <- as(as(Diagonal(x=weights), "symmetricMatrix"), 
+	    "CsparseMatrix")
+        assign("Sweights", Sweights, envir=env)
+
 
     }  else if (method == "spam") {
         if (!require(spam)) stop("spam not available")
@@ -134,7 +163,23 @@ spautolm <- function(formula, data = list(), listw, weights,
 	    warning("Non-symmetric spatial weights in CAR model")
         assign("W", W, envir=env)
 # Jacobian only from symmetric W_J, W can be asymmetric though
-        spam_setup(env)
+        spam_setup(env, pivot=con$spamPivot)
+        Sweights <- diag.spam(x=weights, n, n)
+        assign("Sweights", Sweights, envir=env)
+        if (is.null(interval)) interval <- c(-1, 0.999)
+    }  else if (method == "spam_update") {
+        if (!require(spam)) stop("spam not available")
+        if (listw$style %in% c("W", "S") && !can.sim)
+        stop("spam method requires symmetric weights")
+        if (listw$style %in% c("B", "C", "U") && 
+ 	    !(is.symmetric.glist(listw$neighbours, listw$weights)))
+	    stop("spam method requires symmetric weights")
+	W <- as.spam.listw(listw)
+        if (family == "CAR") if (!isTRUE(all.equal(W, t(W))))
+	    warning("Non-symmetric spatial weights in CAR model")
+        assign("W", W, envir=env)
+# Jacobian only from symmetric W_J, W can be asymmetric though
+        spam_update_setup(env, in_coef=con$in_coef, pivot=con$spamPivot)
         Sweights <- diag.spam(x=weights, n, n)
         assign("Sweights", Sweights, envir=env)
         if (is.null(interval)) interval <- c(-1, 0.999)
@@ -213,6 +258,8 @@ spautolm <- function(formula, data = list(), listw, weights,
     LLNullLlm <- logLik(lm(Y ~ 1, weights=weights))
     nm <- paste(method, "output", sep="_")
     timings[[nm]] <- proc.time() - .ptime_start
+    rm(env)
+    GC <- gc()
     res <- list(fit=fit, lambda=lambda, LL=LL, LL0=LL0, call=match.call(),
         parameters=(ncol(X)+2), aliased=aliased, method=method,
         zero.policy=zero.policy, weights=weights, interval=interval,

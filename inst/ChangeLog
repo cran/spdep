@@ -1,3 +1,46 @@
+2010-09-03 07:04  rsbivand
+
+	* DESCRIPTION, R/impacts.R: tidy
+
+2010-09-03 06:47  rsbivand
+
+	* R/impacts.R: mom_int export to cl
+
+2010-08-31 07:50  rsbivand
+
+	* R/error.spsarlm.R, R/lag.spsarlm.R, R/sacsarlm.R, R/spautolm.R:
+	  tidy
+
+2010-08-28 14:43  rsbivand
+
+	* ChangeLog, inst/ChangeLog: as.double to storage.mode
+
+2010-08-28 14:42  rsbivand
+
+	* R/dnearneigh.R, R/gabrielneigh.R, R/knearneigh.R, R/relneigh.R,
+	  R/soi.R, R/utils.R: as.double to storage.mode
+
+2010-08-27 19:24  rsbivand
+
+	* ChangeLog, inst/ChangeLog: adding moments trace
+
+2010-08-27 19:23  rsbivand
+
+	* DESCRIPTION, NAMESPACE, R/edit.nb.R, R/impacts.R, R/jacobian.R,
+	  data/elect80.rda, man/do_ldet.Rd, man/edit.nb.Rd, man/elect80.Rd,
+	  man/trW.Rd: adding moments trace
+
+2010-08-17 14:05  rsbivand
+
+	* DESCRIPTION, R/error.spsarlm.R, R/jacobian.R, R/lag.spsarlm.R,
+	  R/spautolm.R, man/do_ldet.Rd, man/errorsarlm.Rd, man/lagsarlm.Rd,
+	  man/spautolm.Rd: folding spam_update and Matrix_J into fit
+	  functions
+
+2010-08-16 16:29  rsbivand
+
+	* ChangeLog, inst/ChangeLog: adding spam_update method
+
 2010-08-16 16:27  rsbivand
 
 	* DESCRIPTION, NAMESPACE, R/jacobian.R, man/do_ldet.Rd: adding
