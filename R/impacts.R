@@ -1,4 +1,4 @@
-# Copyright 2009 by Roger Bivand
+# Copyright 2009-2010 by Roger Bivand
 
 trW <- function(W, m=100, p=50, type="mult") {
 # returns traces
@@ -22,11 +22,60 @@ trW <- function(W, m=100, p=50, type="mult") {
         }
         tr[1] <- 0.0
         tr[2] <- sum(t(W) * W)
+    } else if (type == "moments") {
+        if (!is(W, "symmetricMatrix")) stop("moments require symmetric W")
+        tr <- mom_calc(W, m)
     } else stop("unknown type")
     timings[["make_traces"]] <- proc.time() - .ptime_start
     attr(tr, "timings") <- do.call("rbind", timings)[, c(1, 3)]
     attr(tr, "type") <- type
     tr
+}
+
+mom_calc_int <- function(is, m, W, eta0) {
+    Omega <- rep(0.0, m)
+    for (i in is) {
+        eta <- eta0
+        eta[i] <- 1
+        for (j in seq(2, m, 2)) {
+            zeta <- W %*% eta
+            Omega[j-1] <- Omega[j-1] + crossprod(zeta, eta)[1,1]
+            Omega[j] <- Omega[j] + crossprod(zeta, zeta)[1,1]
+            eta <- zeta
+        }
+    }
+    Omega
+}
+
+mom_calc <- function(W, m) {
+    stopifnot((m %% 2) == 0)
+    n <- dim(W)[1]
+    eta0 <- rep(0, n)
+     
+    CL <- get.ClusterOption()
+    if (!is.null(CL) && length(CL) > 1) {
+        require(snow)
+        lis <- splitIndices(n, length(CL))
+        clusterEvalQ(CL, library(Matrix))
+	clusterExport_l <- function(CL, list) {
+            gets <- function(n, v) {
+                assign(n, v, env = .GlobalEnv)
+                NULL
+            }
+            for (name in list) {
+                clusterCall(CL, gets, name, get(name))
+            }
+	}
+	clusterExport_l(CL, list("m", "W", "eta0", "mom_calc_int"))
+        lOmega <- parLapply(CL, lis, function(is) mom_calc_int(is=is, m=m,
+            W=W, eta0=eta0))
+        clusterEvalQ(CL, rm(list=c("m", "W", "eta0", "mom_calc_int")))
+        clusterEvalQ(CL, detach(package:Matrix))
+        Omega <- apply(do.call("cbind", lOmega), 1, sum)
+    } else {
+        Omega <- mom_calc_int(is=1:n, m=m, W=W, eta0=eta0)
+    }
+    Omega
 }
 
 impacts <- function(obj, ...)
@@ -127,7 +176,10 @@ mixedImpactsExact <- function(SW, P, n, listw) {
     list(direct=direct, indirect=indirect, total=total)
 }
 
-processXSample <- function(x, drop2beta, type, iicept, icept, SW, n, listw) {
+processXSample <- function(x, drop2beta, type, iicept, icept, n, listw,
+    irho) {
+    rho <- x[irho]
+    SW <- invIrW(listw, rho)
     beta <- x[-drop2beta]
     if (type == "lag" || type == "sac") {
         if (iicept) {
@@ -279,14 +331,15 @@ intImpacts <- function(rho, beta, P, n, mu, Sigma, irho, drop2beta, bnames,
                     }
 		}
 
-		clusterExport_l(CL, list("irho", "drop2beta", "SW", "icept",
+		clusterExport_l(CL, list("irho", "drop2beta", "icept",
                     "iicept", "type", "listw"))
 
                 timings[["cluster_setup"]] <- proc.time() - .ptime_start
                 .ptime_start <- proc.time()
                 lsres <- parLapply(CL, l_sp, function(sp) apply(sp, 1, 
                     spdep:::processXSample, drop2beta=drop2beta, type=type,
-                    iicept=iicept, icept=icept, SW=SW, n=n, listw=listw))
+                    iicept=iicept, icept=icept, n=n, listw=listw,
+                    irho=irho))
 		clusterEvalQ(CL, rm(list=c("drop2beta",
                     "SW", "icept", "iicept", "type", "listw")))
                 clusterEvalQ(CL, detach(package:spdep))
@@ -295,7 +348,7 @@ intImpacts <- function(rho, beta, P, n, mu, Sigma, irho, drop2beta, bnames,
             } else {
                 sres <- apply(samples, 1, processXSample,
                     drop2beta=drop2beta, type=type, iicept=iicept,
-                    icept=icept, SW=SW, n=n, listw=listw)
+                    icept=icept, n=n, listw=listw, irho=irho)
             }
             timings[["process_samples"]] <- proc.time() - .ptime_start
             .ptime_start <- proc.time()

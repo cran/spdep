@@ -35,7 +35,7 @@ is called.}
   \item{weights}{an optional vector of weights to be used in the fitting process}
   \item{na.action}{a function (default \code{options("na.action")}), can also be \code{na.omit} or \code{na.exclude} with consequences for residuals and fitted values - in these cases the weights list will be subsetted to remove NAs in the data. Note that only weights lists created without using the glist argument to \code{nb2listw} may be subsetted.}
   \item{family}{character string: either \code{"SAR"} or \code{"CAR"} for simultaneous or conditional autoregressions; \code{"SMA"} for spatial moving average added thanks to Jielai Ma - \code{"SMA"} is only implemented for method=\code{"full"} because it necessarily involves dense matrices}
-  \item{method}{character string: default \code{"full"} for use of full matrices, \code{"Matrix"} or \code{"spam"} for sparse matrices (restricted to spatial weights symmetric or similar to symmetric) using methods in either the Matrix or spam packages. Note that users should change from spam to Matrix. Values of method may also include "LU", which provides an alternative sparse matrix decomposition approach, and the "Chebyshev" and Monte Carlo "MC" approximate log-determinant methods.}
+  \item{method}{character string: default \code{"full"} for use of full matrices, \code{"Matrix_J"} or \code{"spam"} for sparse matrices (restricted to spatial weights symmetric or similar to symmetric) using methods in either the Matrix or spam packages; \dQuote{Matrix} and \dQuote{spam_update} provide updating Cholesky decomposition methods. Note that users should change from spam to Matrix. Values of method may also include "LU", which provides an alternative sparse matrix decomposition approach, and the "Chebyshev" and Monte Carlo "MC" approximate log-determinant methods.}
   \item{verbose}{default NULL, use global option value; if TRUE, reports function values during optimization.}
   \item{interval}{search interval for autoregressive parameter when not using method="eigen"; default is c(-1,0.999), \code{optimize} will reset NA/NaN to a bound and gives a warning when the interval is poorly set; method="Matrix" will attempt to search for an appropriate interval, if find\_interval=TRUE (fails on some platforms)}
   \item{zero.policy}{default NULL, use global option value; Include list of no-neighbour observations in output if TRUE --- otherwise zero.policy is handled within the listw argument}
@@ -66,10 +66,12 @@ variable in making predictions for the fitting data.
 \describe{
   \item{tol.opt:}{the desired accuracy of the optimization - passed to \code{optimize()} (default=\code{.Machine$double.eps^(2/3)})}
   \item{Imult:}{default 2; used for preparing the Cholesky decompositions for updating in the Jacobian function}
-  \item{super:}{default FALSE using a simplicial decomposition for the sparse Cholesky decomposition, if TRUE, use a supernodal decomposition}
+  \item{super:}{if NULL (default), set to FALSE to use a simplicial decomposition for the sparse Cholesky decomposition and method \dQuote{Matrix_J}, set to  \code{as.logical(NA)} for method \dQuote{Matrix}, if TRUE, use a supernodal decomposition}
   \item{cheb_q:}{default 5; highest power of the approximating polynomial for the Chebyshev approximation}
   \item{MC_p:}{default 16; number of random variates}
   \item{MC_m:}{default 30; number of products of random variates matrix and spatial weights matrix}
+  \item{spamPivot:}{default \dQuote{MMD}, alternative \dQuote{RCM}}
+  \item{in_coef}{default 0.1, coefficient value for initial Cholesky decomposition in \dQuote{spam_update}}
 }}
 
 

@@ -3,9 +3,10 @@
 \alias{elect80_lw}
 \alias{k4}
 \alias{dll}
+\alias{e80_queen}
 \docType{data}
 \title{1980 Presidential election results}
-\description{A data set for 1980 Presidential election results covering 3,107 US counties using geographical coordinates. In addition, two spatial neighbour objects, \code{k4} not using Great Circle distances, \code{dll} using Great Circle distances, and a spatial weights object imported from \code{elect.ford} - a 4-nearest neighbour non-GC row-standardised object, but with coercion to symmetry.}
+\description{A data set for 1980 Presidential election results covering 3,107 US counties using geographical coordinates. In addition, three spatial neighbour objects, \code{k4} not using Great Circle distances, \code{dll} using Great Circle distances, and \code{e80_queen} of Queen contiguities for equivalent County polygons taken from file \code{co1980p020.tar.gz} on the USGS National Atlas site, and a spatial weights object imported from \code{elect.ford} - a 4-nearest neighbour non-GC row-standardised object, but with coercion to symmetry.}
 
 \usage{data(elect80)}
 \format{

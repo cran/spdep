@@ -9,7 +9,7 @@ errorsarlm <- function(formula, data = list(), listw, na.action,
         con <- list(tol.opt=.Machine$double.eps^0.5, returnHcov=TRUE,
             pWOrder=250, fdHess=NULL, optimHess=FALSE, LAPACK=FALSE,
            compiled_sse=FALSE, Imult=2, cheb_q=5, MC_p=16, MC_m=30,
-           super=FALSE)
+           super=NULL, spamPivot="MMD", in_coef=0.1)
         nmsC <- names(con)
         con[(namc <- names(control))] <- control
         if (length(noNms <- namc[!namc %in% nmsC])) 
@@ -27,8 +27,9 @@ errorsarlm <- function(formula, data = list(), listw, na.action,
         stopifnot(is.logical(con$fdHess))
         stopifnot(is.logical(con$optimHess))
         stopifnot(is.logical(con$LAPACK))
-        stopifnot(is.logical(con$super))
+#        stopifnot(is.logical(con$super))
         stopifnot(is.logical(con$compiled_sse))
+        stopifnot(is.character(con$spamPivot))
 	can.sim <- FALSE
 	if (listw$style %in% c("W", "S")) 
 		can.sim <- can.be.simmed(listw)
@@ -125,7 +126,25 @@ errorsarlm <- function(formula, data = list(), listw, na.action,
 	                    interval <- c(-0.5, +0.25)
 	                } else interval <- c(-1, 0.999)
                     }
+                    if (is.null(con$super)) con$super <- as.logical(NA)
                     Matrix_setup(env, Imult, con$super)
+                    W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
+        	    I <- as_dsCMatrix_I(n)
+		},
+	        Matrix_J = {
+		    if (listw$style %in% c("W", "S") && !can.sim)
+		        stop("Matrix method requires symmetric weights")
+		    if (listw$style %in% c("B", "C", "U") && 
+			!(is.symmetric.glist(listw$neighbours, listw$weights)))
+		        stop("Matrix method requires symmetric weights")
+		    if (!quiet) cat("sparse matrix Cholesky decomposition\n")
+                    if (is.null(interval)) {
+	                if (listw$style == "B") {
+	                    interval <- c(-0.5, +0.25)
+	                } else interval <- c(-1, 0.999)
+                    }
+                    if (is.null(con$super)) con$super <- FALSE
+                    Matrix_J_setup(env, super=con$super)
                     W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
         	    I <- as_dsCMatrix_I(n)
 		},
@@ -138,6 +157,19 @@ errorsarlm <- function(formula, data = list(), listw, na.action,
 		        stop("spam method requires symmetric weights")
 		    if (!quiet) cat("sparse matrix Cholesky decomposition\n")
                     spam_setup(env)
+                    W <- as.spam.listw(get("listw", envir=env))
+                    if (is.null(interval)) interval <- c(-1,0.999)
+		},
+	        spam_update = {
+                    if (!require(spam)) stop("spam not available")
+		    if (listw$style %in% c("W", "S") && !can.sim)
+		        stop("spam method requires symmetric weights")
+		    if (listw$style %in% c("B", "C", "U") && 
+			!(is.symmetric.glist(listw$neighbours, listw$weights)))
+		        stop("spam method requires symmetric weights")
+		    if (!quiet) cat("sparse matrix Cholesky decomposition\n")
+                    spam_update_setup(env, in_coef=con$in_coef,
+                        pivot=con$spamPivot)
                     W <- as.spam.listw(get("listw", envir=env))
                     if (is.null(interval)) interval <- c(-1,0.999)
 		},
@@ -304,6 +336,8 @@ errorsarlm <- function(formula, data = list(), listw, na.action,
                 optimHess=con$optimHess, insert=!is.null(trs),
                 timings=do.call("rbind", timings)[, c(1, 3)]),
                 class=c("sarlm"))
+        rm(env)
+        GC <- gc()
 	if (zero.policy) {
 		zero.regs <- attr(listw$neighbours, 
 			"region.id")[which(card(listw$neighbours) == 0)]

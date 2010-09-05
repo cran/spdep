@@ -10,14 +10,15 @@ committing. If the result is not assigned to a new object, the editing
 will be lost - as in \code{edit}.
 }
 \usage{
-edit.nb(name, coords, polys=NULL, ...)
+edit.nb(name, coords, polys=NULL, ..., use_region.id=FALSE)
 }
 
 \arguments{
   \item{name}{an object of class \code{nb}}
-  \item{coords}{matrix of region point coordinates}
+  \item{coords}{matrix of region point coordinates; if missing and polys= inherits from \code{SpatialPolygons}, the label points of that object are used}
   \item{polys}{if polygon boundaries supplied, will be used as background; should inherit from \code{SpatialPolygons} or for backward compatibility be of class polylist}
   \item{...}{further arguments passed to or from other methods}
+  \item{use_region.id}{default \code{FALSE}, in \code{identify} use 1-based observation numbers, otherwise use the \code{nb} \code{region.id} attribute values}
 }
 \value{
 The function returns an object of class \code{nb} with the edited list of integer vectors containing neighbour region number ids, with added attributes tallying the added and deleted links.
@@ -33,7 +34,7 @@ class(polys)
 nnb <- edit.nb(col.gal.nb, coords, polys)
 example(columbus)
 class(columbus)
-nnb1 <- edit.nb(col.gal.nb, coordinates(columbus), columbus)
+nnb1 <- edit.nb(col.gal.nb, polys=columbus)
 }}
 
 \keyword{spatial}

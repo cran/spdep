@@ -10,10 +10,11 @@ relativeneigh <- function(coords, nnmult=3) {
     ngaballoc <- np*nnmult
     g1<-g2<-rep(0,ngaballoc)
     nogab <- 0
+    storage.mode(x) <- "double"
     z <- .C("compute_relative", np=as.integer(np), from=as.integer(g1),
              to=as.integer(g2), nedges=as.integer(nogab), 
-             ngaballoc=as.integer(ngaballoc), x=as.double(x[,1]), 
-             y=as.double(x[,2]), PACKAGE="spdep")
+             ngaballoc=as.integer(ngaballoc), x=x[,1], 
+             y=x[,2], PACKAGE="spdep")
     z$from<-z$from[1:z$nedges]
     z$to<-z$to[1:z$nedges]
     attr(z, "call") <- match.call()

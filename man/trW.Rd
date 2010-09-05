@@ -12,13 +12,13 @@ trW(W, m = 100, p = 50, type = "mult")
   \item{W}{A spatial weights matrix in CsparseMatrix form}
   \item{m}{The number of powers}
   \item{p}{The number of samples used in Monte Carlo simulation of the traces if type is MC}
-  \item{type}{Either mult (default) for powering a sparse matrix, or MC for Monte Carlo simulation of the traces}
+  \item{type}{Either \dQuote{mult} (default) for powering a sparse matrix (with moderate or larger N, the matrix becomes dense, and may lead to swapping), or \dQuote{MC} for Monte Carlo simulation of the traces, or \dQuote{moments} to use the looping space saving algorithm proposed by Smirnov and Anselin (2009) - for \dQuote{moments}, \code{W} must be symmetric, for row-standardised weights through a similarity transformation; if a \pkg{snow} cluster is available, it will be used to speed up computation}
 }
 
 \value{
 A numeric vector of \code{m} traces.
 }
-\references{LeSage J and RK Pace (2009) Introduction to Spatial Econometrics. CRC Press, Boca Raton, pp. 96--105.}
+\references{LeSage J and RK Pace (2009) \emph{Introduction to Spatial Econometrics}. CRC Press, Boca Raton, pp. 96--105; Smirnov O and L Anselin (2009) An O(N) parallel method of computing the Log-Jacobian of the variable transformation for models with spatial interaction on a lattice. \emph{Computational Statistics and Data Analysis} 53 (2009) 2983--2984.}
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 
 
@@ -29,11 +29,23 @@ A numeric vector of \code{m} traces.
 example(columbus)
 listw <- nb2listw(col.gal.nb)
 W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
-trMat <- trW(W, type="mult")
+system.time(trMat <- trW(W, type="mult"))
 str(trMat)
-trMC <- trW(W, type="MC")
+set.seed(1)
+system.time(trMC <- trW(W, type="MC"))
 str(trMC)
 plot(trMat, trMC)
+listwS <- similar.listw(listw)
+W <- as(as(as_dgRMatrix_listw(listwS), "CsparseMatrix"), "symmetricMatrix")
+system.time(trmom <- trW(W, m=24, type="moments"))
+str(trmom)
+all.equal(trMat[1:24], trmom, check.attributes=FALSE)
+system.time(trMat <- trW(W, m=24, type="mult"))
+str(trMat)
+all.equal(trMat, trmom, check.attributes=FALSE)
+set.seed(1)
+system.time(trMC <- trW(W, m=24, type="MC"))
+str(trMC)
 }
 \keyword{spatial}
 

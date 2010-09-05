@@ -8,10 +8,11 @@
 \alias{Matrix_setup}
 \alias{Matrix_J_setup}
 \alias{LU_setup}
+\alias{moments_setup}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Spatial regression model Jacobian computations}
 
-\description{These functions are made available in the package namespace for other developers, and are not intended for users. They provide a shared infrastructure for setting up data for Jacobian computation, and then for caclulating the Jacobian, either exactly or approximately, in maximum likelihood fitting of spatial regression models. The techniques used are the exact eigenvalue, Cholesky decompositions (Matrix, spam), and LU ones, with Chebyshev and Monte Carlo approximations.}
+\description{These functions are made available in the package namespace for other developers, and are not intended for users. They provide a shared infrastructure for setting up data for Jacobian computation, and then for caclulating the Jacobian, either exactly or approximately, in maximum likelihood fitting of spatial regression models. The techniques used are the exact eigenvalue, Cholesky decompositions (Matrix, spam), and LU ones, with Chebyshev and Monte Carlo approximations; moments use the methods due to Martin and Smirnov/Anselin.}
 
 \usage{
 do_ldet(coef, env, which=1)
@@ -20,9 +21,10 @@ mcdet_setup(env, p=16, m=30, which=1)
 eigen_setup(env, which=1)
 spam_setup(env, pivot="MMD", which=1)
 spam_update_setup(env, in_coef=0.1, pivot="MMD", which=1)
-Matrix_setup(env, Imult, super, which=1)
-Matrix_J_setup(env, which=1)
+Matrix_setup(env, Imult, super=as.logical(NA), which=1)
+Matrix_J_setup(env, super=FALSE, which=1)
 LU_setup(env, which=1)
+moments_setup(env, trs, m, p, type="MC", correct=TRUE, trunc=FALSE, which=1)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -31,11 +33,15 @@ LU_setup(env, which=1)
   \item{which}{default 1; if 2, use second listw object}
   \item{q}{Chebyshev approximation order; default in calling spdep functions is 5, here it cannot be missing and does not have a default}
   \item{p}{Monte Carlo approximation number of random normal variables; default calling spdep functions is 16, here it cannot be missing and does not have a default}
-  \item{m}{Monte Carlo approximation number of series terms; default in calling spdep functions is 30, here it cannot be missing and does not have a default}
+  \item{m}{Monte Carlo approximation number of series terms; default in calling spdep functions is 30, here it cannot be missing and does not have a default; \code{m} serves the same purpose in the moments method}
   \item{pivot}{default \dQuote{MMD}, may also be \dQuote{RCM} for Cholesky decompisition using spam}
   \item{in_coef}{fill-in initiation coefficient value, default 0.1}
   \item{Imult}{see \code{\link[Matrix]{Cholesky}}; numeric scalar which defaults to zero. The matrix that is decomposed is A+m*I where m is the value of Imult and I is the identity matrix of order ncol(A). Default in calling spdep functions is 2, here it cannot be missing and does not have a default, but is rescaled for binary weights matrices in proportion to the maximim row sum in those calling functions}
-  \item{super}{see \code{\link[Matrix]{Cholesky}}; logical scalar indicating is a supernodal decomposition should be created.  The alternative is a simplicial decomposition. Default in calling spdep functions is FALSE, here it cannot be missing and does not have a default.  Setting it to NA leaves the choice to a CHOLMOD-internal heuristic}
+  \item{super}{see \code{\link[Matrix]{Cholesky}}; logical scalar indicating is a supernodal decomposition should be created.  The alternative is a simplicial decomposition. Default in calling spdep functions is FALSE for \dQuote{Matrix_J} and \code{as.logical(NA)} for \dQuote{Matrix}.  Setting it to NA leaves the choice to a CHOLMOD-internal heuristic}
+  \item{trs}{A numeric vector of \code{m} traces, as from \code{trW}}
+  \item{type}{moments trace type, see \code{\link{trW}}}
+  \item{correct}{default TRUE: use Smirnov correction term, see \code{\link{trW}}}
+  \item{trunc}{default FALSE: truncate Smirnov correction term, see \code{\link{trW}}}
 }
 
 \details{Since environments are containers in the R workspace passed by reference rather than by value, they are useful for passing objects to functions called in numerical optimisation, here for the maximum likelihood estimation of spatial regression models. This technique can save a little time on each function call, balanced against the need to access the objects in the environment inside the function. The environment should contain a \code{family} string object either \dQuote{SAR}, \dQuote{CAR} or \dQuote{SMA} (used in \code{do_ldet} to choose spatial moving average in \code{spautolm}, and these specific objects before calling the set-up functions:
@@ -75,6 +81,7 @@ LU_setup(env, which=1)
   \describe{
     \item{csrw}{sparse spatial weights matrix}
     \item{I}{sparse identity matrix}
+    \item{super}{the value of the \code{super} argument}
     \item{method}{string: \dQuote{Matrix_J}}
   }
 }
@@ -135,9 +142,21 @@ LU_setup(env, which=1)
     \item{method}{string: \dQuote{Chebyshev}}
   }
 }
+  \item{moments}{moments approximation:
+  \describe{
+    \item{listw}{A listw spatial weights object}
+    \item{can.sim}{logical scalar: can the spatial weights be made symmetric by similarity}
+  } and assigns to the environment:
+  \describe{
+    \item{trs}{vector of Chebyshev approximation terms}
+    \item{correct}{logical scalar: use Smirnov correction term}
+    \item{trunc}{logical scalar: truncate Smirnov correction term}
+    \item{method}{string: \dQuote{moments}}
+  }
+}
 }
 
-Some set-up functions may also assign \code{similar} to the environment of the weights were made symmetric by similarity.
+Some set-up functions may also assign \code{similar} to the environment if the weights were made symmetric by similarity.
 }
 
 \value{\code{do_ldet} returns the value of the Jacobian for the calculation method recorded in the environment argument; the remaining functions modify the environment in place as a side effect and return nothing.}
