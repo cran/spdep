@@ -9,6 +9,7 @@
 \alias{LR1.gmsar}
 \alias{logLik.gmsar}
 \alias{print.summary.gmsar}
+\alias{GMargminImage}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Spatial simultaneous autoregressive error model estimation by GMM}
 \description{
@@ -20,6 +21,7 @@ GMerrorsar(formula, data = list(), listw, na.action = na.fail,
  control = list(), pars, verbose=NULL, sparse_method="Matrix",
  returnHcov=FALSE, pWOrder=250, tol.Hcov=1.0e-10)
 \method{summary}{gmsar}(object, correlation = FALSE, Hausman=FALSE, ...)
+GMargminImage(obj, lambdaseq, s2seq)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -41,10 +43,12 @@ neighbours, if FALSE (default) assign NA - causing \code{GMerrorsar()} to termin
   \item{returnHcov}{default FALSE, return the Vo matrix for a spatial Hausman test}
   \item{tol.Hcov}{the tolerance for computing the Vo matrix (default=1.0e-10)}
   \item{pWOrder}{default 250, if returnHcov=TRUE, pass this order to \code{powerWeights} as the power series maximum limit}
-  \item{object}{\code{gmsar} object from \code{GMerrorsar}}
+  \item{object, obj}{\code{gmsar} object from \code{GMerrorsar}}
   \item{correlation}{logical; (default=FALSE), TRUE not available}
   \item{Hausman}{if TRUE, the results of the Hausman test for error models are reported}
   \item{\dots}{\code{summary} arguments passed through}
+  \item{lambdaseq}{if given, an increasing sequence of lambda values for gridding}
+  \item{s2seq}{if given, an increasing sequence of sigma squared values for gridding}
 }
 \details{
   When the control list is set with care, the function will converge to values close to the ML estimator without requiring computation of the Jacobian, the most resource-intensive part of ML estimation. For moderately sized data sets with hundreds of observations, but not many thousands, the Jacobian is computed once to give the likelihood of the fitted model, allowing a test against the model with no spatial dependence.
@@ -55,6 +59,7 @@ noise (residuals). Since the values of the response variable are known,
 their spatial lags are used to calculate signal components (Cressie 1993, p. 564). This differs from other software, including GeoDa, which does not use knowledge of the response 
 variable in making predictions for the fitting data.
 
+The \code{GMargminImage} may be used to visualize the shape of the surface of the argmin function used to find lambda.
 }
 \value{
   A list object of class \code{gmsar}
@@ -92,6 +97,11 @@ summary(COL.errW.eig, Hausman=TRUE)
 COL.errW.GM <- GMerrorsar(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb, style="W"), returnHcov=TRUE)
 summary(COL.errW.GM, Hausman=TRUE)
+aa <- GMargminImage(COL.errW.GM)
+levs <- quantile(aa$z, seq(0, 1, 1/12))
+image(aa, breaks=levs, xlab="lambda", ylab="s2")
+points(COL.errW.GM$lambda, COL.errW.GM$s2, pch=3, lwd=2)
+contour(aa, levels=signif(levs, 4), add=TRUE)
 COL.errW.GM1 <- GMerrorsar(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb, style="W"))
 summary(COL.errW.GM1)

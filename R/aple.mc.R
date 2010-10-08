@@ -1,10 +1,11 @@
-aple.mc <- function(x, listw, nsim, override_similarity_check=FALSE) {
+aple.mc <- function(x, listw, nsim, override_similarity_check=FALSE,
+    useTrace=TRUE) {
     aple.boot <- function(var, i, ...) {
         var <- var[i]
         return(inAple(x=var, ...))
     }
     pre <- preAple(x=x, listw=listw,
-        override_similarity_check=override_similarity_check)
+        override_similarity_check=override_similarity_check, useTrace=useTrace)
     cl <- get("cl", env = .spdepOptions)
     if (!is.null(cl) && length(cl) > 1) {
         nnsim <- boot_wrapper_in(cl, nsim)

@@ -23,8 +23,8 @@ stsls <- function(formula, data = list(), listw, zero.policy=NULL,
     	if (any(is.na(y))) stop("NAs in dependent variable")
     	X <- model.matrix(mt, mf)
     	if (any(is.na(X))) stop("NAs in independent variable")
-
-	Wy <- lag.listw(listw, y)
+# modified to pass zero.policy Juan Tomas Sayago 100913
+	Wy <- lag.listw(listw, y, zero.policy=zero.policy)
 	dim(Wy) <- c(nrow(X),1)
 	colnames(Wy) <- c("Rho")
 

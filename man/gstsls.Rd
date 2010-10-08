@@ -61,10 +61,15 @@ neighbours, if FALSE (default) assign NA - causing \code{GMerrorsar()} to termin
 \references{Kelejian, H. H., and Prucha, I. R., 1999. A Generalized Moments Estimator for the Autoregressive Parameter in a Spatial Model. International Economic Review, 40, pp. 509--533; Cressie, N. A. C. 1993 \emph{Statistics for spatial data}, Wiley, New York.}
 \author{Gianfranco Piras and Roger Bivand}
 
-\seealso{\code{\link[stats]{optim}}, \code{\link[stats]{nlminb}}, \code{\link{GMerrorsar}}}
+\seealso{\code{\link[stats]{optim}}, \code{\link[stats]{nlminb}}, \code{\link{GMerrorsar}}, \code{\link{GMargminImage}}}
 \examples{
 data(oldcol)
-COL.errW.eig.GM <- gstsls(CRIME ~ INC + HOVAL, data=COL.OLD, nb2listw(COL.nb, style="W"))
-summary(COL.errW.eig.GM)
+COL.errW.GM <- gstsls(CRIME ~ INC + HOVAL, data=COL.OLD, nb2listw(COL.nb, style="W"))
+summary(COL.errW.GM)
+aa <- GMargminImage(COL.errW.GM)
+levs <- quantile(aa$z, seq(0, 1, 1/12))
+image(aa, breaks=levs, xlab="lambda", ylab="s2")
+points(COL.errW.GM$lambda, COL.errW.GM$s2, pch=3, lwd=2)
+contour(aa, levels=signif(levs, 4), add=TRUE)
 }
 \keyword{spatial}

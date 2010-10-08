@@ -6,7 +6,7 @@ sacsarlm <- function(formula, data = list(), listw, listw2=NULL, na.action,
         con <- list(fdHess=NULL, optimHess=FALSE, LAPACK=FALSE,
            Imult=2, cheb_q=5, MC_p=16, MC_m=30,
            super=FALSE, opt_method="nlminb", opt_control=list(),
-           pars=c(0.0, 0.0), lower=c(-1.0, -1.0)+.Machine$double.eps^0.5,
+           pars=NULL, npars=4L, lower=c(-1.0, -1.0)+.Machine$double.eps^0.5,
            upper=c(1.0, 1.0)-.Machine$double.eps^0.5)
         nmsC <- names(con)
         con[(namc <- names(control))] <- control
@@ -25,10 +25,14 @@ sacsarlm <- function(formula, data = list(), listw, listw2=NULL, na.action,
         else if (!inherits(listw2, "listw")) stop("No 2nd neighbourhood list")
         if (is.null(con$fdHess)) con$fdHess <- method != "eigen"
         stopifnot(is.numeric(con$lower))
-        stopifnot(is.numeric(con$pars))
+        stopifnot(length(con$lower) == 2)
+        if (!is.null(con$pars)) {
+            stopifnot(is.numeric(con$pars))
+            stopifnot(length(con$pars)==length(con$lower))
+        }
+        stopifnot(is.integer(con$npars))
         stopifnot(is.numeric(con$upper))
-        stopifnot(length(con$pars)==length(con$lower))
-        stopifnot(length(con$pars)==length(con$upper))
+        stopifnot(length(con$upper)==length(con$lower))
         stopifnot(is.logical(con$fdHess))
         stopifnot(is.logical(con$optimHess))
         stopifnot(is.logical(con$LAPACK))
@@ -233,16 +237,59 @@ sacsarlm <- function(formula, data = list(), listw, listw2=NULL, na.action,
             .ptime_start <- proc.time()
         }
 
-        if (con$opt_method == "nlminb") {
-            optres <- nlminb(pars, sacsar.f, env=env,
-               control=con$opt_control, lower=lower, upper=upper)
-	       LL <- -optres$objective
+        if (is.null(pars)) {
+          if (con$npars == 4L) {
+             xseq <- c(lower[1], 0, upper[1], upper[1])*0.8
+             yseq <- c(upper[2], 0, upper[2], lower[2])*0.8
+             mpars <- cbind(xseq, yseq)
+          } else {
+             xseq <- seq(lower[1], upper[1], (upper[1]-lower[1])/2)*0.8
+             yseq <- seq(lower[2], upper[2], (upper[2]-lower[2])/2)*0.8
+             mpars <- as.matrix(expand.grid(xseq, yseq))
+          }
         } else {
-	    optres <- optim(pars, sacsar.f, env=env,
-                method="L-BFGS-B", control=con$opt_control,
-                lower=lower, upper=upper)
-	        LL <- -optres$value
+            mxs <- NULL
         }
+        if (con$opt_method == "nlminb") {
+            if (is.null(pars)) {
+                mxs <- apply(mpars, 1, function(pp) -nlminb(pp, sacsar.f, 
+                    env=env, control=con$opt_control, lower=lower, 
+                    upper=upper)$objective)
+                pars <- mpars[which.max(mxs),]
+                optres <- nlminb(pars, sacsar.f, env=env,
+                    control=con$opt_control, lower=lower, upper=upper)
+            } else {
+                optres <- nlminb(pars, sacsar.f, env=env,
+                    control=con$opt_control, lower=lower, upper=upper)
+            }
+        } else if (con$opt_method == "L-BFGS-B"){
+            if (is.null(pars)) {
+                mxs <- apply(mpars, 1, function(pp) -optim(pars, sacsar.f, 
+                    env=env, method="L-BFGS-B", control=con$opt_control, 
+                    lower=lower, upper=upper)$objective)
+                pars <- mpars[which.max(mxs),]
+	        optres <- optim(pars, sacsar.f, env=env,
+                    method="L-BFGS-B", control=con$opt_control,
+                    lower=lower, upper=upper)
+            } else {
+	        optres <- optim(pars, sacsar.f, env=env,
+                    method="L-BFGS-B", control=con$opt_control,
+                    lower=lower, upper=upper)
+            }
+        } else {
+            if (is.null(pars)) {
+                mxs <- apply(mpars, 1, function(pp) -optim(pars, sacsar.f, 
+                    env=env, method=con$opt_method, 
+                    control=con$opt_control)$objective)
+                pars <- mpars[which.max(mxs),]
+	        optres <- optim(pars, sacsar.f, env=env,
+                    method=con$opt_method, control=con$opt_control)
+            } else {
+	        optres <- optim(pars, sacsar.f, env=env,
+                    method=con$opt_method, control=con$opt_control)
+            }
+        }
+	LL <- -optres$objective
         if (optres$convergence != 0)
             warning(paste("convergence failure:", optres$message))
 	rho <- optres$par[1]
@@ -332,17 +379,17 @@ sacsarlm <- function(formula, data = list(), listw, listw2=NULL, na.action,
 	names(r) <- names(y)
 	names(fit) <- names(y)
 	ret <- structure(list(type="sac", rho=rho, lambda=lambda,
-		coefficients=coef.sac, rest.se=rest.se, ase=ase,
-		LL=LL, s2=s2, SSE=SSE, parameters=(p+3), lm.model=lm.model, 
-		method=method, call=call, residuals=r, lm.target=lm.target,
-		opt=optres, fitted.values=fit, formula=formula,
-		similar=get("similar", envir=env), rho.se=rho.se,
-		lambda.se=lambda.se, zero.policy=zero.policy, 
-		aliased=aliased, LLNullLlm=LL_null_lm,
-                fdHess=fdHess, resvar=asyvar1, listw_style=listw$style,
-                optimHess=con$optimHess, insert=FALSE,
-                timings=do.call("rbind", timings)[, c(1, 3)]),
-                class=c("sarlm"))
+	    coefficients=coef.sac, rest.se=rest.se, ase=ase,
+	    LL=LL, s2=s2, SSE=SSE, parameters=(p+3), lm.model=lm.model, 
+	    method=method, call=call, residuals=r, lm.target=lm.target,
+	    opt=optres, pars=pars, mxs=mxs, fitted.values=fit, formula=formula,
+	    similar=get("similar", envir=env), rho.se=rho.se,
+	    lambda.se=lambda.se, zero.policy=zero.policy, 
+	    aliased=aliased, LLNullLlm=LL_null_lm,
+            fdHess=fdHess, resvar=asyvar1, listw_style=listw$style,
+            optimHess=con$optimHess, insert=FALSE,
+            timings=do.call("rbind", timings)[, c(1, 3)]),
+            class=c("sarlm"))
         rm(env)
         GC <- gc()
         if (is.null(llprof)) ret$llprof <- llprof

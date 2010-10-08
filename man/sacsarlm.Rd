@@ -35,6 +35,8 @@ neighbours, if FALSE (default) assign NA - causing \code{sacsarlm()} to terminat
   \item{control}{list of extra control arguments - see section below}
 }
 
+\details{Because numerical optimisation is used to find the values of lambda and rho, care needs to be shown. It has been found that the surface of the 2D likelihood function often forms a \dQuote{banana trench} from (low rho, high lambda) through (high rho, high lambda) to (high rho, low lambda) values. In addition, sometimes the banana has optima towards both ends, one local, the other global, and conseqently the choice of the starting point for the final optimization becomes crucial. The default approach is not to use just (0, 0) as a starting point, nor the (rho, lambda) values from \code{gstsls}, which lie in a central part of the \dQuote{trench}, but either four values at (low rho, high lambda), (0, 0), (high rho, high lambda), and (high rho, low lambda), and to use the best of these start points for the final optimization. Optionally, nine points can be used spanning the whole (lower, upper) space.}
+
 \section{Control arguments}{
 \describe{
   \item{fdHess:}{default NULL, then set to (method != "eigen") internally; use \code{fdHess} to compute an approximate Hessian using finite differences when using sparse matrix methods; used to make a coefficient covariance matrix when the number of observations is large; may be turned off to save resources if need be}
@@ -47,7 +49,8 @@ neighbours, if FALSE (default) assign NA - causing \code{sacsarlm()} to terminat
   \item{MC_m:}{default 30; number of products of random variates matrix and spatial weights matrix}
   \item{opt_method:}{default \dQuote{nlminb}, may be set to \dQuote{L-BFGS-B} to use box-constrained optimisation in \code{optim}}
   \item{opt_control:}{default \code{list()}, a control list to pass to \code{nlminb} or \code{optim}}
-  \item{pars:}{default \code{c(0.0, 0.0)}, starting values of \eqn{\rho}{rho} and \eqn{\lambda}{lambda}}
+  \item{pars:}{default \code{NULL}, for which five trial starting values spanning the lower/upper range are tried and the best selected, starting values of \eqn{\rho}{rho} and \eqn{\lambda}{lambda}}
+  \item{npars}{default integer \code{4L}, four trial points; if not default value, nine trial points}
   \item{lower:}{default \code{c(-1.0, -1.0)}, lower bounds on \eqn{\rho}{rho} and \eqn{\lambda}{lambda}}
   \item{upper:}{default \code{c(1.0, 1.0)}, upper bounds on \eqn{\rho}{rho} and \eqn{\lambda}{lambda}}
 }}
@@ -71,6 +74,8 @@ neighbours, if FALSE (default) assign NA - causing \code{sacsarlm()} to terminat
   \item{residuals}{GLS residuals}
   \item{lm.target}{the \code{lm} object returned for the GLS fit}
   \item{opt}{object returned from numerical optimisation}
+  \item{pars}{starting parameter values for final optimization, either given or found by trial point evaluation}
+  \item{mxs}{if default input pars, optimal objective function values at trial points}
   \item{fitted.values}{Difference between residuals and response variable}
   \item{se.fit}{Not used yet}
   \item{formula}{model formula}

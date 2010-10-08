@@ -1,3 +1,57 @@
+2010-10-08 12:18  rsbivand
+
+	* DESCRIPTION, NAMESPACE, R/kpgm_new.R, man/GMerrorsar.Rd,
+	  man/gstsls.Rd, man/similar.listw.Rd: GM argmin image
+
+2010-10-07 19:55  rsbivand
+
+	* man/sacsarlm.Rd: sacsarlm optimizers
+
+2010-10-07 19:01  rsbivand
+
+	* R/sacsarlm.R, man/sacsarlm.Rd: sacsarlm optimizers
+
+2010-10-06 18:51  rsbivand
+
+	* R/impacts.R, R/sacsarlm.R: sacsarlm optimizers
+
+2010-10-04 19:55  rsbivand
+
+	* R/aple.R, R/aple.mc.R, R/apleplot.R, man/aple.Rd, man/aple.mc.Rd,
+	  man/aple.plot.Rd: aple trace option
+
+2010-09-29 08:17  rsbivand
+
+	* DESCRIPTION: impacts single x fixes
+
+2010-09-29 08:09  rsbivand
+
+	* R/impacts.R: impacts single x fixes
+
+2010-09-29 07:53  rsbivand
+
+	* R/impacts.R: impacts single x fixes
+
+2010-09-28 14:22  rsbivand
+
+	* DESCRIPTION, R/impacts.R: impacts with one variable
+
+2010-09-13 16:22  rsbivand
+
+	* R/s2sls.R: zero.policy in stsls
+
+2010-09-06 07:54  rsbivand
+
+	* R/nblag.R: nblag_cumul tidy
+
+2010-09-05 19:13  rsbivand
+
+	* DESCRIPTION, R/nblag.R: modified nblag_cumul
+
+2010-09-03 07:07  rsbivand
+
+	* ChangeLog, inst/ChangeLog: tidy
+
 2010-09-03 07:04  rsbivand
 
 	* DESCRIPTION, R/impacts.R: tidy

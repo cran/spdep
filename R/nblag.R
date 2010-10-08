@@ -43,7 +43,7 @@ nblag <- function(neighbours, maxlag)
 	lags
 }
 
-# Copyright 2006-2007 (c) Giovanni Millo and Roger Bivand
+# Copyright 2006-2010 (c) Giovanni Millo and Roger Bivand
 
 nblag_cumul <- function (nblags) {
     if (any(sapply(nblags, function(x) class(x) != "nb")))
@@ -53,10 +53,16 @@ nblag_cumul <- function (nblags) {
 
     n <- length(nblags[[1]])
     lags <- vector(mode="list", length=n)
-    for (i in 1:n) {
+    ncard <- card(nblags[[1]])
+    neigh <- which(ncard > 0)
+    nneigh <- which(ncard == 0)
+    for (i in nneigh) lags[[i]] <- as.integer(0)
+    for (i in neigh) {
         res <- nblags[[1]][[i]]
 	for (j in 2:maxlag) res <- c(res, nblags[[j]][[i]])
-        lags[[i]] <- res[order(res)]
+        res <- as.integer(res[order(unique(res))])
+        if (any(res == 0)) res <- res[-which(res == 0)]
+        lags[[i]] <- res
     }
     attr(lags, "region.id") <- attr(nblags[[1]], "region.id")
     attr(lags, "call") <- match.call()

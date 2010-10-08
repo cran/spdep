@@ -548,5 +548,19 @@ gstsls<-function (formula, data = list(), listw, listw2=NULL, na.action = na.fai
     ret
 }
 
-
+GMargminImage <- function(obj, lambdaseq, s2seq) {
+    if (missing(lambdaseq)) {
+        lamin <- obj$lambda-0.5
+        lamin <- ifelse(lamin < -1, -1, lamin)
+        lamax <- obj$lambda+0.5
+        lamax <- ifelse(lamax >= 1, (1-.Machine$double.eps), lamax)
+        lambdaseq <- seq(lamin, lamax, length.out=40)
+    }
+    if (missing(s2seq)) 
+        s2seq <- seq(0.5*obj$s2, 1.5*obj$s2, length.out=40)
+    xy <- as.matrix(expand.grid(lambdaseq, s2seq))
+    vres <- apply(xy, 1, function(x) .kpgm(rhopar=x, v=obj$vv))
+    res <- matrix(vres, ncol=length(lambdaseq))
+    list(x=lambdaseq, y=s2seq, z=res)
+}
 
