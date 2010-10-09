@@ -6,13 +6,14 @@
   The Approximate profile-likelihood estimator (APLE) of the simultaneous autoregressive model's spatial dependence parameter was introduced in Li et al. (2007). It employs a correction term using the eigenvalues of the spatial weights matrix, and consequently should not be used for large numbers of observations. It also requires that the variable has a mean of zero, and it is assumed that it has been detrended. The spatial weights object is assumed to be row-standardised, that is using default \code{style="W"} in \code{nb2listw}.
 }
 \usage{
-aple(x, listw, override_similarity_check=FALSE)
+aple(x, listw, override_similarity_check=FALSE, useTrace=TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{a zero-mean detrended continuous variable}
   \item{listw}{a \code{listw} object from for example \code{nb2listw}}
   \item{override\_similarity\_check}{default FALSE, if TRUE - typically for row-standardised weights with asymmetric underlying general weights - similarity is not checked}
+  \item{useTrace}{default TRUE, use trace of sparse matrix \code{W \%*\% W} (Li et al. (2010)), if FALSE, use crossproduct of eigenvalues of \code{W} as in Li et al. (2007)}
 }
 \details{
  This implementation has been checked with Hongfei Li's own implementation using her data; her help was very valuable.
@@ -20,7 +21,7 @@ aple(x, listw, override_similarity_check=FALSE)
 \value{
   A scalar APLE value.
 }
-\references{Li, H, Calder, C. A. and Cressie N. A. C. (2007) Beyond Moran's I: testing for spatial dependence based on the spatial autoregressive model. Geographical Analysis 39, 357-375.}
+\references{Li, H, Calder, C. A. and Cressie N. A. C. (2007) Beyond Moran's I: testing for spatial dependence based on the spatial autoregressive model. Geographical Analysis 39, 357-375; Li, H, Calder, C. A. and Cressie N. A. C. (2010) One-step estimation of spatial dependence parameters: Properties and extensions of the APLE statistic, Technical Report No. 846, Department of Statistics, The Ohio State University, Columbus, OH.}
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 
 \seealso{\code{\link{nb2listw}}, \code{\link{aple.mc}}, \code{\link{aple.plot}}

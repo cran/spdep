@@ -6,7 +6,7 @@
   A permutation bootstrap test for the approximate profile-likelihood estimator (APLE).
 }
 \usage{
-aple.mc(x, listw, nsim, override_similarity_check=FALSE)
+aple.mc(x, listw, nsim, override_similarity_check=FALSE, useTrace=TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -14,12 +14,13 @@ aple.mc(x, listw, nsim, override_similarity_check=FALSE)
   \item{listw}{a \code{listw} object from for example \code{nb2listw}}
   \item{nsim}{number of simulations}
   \item{override\_similarity\_check}{default FALSE, if TRUE - typically for row-standardised weights with asymmetric underlying general weights - similarity is not checked}
+  \item{useTrace}{default TRUE, use trace of sparse matrix \code{W \%*\% W} (Li et al. (2010)), if FALSE, use crossproduct of eigenvalues of \code{W} as in Li et al. (2007)}
 }
 
 \value{
   A \code{boot} object as returned by the \code{boot} function.
 }
-\references{Li, H, Calder, C. A. and Cressie N. A. C. (2007) Beyond Moran's I: testing for spatial dependence based on the spatial autoregressive model. Geographical Analysis 39, 357-375.}
+\references{Li, H, Calder, C. A. and Cressie N. A. C. (2007) Beyond Moran's I: testing for spatial dependence based on the spatial autoregressive model. Geographical Analysis 39, 357-375; Li, H, Calder, C. A. and Cressie N. A. C. (2010) One-step estimation of spatial dependence parameters: Properties and extensions of the APLE statistic, Technical Report No. 846, Department of Statistics, The Ohio State University, Columbus, OH.}
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 
 \seealso{\code{\link{aple}}, \code{\link[boot]{boot}}}

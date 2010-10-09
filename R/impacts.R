@@ -123,7 +123,11 @@ lagImpacts <- function(T, g, P) {
 lagDistrImpacts <- function(T, g, P, q=10) {
     PT <- P %*% T
     direct <- apply(PT, 1, function(x) x * g)[1:q, ]
-    total <- t(sapply(g, function(x) apply(P, 1, sum)*x))[1:q, ]
+    if (nrow(P) == 1) {
+        total <- sapply(g, function(x) apply(P, 1, sum)*x)[1:q]
+    } else {
+        total <- t(sapply(g, function(x) apply(P, 1, sum)*x))[1:q, ]
+    }
     indirect <- total - direct
     list(direct=direct, indirect=indirect, total=total)
 }
@@ -272,9 +276,19 @@ intImpacts <- function(rho, beta, P, n, mu, Sigma, irho, drop2beta, bnames,
             }
             timings[["process_samples"]] <- proc.time() - .ptime_start
             .ptime_start <- proc.time()
-            direct <- as.mcmc(t(sapply(sres, function(x) x$direct)))
-            indirect <- as.mcmc(t(sapply(sres, function(x) x$indirect)))
-            total <- as.mcmc(t(sapply(sres, function(x) x$total)))
+# 100928 Eelke Folmer
+            if (length(bnames) == 1) {
+                direct <- as.mcmc(t(matrix(sapply(sres, function(x) x$direct),
+                    nrow=1)))
+                indirect <- as.mcmc(t(matrix(sapply(sres,
+                    function(x) x$indirect), nrow=1)))
+                total <- as.mcmc(t(matrix(sapply(sres, function(x) x$total),
+                    nrow=1)))
+            } else {
+                direct <- as.mcmc(t(sapply(sres, function(x) x$direct)))
+                indirect <- as.mcmc(t(sapply(sres, function(x) x$indirect)))
+                total <- as.mcmc(t(sapply(sres, function(x) x$total)))
+            }
             colnames(direct) <- bnames
             colnames(indirect) <- bnames
             colnames(total) <- bnames
@@ -288,6 +302,11 @@ intImpacts <- function(rho, beta, P, n, mu, Sigma, irho, drop2beta, bnames,
                     attr(x, "Qres")$total)))
                 Qnames <- c(sapply(bnames, function(x) 
                     paste(x, 1:Q, sep="__Q")))
+                if (length(Qnames) == 1) {
+                    Qdirect <- t(Qdirect)
+                    Qindirect <- t(Qindirect)
+                    Qtotal <- t(Qtotal)
+                }
                 colnames(Qdirect) <- Qnames
                 colnames(Qindirect) <- Qnames
                 colnames(Qtotal) <- Qnames
@@ -352,9 +371,18 @@ intImpacts <- function(rho, beta, P, n, mu, Sigma, irho, drop2beta, bnames,
             }
             timings[["process_samples"]] <- proc.time() - .ptime_start
             .ptime_start <- proc.time()
-            direct <- as.mcmc(t(sapply(sres, function(x) x$direct)))
-            indirect <- as.mcmc(t(sapply(sres, function(x) x$indirect)))
-            total <- as.mcmc(t(sapply(sres, function(x) x$total)))
+            if (length(bnames) == 1) {
+                direct <- as.mcmc(t(matrix(sapply(sres, function(x) x$direct),
+                    nrow=1)))
+                indirect <- as.mcmc(t(matrix(sapply(sres,
+                    function(x) x$indirect), nrow=1)))
+                total <- as.mcmc(t(matrix(sapply(sres, function(x) x$total),
+                    nrow=1)))
+            } else {
+                direct <- as.mcmc(t(sapply(sres, function(x) x$direct)))
+                indirect <- as.mcmc(t(sapply(sres, function(x) x$indirect)))
+                total <- as.mcmc(t(sapply(sres, function(x) x$total)))
+            }
             colnames(direct) <- bnames
             colnames(indirect) <- bnames
             colnames(total) <- bnames
@@ -492,9 +520,18 @@ lagImpactMat <- function(x, reportQ=NULL) {
         }
         if (is.null(Qobj)) warning("No impact components to report")
         else {
+# 100928 Eelke Folmer
+            if (length(attr(x, "bnames")) == 1) {
+                Qobj$direct <- matrix(Qobj$direct, ncol=1)
+                Qobj$indirect <- matrix(Qobj$indirect, ncol=1)
+                Qobj$total <- matrix(Qobj$total, ncol=1)
+            }
             colnames(Qobj$direct) <- attr(x, "bnames")
             colnames(Qobj$indirect) <- attr(x, "bnames")
             colnames(Qobj$total) <- attr(x, "bnames")
+            rownames(Qobj$direct) <- paste("Q", 1:nrow(Qobj$direct), sep="")
+            rownames(Qobj$indirect) <- paste("Q", 1:nrow(Qobj$indirect), sep="")
+            rownames(Qobj$total) <- paste("Q", 1:nrow(Qobj$total), sep="")
             attr(mat, "Qobj") <- Qobj
         }
     }
@@ -520,14 +557,15 @@ print.lagImpact <- function(x, ..., reportQ=NULL) {
 
 summary.lagImpact <- function(object, ..., zstats=FALSE, short=FALSE, reportQ=NULL) {
     if (is.null(object$sres)) stop("summary method unavailable")
-    direct_sum <- summary(object$sres$direct)
-    indirect_sum <- summary(object$sres$indirect)
-    total_sum <- summary(object$sres$total)
+# pass coda arguments 101006
+    direct_sum <- summary(object$sres$direct, ...)
+    indirect_sum <- summary(object$sres$indirect, ...)
+    total_sum <- summary(object$sres$total, ...)
     Qmcmc <- NULL
     if (!is.null(attr(object$sres, "Qmcmc")) && !is.null(reportQ) && reportQ) {
-        Qdirect_sum <- summary(attr(object$sres, "Qmcmc")$direct)
-        Qindirect_sum <- summary(attr(object$sres, "Qmcmc")$indirect)
-        Qtotal_sum <- summary(attr(object$sres, "Qmcmc")$total)
+        Qdirect_sum <- summary(attr(object$sres, "Qmcmc")$direct, ...)
+        Qindirect_sum <- summary(attr(object$sres, "Qmcmc")$indirect, ...)
+        Qtotal_sum <- summary(attr(object$sres, "Qmcmc")$total, ...)
         Qmcmc <- list(Qdirect_sum=Qdirect_sum, Qindirect_sum=Qindirect_sum,
            Qtotal_sum=Qtotal_sum)
     }
@@ -535,8 +573,15 @@ summary.lagImpact <- function(object, ..., zstats=FALSE, short=FALSE, reportQ=NU
         total_sum=total_sum)
     res <- c(object, lres, Qmcmc)
     if (zstats) {
-        zmat <- sapply(lres, function(x) x$statistics[,1]/x$statistics[,2])
-        colnames(zmat) <- c("Direct", "Indirect", "Total")
+# 100928 Eelke Folmer
+        if (length(attr(object, "bnames")) == 1) {
+            zmat <- sapply(lres, function(x) x$statistics[1]/x$statistics[2])
+            zmat <- matrix(zmat, ncol=3)
+            colnames(zmat) <- c("Direct", "Indirect", "Total")
+        } else {
+            zmat <- sapply(lres, function(x) x$statistics[,1]/x$statistics[,2])
+            colnames(zmat) <- c("Direct", "Indirect", "Total")
+        }
         pzmat <- 2*(1-pnorm(abs(zmat)))
         res <- c(res, list(zmat=zmat, pzmat=pzmat))
         if (!is.null(Qmcmc) && !is.null(reportQ) && reportQ) {
@@ -544,10 +589,15 @@ summary.lagImpact <- function(object, ..., zstats=FALSE, short=FALSE, reportQ=NU
                 Qm <- matrix(x$statistics[,1]/x$statistics[,2],
                     ncol=length(attr(object, "bnames")))
                 colnames(Qm) <- attr(object, "bnames")
+                rownames(Qm) <- paste("Q", 1:nrow(Qm), sep="")
                 Qm
             })
             names(Qzmats) <- c("Direct", "Indirect", "Total")
-            Qpzmats <- lapply(Qzmats, function(x) 2*(1-pnorm(abs(x))))
+            Qpzmats <- lapply(Qzmats, function(x) {
+                xo <- 2*(1-pnorm(abs(x)))
+                rownames(xo) <- paste("Q", 1:nrow(xo), sep="")
+                xo
+            })
             res <- c(res, list(Qzmats=Qzmats, Qpzmats=Qpzmats))
         }
     }
@@ -626,6 +676,11 @@ print.summary.lagImpact <- function(x, ...) {
         print(mat)
         cat("\nSimulated p-values:\n")
         xx <- apply(x$pzmat, 2, format.pval)
+# 100928 Eelke Folmer
+        if (length(attr(x, "bnames")) == 1) {
+            xx <- matrix(xx, ncol=3)
+            colnames(xx) <- c("Direct", "Indirect", "Total")
+        }
         rownames(xx) <- attr(x, "bnames")
         print(xx, quote=FALSE)
         if (!is.null(x$Qzmats)) {
@@ -633,7 +688,11 @@ print.summary.lagImpact <- function(x, ...) {
             cat("Simulated impact components z-values:\n")
             print(x$Qzmats)
             cat("\nSimulated impact components p-values:\n")
-            xx <- lapply(x$Qpzmats, function(y) apply(y, 2, format.pval))
+            xx <- lapply(x$Qpzmats, function(y) {
+                xo <- apply(y, 2, format.pval)
+                rownames(xo) <- paste("Q", 1:nrow(xo), sep="")
+                xo
+            })
             print(xx, quote=FALSE)
         }
     }
