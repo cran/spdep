@@ -100,8 +100,9 @@ print.listw <- function(x, zero.policy=NULL, ...) {
 	cat(paste("\nWeights style:", style, "\n"))
 	if (is.na(style)) style = "NA"
 	cat("Weights constants summary:\n")
-	print(data.frame(rbind(unlist(spweights.constants(x,
-		zero.policy=zero.policy))[c(1, 5:8)]), row.names=style))
+        df <- data.frame(rbind(unlist(spweights.constants(x,
+		zero.policy=zero.policy))[c(1, 5:8)]), row.names=style)
+	print(df)
 	invisible(x)
 
 }

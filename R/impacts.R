@@ -1,18 +1,24 @@
 # Copyright 2009-2010 by Roger Bivand
 
-trW <- function(W, m=100, p=50, type="mult") {
+trW <- function(W=NULL, m=30, p=16, type="mult", listw=NULL) {
 # returns traces
     timings <- list()
     .ptime_start <- proc.time()
-    n <- dim(W)[1]
-    iW <- W
-    tr <- numeric(m)
     if (type == "mult") {
+        stopifnot(!is.null(W))
+        stopifnot(inherits(W, "sparseMatrix"))
+        n <- dim(W)[1]
+        iW <- W
+        tr <- numeric(m)
         for (i in 1:m) {
             tr[i] <- sum(diag(iW))
             iW <- W %*% iW
         }
     } else if (type == "MC") {
+        stopifnot(!is.null(W))
+        stopifnot(inherits(W, "sparseMatrix"))
+        n <- dim(W)[1]
+        tr <- numeric(m)
         x <- matrix(rnorm(n*p), nrow=n, ncol=p)
         xx <- x
         for (i in 1:m) {
@@ -23,8 +29,11 @@ trW <- function(W, m=100, p=50, type="mult") {
         tr[1] <- 0.0
         tr[2] <- sum(t(W) * W)
     } else if (type == "moments") {
-        if (!is(W, "symmetricMatrix")) stop("moments require symmetric W")
-        tr <- mom_calc(W, m)
+        if (!is.null(W) && is.null(listw)) {
+            if (!is(W, "symmetricMatrix")) stop("moments require symmetric W")
+            listw <- mat2listw(W)
+        }
+        tr <- mom_calc(listw, m)
     } else stop("unknown type")
     timings[["make_traces"]] <- proc.time() - .ptime_start
     attr(tr, "timings") <- do.call("rbind", timings)[, c(1, 3)]
@@ -47,33 +56,28 @@ mom_calc_int <- function(is, m, W, eta0) {
     Omega
 }
 
-mom_calc <- function(W, m) {
+mom_calc_int2 <- function(is, m, nb, weights, Card) {
+    Omega <- .Call("mom_calc_int2", is, as.integer(m), nb, weights, Card, PACKAGE="spdep")
+    Omega
+}
+
+mom_calc <- function(lw, m) {
     stopifnot((m %% 2) == 0)
-    n <- dim(W)[1]
-    eta0 <- rep(0, n)
+    nb <- lw$neighbours
+    n <- length(nb)
+    weights <- lw$weights
+    Card <- card(nb)
      
     CL <- get.ClusterOption()
     if (!is.null(CL) && length(CL) > 1) {
         require(snow)
         lis <- splitIndices(n, length(CL))
-        clusterEvalQ(CL, library(Matrix))
-	clusterExport_l <- function(CL, list) {
-            gets <- function(n, v) {
-                assign(n, v, env = .GlobalEnv)
-                NULL
-            }
-            for (name in list) {
-                clusterCall(CL, gets, name, get(name))
-            }
-	}
-	clusterExport_l(CL, list("m", "W", "eta0", "mom_calc_int"))
-        lOmega <- parLapply(CL, lis, function(is) mom_calc_int(is=is, m=m,
-            W=W, eta0=eta0))
-        clusterEvalQ(CL, rm(list=c("m", "W", "eta0", "mom_calc_int")))
-        clusterEvalQ(CL, detach(package:Matrix))
+        lOmega <- clusterApply(CL, lis, spdep:::mom_calc_int2, m, nb,
+           weights, Card)
+
         Omega <- apply(do.call("cbind", lOmega), 1, sum)
     } else {
-        Omega <- mom_calc_int(is=1:n, m=m, W=W, eta0=eta0)
+        Omega <- mom_calc_int2(is=1:n, m=m, nb=nb, weights=weights, Card=Card)
     }
     Omega
 }
@@ -561,6 +565,29 @@ summary.lagImpact <- function(object, ..., zstats=FALSE, short=FALSE, reportQ=NU
     direct_sum <- summary(object$sres$direct, ...)
     indirect_sum <- summary(object$sres$indirect, ...)
     total_sum <- summary(object$sres$total, ...)
+# 101109 Eelke Folmer
+    if (length(attr(object, "bnames")) == 1) {
+        scnames <- names(direct_sum$statistics)
+        qcnames <- names(direct_sum$quantiles)
+        direct_sum$statistics <- matrix(direct_sum$statistics, nrow=1)
+        rownames(direct_sum$statistics) <- attr(object, "bnames")[1]
+        colnames(direct_sum$statistics) <- scnames
+        direct_sum$quantiles <- matrix(direct_sum$quantiles, nrow=1)
+        rownames(direct_sum$quantiles) <- attr(object, "bnames")[1]
+        colnames(direct_sum$quantiles) <- qcnames
+        indirect_sum$statistics <- matrix(indirect_sum$statistics, nrow=1)
+        rownames(indirect_sum$statistics) <- attr(object, "bnames")[1]
+        colnames(indirect_sum$statistics) <- scnames
+        indirect_sum$quantiles <- matrix(indirect_sum$quantiles, nrow=1)
+        rownames(indirect_sum$quantiles) <- attr(object, "bnames")[1]
+        colnames(indirect_sum$quantiles) <- qcnames
+        total_sum$statistics <- matrix(total_sum$statistics, nrow=1)
+        rownames(total_sum$statistics) <- attr(object, "bnames")[1]
+        colnames(total_sum$statistics) <- scnames
+        total_sum$quantiles <- matrix(total_sum$quantiles, nrow=1)
+        rownames(total_sum$quantiles) <- attr(object, "bnames")[1]
+        colnames(total_sum$quantiles) <- qcnames
+    }
     Qmcmc <- NULL
     if (!is.null(attr(object$sres, "Qmcmc")) && !is.null(reportQ) && reportQ) {
         Qdirect_sum <- summary(attr(object$sres, "Qmcmc")$direct, ...)

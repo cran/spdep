@@ -22,6 +22,7 @@ SEXP nbdists(SEXP nb, SEXP x, SEXP np, SEXP dim, SEXP lonlat)
 	setAttrib(VECTOR_ELT(ans, 0), R_ClassSymbol, class);
 
 	for (i=0; i < n; i++) {
+                R_CheckUserInterrupt();
 		k = length(VECTOR_ELT(nb, i));
 /*		if (k == 1 && INTEGER_POINTER(VECTOR_ELT(nb, i))[0] == 0) {
 			SET_VECTOR_ELT(VECTOR_ELT(ans, 0), i,

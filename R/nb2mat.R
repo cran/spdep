@@ -1,4 +1,4 @@
-# Copyright 2001-9 by Roger Bivand, Markus Reder and Werner Mueller
+# Copyright 2001-10 by Roger Bivand, Markus Reder and Werner Mueller
 #
 
 
@@ -103,8 +103,8 @@ powerWeights <- function(W, rho, order=250, X, tol=.Machine$double.eps^(3/5)) {
 }
 
 
-mat2listw <- function(x, row.names=NULL) {
-	if (!is.matrix(x)) stop("x is not a matrix")
+mat2listw <- function(x, row.names=NULL, style="M") {
+	if (!(is.matrix(x) || is(x, "sparseMatrix"))) stop("x is not a matrix")
 	n <- nrow(x)
 	if (n < 1) stop("non-positive number of entities")
 	m <- ncol(x)
@@ -124,10 +124,26 @@ mat2listw <- function(x, row.names=NULL) {
 			row.names <- as.character(1:n)
 		}
 	}
-	style <- "M"
-	neighbours <- vector(mode="list", length=n)
-	weights <- vector(mode="list", length=n)
-	for (i in 1:n) {
+#	style <- "M"
+        if (is(x, "sparseMatrix")) {
+            xC <- as(x, "dgCMatrix")
+            i <- slot(xC, "i")+1
+            p <- slot(xC, "p")
+            dp <- diff(p)
+            rp <- rep(seq_along(dp), dp)
+            df0 <- data.frame(from=i, to=rp, weights=slot(xC, "x"))
+            o <- order(df0$from, df0$to)
+            df <- df0[o,]
+            class(df) <- c(class(df), "spatial.neighbour")
+            attr(df, "region.id") <- as.character(1:dim(xC)[1])
+            attr(df, "n") <- dim(xC)[1]
+            res <- sn2listw(df)
+            neighbours <- res$neighbours
+            weights <- res$weights
+        } else {
+	    neighbours <- vector(mode="list", length=n)
+	    weights <- vector(mode="list", length=n)
+	    for (i in 1:n) {
 		nbs  <- which(x[i,] > 0.0)
 		if (length(nbs) > 0) {
 			neighbours[[i]] <- nbs
@@ -135,7 +151,8 @@ mat2listw <- function(x, row.names=NULL) {
 		} else {
 			neighbours[[i]] <- as.integer(0)
 		}
-	}
+	    }
+        }
 	attr(weights, "mode") <- "unknown" # Brian Rubineau
 	class(neighbours) <- "nb"
 	attr(neighbours, "region.id") <- row.names
@@ -146,5 +163,9 @@ mat2listw <- function(x, row.names=NULL) {
 	class(res) <- c("listw", "nb")
 	attr(res, "region.id") <- attr(neighbours, "region.id")
 	attr(res, "call") <- match.call()
+        if (style != "M") {
+            res <- nb2listw(res$neighbours, glist=res$weights, style=style,
+                zero.policy=TRUE)
+        }
 	res
 }

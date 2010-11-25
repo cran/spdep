@@ -39,6 +39,7 @@ dnearneigh(SEXP din1, SEXP din2, SEXP pnte, SEXP p, SEXP test, SEXP lonlat)
     dn = dn;
     pos = (int *) R_alloc(nte, sizeof(int));
     for (npat = 0; npat < nte; npat++) {
+        R_CheckUserInterrupt();
 	kn = 0;
 	lon1[0] = NUMERIC_POINTER(test)[npat];
 	lat1[0] = NUMERIC_POINTER(test)[npat + nte];

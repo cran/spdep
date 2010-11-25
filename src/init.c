@@ -42,6 +42,7 @@ static R_CallMethodDef CallEntries[] = {
     {"poly_loop2", (DL_FUNC) &poly_loop2, 8},
     {"symtest", (DL_FUNC) &symtest, 3},
     {"g_components", (DL_FUNC) &g_components, 2},
+    {"mom_calc_int2", (DL_FUNC) &mom_calc_int2, 5},
     {NULL, NULL, 0}
 };
 
