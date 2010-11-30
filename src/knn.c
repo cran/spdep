@@ -29,6 +29,7 @@ knearneigh(int *kin, int *pnte, int *p, double *test, int *res, double *dists,
  */
 
     for (npat = 0; npat < nte; npat++) {
+        R_CheckUserInterrupt();
 	kn = kinit;
 	for (k = 0; k < kn; k++)
 	    nndist[k] = 0.99 * DOUBLE_XMAX;

@@ -34,9 +34,13 @@ get.ZeroPolicyOption <- function() {
 }
 
 set.ClusterOption <- function(cl) {
-	if (!is.null(cl)) 
+	if (!is.null(cl)) {
             if (!inherits(cl, "cluster")) 
                 stop ("cluster required")
+            clusterEvalQ(cl, library(spdep))
+        }
+        if (is.null(cl)) clusterEvalQ(get.ClusterOption(),
+            detach(package:spdep))
 	assign("cl", cl, env = .spdepOptions)
         invisible(NULL)
 }
@@ -51,7 +55,7 @@ get.rlecuyerSeedOption  <- function() {
 
 set.rlecuyerSeedOption  <- function(seed) {
     if (length(seed) != 6) stop("Six integer values required")
-    if (storage.mode(seed) != integer) seed <- as.integer(seed)
+    if (storage.mode(seed) != "integer") seed <- as.integer(seed)
     assign("rlecuyerSeed", seed, env = .spdepOptions)
     invisible(NULL)
 }

@@ -2226,6 +2226,16 @@ col005.w.mat <- nb2mat(col005, zero.policy=TRUE)
 col005.w.b <- mat2listw(col005.w.mat)
 summary(col005.w.b$neighbours)
 diffnb(col005, col005.w.b$neighbours)
+col005.w.mat.3T <- kronecker(diag(3), col005.w.mat)
+col005.w.b.3T <- mat2listw(col005.w.mat.3T, style="W")
+summary(col005.w.b.3T$neighbours)
+W <- as(as_dgRMatrix_listw(nb2listw(col005, style="W", zero.policy=TRUE)), "CsparseMatrix")
+col005.spM <- mat2listw(W)
+summary(col005.spM$neighbours)
+diffnb(col005, col005.spM$neighbours)
+IW <- kronecker(Diagonal(3), W)
+col005.spM.3T <- mat2listw(IW, style="W")
+summary(col005.spM.3T$neighbours)
 
 
 
@@ -3002,6 +3012,40 @@ diffnb(listwmat1$neighbours, listwmat2$neighbours, verbose=TRUE)
 
 
 cleanEx()
+nameEx("rotation")
+### * rotation
+
+flush(stderr()); flush(stdout())
+
+### Name: Rotation
+### Title: Rotate a set of point by a certain angle
+### Aliases: Rotation
+### Keywords: manip
+
+### ** Examples
+
+set.seed(1)
+### Create a set of coordinates
+coords<-cbind(runif(20),runif(20))
+
+### Create a series of angles
+rad<-seq(0,pi,l=20)
+
+for(i in rad){
+	coords.rot<-Rotation(coords,i)
+	plot(coords.rot)
+}
+
+### Rotate the coordinates by an angle of 90 degrees
+coords.90<-Rotation(coords,90*pi/180)
+coords.90
+
+plot(coords,xlim=range(rbind(coords.90,coords)[,1]),ylim=range(rbind(coords.90,coords)[,2]),asp=1)
+points(coords.90,pch=19)
+
+
+
+cleanEx()
 nameEx("sacsarlm")
 ### * sacsarlm
 
@@ -3571,6 +3615,41 @@ print(is.symmetric.nb(k4.sym))
 
 
 
+cleanEx()
+nameEx("tolerance.nb")
+### * tolerance.nb
+
+flush(stderr()); flush(stdout())
+
+### Name: tolerance.nb
+### Title: Function to construct edges based on a tolerance angle and a
+###   maximum
+### Aliases: tolerance.nb
+### Keywords: spatial
+
+### ** Examples
+
+set.seed(1)
+ex.data<-cbind(runif(50),rexp(50))
+
+### Construct object of class nb with a tolerance angle of 30 degrees and a maximum distance of 2 m.
+nb.ex<-tolerance.nb(ex.data, unit.angle = "degrees", max.dist=1, tolerance = 30)
+
+### Construct object of class nb with a tolerance angle of 30 degrees and a maximum distance of 2 m. The coordinates are rotated at an angle of 45 degrees counterclockwise.
+nb.ex2<-tolerance.nb(ex.data, unit.angle = "degrees", max.dist=1, tolerance = 30, rot.angle = 45)
+
+### Construct object of class nb with a tolerance angle of pi/8 radians and a maximum distance of 1.5 m. The coordinates are rotated at an angle of pi/4 radians clockwise.
+nb.ex3<-tolerance.nb(ex.data, unit.angle = "radians", max.dist=1.5, tolerance = pi/8,rot.angle = -pi*2/3)
+
+
+par(mfrow=c(1,3))
+plot(nb.ex,ex.data,asp=1)
+plot(nb.ex2,ex.data,asp=1)
+plot(nb.ex3,ex.data,asp=1)
+
+
+
+graphics::par(get("par.postscript", pos = 'CheckExEnv'))
 cleanEx()
 nameEx("trW")
 ### * trW

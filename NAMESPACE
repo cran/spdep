@@ -78,6 +78,8 @@ export(do_ldet, eigen_setup, mcdet_setup, cheb_setup, spam_setup,
         Matrix_setup, LU_setup, Matrix_J_setup, spam_update_setup,
         moments_setup)
 
+export(tolerance.nb, Rotation)
+
 import(maptools)
 
 S3method(print, nb)

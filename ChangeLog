@@ -1,3 +1,30 @@
+2010-11-10 17:54  rsbivand
+
+	* R/rotation.R, R/tolerance.nb.R, man/rotation.Rd,
+	  man/tolerance.nb.Rd: impacts summary fix; added tolerance.nb
+
+2010-11-10 17:37  rsbivand
+
+	* DESCRIPTION, NAMESPACE, R/impacts.R, man/mat2listw.Rd: impacts
+	  summary fix; added tolerance.nb
+
+2010-11-02 11:20  rsbivand
+
+	* R/nb2mat.R: added sparseMatrix to mat2listw
+
+2010-10-31 19:57  rsbivand
+
+	* DESCRIPTION, R/nb2mat.R, R/summary.nb.R, man/mat2listw.Rd: added
+	  sparseMatrix to mat2listw
+
+2010-10-30 13:35  rsbivand
+
+	* R/nb2mat.R, man/mat2listw.Rd: added style argement to mat2listw
+
+2010-10-08 17:45  rsbivand
+
+	* ChangeLog, inst/ChangeLog: sacsarlm optimizers
+
 2010-10-08 12:18  rsbivand
 
 	* DESCRIPTION, NAMESPACE, R/kpgm_new.R, man/GMerrorsar.Rd,
