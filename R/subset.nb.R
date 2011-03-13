@@ -19,13 +19,13 @@ subset.nb <- function(x, subset, ...) {
 	zi <- z[[i]]
 	res <- NULL
 # bug report 20050107 Yong Cai, now handles no-neighbour entities correctly
-	if (!(length(zi) == 1 & zi[1] == 0)) {
+	if (!(length(zi) == 1L & zi[1] == 0)) {
 	    for (j in seq(along=zi)) {
 	        a <- new.ids[zi[j]]
 	        if (!is.na(a)) res <- c(res, a)
 	    }
 	}
-	if (is.null(res)) z[[i]] <- as.integer(0)
+	if (is.null(res)) z[[i]] <- 0L
 	else z[[i]] <- sort(unique(res))
     }
     attr(z, "region.id") <- reg.id

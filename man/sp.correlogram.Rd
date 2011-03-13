@@ -19,9 +19,9 @@ print.spcor(x, p.adj.method="none", ...)
   \item{neighbours}{an object of class \code{nb}}
   \item{var}{a numeric vector}
   \item{order}{maximum lag order}
-  \item{method}{"corr" for correlation, "I" for Moran's I}
+  \item{method}{"corr" for correlation, "I" for Moran's I, "C" for Geary's C}
   \item{style}{\code{style} can take values W, B, C, and S}
-  \item{randomisation}{variance of I calculated under the assumption of randomisation, if FALSE normality}
+  \item{randomisation}{variance of I or C calculated under the assumption of randomisation, if FALSE normality}
   \item{zero.policy}{default NULL, use global option value; if FALSE stop with error for any empty neighbour sets, 
 if TRUE permit the weights list to be formed with zero-length weights vectors}
   \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
@@ -33,7 +33,7 @@ if TRUE permit the weights list to be formed with zero-length weights vectors}
   \item{\dots}{further arguments passed through}
 }
 \details{
-  The print function also calculates the standard deviates of Moran's I and a two-sided probability value, optionally using \code{p.adjust} to correct by the nymber of lags. The plot function plots a bar from the estimated Moran's I value to +/- twice the square root of its variance (in previous releases only once, not twice).
+  The print function also calculates the standard deviates of Moran's I or Geary's C and a two-sided probability value, optionally using \code{p.adjust} to correct by the nymber of lags. The plot function plots a bar from the estimated Moran's I, or Geary's C value to +/- twice the square root of its variance (in previous releases only once, not twice).
 }
 
 \value{
@@ -65,6 +65,11 @@ Ispc <- sp.correlogram(ncCC89_nb, tr.SIDS74, order=8, method="I",
 print(Ispc)
 print(Ispc, "bonferroni")
 plot(Ispc)
+Cspc <- sp.correlogram(ncCC89_nb, tr.SIDS74, order=8, method="C",
+ zero.policy=TRUE)
+print(Cspc)
+print(Cspc, "bonferroni")
+plot(Cspc)
 drop.no.neighs <- !(1:length(ncCC89_nb) \%in\% which(card(ncCC89_nb) == 0))
 sub.ncCC89.nb <- subset(ncCC89_nb, drop.no.neighs)
 plot(sp.correlogram(sub.ncCC89.nb, subset(tr.SIDS74,  drop.no.neighs),

@@ -1148,6 +1148,9 @@ system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb, style="W"), method="spam_update", control=list(spamPivot="MMD")))
 system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb, style="W"), method="spam_update", control=list(spamPivot="RCM")))
+COL.merrW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
+ nb2listw(COL.nb, style="W"), method="eigen", etype="emixed")
+summary(COL.merrW.eig, correlation=TRUE)
 
 
 
@@ -3065,6 +3068,10 @@ summary(COL.sacW.eig, correlation=TRUE)
 W <- as(as_dgRMatrix_listw(nb2listw(COL.nb, style="W")), "CsparseMatrix")
 trMatc <- trW(W, type="mult")
 summary(impacts(COL.sacW.eig, tr=trMatc, R=2000), zstats=TRUE, short=TRUE)
+COL.msacW.eig <- sacsarlm(CRIME ~ INC + HOVAL, data=COL.OLD, 
+ nb2listw(COL.nb, style="W"), type="sacmixed")
+summary(COL.msacW.eig, correlation=TRUE)
+summary(impacts(COL.msacW.eig, tr=trMatc, R=2000), zstats=TRUE, short=TRUE)
 
 
 
@@ -3238,6 +3245,11 @@ Ispc <- sp.correlogram(ncCC89_nb, tr.SIDS74, order=8, method="I",
 print(Ispc)
 print(Ispc, "bonferroni")
 plot(Ispc)
+Cspc <- sp.correlogram(ncCC89_nb, tr.SIDS74, order=8, method="C",
+ zero.policy=TRUE)
+print(Cspc)
+print(Cspc, "bonferroni")
+plot(Cspc)
 drop.no.neighs <- !(1:length(ncCC89_nb) %in% which(card(ncCC89_nb) == 0))
 sub.ncCC89.nb <- subset(ncCC89_nb, drop.no.neighs)
 plot(sp.correlogram(sub.ncCC89.nb, subset(tr.SIDS74,  drop.no.neighs),
@@ -3623,7 +3635,7 @@ flush(stderr()); flush(stdout())
 
 ### Name: tolerance.nb
 ### Title: Function to construct edges based on a tolerance angle and a
-###   maximum
+###   maximum distance
 ### Aliases: tolerance.nb
 ### Keywords: spatial
 

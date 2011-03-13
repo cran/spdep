@@ -53,7 +53,7 @@ sp.mantel.mc <- function(var, listw, nsim, type="moran", zero.policy=NULL,
                 return(f(x=var, ...))
             }
             cl <- get("cl", env = .spdepOptions)
-            if (!is.null(cl) && length(cl) > 1) {
+            if (!is.null(cl) && length(cl) > 1L) {
                 nnsim <- boot_wrapper_in(cl, nsim)
                 lres <- clusterCall(cl, boot, xs, statistic=mantel_boot,
                     R=nnsim, sim="permutation", listwU=listw.U,

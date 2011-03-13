@@ -19,7 +19,7 @@ lm.LMtests <- function(model, listw, zero.policy=NULL, test="LMerr",
 	    listw <- subset(listw, subset, zero.policy=zero.policy)
 	}
 
-	if (length(test) == 1 && test[1] == "LMerr") {
+	if (length(test) == 1L && test[1] == "LMerr") {
 		res <- lm.LMErr(model=model, listw=listw, 
 			zero.policy=zero.policy, spChk=spChk) 
 		if (class(model) == "lm") res$data.name <- paste("\n", 
@@ -60,7 +60,7 @@ lm.LMtests <- function(model, listw, zero.policy=NULL, test="LMerr",
 	p1 <- 1:p
 	nacoefs <- which(is.na(coefficients(model)))
 # fixed after looking at TOWN dummy in Boston data
-	if (length(nacoefs > 0)) X <- X[,-nacoefs]
+	if (length(nacoefs) > 0L) X <- X[,-nacoefs]
 	XtXinv <- chol2inv(model$qr$qr[p1, p1, drop = FALSE])
 	sigma2 <- (t(u) %*% u) / N
 	TrW <- tracew(listw)
@@ -129,7 +129,7 @@ tracew <- function (listw) {
 			k <- dij[j]
 # Luc Anselin 2006-11-11 problem with asymmetric listw
 			    dk <- which(listw$neighbours[[k]] == i)
-			    if (length(dk) > 0 && dk > 0 &&
+			    if (length(dk) > 0L && dk > 0L &&
 				dk <= length(listw$neighbours[[k]]))
 				wdk <- listw$weights[[k]][dk]
 			    else wdk <- 0

@@ -47,7 +47,7 @@ f_errlm_hess <- function(coefs, env) {
 
 insert_asye <- function(coefs, env, s2, mat, trs) {
     lambda <- coefs[1]
-    p <- length(coefs)-1
+    p <- length(coefs)-1L
     p2 <- p+2
     omat <- matrix(0, nrow=p2, ncol=p2)
     LX <- get("x", envir=env) - lambda * get("WX", envir=env)

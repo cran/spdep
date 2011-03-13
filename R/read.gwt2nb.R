@@ -8,13 +8,13 @@
 read.gwt2nb <- function(file, region.id=NULL) {
 	con <- file(file, open="r")   #opens the file
 	firstline <- unlist(strsplit(readLines(con,1)," "))
-	if (length(firstline) == 4) {
+	if (length(firstline) == 4L) {
 		n <- as.integer(firstline[2])
 		shpfile <- firstline[3]
 		ind <- firstline[4]
 		if (ind != deparse(substitute(region.id)))
 			warning(paste("region.id not named", ind))
-	} else if (length(firstline) == 1) {
+	} else if (length(firstline) == 1L) {
 		n <- as.integer(firstline[1])
 		shpfile <- as.character(NA)
 		ind <- as.character(NA)
@@ -57,7 +57,7 @@ read.gwt2nb <- function(file, region.id=NULL) {
 			vlist[[i]] <- as.double(odij[cs0.sn[ii]:cs1.sn[ii],3])
 			ii <- ii+1
 		} else {
-			res[[i]] <- as.integer(0)
+			res[[i]] <- 0L
 		}
 	}
 
@@ -83,7 +83,7 @@ write.sn2gwt <- function(sn, file, shpfile=NULL, ind=NULL, useInd=FALSE, legacy=
 		else shpfile <- tmp
 	} else {
             stopifnot(is.character(shpfile))
-            stopifnot(length(shpfile) == 1)
+            stopifnot(length(shpfile) == 1L)
         }
 	if (is.null(ind)) {
 		tmp <- attr(sn, "GeoDa")$ind
@@ -91,7 +91,7 @@ write.sn2gwt <- function(sn, file, shpfile=NULL, ind=NULL, useInd=FALSE, legacy=
 		else ind <- tmp
 	} else {
             stopifnot(is.character(ind))
-            stopifnot(length(ind) == 1)
+            stopifnot(length(ind) == 1L)
         }
         if (useInd) {
             rid <- attr(sn, "region.id")

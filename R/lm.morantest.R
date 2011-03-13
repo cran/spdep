@@ -34,7 +34,7 @@ lm.morantest <- function(model, listw, zero.policy=NULL,
 	lu <- lag.listw(listw.U, u, zero.policy=zero.policy)
 # 101125 Aleksandr Andreev
 	if (zero.policy)
-            N <- as.double(length(which(card(listw$neighbours) > 0)))
+            N <- as.double(length(which(card(listw$neighbours) > 0L)))
 	I <- (N/S0) * ((t(u) %*% lu) / (t(u) %*% u))
 	p <- model$rank
 	p1 <- 1:p
@@ -42,7 +42,7 @@ lm.morantest <- function(model, listw, zero.policy=NULL,
 	XtXinv <- chol2inv(model$qr$qr[p1, p1, drop = FALSE])
 	X <- model.matrix(terms(model), model.frame(model))
 # fixed after looking at TOWN dummy in Boston data
-	if (length(nacoefs > 0)) X <- X[,-nacoefs]
+	if (length(nacoefs) > 0L) X <- X[,-nacoefs]
 	if (!is.null(wts <- weights(model))) {
 #		X <- sqrt(diag(wts)) %*% X
 		X <- drop(t(sapply(1:length(wts), 

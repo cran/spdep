@@ -94,7 +94,7 @@ poly2nb <- function(pl, row.names=NULL, snap=sqrt(.Machine$double.eps),
 
         } else {
             stopifnot(is.list(foundInBox))
-            stopifnot(length(foundInBox) == (n-1))
+            stopifnot(length(foundInBox) == (n-1L))
             stopifnot(all(unlist(sapply(foundInBox,
                 function(x) {if(!is.null(x)) is.integer(x)}))))
             nfIBB <- sum(sapply(foundInBox, length))
@@ -133,7 +133,7 @@ poly2nb <- function(pl, row.names=NULL, snap=sqrt(.Machine$double.eps),
 #        }
 
 	polypoly2 <- function(poly1, nrs1, poly2, nrs2, snap) {
-		if (any(nrs1 == 0 || nrs2 == 0)) return(as.integer(0))
+		if (any(nrs1 == 0 || nrs2 == 0)) return(0L)
 		res <- .Call("polypoly", poly1, nrs1, poly2, 
 			nrs2, snap, PACKAGE="spdep")
 		res
@@ -141,7 +141,7 @@ poly2nb <- function(pl, row.names=NULL, snap=sqrt(.Machine$double.eps),
 
         if (is.null(foundInBox)) {
           CL <- get("cl", env = .spdepOptions)
-          if (!is.null(CL) && length(CL) > 1) {
+          if (!is.null(CL) && length(CL) > 1L) {
             require(snow)
             idx <- clusterSplit(CL, 1:(n-1))
 #            clusterExport_l <- function(CL, list) {
@@ -215,8 +215,8 @@ poly2nb <- function(pl, row.names=NULL, snap=sqrt(.Machine$double.eps),
 		}
 	    }
 	    for (i in 1:n) {
-                if (length(ans[[i]]) == 0) ans[[i]] <- as.integer(0)
-                if (length(ans[[i]]) > 1) ans[[i]] <- sort(ans[[i]])
+                if (length(ans[[i]]) == 0L) ans[[i]] <- 0L
+                if (length(ans[[i]]) > 1L) ans[[i]] <- sort(ans[[i]])
             }
         }
         if (verbose)

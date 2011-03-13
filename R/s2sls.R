@@ -111,7 +111,7 @@ print.summary.stsls <- function(x, digits = max(5, .Options$digits - 3),
 	cat("\nResiduals:\n")
 	resid <- residuals(x)
 	nam <- c("Min", "1Q", "Median", "3Q", "Max")
-	rq <- if (length(dim(resid)) == 2) 
+	rq <- if (length(dim(resid)) == 2L) 
 		structure(apply(t(resid), 1, quantile), dimnames = list(nam, 
 			dimnames(resid)[[2]]))
 	else structure(quantile(resid), names = nam)
@@ -270,34 +270,39 @@ tsls <- function(y,yend,X,Zinst,robust=FALSE, legacy=FALSE) {
 	Q <- cbind(X,Zinst)
 	Z <- cbind(yend,X)
 	df <- nrow(Z) - ncol(Z)
-	QQ <- crossprod(Q,Q)
+#	QQ <- crossprod(Q,Q)
 	Qye <- crossprod(Q,yend)
-	bz <- solve(QQ,Qye)
+        Qr <- qr(Q)
+        bz <- chol2inv(Qr$qr)%*% Qye
+#	bz <- solve(QQ,Qye)
 	yendp <- Q %*% bz
 	Zp <- cbind(yendp,X)
-	ZpZp <- crossprod(Zp,Zp)
-	ZpZpi <- solve(ZpZp)
+        Qr <- qr(Zp)
+#	ZpZp <- crossprod(Zp,Zp)
+#	ZpZpi <- solve(ZpZp)
+	ZpZpi <- chol2inv(Qr$qr)
 	Zpy <- crossprod(Zp,y)
-	biv <- crossprod(ZpZpi,Zpy)
+        biv <- ZpZpi %*% Zpy
+#	biv <- crossprod(ZpZpi,Zpy)
 	yp <- Z %*% biv
 	biv <- biv[,1,drop=TRUE]
+        names(biv) <- colnames(Zp)
 	e <- y - yp
 	if (robust) {
-		if (legacy){		
+		if (legacy) {		
 		result <- htsls(y,Z,Q,e)
-		}
-		else{
-	   sse <- c(crossprod(e,e))		
-		ZoZ<-crossprod(Z,(Z*as.numeric(e^2)))
-		varb<-ZpZpi%*%ZoZ%*%ZpZpi
+		} else {
+	        	sse <- c(crossprod(e,e))		
+			ZoZ<-crossprod(Z,(Z*as.numeric(e^2)))
+			varb<-ZpZpi%*%ZoZ%*%ZpZpi
 	   
-	   result <- list(coefficients=biv,
-		var=varb,
-		sse=sse,
-	        residuals=c(e),
-		df=df)
+	   		result <- list(coefficients=biv,
+				var=varb,
+				sse=sse,
+	        		residuals=c(e),
+				df=df)
 
-			}
+		}
 	} else {	
 	    sse <- c(crossprod(e,e))
     	    s2 <- sse / df

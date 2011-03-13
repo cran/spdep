@@ -39,7 +39,7 @@ knearneigh(int *kin, int *pnte, int *p, double *test, int *res, double *dists,
 	    lat1[0] = test[npat + nte];
 	    lon2[0] = test[j];
 	    lat2[0] = test[j + nte];
-	    if (ll == 0) dist = pythag((lon1[0]-lon2[0]), (lat1[0]-lat2[0]));
+	    if (ll == 0) dist = hypot((lon1[0]-lon2[0]), (lat1[0]-lat2[0]));
 	    else {
 		    gcdist(lon1, lon2, lat1, lat2, gc);
 		    dist = gc[0];

@@ -225,7 +225,7 @@ spautolm <- function(formula, data = list(), listw, weights,
     .ptime_start <- proc.time()
 
     if (!is.null(llprof)) {
-        if (length(llprof) == 1)
+        if (length(llprof) == 1L)
             llprof <- seq(interval[1], interval[2], length.out=llprof)
         ll_prof <- numeric(length(llprof))
         for (i in seq(along=llprof)) 
@@ -238,6 +238,9 @@ spautolm <- function(formula, data = list(), listw, weights,
     opt <- optimize(.opt.fit, interval=interval, maximum=TRUE,
         tol = con$tol.opt, env=env, tol.solve=tol.solve)
     lambda <- opt$maximum
+    if (isTRUE(all.equal(lambda, interval[1])) ||
+        isTRUE(all.equal(lambda, interval[2]))) 
+        warning("lambda on interval bound - results should not be used")
     names(lambda) <- "lambda"
     LL <- opt$objective
     nm <- paste(method, "opt", sep="_")
@@ -273,7 +276,7 @@ spautolm <- function(formula, data = list(), listw, weights,
     if (zero.policy) {
         zero.regs <- attr(listw$neighbours, 
 	    "region.id")[which(card(listw$neighbours) == 0)]
-	if (length(zero.regs) > 0)
+	if (length(zero.regs) > 0L)
 	    attr(res, "zero.regs") <- zero.regs
 	}
 
@@ -338,6 +341,9 @@ SMA <- function(IlW, weights) {
 
 
 print.spautolm <- function(x, ...) {
+        if (isTRUE(all.equal(x$lambda, x$interval[1])) ||
+            isTRUE(all.equal(x$lambda, x$interval[2]))) 
+            warning("lambda on interval bound - results should not be used")
 	cat("\nCall:\n")
 	print(x$call)
 	cat("\nCoefficients:\n")
@@ -433,10 +439,13 @@ print.summary.spautolm <- function(x, digits = max(5, .Options$digits - 3),
 	signif.stars = FALSE, ...)
 {
 	cat("\nCall: ", deparse(x$call),	sep = "", fill=TRUE)
+        if (isTRUE(all.equal(x$lambda, x$interval[1])) ||
+            isTRUE(all.equal(x$lambda, x$interval[2]))) 
+            warning("lambda on interval bound - results should not be used")
 	cat("\nResiduals:\n")
 	resid <- residuals(x)
 	nam <- c("Min", "1Q", "Median", "3Q", "Max")
-	rq <- if (length(dim(resid)) == 2) 
+	rq <- if (length(dim(resid)) == 2L) 
 		structure(apply(t(resid), 1, quantile), dimnames = list(nam, 
 			dimnames(resid)[[2]]))
 	else structure(quantile(resid), names = nam)

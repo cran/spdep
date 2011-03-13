@@ -25,7 +25,7 @@ void	SubVec( tPointd a, tPointd b, tPointd c );
 
 static double distance(double x1, double y1, double x2, double y2){
 
-  return(pythag(x1-x2,y1-y2));
+  return(hypot(x1-x2,y1-y2));
 
 }
 static double  Length2( tPointd v )
@@ -114,7 +114,7 @@ int     TwoCircles0b( double r1, tPointd c2, double r2, tPointd p )
 
    /* Rotate c2 to a2 on x-axis. */
    /*a2 = sqrt( Length2( c2 ) )*/ 
-   a2=pythag(c2[X],c2[Y]);
+   a2=hypot(c2[X],c2[Y]);
    cost = c2[X] / a2;
    sint = c2[Y] / a2;
 
@@ -138,7 +138,7 @@ void     TwoCircles00( double r1, double a2, double r2, tPointd p )
 
    /* Return only positive-y soln in p. */
    p[X] = ( a2 + ( r1sq - r2sq ) / a2 ) * 0.5;
-   p[Y] = pythag(r1,p[X]);
+   p[Y] = hypot(r1,p[X]);
    /*sqrt( r1sq - p[X]*p[X] );*/
    /*Rprintf("%%TwoCircles00: p=(%f,%f)\n", p[X], p[Y]);*/
    return;

@@ -119,7 +119,7 @@ geary.mc <- function(x, listw, nsim, zero.policy=NULL,
                 return(geary(x=var, ...)$C)
             }
             cl <- get("cl", env = .spdepOptions)
-            if (!is.null(cl) && length(cl) > 1) {
+            if (!is.null(cl) && length(cl) > 1L) {
                 nnsim <- boot_wrapper_in(cl, nsim)
                 lres <- clusterCall(cl, boot, x, statistic=geary_boot,
                     R=nnsim, sim="permutation", listw=listw, n=n, n1=wc$n1,

@@ -27,11 +27,11 @@ nblag <- function(neighbours, maxlag)
 					new <- c(new, neighbours[[j]])
 				new <- sort(unique(new))
 				res <- new[-which(new %in% already)]
-				if(length(res) == 0) 
-					lags[[thislag]][[i]] <- as.integer(0)
+				if(length(res) == 0L) 
+					lags[[thislag]][[i]] <- 0L
 				else lags[[thislag]][[i]] <- res
 			}
-			else lags[[thislag]][[i]] <- as.integer(0)
+			else lags[[thislag]][[i]] <- 0L
 		}
 	}
 	for (i in 1:maxlag) {
@@ -56,7 +56,7 @@ nblag_cumul <- function (nblags) {
     ncard <- card(nblags[[1]])
     neigh <- which(ncard > 0)
     nneigh <- which(ncard == 0)
-    for (i in nneigh) lags[[i]] <- as.integer(0)
+    for (i in nneigh) lags[[i]] <- 0L
     for (i in neigh) {
         res <- nblags[[1]][[i]]
 	for (j in 2:maxlag) res <- c(res, nblags[[j]][[i]])

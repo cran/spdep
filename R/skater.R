@@ -45,7 +45,7 @@ skater <- function(edges, data, ncuts, crit, vec.crit,
   repeat {
     if (cuts>ncuts)
       break
-    if (length(res$candidates)==0)
+    if (length(res$candidates)==0L)
       break
     l.costs.ord <- lapply(res$edges.groups[res$candidates],
                           function(x) x$edge[,3])

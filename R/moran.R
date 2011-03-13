@@ -131,7 +131,7 @@ moran.mc <- function(x, listw, nsim, zero.policy=NULL,
                 return(moran(x=var, ...)$I)
             }
             cl <- get("cl", env = .spdepOptions)
-            if (!is.null(cl) && length(cl) > 1) {
+            if (!is.null(cl) && length(cl) > 1L) {
                 nnsim <- boot_wrapper_in(cl, nsim)
                 lres <- clusterCall(cl, boot, x, statistic=moran_boot,
                     R=nnsim, sim="permutation", listw=listw, n=n,

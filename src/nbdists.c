@@ -47,7 +47,7 @@ SEXP nbdists(SEXP nb, SEXP x, SEXP np, SEXP dim, SEXP lonlat)
 	    			lon2[0] = NUMERIC_POINTER(x)[j1];
 	    			lat2[0] = NUMERIC_POINTER(x)[j1 + n];
 	    			if (ll == 0) 
-					tmp = pythag((lon1[0]-lon2[0]), 
+					tmp = hypot((lon1[0]-lon2[0]), 
 							(lat1[0]-lat2[0]));
 	    			else {
 		    			gcdist(lon1, lon2, lat1, lat2, gc);

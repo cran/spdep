@@ -54,7 +54,7 @@ EBImoran.mc <- function (n, x, listw, nsim, zero.policy = NULL,
                 return(EBImoran(z=var, ...))
             }
             cl <- get("cl", env = .spdepOptions)
-            if (!is.null(cl) && length(cl) > 1) {
+            if (!is.null(cl) && length(cl) > 1L) {
                 nnsim <- boot_wrapper_in(cl, nsim)
                 lres <- clusterCall(cl, boot, z, statistic=EBI_boot, R=nnsim,
                     sim="permutation", listw=listw, nn=m, S0=S0,

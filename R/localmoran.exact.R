@@ -23,7 +23,7 @@ localmoran.exact <- function(model, select, nb, glist = NULL, style = "W",
     if (missing(select)) select <- 1:n
     u <- as.vector(u)
     select <- unique(as.integer(select))
-    if (length(select) < 1) stop("select too short")
+    if (length(select) < 1L) stop("select too short")
     if (any(select < 1 || select > n))
         stop("select out of range")
     utu <- c(crossprod(u))
@@ -34,7 +34,7 @@ localmoran.exact <- function(model, select, nb, glist = NULL, style = "W",
     XtXinv <- chol2inv(model$qr$qr[p1, p1, drop = FALSE])
     X <- model.matrix(terms(model), model.frame(model))
 # fixed after looking at TOWN dummy in Boston data
-    if (length(nacoefs > 0)) X <- X[,-nacoefs]
+    if (length(nacoefs) > 0L) X <- X[,-nacoefs]
     if (!is.null(wts <- weights(model))) {
 	X <- sqrt(diag(wts)) %*% X
     }
@@ -117,7 +117,7 @@ as.data.frame.localmoranex <- function(x, row.names=NULL, optional=FALSE, ...) {
     for (i in 1:n) {
         tau <- x[[i]]$gamma
 	df <- x[[i]]$df
-        if (length(tau) == 2) tau <- c(tau[1], rep(0, df-2), tau[2])
+        if (length(tau) == 2L) tau <- c(tau[1], rep(0, df-2), tau[2])
         max.I <- tau[1]
         min.I <- tau[length(tau)]
         E.I <- sum(tau)/df

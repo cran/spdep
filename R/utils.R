@@ -36,7 +36,7 @@ spweights.constants <- function(listw, zero.policy=NULL, adjust.n=TRUE) {
 				ij.j <- ij[j]
 				cS[ij.j] <- cS[ij.j] + dij
 				ij.lkup <- which(listw$neighbours[[ij.j]] == i)
-				if (length(ij.lkup) == 1)
+				if (length(ij.lkup) == 1L)
 					dji <- listw$weights[[ij.j]][ij.lkup]
 				else dji <- 0
 				S1 <- S1 + (dij*dij) + (dij*dji)
@@ -154,7 +154,7 @@ listw2star <- function(listw, ireg, style, n, D, a, zero.policy=NULL) {
     nb <- vector(mode="list", length=n)
     class(nb) <- "nb"
     wts <- vector(mode="list", length=n)
-    for (i in 1:n) nb[[i]] <- as.integer(0)
+    for (i in 1:n) nb[[i]] <- 0L
     inb <- listw$neighbours[[ireg]]
     iwts <- listw$weights[[ireg]]
     cond <- TRUE

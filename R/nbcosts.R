@@ -2,6 +2,9 @@ nbcosts <- function(nb, data, method=c("euclidean", "maximum", "manhattan",
                                 "canberra", "binary", "minkowski",
                                 "mahalanobis", "other"), p=2, 
                     cov, inverted=FALSE, otherfun) {
+  if (ncol(data) < 2) warning("data should have at least two columns")
+  if (any(card(nb) == 0))
+    warning("All observations should have at least one neighbour")
   clist <- lapply(1:length(nb), function(i)
                   nbcost(data, i, nb[[i]], method,
                          p, cov, inverted, otherfun))

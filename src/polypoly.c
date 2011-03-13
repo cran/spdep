@@ -26,7 +26,7 @@ SEXP polypoly(SEXP p1, SEXP n01, SEXP p2, SEXP n02, SEXP snap)
 			if (fabs(xd)>sn) { continue; }
 			yd = y1-y2;
 			if (fabs(yd)>sn) { continue; }
-			dist = pythag(xd, yd);
+			dist = hypot(xd, yd);
 			if (dist <= sn) {
                             k++;
                         }
@@ -200,7 +200,7 @@ int polypolyC(double *px1, double *py1, int n1, double *px2, double *py2,
 			if (fabs(xd)>sn) { continue; }
 			yd = y1-y2;
 			if (fabs(yd)>sn) { continue; }
-			dist = pythag(xd, yd);
+			dist = hypot(xd, yd);
 			if (dist <= sn) {
                             k++;
                         }

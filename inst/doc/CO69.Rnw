@@ -508,7 +508,7 @@ print(formatC(res, format="f", digits=4), quote=FALSE)
 
 Next, let us look at Table 5 in the original paper. Here we only tabulate
 the values of the measures themselves, and, since the expectation is
-constant for each measure, the sqare root of the variance of the measure
+constant for each measure, the square root of the variance of the measure
 under randomisation --- extracting values calculated above:
 
 \begin{footnotesize}

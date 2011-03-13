@@ -36,7 +36,7 @@ lm.morantest.exact <- function(model, listw, zero.policy = NULL,
     XtXinv <- chol2inv(model$qr$qr[p1, p1, drop = FALSE])
     X <- model.matrix(terms(model), model.frame(model))
 # fixed after looking at TOWN dummy in Boston data
-    if (length(nacoefs > 0)) X <- X[,-nacoefs]
+    if (length(nacoefs) > 0L) X <- X[,-nacoefs]
     if (!is.null(wts <- weights(model))) {
 	X <- sqrt(diag(wts)) %*% X
     }
@@ -118,7 +118,7 @@ exactMoran <- function(I, gamma, alternative="greater", type="Global", np2=NULL,
     if (II > pi/2 && type == "Local") {
         tau <- gamma
 	df <- np2 + 2
-        if (length(tau) == 2) tau <- c(tau[1], rep(0, df-2), tau[2])
+        if (length(tau) == 2L) tau <- c(tau[1], rep(0, df-2), tau[2])
         E.I <- sum(tau)/df
         tau <- tau - E.I
         V.I <- (2*sum(tau^2)) / (df*(df+2))

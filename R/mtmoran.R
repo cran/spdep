@@ -27,7 +27,7 @@ lm.morantest.sad <- function (model, listw, zero.policy = NULL,
     S0 <- sum(unlist(listw.U$weights))
     lu <- lag.listw(listw.U, u, zero.policy = zero.policy)
     Nnn <- N
-    if (zero.policy) Nnn <- length(which(card(listw$neighbours) > 0))
+    if (zero.policy) Nnn <- length(which(card(listw$neighbours) > 0L))
     I <- (Nnn/S0) * ((t(u) %*% lu)/(t(u) %*% u))
     I_save <- I
     if (!isTRUE(all.equal((Nnn/S0), 1))) I <- I * (S0/Nnn)
@@ -37,7 +37,7 @@ lm.morantest.sad <- function (model, listw, zero.policy = NULL,
     XtXinv <- chol2inv(model$qr$qr[p1, p1, drop = FALSE])
     X <- model.matrix(terms(model), model.frame(model))
 # fixed after looking at TOWN dummy in Boston data
-    if (length(nacoefs > 0)) X <- X[,-nacoefs]
+    if (length(nacoefs) > 0L) X <- X[,-nacoefs]
     if (!is.null(wts <- weights(model))) {
 	X <- sqrt(diag(wts)) %*% X
     }

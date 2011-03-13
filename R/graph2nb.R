@@ -17,13 +17,13 @@ graph2nb <- function(gob, row.names=NULL,sym=FALSE) {
           for (i in 1:gob$np) {
 		res[[i]] <- sort(unique(c(gob$to[gob$from==i],
                                        gob$from[gob$to==i])))
-	  	if(length(res[[i]]) == 0) res[[i]] <- as.integer(0)
+	  	if(length(res[[i]]) == 0L) res[[i]] <- 0L
 	  }
         }
         else{
 	  for (i in 1:gob$np) {
 		res[[i]] <- sort(gob$to[gob$from==i])
-	  	if(length(res[[i]]) == 0) res[[i]] <- as.integer(0)
+	  	if(length(res[[i]]) == 0L) res[[i]] <- 0L
 	  }
         }
         attr(res, "region.id") <- row.names
