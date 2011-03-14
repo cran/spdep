@@ -1,3 +1,137 @@
+2011-03-14 09:24  rsbivand
+
+	* data/NY_data.rda, data/afcon.rda, data/auckland.rda,
+	  data/baltimore.rda, data/boston.rda, data/columbus.rda,
+	  data/eire.rda, data/elect80.rda, data/getisord.rda,
+	  data/hopkins.rda, data/house.RData, data/huddersfield.rda,
+	  data/nc.sids.rda, data/oldcol.rda, data/used.cars.rda,
+	  inst/doc/CO69.pdf, inst/doc/sids.pdf: compressing PDFs and data
+
+2011-03-14 07:50  rsbivand
+
+	* data/00Index: removing data/00Index
+
+2011-03-13 13:23  rsbivand
+
+	* ChangeLog, inst/ChangeLog: revise vignettes (thanks to Edzer
+	  Pebesma)
+
+2011-03-13 13:22  rsbivand
+
+	* inst/doc/CO69.Rnw, inst/doc/sids.Rnw: revise vignettes (thanks to
+	  Edzer Pebesma)
+
+2011-03-13 12:56  rsbivand
+
+	* ChangeLog, inst/ChangeLog: hypot for pythag in C code
+
+2011-03-13 12:54  rsbivand
+
+	* DESCRIPTION, src/dnn.c, src/gabriel.c, src/knn.c, src/nbdists.c,
+	  src/polypoly.c, src/relative.c, src/soigraph.c: hypot for pythag
+	  in C code
+
+2011-03-06 18:51  rsbivand
+
+	* DESCRIPTION, R/error.spsarlm.R, R/jacobian.R, R/lag.spsarlm.R,
+	  man/do_ldet.Rd, man/errorsarlm.Rd, man/lagsarlm.Rd: adding
+	  moments to lag and error
+
+2011-02-24 16:04  rsbivand
+
+	* R/EBI.R, R/anova.sarlm.R, R/aple.mc.R, R/diffnb.R, R/droplinks.R,
+	  R/edit.nb.R, R/error.hessian.R, R/error.spsarlm.R, R/geary.R,
+	  R/graph2nb.R, R/impacts.R, R/jacobian.R, R/kpgm_new.R,
+	  R/lag.hessian.R, R/lag.spsarlm.R, R/listw2sn.R, R/lm.LMtests.R,
+	  R/lm.morantest.R, R/localmoran.exact.R, R/moran.R,
+	  R/moran.exact.R, R/moran.exact.alt.R, R/mtlocalmoran.R,
+	  R/mtmoran.R, R/nb2mat.R, R/nblag.R, R/nboperations.R,
+	  R/plot.skater.R, R/poly2nb.R, R/read.gal.R, R/read.gwt2nb.R,
+	  R/s2sls.R, R/sacsarlm.R, R/skater.R, R/sp.mantel.R,
+	  R/spChkOption.R, R/spautolm.R, R/subset.nb.R, R/summary.nb.R,
+	  R/summary.spsarlm.R, R/utils.R, R/weights-utils.R: making length
+	  comparisons literal integers
+
+2011-01-24 08:46  rsbivand
+
+	* man/geary.test.Rd: geary.test standard deviate help page
+
+2010-12-21 16:24  rsbivand
+
+	* R/sp.correlogram.R: adding Geary C to sp.correlogram
+
+2010-12-21 16:22  rsbivand
+
+	* DESCRIPTION, R/nbcosts.R, R/sp.correlogram.R,
+	  man/sp.correlogram.Rd: adding Geary C to sp.correlogram
+
+2010-12-19 19:32  rsbivand
+
+	* R/error.spsarlm.R, R/lag.spsarlm.R, R/spautolm.R,
+	  R/summary.spsarlm.R: warnings when rho/lambda at limit
+
+2010-12-14 20:29  rsbivand
+
+	* R/s2sls.R: stsls using QR
+
+2010-11-30 22:02  rsbivand
+
+	* DESCRIPTION, R/error.spsarlm.R, R/impacts.R, R/sacsarlm.R,
+	  R/summary.spsarlm.R, man/errorsarlm.Rd, man/lagsarlm.Rd,
+	  man/sacsarlm.Rd: Elhorst 2010 paper trials
+
+2010-11-25 08:13  rsbivand
+
+	* R/lm.morantest.R: as.double N in lm.morantest
+
+2010-11-24 15:14  rsbivand
+
+	* R/lm.morantest.R: as.double N in lm.morantest
+
+2010-11-24 14:43  rsbivand
+
+	* DESCRIPTION, R/sacsarlm.R, src/dnn.c, src/knn.c, src/nbdists.c:
+	  CheckUserInterrupt in distance C code
+
+2010-11-18 07:52  rsbivand
+
+	* .Rbuildignore: add .Rbuildignore
+
+2010-11-17 20:40  rsbivand
+
+	* R/impacts.R, man/trW.Rd, src/mom_calc.c: moment calculations
+
+2010-11-17 19:07  rsbivand
+
+	* R/impacts.R, R/spChkOption.R, man/trW.Rd, src/mom_calc.c,
+	  src/spdep.h: moment calculations
+
+2010-11-17 13:37  rsbivand
+
+	* R/aple.mc.R, R/impacts.R: moment calculations
+
+2010-11-16 21:37  rsbivand
+
+	* R/impacts.R, man/trW.Rd: moment calculations
+
+2010-11-16 12:45  rsbivand
+
+	* R/impacts.R, src/mom_calc.c: moments calculation
+
+2010-11-15 20:39  rsbivand
+
+	* R/impacts.R, src/init.c, src/mom_calc.c, src/spdep.h: moment
+	  calculations
+
+2010-11-11 11:31  rsbivand
+
+	* INDEX: tidy
+
+2010-11-10 17:55  rsbivand
+
+	* ChangeLog, inst/ChangeLog: impacts summary fix; added
+	  tolerance.nb
+
 2010-11-10 17:54  rsbivand
 
 	* R/rotation.R, R/tolerance.nb.R, man/rotation.Rd,

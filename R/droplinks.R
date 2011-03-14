@@ -27,7 +27,7 @@ droplinks <- function(nb, drop, sym=TRUE) {
 			for (j in nb[[i]])
 				nb[[j]] <- nb[[j]][nb[[j]] != i]
 		}
-		nb[[i]] <- as.integer(0)
+		nb[[i]] <- 0L
 	}
 	nb <- sym.attr.nb(nb)
 	nb

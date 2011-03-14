@@ -68,7 +68,7 @@ GMerrorsar <- function(#W, y, X,
             scorr <- scorr / (sum(unlist(listw$weights)) / length(ubase))
             pars <- c(scorr, deviance(ols)/df.residual(ols))
         }
-        if (length(pars) !=2 || !is.numeric(pars))
+        if (length(pars) !=2L || !is.numeric(pars))
             stop("invalid starting parameter values")
 	vv <- .kpwuwu(listw, residuals(ols), zero.policy=zero.policy)
 #	nlsres <- nlm(.kpgm, pars, print.level=print.level, gradtol=gradtol, steptol=steptol, iterlim=iterlim, v=vv, verbose=verbose)
@@ -190,7 +190,7 @@ GMerrorsar <- function(#W, y, X,
 	if (zero.policy) {
 		zero.regs <- attr(listw$neighbours, 
 			"region.id")[which(card(listw$neighbours) == 0)]
-		if (length(zero.regs) > 0)
+		if (length(zero.regs) > 0L)
 			attr(ret, "zero.regs") <- zero.regs
 	}
 	if (!is.null(na.act))
@@ -298,7 +298,7 @@ print.summary.gmsar<-function (x, digits = max(5, .Options$digits - 3), signif.s
     cat("\nResiduals:\n")
     resid <- residuals(x)
     nam <- c("Min", "1Q", "Median", "3Q", "Max")
-    rq <- if (length(dim(resid)) == 2) 
+    rq <- if (length(dim(resid)) == 2L) 
         structure(apply(t(resid), 1, quantile), dimnames = list(nam, 
             dimnames(resid)[[2]]))
     else structure(quantile(resid), names = nam)
@@ -470,7 +470,7 @@ gstsls<-function (formula, data = list(), listw, listw2=NULL, na.action = na.fai
 
 
         wy <- lag.listw(listw, y, zero.policy = zero.policy)
-        wy <- array(wy, c(length(y), 1))
+        wy <- array(wy, c(length(y), 1L))
         colnames(wy) <- ("Wy")
         if (any(is.na(wy))) 
             stop("NAs in spatially lagged dependent variable")
@@ -499,7 +499,7 @@ gstsls<-function (formula, data = list(), listw, listw2=NULL, na.action = na.fai
         
         pars <- c(scorr, firststep$sse/firststep$df)
     }
-    if (length(pars) != 2 || !is.numeric(pars)) 
+    if (length(pars) != 2L || !is.numeric(pars)) 
         stop("invalid starting parameter values")
     vv <- .kpwuwu(listw2, ubase, zero.policy = zero.policy)
     if (method == "nlminb") 
@@ -540,7 +540,7 @@ gstsls<-function (formula, data = list(), listw, listw2=NULL, na.action = na.fai
     if (zero.policy) {
         zero.regs <- attr(listw$neighbours, "region.id")[which(card(listw$neighbours) == 
             0)]
-        if (length(zero.regs) > 0) 
+        if (length(zero.regs) > 0L) 
             attr(ret, "zero.regs") <- zero.regs
     }
         

@@ -91,7 +91,7 @@ old.make.sym.nb <- function(nb){
         	}
         	for(i in 1:length(nb)){
         		res[[i]] <- sort(unique(c(to[from==i],from[to==i])))
-        		if(length(res[[i]]) == 0) res[[i]] <- as.integer(0)
+        		if(length(res[[i]]) == 0L) res[[i]] <- 0L
         	}
         	attr(res, "region.id") <- attr(nb,"region.id")
         	attr(res, "call") <- attr(nb, "call")
@@ -133,13 +133,13 @@ aggregate.nb <- function(x, IDs, remove.self=TRUE, ...) {
     out_reg.ids <- names(mtch)
     nb_short <- vector(mode="list", length=length(mtch))
     for (i in seq(along=mtch)) {
-        nb_short[[i]] <- as.integer(0)
+        nb_short[[i]] <- 0L
         imtch <- match(mtch[[i]], in_reg.ids)
         res <- unlist(x[imtch])
         nb_short[[i]] <- as.integer(sort(unique(match(IDs[res], out_reg.ids))))
         if (remove.self && i %in% nb_short[[i]]) {
             nb_short[[i]] <- nb_short[[i]][-(match(i, nb_short[[i]]))]
-            if (length(nb_short[[i]]) < 1) nb_short[[i]] <- as.integer(0)
+            if (length(nb_short[[i]]) < 1L) nb_short[[i]] <- 0L
         }
     }
     attr(nb_short, "region.id") <- out_reg.ids

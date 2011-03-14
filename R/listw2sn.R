@@ -61,7 +61,7 @@ sn2listw <- function(sn) {
 			vlist[[i]] <- as.double(sn[cs0.sn[ii]:cs1.sn[ii],3])
 			ii <- ii+1
 		} else {
-			nlist[[i]] <- as.integer(0)
+			nlist[[i]] <- 0L
 		}
 	}
 	res <- list(style=as.character(NA), neighbours=nlist, weights=vlist)

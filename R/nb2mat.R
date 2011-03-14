@@ -149,7 +149,7 @@ mat2listw <- function(x, row.names=NULL, style="M") {
 			neighbours[[i]] <- nbs
 			weights[[i]] <- as.double(x[i, nbs]) # Laurajean Lewis
 		} else {
-			neighbours[[i]] <- as.integer(0)
+			neighbours[[i]] <- 0L
 		}
 	    }
         }

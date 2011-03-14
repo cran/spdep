@@ -16,14 +16,14 @@ summary.nb <- function(object, coords=NULL, longlat=NULL, scale=1, ...) {
     if(any(c.nb > 0)) {
         min.nb <- min(c.nb[c.nb > 0])
         cat(length(c.nb[c.nb == min.nb]), " least connected region",
-	    ifelse(length(c.nb[c.nb == min.nb]) < 2, "", "s"), ":\n",
+	    ifelse(length(c.nb[c.nb == min.nb]) < 2L, "", "s"), ":\n",
 	    paste(regids[which(c.nb == min.nb)], collapse=" "), " with ",
-	    min.nb, " link", ifelse(min.nb < 2, "", "s"), "\n", sep="")
+	    min.nb, " link", ifelse(min.nb < 2L, "", "s"), "\n", sep="")
         max.nb <- max(c.nb)
 	cat(length(c.nb[c.nb == max.nb]), " most connected region",
-	    ifelse(length(c.nb[c.nb == max.nb]) < 2, "", "s"), ":\n",
+	    ifelse(length(c.nb[c.nb == max.nb]) < 2L, "", "s"), ":\n",
 	    paste(regids[which(c.nb == max.nb)], collapse=" "), " with ",
-	    max.nb, " link", ifelse(max.nb < 2, "", "s"), "\n", sep="")
+	    max.nb, " link", ifelse(max.nb < 2L, "", "s"), "\n", sep="")
     }
     if(!is.null(coords)) {
    	if (inherits(coords, "SpatialPoints")) {
@@ -66,7 +66,7 @@ print.nb <- function(x, ...) {
     cat("Percentage nonzero weights:", (100*sum(c.nb))/(n.nb^2), "\n")
     cat("Average number of links:", mean(c.nb), "\n")
     if(any(c.nb == 0)) cat(length(c.nb[c.nb == 0]), " region", 
-        ifelse(length(c.nb[c.nb == 0]) < 2, "", "s"), " with no links:\n",
+        ifelse(length(c.nb[c.nb == 0]) < 2L, "", "s"), " with no links:\n",
 	paste(regids[which(c.nb == 0)], collapse=" "), "\n", sep="")
     res <- is.symmetric.nb(nb, verbose=FALSE)
     if (!res) cat("Non-symmetric neighbours list\n")

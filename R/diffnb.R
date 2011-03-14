@@ -25,7 +25,7 @@ diffnb <- function(x, y, verbose=NULL) {
 			if(verbose && (res[[i]] != 0))
 				cat("Neighbour difference for region id:",
 				ids[i], "in relation to id:", ids[res[[i]]], "\n")
-		} else res[[i]] <- as.integer(0)
+		} else res[[i]] <- 0L
 	}
 	class(res) <- "nb"
 	attr(res, "region.id") <- attr(x, "region.id")

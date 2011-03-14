@@ -24,7 +24,7 @@ spam_update_setup(env, in_coef=0.1, pivot="MMD", which=1)
 Matrix_setup(env, Imult, super=as.logical(NA), which=1)
 Matrix_J_setup(env, super=FALSE, which=1)
 LU_setup(env, which=1)
-moments_setup(env, trs, m, p, type="MC", correct=TRUE, trunc=FALSE, which=1)
+moments_setup(env, trs=NULL, m, p, type="MC", correct=TRUE, trunc=TRUE, which=1)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -41,7 +41,7 @@ moments_setup(env, trs, m, p, type="MC", correct=TRUE, trunc=FALSE, which=1)
   \item{trs}{A numeric vector of \code{m} traces, as from \code{trW}}
   \item{type}{moments trace type, see \code{\link{trW}}}
   \item{correct}{default TRUE: use Smirnov correction term, see \code{\link{trW}}}
-  \item{trunc}{default FALSE: truncate Smirnov correction term, see \code{\link{trW}}}
+  \item{trunc}{default TRUE: truncate Smirnov correction term, see \code{\link{trW}}}
 }
 
 \details{Since environments are containers in the R workspace passed by reference rather than by value, they are useful for passing objects to functions called in numerical optimisation, here for the maximum likelihood estimation of spatial regression models. This technique can save a little time on each function call, balanced against the need to access the objects in the environment inside the function. The environment should contain a \code{family} string object either \dQuote{SAR}, \dQuote{CAR} or \dQuote{SMA} (used in \code{do_ldet} to choose spatial moving average in \code{spautolm}, and these specific objects before calling the set-up functions:

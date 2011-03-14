@@ -6,11 +6,11 @@ read.gal <- function(file, region.id=NULL, override.id=FALSE)
 	con <- file(file, open="r")
 	line <- unlist(strsplit(readLines(con, 1), " "))
 	x <- subset(line, nchar(line) > 0)
-	if (length(x) == 1) {
+	if (length(x) == 1L) {
 		n <- as.integer(x[1])
 		shpfile <- as.character(NA)
 		ind <- as.character(NA)
-	} else if (length(x) == 4) {
+	} else if (length(x) == 4L) {
 		n <- as.integer(x[2])
 		shpfile <- as.character(x[3])
 		ind <- as.character(x[4])

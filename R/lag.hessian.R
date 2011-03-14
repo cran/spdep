@@ -57,11 +57,11 @@ f_errlm_hess <- function(coefs, env) {
    ret
 }
 
-trB <- function(rho, tr)  sum(sapply(0:(length(tr)-1),
+trB <- function(rho, tr)  sum(sapply(0:(length(tr)-1L),
     function(i) rho^i * tr[i+1]))
 
 insert_asy <- function(coefs, env, s2, mat, trs) {
-    p <- length(coefs)-1
+    p <- length(coefs)-1L
     p2 <- p+2
     n <- get("n", envir=env)
     omat <- matrix(0, nrow=p2, ncol=p2)

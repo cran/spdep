@@ -22,7 +22,7 @@ geary.test(x, listw, randomisation=TRUE, zero.policy=NULL,
 
 \value{
 A list with class \code{htest} containing the following components:
-  \item{statistic}{the value of the standard deviate of Geary's C.}
+  \item{statistic}{the value of the standard deviate of Geary's C, in the order given in Cliff and Ord 1973, p. 21, which is (EC - C) / sqrt(VC), that is with the sign reversed with respect to the more usual (C - EC) / sqrt(VC); this means that the \dQuote{greater} alternative for the Geary C test corresponds to the \dQuote{greater} alternative for Moran's I test.}
   \item{p.value}{the p-value of the test.}
   \item{estimate}{the value of the observed Geary's C, its expectation and 
  variance under the method assumption.}

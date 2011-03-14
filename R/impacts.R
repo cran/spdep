@@ -69,7 +69,7 @@ mom_calc <- function(lw, m) {
     Card <- card(nb)
      
     CL <- get.ClusterOption()
-    if (!is.null(CL) && length(CL) > 1) {
+    if (!is.null(CL) && length(CL) > 1L) {
         require(snow)
         lis <- splitIndices(n, length(CL))
         lOmega <- clusterApply(CL, lis, spdep:::mom_calc_int2, m, nb,
@@ -145,7 +145,7 @@ processSample <- function(x, irho, drop2beta, type, iicept, icept, T, Q, q) {
       } else {
         P <- matrix(beta, ncol=1)
       }
-    } else if (type == "mixed") {
+    } else if (type == "mixed" || type == "sacmixed") {
         if (iicept) {
           b1 <- beta[-icept]
         } else {
@@ -196,7 +196,7 @@ processXSample <- function(x, drop2beta, type, iicept, icept, n, listw,
           P <- matrix(beta, ncol=1)
         }
         return(spdep:::lagImpactsExact(SW, P, n))
-    } else if (type == "mixed") {
+    } else if (type == "mixed" || type == "sacmixed") {
         if (iicept) {
             b1 <- beta[-icept]
         } else {
@@ -219,15 +219,15 @@ intImpacts <- function(rho, beta, P, n, mu, Sigma, irho, drop2beta, bnames,
     if (is.null(listw)) {
 
 
-        q <- length(tr)-1
+        q <- length(tr)-1L
         g <- rho^(0:q)
         T <- matrix(c(1, tr[-(q+1)]/n), nrow=1)
-        if (type == "mixed") {
+        if (type == "mixed" || type == "sacmixed") {
             T <- rbind(T, tr/n)
         }
         res <- lagImpacts(T, g, P)
         if (!is.null(Q)) {
-            if (!is.numeric(Q) || length(Q) > 1) stop("Invalid Q argument")
+            if (!is.numeric(Q) || length(Q) > 1L) stop("Invalid Q argument")
             if (Q > length(tr)) stop("Q larger than length of tr")
             Qres <- lagDistrImpacts(T, g, P, q=as.integer(Q))
             attr(res, "Qres") <- Qres
@@ -246,7 +246,7 @@ intImpacts <- function(rho, beta, P, n, mu, Sigma, irho, drop2beta, bnames,
             timings[["impacts_samples"]] <- proc.time() - .ptime_start
             .ptime_start <- proc.time()
             CL <- get("cl", env = .spdepOptions)
-            if (!is.null(CL) && length(CL) > 1) {
+            if (!is.null(CL) && length(CL) > 1L) {
                 require(snow)
                 l_sp <- lapply(splitIndices(nrow(samples), length(CL)), 
 		    function(i) samples[i,])
@@ -281,7 +281,7 @@ intImpacts <- function(rho, beta, P, n, mu, Sigma, irho, drop2beta, bnames,
             timings[["process_samples"]] <- proc.time() - .ptime_start
             .ptime_start <- proc.time()
 # 100928 Eelke Folmer
-            if (length(bnames) == 1) {
+            if (length(bnames) == 1L) {
                 direct <- as.mcmc(t(matrix(sapply(sres, function(x) x$direct),
                     nrow=1)))
                 indirect <- as.mcmc(t(matrix(sapply(sres,
@@ -306,7 +306,7 @@ intImpacts <- function(rho, beta, P, n, mu, Sigma, irho, drop2beta, bnames,
                     attr(x, "Qres")$total)))
                 Qnames <- c(sapply(bnames, function(x) 
                     paste(x, 1:Q, sep="__Q")))
-                if (length(Qnames) == 1) {
+                if (length(Qnames) == 1L) {
                     Qdirect <- t(Qdirect)
                     Qindirect <- t(Qindirect)
                     Qtotal <- t(Qtotal)
@@ -324,7 +324,8 @@ intImpacts <- function(rho, beta, P, n, mu, Sigma, irho, drop2beta, bnames,
     } else {
         SW <- invIrW(listw, rho)
         if (type == "lag") res <- lagImpactsExact(SW, P, n)
-        else if (type == "mixed") res <- mixedImpactsExact(SW, P, n, listw)
+        else if (type == "mixed" || type == "sacmixed")
+            res <- mixedImpactsExact(SW, P, n, listw)
         timings[["weights_impacts"]] <- proc.time() - .ptime_start
         .ptime_start <- proc.time()
         if (!is.null(R)) {
@@ -339,7 +340,7 @@ intImpacts <- function(rho, beta, P, n, mu, Sigma, irho, drop2beta, bnames,
             .ptime_start <- proc.time()
 # type, iicept, icept, SW, n, listw
             CL <- get("cl", env = .spdepOptions)
-            if (!is.null(CL) && length(CL) > 1) {
+            if (!is.null(CL) && length(CL) > 1L) {
                 require(snow)
                 l_sp <- lapply(splitIndices(nrow(samples), length(CL)), 
 		    function(i) samples[i,])
@@ -375,7 +376,7 @@ intImpacts <- function(rho, beta, P, n, mu, Sigma, irho, drop2beta, bnames,
             }
             timings[["process_samples"]] <- proc.time() - .ptime_start
             .ptime_start <- proc.time()
-            if (length(bnames) == 1) {
+            if (length(bnames) == 1L) {
                 direct <- as.mcmc(t(matrix(sapply(sres, function(x) x$direct),
                     nrow=1)))
                 indirect <- as.mcmc(t(matrix(sapply(sres,
@@ -419,7 +420,7 @@ impacts.sarlm <- function(obj, ..., tr=NULL, R=NULL, listw=NULL, useHESS=NULL,
     rho <- obj$rho
     beta <- obj$coefficients
     s2 <- obj$s2
-    if (obj$type == "sac") lambda <- obj$lambda
+    if (obj$type == "sac" || obj$type == "sacmixed") lambda <- obj$lambda
     usingHESS <- NULL
     iNsert <- obj$insert
     if (!is.null(R)) {
@@ -427,7 +428,8 @@ impacts.sarlm <- function(obj, ..., tr=NULL, R=NULL, listw=NULL, useHESS=NULL,
         usingHESS <- FALSE
         irho <- 2
         drop2beta <- 1:2
-        if (obj$type == "sac") drop2beta <- c(drop2beta, 3)
+        if (obj$type == "sac" || obj$type == "sacmixed")
+            drop2beta <- c(drop2beta, 3)
         if (is.logical(resvar)) {
             fdHess <- obj$fdHess
             if (is.logical(fdHess)) 
@@ -436,7 +438,8 @@ impacts.sarlm <- function(obj, ..., tr=NULL, R=NULL, listw=NULL, useHESS=NULL,
             if (!iNsert) {
                 irho <- 1
                 drop2beta <- 1
-                if (obj$type == "sac") drop2beta <- c(drop2beta, 2)
+                if (obj$type == "sac" || obj$type == "sacmixed")
+                    drop2beta <- c(drop2beta, 2)
             }
         }
         if (!is.null(useHESS) && useHESS) {
@@ -447,14 +450,15 @@ impacts.sarlm <- function(obj, ..., tr=NULL, R=NULL, listw=NULL, useHESS=NULL,
             if (!iNsert) {
                 irho <- 1
                 drop2beta <- 1
-                if (obj$type == "sac") drop2beta <- c(drop2beta, 2)
+                if (obj$type == "sac" || obj$type == "sacmixed")
+                    drop2beta <- c(drop2beta, 2)
             }
         }
         interval <- obj$interval
         if (is.null(interval)) interval <- c(-1,0.999)
     }
     icept <- grep("(Intercept)", names(beta))
-    iicept <- length(icept) > 0
+    iicept <- length(icept) > 0L
     if (obj$type == "lag" || obj$type == "sac") {
       if (iicept) {
         P <- matrix(beta[-icept], ncol=1)
@@ -464,7 +468,7 @@ impacts.sarlm <- function(obj, ..., tr=NULL, R=NULL, listw=NULL, useHESS=NULL,
         bnames <- names(beta)
       }
       p <- length(beta)
-    } else if (obj$type == "mixed") {
+    } else if (obj$type == "mixed" || obj$type == "sacmixed") {
       if (iicept) {
         b1 <- beta[-icept]
       } else {
@@ -481,11 +485,13 @@ impacts.sarlm <- function(obj, ..., tr=NULL, R=NULL, listw=NULL, useHESS=NULL,
     if (!is.null(R)) {
         if (usingHESS && !iNsert) {
             mu <- c(rho, beta)
-            if (obj$type == "sac") mu <- c(rho, lambda, beta)
+            if (obj$type == "sac" || obj$type == "sacmixed")
+                mu <- c(rho, lambda, beta)
             Sigma <- fdHess
         } else {
             mu <- c(s2, rho, beta)
-            if (obj$type == "sac") mu <- c(s2, rho, lambda, beta)
+            if (obj$type == "sac" || obj$type == "sacmixed")
+                mu <- c(s2, rho, lambda, beta)
             if (usingHESS) {
                 Sigma <- fdHess
             } else {
@@ -525,7 +531,7 @@ lagImpactMat <- function(x, reportQ=NULL) {
         if (is.null(Qobj)) warning("No impact components to report")
         else {
 # 100928 Eelke Folmer
-            if (length(attr(x, "bnames")) == 1) {
+            if (length(attr(x, "bnames")) == 1L) {
                 Qobj$direct <- matrix(Qobj$direct, ncol=1)
                 Qobj$indirect <- matrix(Qobj$indirect, ncol=1)
                 Qobj$total <- matrix(Qobj$total, ncol=1)
@@ -566,7 +572,7 @@ summary.lagImpact <- function(object, ..., zstats=FALSE, short=FALSE, reportQ=NU
     indirect_sum <- summary(object$sres$indirect, ...)
     total_sum <- summary(object$sres$total, ...)
 # 101109 Eelke Folmer
-    if (length(attr(object, "bnames")) == 1) {
+    if (length(attr(object, "bnames")) == 1L) {
         scnames <- names(direct_sum$statistics)
         qcnames <- names(direct_sum$quantiles)
         direct_sum$statistics <- matrix(direct_sum$statistics, nrow=1)
@@ -601,7 +607,7 @@ summary.lagImpact <- function(object, ..., zstats=FALSE, short=FALSE, reportQ=NU
     res <- c(object, lres, Qmcmc)
     if (zstats) {
 # 100928 Eelke Folmer
-        if (length(attr(object, "bnames")) == 1) {
+        if (length(attr(object, "bnames")) == 1L) {
             zmat <- sapply(lres, function(x) x$statistics[1]/x$statistics[2])
             zmat <- matrix(zmat, ncol=3)
             colnames(zmat) <- c("Direct", "Indirect", "Total")
@@ -704,7 +710,7 @@ print.summary.lagImpact <- function(x, ...) {
         cat("\nSimulated p-values:\n")
         xx <- apply(x$pzmat, 2, format.pval)
 # 100928 Eelke Folmer
-        if (length(attr(x, "bnames")) == 1) {
+        if (length(attr(x, "bnames")) == 1L) {
             xx <- matrix(xx, ncol=3)
             colnames(xx) <- c("Direct", "Indirect", "Total")
         }

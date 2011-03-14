@@ -1,18 +1,18 @@
 Package: spdep
-Version: 0.5-26
-Date: 2010-11-25
+Version: 0.5-29
+Date: 2011-03-13
 Title: Spatial dependence: weighting schemes, statistics and models
 Encoding: latin1
 Author: Roger Bivand <Roger.Bivand@nhh.no>, with contributions by Micah
         Altman, Luc Anselin, Renato Assunção, Olaf Berke, Andrew
         Bernat, Guillaume Blanchet, Eric Blankmeyer, Marilia Carvalho,
         Bjarke Christensen, Yongwan Chun, Carsten Dormann, Stéphane
-        Dray, Rein Halbersma, Elias Krainski, Nicholas Lewin-Koh,
-        Hongfei Li, Jielai Ma, Giovanni Millo, Werner Mueller, Hisaji
-        Ono, Pedro Peres-Neto, Gianfranco Piras, Markus Reder, Michael
-        Tiefelsdorf, and Danlin Yu.
+        Dray, Rein Halbersma, Elias Krainski, Pierre Legendre, Nicholas
+        Lewin-Koh, Hongfei Li, Jielai Ma, Giovanni Millo, Werner
+        Mueller, Hisaji Ono, Pedro Peres-Neto, Gianfranco Piras, Markus
+        Reder, Michael Tiefelsdorf, and Danlin Yu.
 Maintainer: Roger Bivand <Roger.Bivand@nhh.no>
-Depends: R (>= 2.4.0), methods, sp (>= 0.9), boot, Matrix (>=
+Depends: R (>= 2.10.0), methods, sp (>= 0.9), boot, Matrix (>=
         0.999375-9), MASS, nlme, maptools (>= 0.5-4), deldir, coda
 Suggests: snow, rlecuyer, spam(>= 0.13-1), RANN
 Description: A collection of functions to create spatial weights matrix
@@ -32,6 +32,6 @@ Description: A collection of functions to create spatial weights matrix
         eigenvector spatial filtering, GM SAR error models, and
         generalized spatial two stage least squares models.
 License: GPL (>= 2)
-Packaged: 2010-11-30 17:21:13 UTC; rsb
+Packaged: 2011-03-14 09:34:29 UTC; rsb
 Repository: CRAN
-Date/Publication: 2010-11-30 19:46:21
+Date/Publication: 2011-03-14 10:01:32

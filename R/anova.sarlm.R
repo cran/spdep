@@ -2,11 +2,11 @@
 #
 
 anova.sarlm <- function(object, ...) {
-    if (length(list(object, ...)) > 1) {
+    if (length(list(object, ...)) > 1L) {
         getResponseFormula <- function (object) 
         {
             form <- formula(object)
-            if (!(inherits(form, "formula") && (length(form) == 3))) {
+            if (!(inherits(form, "formula") && (length(form) == 3L))) {
                 stop("\"Form\" must be a two sided formula")
             }
             eval(parse(text = paste("~", deparse(form[[2]]))))
@@ -31,7 +31,7 @@ anova.sarlm <- function(object, ...) {
         object <- object[subs]
         aux <- lapply(object, logLik)
         if (length(unique(unlist(lapply(object, 
-	    function(el) length(residuals(el)))))) > 1) {
+	    function(el) length(residuals(el)))))) > 1L) {
             stop("All fitted objects must use the same number of observations")
         }
         dfModel <- unlist(lapply(aux, function(el) attr(el, "df")))

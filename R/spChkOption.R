@@ -54,7 +54,7 @@ get.rlecuyerSeedOption  <- function() {
 }
 
 set.rlecuyerSeedOption  <- function(seed) {
-    if (length(seed) != 6) stop("Six integer values required")
+    if (length(seed) != 6L) stop("Six integer values required")
     if (storage.mode(seed) != "integer") seed <- as.integer(seed)
     assign("rlecuyerSeed", seed, env = .spdepOptions)
     invisible(NULL)

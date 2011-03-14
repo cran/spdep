@@ -1,6 +1,6 @@
 # Copyright 2010 by Roger Bivand
 sacsarlm <- function(formula, data = list(), listw, listw2=NULL, na.action, 
-	method="eigen", quiet=NULL, zero.policy=NULL, 
+	type="sac", method="eigen", quiet=NULL, zero.policy=NULL, 
 	tol.solve=1.0e-10, llprof=NULL, control=list()) {
         timings <- list()
         .ptime_start <- proc.time()
@@ -14,6 +14,9 @@ sacsarlm <- function(formula, data = list(), listw, listw2=NULL, na.action,
         if (length(noNms <- namc[!namc %in% nmsC])) 
             warning("unknown names in control: ", paste(noNms, collapse = ", "))
         if (is.null(quiet)) quiet <- !get("verbose", env = .spdepOptions)
+	switch(type, sac = if (!quiet) cat("\nSpatial ARAR model\n"),
+	    sacmixed = if (!quiet) cat("\nSpatial ARAR mixed model (Manski)\n"),
+	    stop("\nUnknown model type\n"))
         stopifnot(is.logical(quiet))
         if (is.null(zero.policy))
             zero.policy <- get("zeroPolicy", env = .spdepOptions)
@@ -26,7 +29,7 @@ sacsarlm <- function(formula, data = list(), listw, listw2=NULL, na.action,
         else if (!inherits(listw2, "listw")) stop("No 2nd neighbourhood list")
         if (is.null(con$fdHess)) con$fdHess <- method != "eigen"
         stopifnot(is.numeric(con$lower))
-        stopifnot(length(con$lower) == 2)
+        stopifnot(length(con$lower) == 2L)
         if (!is.null(con$pars)) {
             stopifnot(is.numeric(con$pars))
             stopifnot(length(con$pars)==length(con$lower))
@@ -59,12 +62,50 @@ sacsarlm <- function(formula, data = list(), listw, listw2=NULL, na.action,
 	if (NROW(x) != length(listw$neighbours))
 	    stop("Input data and neighbourhood list have different dimensions")
 	wy <- lag.listw(listw, y, zero.policy=zero.policy)
+	xcolnames <- colnames(x)
+	K <- ifelse(xcolnames[1] == "(Intercept)", 2, 1)
+	n <- NROW(x)
+	m <- NCOL(x)
+	if (type != "sac") {
+		# check if there are enough regressors
+	        if (m > 1) {
+			WX <- matrix(nrow=n,ncol=(m-(K-1)))
+			for (k in K:m) {
+				wx <- lag.listw(listw, x[,k], 
+				    zero.policy=zero.policy)
+				if (any(is.na(wx))) 
+				    stop("NAs in lagged independent variable")
+				WX[,(k-(K-1))] <- wx
+			}
+		}
+		if (K == 2) {
+         	    # unnormalized weight matrices
+                	if (!(listw$style == "W")) {
+ 	      			intercept <- as.double(rep(1, n))
+       	        		wx <- lag.listw(listw, intercept, 
+					zero.policy = zero.policy)
+                    		if (m > 1) {
+                        		WX <- cbind(wx, WX)
+                    		} else {
+			      		WX <- matrix(wx, nrow = n, ncol = 1)
+                    		}
+                	} 
+            	}   
+		m1 <- m + 1
+		mm <- NCOL(x) + NCOL(WX)
+            	xxcolnames <- character(mm)
+		for (k in 1:m) xxcolnames[k] <- xcolnames[k]
+		for (k in m1:mm) 
+		    xxcolnames[k] <- paste("lag.", xcolnames[k-mm+m], sep="")
+		x <- cbind(x, WX)
+		colnames(x) <- xxcolnames
+		m <- NCOL(x)
+		rm(wx, WX)
+	}
 	if (NROW(x) != length(listw2$neighbours))
 	    stop("Input data and neighbourhood list2 have different dimensions")
 	w2y <- lag.listw(listw2, y, zero.policy=zero.policy)
 	w2wy <- lag.listw(listw2, wy, zero.policy=zero.policy)
-	n <- NROW(x)
-	m <- NCOL(x)
 	lm.base <- lm(y ~ x - 1)
 	aliased <- is.na(coefficients(lm.base))
 	cn <- names(aliased)
@@ -225,7 +266,7 @@ sacsarlm <- function(formula, data = list(), listw, listw2=NULL, na.action,
         if (!is.null(llprof)) {
             llrho <- NULL
             lllambda <- NULL
-            if (length(llprof) == 1) {
+            if (length(llprof) == 1L) {
                 llrho <- seq(lower[1], upper[1], length.out=llprof)
                 lllambda <- seq(lower[2], upper[2], length.out=llprof)
                 llprof <- as.matrix(expand.grid(llrho, lllambda))
@@ -379,7 +420,7 @@ sacsarlm <- function(formula, data = list(), listw, listw2=NULL, na.action,
 	call <- match.call()
 	names(r) <- names(y)
 	names(fit) <- names(y)
-	ret <- structure(list(type="sac", rho=rho, lambda=lambda,
+	ret <- structure(list(type=type, rho=rho, lambda=lambda,
 	    coefficients=coef.sac, rest.se=rest.se, ase=ase,
 	    LL=LL, s2=s2, SSE=SSE, parameters=(p+3), lm.model=lm.model, 
 	    method=method, call=call, residuals=r, lm.target=lm.target,

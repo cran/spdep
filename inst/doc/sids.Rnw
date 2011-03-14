@@ -66,7 +66,7 @@ reference to the spatial nature of the data in \citet{cressie+read:1985},
 expanded in \citet{cressie+chan:1989}, and used in detail in \citet{cressie:1991}. It is for
 the 100 counties of North Carolina, and includes counts of numbers of
 live births (also non-white live births) and numbers of sudden infant
-deaths, for the 1974--1978 and 1979--1984 periods. In \citet{cressie+read:1985}, a listing of county neighbours based on shared boundaries
+deaths, for the July 1, 1974 to June 30, 1978 and July 1, 1979 to June 30, 1984 periods. In \citet{cressie+read:1985}, a listing of county neighbours based on shared boundaries
 (contiguity) is given, and in \citet{cressie+chan:1989}, and in \citet[][pp. 386--389]{cressie:1991}, a different listing based on the criterion of
 distance between county seats, with a cutoff at 30 miles. The county seat
 location coordinates are given in miles in a local (unknown) coordinate
@@ -80,7 +80,7 @@ library(spdep)
 \section{Getting the data into \RR}
 
 We will be using the \pkg{spdep} package, here version:
-\Sexpr{spdep()[1]}, the pkg{sp} package and the \pkg{maptools}
+\Sexpr{spdep()[1]}, the \pkg{sp} package and the \pkg{maptools}
 package. The data from the sources refered to above is documented in
 the help page for the \code{nc.sids} data set in \pkg{spdep}. The
 actual data, included in a shapefile of the county boundaries
@@ -243,9 +243,12 @@ separately in Figure \ref{choymap}.
 ch <- choynowski(nc$SID74, nc$BIR74)
 nc$ch_pmap_low <- ifelse(ch$type, ch$pmap, NA)
 nc$ch_pmap_high <- ifelse(!ch$type, ch$pmap, NA)
+prbs <- c(0,.001,.01,.05,.1,1)
+nc$high = cut(nc$ch_pmap_high, prbs)
+nc$low = cut(nc$ch_pmap_low,prbs )
 @ 
 <<echo=TRUE,eval=FALSE>>= 
-spplot(nc, c("ch_pmap_low", "ch_pmap_high"), at=c(0, 0.001, 0.01, 0.05, 0.1, 1), col.regions=grey.colors(5))
+spplot(nc, c("low", "high"), col.regions=grey.colors(5))
 @
 \end{footnotesize}
 
@@ -253,7 +256,7 @@ spplot(nc, c("ch_pmap_low", "ch_pmap_high"), at=c(0, 0.001, 0.01, 0.05, 0.1, 1),
 \begin{center} 
 <<results=tex,echo=FALSE>>= 
 <<afigl>>
-print(spplot(nc, c("ch_pmap_low", "ch_pmap_high"), at=c(0, 0.001, 0.01, 0.05, 0.1, 1), col.regions=grey.colors(5)))
+print(spplot(nc, c("low", "high"), col.regions=grey.colors(5)))
 <<zfigl>>
 @ 
 \end{center}
@@ -268,7 +271,7 @@ the grey sequential palette, available in \RR~in the \pkg{RColorBrewer}
 package (the colours are copied here to avoid loading the package).
 
 While the \code{choynowski()} function only provides the probability
-map valyes required, the \code{probmap()} function returns raw (crude)
+map values required, the \code{probmap()} function returns raw (crude)
 rates, expected counts (assuming a constant rate across the study area),
 relative risks, and Poisson probability map values calculated using the
 standard cumulative distribution function \code{ppois()}. This does not
@@ -301,7 +304,7 @@ print(spplot(nc, "pmap", at=brks, col.regions=rev(brewer.pal(9, "RdBu"))))
 \label{poismap}
 \end{figure}
 
-Marilia Carvalho (personal communication) and Virgilio Gómez Rubio
+Marilia Carvalho (personal communication) and Virgilio G\'{o}mez Rubio
 \citep{gomez-rubio+ferrandiz+lopez:2003} have pointed to the unusual
 shape of the distribution of the Poisson probability values (Figure
 \ref{poishist}), repeating the doubts about probability mapping voiced
@@ -309,7 +312,7 @@ by \citet[][p. 392]{cressie:1991}: ``an extreme value $\ldots$ may be
 more due to its lack of fit to the Poisson model than to its deviation
 from the constant rate assumption''. There are many more high values
 than one would have expected, suggesting perhaps overdispersion, that
-is that the ratio of the mean and variance is larger than unity.
+is that the ratio of the variance and mean is larger than unity.
 
 
 \begin{footnotesize}
@@ -334,7 +337,7 @@ hist(nc$pmap, main="")
 
 One ad-hoc way to assess the impact of the possible failure of our
 assumption that the counts follow the Poisson distribution is to estimate
-the dispersion by fitting a general linear model of the observed counts
+the dispersion by fitting a generalized linear model of the observed counts
 including only the intercept (null model) and offset by the observed
 population at risk (suggested by Marilia Carvalho and associates):
 
@@ -359,7 +362,7 @@ an ad-hoc adjustment made because \RR~provides access to a wide
 range of model-fitting functions that can be used to help check our
 assumptions. \citet{gomez-rubio+ferrandiz+lopez:2003} chose rather to
 construct a probability map under the hypothesis that data are drawn
-from a Negative Binomial.
+from a Negative Binomial distribution.
 
 \begin{figure}[htbp]
 \begin{center} 
@@ -427,7 +430,7 @@ print(spplot(nc, "EB_loc", at=brks, col.regions=rev(brewer.pal(8, "RdBu")), sp.l
 \end{figure}
 @ 
 
-In addition to Empirical Bayes smoothing globally, used both for disease mapping and the Assunção and Reis correction to Moran's $I$ for rates data (to shrink towards the global rate when the population at risk is small, here as a Monte Carlo test), lists of local neighbours can be used to shrink towards a local rate.
+In addition to Empirical Bayes smoothing globally, used both for disease mapping and the Assun\,{c}\~{a}o and Reis correction to Moran's $I$ for rates data (to shrink towards the global rate when the population at risk is small, here as a Monte Carlo test), lists of local neighbours can be used to shrink towards a local rate.
 
 
 \begin{scriptsize}

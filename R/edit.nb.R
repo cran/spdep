@@ -8,7 +8,7 @@ edit.nb <- function(name, coords, polys=NULL, ..., use_region.id=FALSE) {
 # corrected object Thibaut Jombart 081002
   if (!inherits(nb, "nb")) stop("not a neighbours list")
   cl <- class(nb)
-  if (length(cl) > 1) icl <- cl[-match("nb", cl)]
+  if (length(cl) > 1L) icl <- cl[-match("nb", cl)]
   else icl <- NULL
   if (missing(coords) && !is.null(polys) &&
       inherits(polys, "SpatialPolygons")) coords <- coordinates(polys)
@@ -61,13 +61,13 @@ edit.nb <- function(name, coords, polys=NULL, ..., use_region.id=FALSE) {
       else {
         deletions <- c(deletions, paste(cand, collapse="-"))
         nb[[cand[1]]] <- nb[[cand[1]]][nb[[cand[1]]] != cand[2]]
-				if(length(nb[[cand[1]]]) == 0) {
-                                  nb[[cand[1]]] <- as.integer(0)
+				if(length(nb[[cand[1]]]) == 0L) {
+                                  nb[[cand[1]]] <- 0L
                                   cat(labels[cand[1]], "is now an island\n")
 				}
         nb[[cand[2]]] <- nb[[cand[2]]][nb[[cand[2]]] != cand[1]]
-        if(length(nb[[cand[2]]]) == 0) {
-          nb[[cand[2]]] <- as.integer(0)
+        if(length(nb[[cand[2]]]) == 0L) {
+          nb[[cand[2]]] <- 0L
           cat(labels[cand[2]], "is now an island\n")
         }
 ###
@@ -94,7 +94,7 @@ edit.nb <- function(name, coords, polys=NULL, ..., use_region.id=FALSE) {
       #points(x, y)
     }
       else {
-        if (length(cand == 2)) {
+        if (length(cand) == 2L) {
           cat("No contiguity between chosen points\n")
           addcont <- readline("Add contiguity? (y/n) ")
           if (addcont != "y") addcont <- "n"
@@ -139,7 +139,7 @@ edit.nb <- function(name, coords, polys=NULL, ..., use_region.id=FALSE) {
         else if (inherits(polys, "SpatialPolygons"))
             plot(polys, border="grey", add=TRUE)
       for (i in 1:n) {
-        if(nb[[i]][1]!=0 & length(nb[[i]])>0)
+        if(nb[[i]][1]!=0 & length(nb[[i]])>0L)
           segments(x[i],y[i],x[nb[[i]]],y[nb[[i]]])
       }
       if(enum>1){

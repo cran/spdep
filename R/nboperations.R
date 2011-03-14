@@ -17,7 +17,7 @@ union.nb<-function(nb.obj1, nb.obj2){
   new.nb<-vector(mode="list", length=n)
   for(i in 1:n) {
     if (card1[i] == 0) {
-      if (card2[i] == 0) new.nb[[i]] <- as.integer(0)
+      if (card2[i] == 0) new.nb[[i]] <- 0L
       else new.nb[[i]] <- nb.obj2[[i]]
     } else {
       if (card2[i] == 0) new.nb[[i]] <- nb.obj1[[i]]
@@ -47,9 +47,9 @@ intersect.nb<-function(nb.obj1, nb.obj2){
   for(i in 1:n) {
     if (card1[i] > 0 && card2[i] > 0) {
       res <- sort(intersect(nb.obj1[[i]], nb.obj2[[i]]))
-      if(length(res) == 0) new.nb[[i]] <- as.integer(0)
+      if(length(res) == 0L) new.nb[[i]] <- 0L
       else new.nb[[i]] <- res
-    } else new.nb[[i]] <- as.integer(0)
+    } else new.nb[[i]] <- 0L
   }
   attr(new.nb,"region.id")<-attr(nb.obj1,"region.id")
   attr(new.nb,"type")<-paste("intersect(",attr(nb.obj1,"type"),
@@ -72,7 +72,7 @@ setdiff.nb<-function(nb.obj1, nb.obj2){
   	new.nb<-vector(mode="list", length=n)
   	for(i in 1:n) {
     		if (card1[i] == 0) {
-      			if (card2[i] == 0) new.nb[[i]] <- as.integer(0)
+      			if (card2[i] == 0) new.nb[[i]] <- 0L
       			else new.nb[[i]] <- nb.obj2[[i]]
     		} else {
       			if (card2[i] == 0) new.nb[[i]] <- nb.obj1[[i]]
@@ -88,8 +88,8 @@ setdiff.nb<-function(nb.obj1, nb.obj2){
                   				a <- nb.obj2[[i]]
                 			}
                 			res <- sort(setdiff(a, b))
-			                if(length(res) == 0) 
-					    new.nb[[i]] <- as.integer(0)
+			                if(length(res) == 0L) 
+					    new.nb[[i]] <- 0L
                 			else new.nb[[i]] <- res
 	    			}
         		}
@@ -116,7 +116,7 @@ complement.nb<-function(nb.obj){
     if (card1[i] == 0) new.nb[[i]] <- cmp
     else {
       res <- sort(cmp[-nb.obj[[i]]])
-      if(length(res) == 0) new.nb[[i]] <- as.integer(0)
+      if(length(res) == 0L) new.nb[[i]] <- 0L
       else new.nb[[i]] <- res
     }
   }

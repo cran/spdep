@@ -11,7 +11,7 @@
 
 where \eqn{\rho}{rho} and \eqn{\lambda}{lambda} are found by \code{nlminb} or \code{optim()} first, and \eqn{\beta}{beta} and other parameters by generalized least squares subsequently}
 \usage{
-sacsarlm(formula, data = list(), listw, listw2 = NULL, na.action,
+sacsarlm(formula, data = list(), listw, listw2 = NULL, na.action, type="sac",
  method = "eigen", quiet = NULL, zero.policy = NULL, tol.solve = 1e-10,
  llprof=NULL, control = list())
 }
@@ -25,6 +25,7 @@ is called}
   \item{listw}{a \code{listw} object created for example by \code{nb2listw}}
   \item{listw2}{a \code{listw} object created for example by \code{nb2listw}, if not given, set to the same spatial weights as the \code{listw} argument}
   \item{na.action}{a function (default \code{options("na.action")}), can also be \code{na.omit} or \code{na.exclude} with consequences for residuals and fitted values - in these cases the weights list will be subsetted to remove NAs in the data. It may be necessary to set zero.policy to TRUE because this subsetting may create no-neighbour observations. Note that only weights lists created without using the glist argument to \code{nb2listw} may be subsetted.}
+  \item{type}{default "sac", may be set to "sacmixed" for the Manski model to include the spatially lagged independent variables added to X using \code{listw}; when "sacmixed", the lagged intercept is dropped for spatial weights style "W", that is row-standardised weights, but otherwise included}
   \item{method}{"eigen" (default) - the Jacobian is computed as the product 
 of (1 - rho*eigenvalue) using \code{eigenw}, and "spam" or "Matrix" for strictly symmetric weights lists of styles "B" and "C", or made symmetric by similarity (Ord, 1975, Appendix C) if possible for styles "W" and "S", using code from the spam or Matrix packages to calculate the determinant; "LU" provides an alternative sparse matrix decomposition approach. In addition, there are "Chebyshev" and Monte Carlo "MC" approximate log-determinant methods.}
   \item{quiet}{default NULL, use !verbose global option value; if FALSE, reports function values during optimization.}
@@ -104,6 +105,10 @@ summary(COL.sacW.eig, correlation=TRUE)
 W <- as(as_dgRMatrix_listw(nb2listw(COL.nb, style="W")), "CsparseMatrix")
 trMatc <- trW(W, type="mult")
 summary(impacts(COL.sacW.eig, tr=trMatc, R=2000), zstats=TRUE, short=TRUE)
+COL.msacW.eig <- sacsarlm(CRIME ~ INC + HOVAL, data=COL.OLD, 
+ nb2listw(COL.nb, style="W"), type="sacmixed")
+summary(COL.msacW.eig, correlation=TRUE)
+summary(impacts(COL.msacW.eig, tr=trMatc, R=2000), zstats=TRUE, short=TRUE)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

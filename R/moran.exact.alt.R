@@ -33,7 +33,7 @@ localmoran.exact.alt <- function(model, select, nb, glist = NULL, style = "W",
     if (missing(select)) select <- 1:n
     u <- as.vector(u)
     select <- unique(as.integer(select))
-    if (length(select) < 1) stop("select too short")
+    if (length(select) < 1L) stop("select too short")
     if (any(select < 1 || select > n))
         stop("select out of range")
     utu <- c(crossprod(u))
@@ -44,7 +44,7 @@ localmoran.exact.alt <- function(model, select, nb, glist = NULL, style = "W",
     XtXinv <- chol2inv(model$qr$qr[p1, p1, drop = FALSE])
     X <- model.matrix(terms(model), model.frame(model))
 # fixed after looking at TOWN dummy in Boston data
-    if (length(nacoefs > 0)) X <- X[,-nacoefs]
+    if (length(nacoefs) > 0L) X <- X[,-nacoefs]
     if (!is.null(wts <- weights(model))) {
 	X <- sqrt(diag(wts)) %*% X
     }

@@ -1,4 +1,4 @@
-# Copyright 2002-3 by Roger Bivand
+# Copyright 2002-2010 by Roger Bivand and Pierre Legendre
 #
 
 sp.correlogram <- function (neighbours, var, order = 1, method = "corr", 
@@ -7,9 +7,9 @@ sp.correlogram <- function (neighbours, var, order = 1, method = "corr",
         stop("not a neighbours list")
     if (any(is.na(var))) 
         stop("no NAs permitted in variable")
-        if (is.null(zero.policy))
-            zero.policy <- get("zeroPolicy", env = .spdepOptions)
-        stopifnot(is.logical(zero.policy))
+    if (is.null(zero.policy))
+        zero.policy <- get("zeroPolicy", env = .spdepOptions)
+    stopifnot(is.logical(zero.policy))
     if (is.null(spChk)) 
         spChk <- get.spChkOption()
     if (spChk && !chkIDs(var, nb2listw(neighbours, zero.policy = zero.policy))) 
@@ -25,12 +25,20 @@ sp.correlogram <- function (neighbours, var, order = 1, method = "corr",
         res <- cor(cbind(var, lags.x))[1, -1]
         names(res) <- 1:order
     }
-    else if (method == "I") {
+    else if ((method == "I") || (method == "C")) {
         res <- matrix(NA, nrow = order, ncol = 3)
         for (i in 1:order) {
-            listw <- nb2listw(nblags[[i]], style = style, zero.policy = zero.policy)
-            res[i,] <- moran.test(var, listw, randomisation = randomisation, 
-		zero.policy = zero.policy)$estimate
+            listw <- nb2listw(nblags[[i]], style = style,
+                zero.policy = zero.policy)
+            if (method == "I") {
+                res[i,] <- moran.test(var, listw,
+                    randomisation = randomisation,
+                    zero.policy = zero.policy)$estimate
+            } else {                                          # Addition PL
+                res[i, ] <- geary.test(var, listw,
+                    randomisation = randomisation, 
+                    zero.policy = zero.policy)$estimate           # Addition PL
+            }
         }
         rownames(res) <- 1:order
     }
@@ -43,9 +51,15 @@ sp.correlogram <- function (neighbours, var, order = 1, method = "corr",
 
 print.spcor <- function (x, p.adj.method="none", ...) 
 {
-    cat("Spatial correlogram for", x$var, "\nmethod:", 
-        ifelse(x$method == "I", "Moran's I", "Spatial autocorrelation"), "\n")
+    cat("Spatial correlogram for", x$var, "\nmethod: ") 
     if (x$method == "I") {
+        cat( "Moran's I\n")       # Modif. PL
+    } else if(x$method == "C") {
+        cat( "Geary's C\n")   # Modif. PL
+    } else {
+        cat("Spatial autocorrelation\n")          # Modif. PL
+    }
+    if ((x$method == "I") || (x$method == "C")) {
         res <- as.matrix(x$res)
 	ZI <- (res[,1]-res[,2])/sqrt(res[,3])
 	pv <- p.adjust(2*pnorm(abs(ZI), lower.tail=FALSE), method=p.adj.method)
@@ -67,14 +81,19 @@ plot.spcor <- function (x, main, ylab, ylim, ...)
 {
     if (missing(main)) 
         main <- x$var
-    if (x$method == "I") {
+    if ((x$method == "I") || (x$method == "C")) {
         lags <- as.integer(rownames(x$res))
-        sd2 <- 2*sqrt(x$res[,3])
+        to.plot <- which((x$res[,3] > 0) & (x$res[,3] != Inf))  # Addition PL
+        sd2 <- rep(0, nrow(x$res))                              # Addition PL
+        sd2[to.plot] <- 2 * sqrt(x$res[to.plot, 3])             # Modif. PL
+#        sd2 <- 2*sqrt(x$res[,3])
         if (missing(ylim)) {
             ylim <- range(c(x$res[,1]+sd2, x$res[,1]-sd2))
 	}
         if (missing(ylab)) 
-            ylab <- "Moran's I"
+            if(x$method == "I") ylab <- "Moran's  I"            # Addition PL
+            if(x$method == "C") ylab <- "Geary's  C"            # Addition PL
+#            ylab <- "Moran's I"
         plot(lags, x$res[,1], type="p", pch=18, ylim = ylim, main = main, ylab = ylab, xaxt = "n")
 #        segments(lags, x$res[,1], lags, x$res[,2], lwd=4, col="grey")
         arrows(lags, x$res[,1]+sd2, lags, x$res[,1]-sd2, length=0.1, angle=90)

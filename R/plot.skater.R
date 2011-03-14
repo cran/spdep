@@ -11,8 +11,8 @@ function(x, coords, label.areas=NULL,
           inches=FALSE, xlab=" ", ylab=" ", xaxt="n", yaxt="n",
           fg=groups.colors[x$groups], ...)
   id.edgp <- which(sapply(x$edges.groups, function(x)
-                          length(x$node))>1)
-  if (length(id.edgp)>0)
+                          length(x$node))>1L)
+  if (length(id.edgp)>0L)
     for (i in 1:length(id.edgp)) {
       id1 <- x$edges.groups[[id.edgp[i]]]$edge[,1]
       id2 <- x$edges.groups[[id.edgp[i]]]$edge[,2]
