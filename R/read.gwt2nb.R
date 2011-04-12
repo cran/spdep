@@ -143,3 +143,28 @@ write.sn2Arc <- function(sn, file, field=NULL) {
 	close(con)
 }
 
+# Copyright 2011 Virgilio Gomez-Rubio
+# a function to export from nb object to a particular file format
+# which is used by INLA when fitting spatial models for lattice data
+
+nb2INLA <-function(file, nb)
+{
+        
+        n<-length(nb)
+
+        if(!file.create(file))
+        {
+                stop("Cannot open file")
+        }
+
+        txt<-paste(n, "\n", sep="")
+        cat(txt, file=file, append = TRUE)
+
+        for(i in 1:length(nb))
+        {
+                txt<-paste(c(i, length(nb[[i]]), nb[[i]]), collapse=" ")
+                txt<-paste(txt, "\n",sep="")
+                cat(txt, file=file, append = TRUE)
+        }
+}
+

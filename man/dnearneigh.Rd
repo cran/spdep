@@ -17,11 +17,11 @@ dnearneigh(x, d1, d2, row.names = NULL, longlat = NULL)
 }
 \value{
 The function returns a list of integer vectors giving the region id numbers
-for neighbours satisfying the distance criteria.
+for neighbours satisfying the distance criteria. See \code{\link{card}} for details of \dQuote{nb} objects.
 }
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 
-\seealso{\code{\link{knearneigh}}}
+\seealso{\code{\link{knearneigh}}, \code{\link{card}}}
 
 \examples{
 example(columbus)

@@ -17,11 +17,11 @@ knn2nb(knn, row.names = NULL, sym = FALSE)
   \item{sym}{force the output neighbours list to symmetry}
 }
 \value{
-The function returns an object of class \code{nb} with a list of integer vectors containing neighbour region number ids.
+The function returns an object of class \code{nb} with a list of integer vectors containing neighbour region number ids. See \code{\link{card}} for details of \dQuote{nb} objects.
 }
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 
-\seealso{\code{\link{knearneigh}}}
+\seealso{\code{\link{knearneigh}}, \code{\link{card}}}
 
 \examples{
 example(columbus)

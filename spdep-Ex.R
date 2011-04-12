@@ -2431,6 +2431,25 @@ plot(bh, border=gray(.5), add=TRUE)
 
 graphics::par(get("par.postscript", pos = 'CheckExEnv'))
 cleanEx()
+nameEx("nb2INLA")
+### * nb2INLA
+
+flush(stderr()); flush(stdout())
+
+### Name: nb2INLA
+### Title: Output spatial neighbours for INLA
+### Aliases: nb2INLA
+### Keywords: spatial
+
+### ** Examples
+
+example(columbus)
+td <- tempdir()
+x <- nb2INLA(paste(td, "columbus-INLA.adj", sep="/"), col.gal.nb)
+
+
+
+cleanEx()
 nameEx("nb2WB")
 ### * nb2WB
 

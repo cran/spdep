@@ -1,3 +1,19 @@
+2011-04-12 15:05  rsbivand
+
+	* DESCRIPTION, R/geary.R, R/kpgm_new.R, man/GMerrorsar.Rd,
+	  man/card.Rd, man/cell2nb.Rd, man/dnearneigh.Rd, man/geary.mc.Rd,
+	  man/graphneigh.Rd, man/knn2nb.Rd, man/nb2INLA.Rd, man/poly2nb.Rd:
+	  fixes for geary.mc and GMerrorsar
+
+2011-03-30 18:51  rsbivand
+
+	* DESCRIPTION, NAMESPACE, R/EBI.R, R/read.gwt2nb.R, man/nb2INLA.Rd:
+	  adding INLA nb interface
+
+2011-03-14 09:25  rsbivand
+
+	* ChangeLog, inst/ChangeLog: compressing PDFs and data
+
 2011-03-14 09:24  rsbivand
 
 	* data/NY_data.rda, data/afcon.rda, data/auckland.rda,
