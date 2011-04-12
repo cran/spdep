@@ -23,7 +23,7 @@
 GMerrorsar <- function(#W, y, X, 
 	formula, data = list(), listw, na.action=na.fail, 
 	zero.policy=NULL, return_LL=FALSE, method="nlminb", 
-        control=list(), pars, verbose=NULL, sparse_method="Matrix",
+        control=list(), pars, verbose=NULL, legacy=FALSE, sparse_method="Matrix",
         returnHcov=FALSE, pWOrder=250, tol.Hcov=1.0e-10) {
 #	ols <- lm(I(y) ~ I(X) - 1)
         if (is.null(verbose)) verbose <- get("verbose", env = .spdepOptions)
@@ -112,62 +112,69 @@ GMerrorsar <- function(#W, y, X,
 	colnames(WX) <- xcolnames
 	rm(wx)
 	lm.target <- lm(I(y - lambda*wy) ~ I(x - lambda*WX) - 1)
-	r <- as.vector(residuals(lm.target))
-	fit <- as.vector(y - r)
 	p <- lm.target$rank
 	SSE <- deviance(lm.target)
 	s2 <- SSE/n
 	rest.se <- (summary(lm.target)$coefficients[,2])*sqrt((n-p)/n)
 	coef.lambda <- coefficients(lm.target)
 	names(coef.lambda) <- xcolnames
+        if (legacy) {
+	    r <- as.vector(residuals(lm.target))
+	    fit <- as.vector(y - r)
+        } else {
+            fit <- as.vector(x %*% coef.lambda)
+            r <- as.vector(y - fit)
+        }
+# produce an std for "rho" following Kelejian-Prucha (2004)
+# implemented following sem_gmm.m in the Matlab Spatial Econometrics
+# toolbox, written by Shawn Bucholtz, modified extensively by J.P. LeSage
+        KP04a <- (1/n) * vv$trwpw
+        KP04c <- sqrt(1/(1+(KP04a*KP04a)))
+        KP04se <- vv$wu
+        KP04de <- vv$wwu
+        KP04eo <- residuals(ols)
+
+        J <- matrix(0.0, ncol=2, nrow=2)
+        J[1,1] <- 2*KP04c*(crossprod(KP04de, KP04se) - 
+            KP04a*crossprod(KP04se, KP04eo))
+        J[2,1] <- crossprod(KP04de, KP04eo) + crossprod(KP04se)
+        J[1,2] <- - KP04c*(crossprod(KP04de) - KP04a*crossprod(KP04se))
+        J[2,2] <- - crossprod(KP04de, KP04se)
+
+        J <- (1/n)*J
+
+        J1 <- J %*% matrix(c(1, 2*lambda), ncol=1)
+        W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
+        A2N <- crossprod(W)
+        A1N <- KP04c*(A2N - KP04a*as_dsCMatrix_I(n))
+        A1NA1Np <- A1N+t(A1N)
+        A2NA2Np <- A2N+t(A2N)
+
+        trA1A1 <- sum(apply((t(A1NA1Np)*A1NA1Np), 2, sum))
+        trA1A2 <- sum(apply(crossprod(A2NA2Np, A1NA1Np), 2, sum))
+        trA2A2 <- sum(apply(crossprod(A2NA2Np, A2NA2Np), 2, sum))
+        sigh <- s2*s2
+
+        phihat <- matrix(0.0, ncol=2, nrow=2)
+        phihat[1,1] <- (sigh)*trA1A1/(2*n)
+        phihat[1,2] <- (sigh)*trA1A2/(2*n)
+        phihat[2,1] <- (sigh)*trA1A2/(2*n)
+        phihat[2,2] <- (sigh)*trA2A2/(2*n)
+
+        JJI <- 1/crossprod(J1)
+        omega <- JJI * t(J1) %*% phihat %*% J1 * JJI
+        lambda.se <- sqrt(omega/n)
+
 	call <- match.call()
 	names(r) <- names(y)
 	names(fit) <- names(y)
 	LL <- NULL
 	if (return_LL) {
-    		if (listw$style %in% c("W", "S") && !can.sim) {
-			warning("No log likelihood value available")
-		} else {
-			if (sparse_method == "spam") {
-                          if (!require(spam)) stop("spam not available")
-			  if (listw$style %in% c("W", "S") & can.sim) {
-			    csrw <- listw2U_spam(similar.listw_spam(listw))
-			  } else csrw <- as.spam.listw(listw)
-			  I <- diag.spam(1, n, n)
-			} else if (sparse_method == "Matrix") {
-			  if (listw$style %in% c("W", "S") & can.sim) {
-			    csrw <- listw2U_Matrix(similar.listw_Matrix(listw))
-			    similar <- TRUE
-			  } else csrw <- as_dsTMatrix_listw(listw)
-			  csrw <- as(csrw, "CsparseMatrix")
-			  I <- as_dsCMatrix_I(n)
-			} else stop("unknown sparse_method")
-			gc(FALSE)
-			yl <- y - lambda*wy
-			xl <- x - lambda*WX
-			xl.q <- qr.Q(qr(xl))
-			xl.q.yl <- t(xl.q) %*% yl
-			SSE <- t(yl) %*% yl - t(xl.q.yl) %*% xl.q.yl
-			s2 <- SSE/n
-			if (sparse_method == "spam") {
-			  Jacobian <- determinant((I - lambda * csrw), 
-			    logarithm=TRUE)$modulus
-			} else if (sparse_method == "Matrix") {
-                             .f <- if (package_version(packageDescription(
-                                 "Matrix")$Version) > "0.999375-30") 2 else 1
-			  Jacobian <- .f * determinant(I - lambda * csrw,
- 			    logarithm=TRUE)$modulus
-			}
-			gc(FALSE)
-			LL <- (Jacobian -
-				((n/2)*log(2*pi)) - (n/2)*log(s2) - 
-				(1/(2*(s2)))*SSE)
-		}
+            warning("Return of log-likelihood deprecated")
 	}
         Hcov <- NULL
         if (returnHcov) {
-            W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
-            pp <- ols$rank
+	    pp <- ols$rank
             p1 <- 1L:pp
             R <- chol2inv(ols$qr$qr[p1, p1, drop = FALSE])
             B <- tcrossprod(R, x)
@@ -186,7 +193,8 @@ GMerrorsar <- function(#W, y, X,
 		call=call, residuals=r, lm.target=lm.target,
 		fitted.values=fit, formula=formula, aliased=aliased,
 		zero.policy=zero.policy, LL=LL, vv=vv, optres=optres,
-                pars=pars, Hcov=Hcov), class=c("gmsar"))
+                pars=pars, Hcov=Hcov, legacy=legacy,lambda.se=lambda.se),
+                class=c("gmsar"))
 	if (zero.policy) {
 		zero.regs <- attr(listw$neighbours, 
 			"region.id")[which(card(listw$neighbours) == 0)]
@@ -304,8 +312,8 @@ print.summary.gmsar<-function (x, digits = max(5, .Options$digits - 3), signif.s
     else structure(quantile(resid), names = nam)
     print(rq, digits = digits, ...)
 
-if(x$type=="SARAR") cat("\nType: GM SARAR estimator\n")
-  else  cat("\nType: GM SAR estimator\n")
+    if(x$type=="SARAR") cat("\nType: GM SARAR estimator\n")
+    else  cat("\nType: GM SAR estimator\n")
     if (x$zero.policy) {
         zero.regs <- attr(x, "zero.regs")
         if (!is.null(zero.regs)) 
@@ -326,6 +334,8 @@ if(x$type=="SARAR") cat("\nType: GM SARAR estimator\n")
         na.print = "NA")
     res <- x$LR1
     cat("\nLambda:", format(signif(x$lambda, digits)))
+    cat(" (standard error):", format(signif(x$lambda.se, digits)))
+    cat(" (z-value):", format(signif(x$lambda/x$lambda.se, digits)))
     if (!is.null(res)) 
         cat(" LR test value:", format(signif(res$statistic, digits)), 
             "p-value:", format.pval(res$p.value, digits), "\n")
@@ -412,7 +422,7 @@ if(x$type=="SARAR") cat("\nType: GM SARAR estimator\n")
     	bigG[,2] <- - c(uwpuw,wwupwwu,wwupwu) / n
     	bigG[,3] <- c(1,trwpw/n,0)
     	litg <- c(uu,uwpuw,uwu) / n
-    	list(bigG=bigG,litg=litg)
+    	list(bigG=bigG, litg=litg, trwpw=trwpw, wu=wu, wwu=wwu)
 }
 
 ####SARAR model
@@ -518,7 +528,7 @@ gstsls<-function (formula, data = list(), listw, listw2=NULL, na.action = na.fai
         wyt <- wy - lambda * lag.listw(listw2, wy)
 
         colnames(xt) <- xcolnames
-        colnames(wyt) <- c("Wyt")
+        colnames(wyt) <- c("Rho_Wy")
         secstep <- tsls(y = yt, yend = wyt, X = xt, Zinst = instr, robust = robust, legacy = legacy)
 		rho<-secstep$coefficients[1]
 		coef.sac<-secstep$coefficients
@@ -528,7 +538,45 @@ gstsls<-function (formula, data = list(), listw, listw2=NULL, na.action = na.fai
 		r<- secstep$residuals
 		fit<- y - r
 		SSE<- crossprod(r)
-		
+
+# speculative SE for lambda
+
+        KP04a <- (1/n) * vv$trwpw
+        KP04c <- sqrt(1/(1+(KP04a*KP04a)))
+        KP04se <- vv$wu
+        KP04de <- vv$wwu
+        KP04eo <- ubase
+
+        J <- matrix(0.0, ncol=2, nrow=2)
+        J[1,1] <- 2*KP04c*(crossprod(KP04de, KP04se) - 
+            KP04a*crossprod(KP04se, KP04eo))
+        J[2,1] <- crossprod(KP04de, KP04eo) + crossprod(KP04se)
+        J[1,2] <- - KP04c*(crossprod(KP04de) - KP04a*crossprod(KP04se))
+        J[2,2] <- - crossprod(KP04de, KP04se)
+
+        J <- (1/n)*J
+
+        J1 <- J %*% matrix(c(1, 2*lambda), ncol=1)
+        W <- as(as_dgRMatrix_listw(listw2), "CsparseMatrix")
+        A2N <- crossprod(W)
+        A1N <- KP04c*(A2N - KP04a*as_dsCMatrix_I(n))
+        A1NA1Np <- A1N+t(A1N)
+        A2NA2Np <- A2N+t(A2N)
+
+        trA1A1 <- sum(apply((t(A1NA1Np)*A1NA1Np), 2, sum))
+        trA1A2 <- sum(apply(crossprod(A2NA2Np, A1NA1Np), 2, sum))
+        trA2A2 <- sum(apply(crossprod(A2NA2Np, A2NA2Np), 2, sum))
+        sigh <- s2*s2
+
+        phihat <- matrix(0.0, ncol=2, nrow=2)
+        phihat[1,1] <- (sigh)*trA1A1/(2*n)
+        phihat[1,2] <- (sigh)*trA1A2/(2*n)
+        phihat[2,1] <- (sigh)*trA1A2/(2*n)
+        phihat[2,2] <- (sigh)*trA2A2/(2*n)
+
+        JJI <- 1/crossprod(J1)
+        omega <- JJI * t(J1) %*% phihat %*% J1 * JJI
+        lambda.se <- sqrt(omega/n)
     call <- match.call()
 
     ret <- structure(list(type= "SARAR", lambda = lambda, coefficients = coef.sac, 
@@ -536,7 +584,7 @@ gstsls<-function (formula, data = list(), listw, listw2=NULL, na.action = na.fai
             3), lm.model = NULL, call = call, residuals = r, lm.target = NULL, 
         fitted.values = fit, formula = formula, aliased = NULL, 
         zero.policy = zero.policy, LL = NULL, vv = vv, optres = optres, 
-        pars = pars, Hcov = NULL), class = c("gmsar"))
+        pars = pars, Hcov = NULL, lambda.se=lambda.se), class = c("gmsar"))
     if (zero.policy) {
         zero.regs <- attr(listw$neighbours, "region.id")[which(card(listw$neighbours) == 
             0)]

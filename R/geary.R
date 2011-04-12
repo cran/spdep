@@ -93,7 +93,7 @@ geary.test <- function(x, listw, randomisation=TRUE, zero.policy=NULL,
 }
 
 geary.mc <- function(x, listw, nsim, zero.policy=NULL,
-	alternative="less", spChk=NULL, adjust.n=TRUE, return_boot=FALSE) {
+	alternative="greater", spChk=NULL, adjust.n=TRUE, return_boot=FALSE) {
         if (is.null(zero.policy))
             zero.policy <- get("zeroPolicy", env = .spdepOptions)
         stopifnot(is.logical(zero.policy))
@@ -140,9 +140,10 @@ geary.mc <- function(x, listw, nsim, zero.policy=NULL,
 	xrank <- rankres[length(res)]
 	diff <- nsim - xrank
 	diff <- ifelse(diff > 0, diff, 0)
-        if (alternative == "less") 
+# order changed 110411 RSB (C&O 1973, p. 21) Thanks to Daniel Garavito
+        if (alternative == "greater") 
         	pval <- punif((diff + 1)/(nsim + 1), lower.tail=FALSE)
-    	else if (alternative == "greater") 
+    	else if (alternative == "less") 
         	pval <- punif((diff + 1)/(nsim + 1))
 	if (!is.finite(pval) || pval < 0 || pval > 1) 
 		warning("Out-of-range p-value: reconsider test arguments")

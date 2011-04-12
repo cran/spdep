@@ -18,14 +18,14 @@ poly2nb(pl, row.names = NULL, snap=sqrt(.Machine$double.eps),
   \item{foundInBox}{default NULL using R code, possibly parallelised if a \pkg{snow} cluster is available, otherwise a list of length \code{(n-1)} with integer vectors of candidate neighbours \code{(j > i)}, or NULL if all candidates were \code{(j < i)} (as created by the \code{poly_findInBoxGEOS} function in \pkg{rgeos} for clean polygons)}
 }
 \value{
-A neighbours list with class \code{nb}
+A neighbours list with class \code{nb}. See \code{\link{card}} for details of \dQuote{nb} objects.
 }
 \note{
 From 0.5-8, the function includes faster bounding box indexing and other improvements contributed by Micah Altman. If a cluster is provided using \code{set.ClusterOption}, it will be used for finding candidate bounding box overlaps for exact testing for contiguity.
 }
 \author{Roger Bivand \email{Roger.Bivand@nhh.no} with contributions from Micah Altman}
 
-\seealso{\code{\link{summary.nb}}}
+\seealso{\code{\link{summary.nb}}, \code{\link{card}}}
 
 \examples{
 example(columbus)

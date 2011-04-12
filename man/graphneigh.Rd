@@ -67,6 +67,7 @@ x and y are SOI neigbors iff \eqn{C_x} and \eqn{C_y} intersect in at
 least 2 places.
 
 %The \eqn{beta}{\beta} 
+See \code{\link{card}} for details of \dQuote{nb} objects.
 }
 \value{
 A list of class \code{Graph} withte following elements
@@ -98,7 +99,7 @@ The helper functions return an \code{nb} object with a list of integer
 \author{Nicholas Lewin-Koh \email{nikko@hailmail.net}}
 
 \seealso{\code{\link{knearneigh}}, \code{\link{dnearneigh}},
-\code{\link{knn2nb}}}
+\code{\link{knn2nb}}, \code{\link{card}}}
 
 \examples{
 example(columbus)

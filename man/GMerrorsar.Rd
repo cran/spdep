@@ -18,7 +18,7 @@
 \usage{
 GMerrorsar(formula, data = list(), listw, na.action = na.fail,
  zero.policy = NULL, return_LL = FALSE, method="nlminb", 
- control = list(), pars, verbose=NULL, sparse_method="Matrix",
+ control = list(), pars, verbose=NULL, legacy=FALSE, sparse_method="Matrix",
  returnHcov=FALSE, pWOrder=250, tol.Hcov=1.0e-10)
 \method{summary}{gmsar}(object, correlation = FALSE, Hausman=FALSE, ...)
 GMargminImage(obj, lambdaseq, s2seq)
@@ -34,12 +34,13 @@ is called.}
   \item{na.action}{a function (default \code{na.fail}), can also be \code{na.omit} or \code{na.exclude} with consequences for residuals and fitted values - in these cases the weights list will be subsetted to remove NAs in the data. It may be necessary to set zero.policy to TRUE because this subsetting may create no-neighbour observations. Note that only weights lists created without using the glist argument to \code{nb2listw} may be subsetted.}
   \item{zero.policy}{default NULL, use global option value; if TRUE assign zero to the lagged value of zones without 
 neighbours, if FALSE (default) assign NA - causing \code{GMerrorsar()} to terminate with an error}
-  \item{return_LL}{default FALSE, if TRUE, try to calculate the log likelihood of the function for the fitted model values --- see details}
+  \item{return_LL}{default FALSE, if TRUE, a warning that this argument is deprecated will be given}
   \item{method}{default \code{"nlminb"}, or optionally a method passed to \code{optim} to use an alternative optimizer}
   \item{control}{A list of control parameters. See details in \code{\link[stats]{optim}} or \code{\link[stats]{nlminb}}.}
   \item{pars}{starting values for \eqn{\lambda}{lambda} and \eqn{\sigma^2}{sigma squared} for GMM optimisation, if missing (default), approximated from initial OLS model as the autocorrelation coefficient corrected for weights style and model sigma squared}
   \item{verbose}{default NULL, use global option value; if TRUE, reports function values during optimization.}
-  \item{sparse_method}{default "Matrix", can also be "spam" to use spam package objects for finding the Jacobian}
+  \item{legacy}{default FALSE - compute using the unfiltered values of the response and right hand side variables; if TRUE - compute the fitted value and residuals from the spatially filtered model using the spatial error parameter}
+  \item{sparse_method}{default "Matrix", can also be "spam" to use spam package objects for finding the Jacobian - argument deprecated}
   \item{returnHcov}{default FALSE, return the Vo matrix for a spatial Hausman test}
   \item{tol.Hcov}{the tolerance for computing the Vo matrix (default=1.0e-10)}
   \item{pWOrder}{default 250, if returnHcov=TRUE, pass this order to \code{powerWeights} as the power series maximum limit}
@@ -51,7 +52,7 @@ neighbours, if FALSE (default) assign NA - causing \code{GMerrorsar()} to termin
   \item{s2seq}{if given, an increasing sequence of sigma squared values for gridding}
 }
 \details{
-  When the control list is set with care, the function will converge to values close to the ML estimator without requiring computation of the Jacobian, the most resource-intensive part of ML estimation. For moderately sized data sets with hundreds of observations, but not many thousands, the Jacobian is computed once to give the likelihood of the fitted model, allowing a test against the model with no spatial dependence.
+  When the control list is set with care, the function will converge to values close to the ML estimator without requiring computation of the Jacobian, the most resource-intensive part of ML estimation. 
 
 Note that the fitted() function for the output object assumes that the response 
 variable may be reconstructed as the sum of the trend, the signal, and the
@@ -78,7 +79,7 @@ The \code{GMargminImage} may be used to visualize the shape of the surface of th
   \item{formula}{model formula}
   \item{aliased}{if not NULL, details of aliased variables}
   \item{zero.policy}{zero.policy for this model}
-  \item{LL}{log likelihood value at computed optimum}
+  \item{LL}{log likelihood value at computed optimum (deprecated)}
   \item{vv}{list of internal bigG and litg components for testing optimisation surface}
   \item{optres}{object returned by optimizer}
   \item{pars}{start parameter values for optimisation}

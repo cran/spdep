@@ -62,7 +62,7 @@ export(spautolm, residuals.spautolm, deviance.spautolm, coef.spautolm,
 	print.summary.stsls, residuals.stsls, coef.stsls, deviance.stsls)
 
 export(nb2WB, listw2WB, as_dgRMatrix_listw, as_dsTMatrix_listw, as_dsCMatrix_I,
-	as_dsCMatrix_IrW, Jacobian_W, powerWeights)
+	as_dsCMatrix_IrW, Jacobian_W, powerWeights, nb2INLA)
 
 export(lm.morantest.exact, print.moranex, localmoran.exact, localmoran.exact.alt, print.localmoranex, as.data.frame.localmoranex)
 

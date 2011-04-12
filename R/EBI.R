@@ -214,6 +214,8 @@ EBlocal <- function(ri, ni, nb, zero.policy = NULL,
         stop(paste(deparse(substitute(ri)), "is not a numeric vector"))
     if (any(is.na(ni))) 
         stop("NA in at risk population")
+    if (any(ni == 0)) 
+        stop("zero in at risk population")
     if (any(is.na(ri))) 
         stop("NA in cases")
     if (any(ni < 0)) 
