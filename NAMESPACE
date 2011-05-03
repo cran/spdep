@@ -56,7 +56,7 @@ export(spautolm, residuals.spautolm, deviance.spautolm, coef.spautolm,
 	logLik.spautolm, print.summary.spautolm, autocov_dist, GMerrorsar,
         gstsls, GMargminImage,
 	residuals.gmsar, deviance.gmsar, coef.gmsar, fitted.gmsar, 
-	print.gmsar, summary.gmsar, LR1.gmsar, logLik.gmsar, 
+	print.gmsar, summary.gmsar, 
 	print.summary.gmsar, SpatialFiltering, print.SFResult, fitted.SFResult,
 	ME, print.ME_res, fitted.ME_res, stsls, print.stsls, summary.stsls,
 	print.summary.stsls, residuals.stsls, coef.stsls, deviance.stsls)
@@ -150,7 +150,6 @@ S3method(coef, gmsar)
 S3method(fitted, gmsar)
 S3method(print, gmsar)
 S3method(summary, gmsar)
-S3method(logLik, gmsar)
 S3method(Hausman.test, gmsar)
 
 S3method(print, summary.gmsar)

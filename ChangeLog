@@ -1,3 +1,44 @@
+2011-05-05 16:22  rsbivand
+
+	* R/kpgm_new.R, man/GMerrorsar.Rd: GMerrorsar se lambda
+
+2011-05-04 20:06  rsbivand
+
+	* R/kpgm_new.R, man/GMerrorsar.Rd: GM lambda standard error
+	  incomplete
+
+2011-05-03 20:39  rsbivand
+
+	* DESCRIPTION, NAMESPACE, R/kpgm_new.R, man/GMerrorsar.Rd,
+	  man/gstsls.Rd: GM lambda standard error incomplete
+
+2011-04-16 12:24  rsbivand
+
+	* R/kpgm_new.R: tidy
+
+2011-04-16 12:16  rsbivand
+
+	* R/kpgm_new.R: tidy
+
+2011-04-16 11:42  rsbivand
+
+	* R/kpgm_new.R: Arnold-Wied (2010) moments
+
+2011-04-14 20:16  rsbivand
+
+	* DESCRIPTION, R/eigenw.R, R/jacobian.R, R/kpgm_new.R,
+	  man/GMerrorsar.Rd, man/eigenw.Rd, man/gstsls.Rd: complex
+	  eigenvalues
+
+2011-04-13 09:53  rsbivand
+
+	* inst/doc/CO69.pdf, inst/doc/sids.pdf, man/eigenw.Rd: complex
+	  eigenvalues
+
+2011-04-12 15:06  rsbivand
+
+	* ChangeLog, inst/ChangeLog: fixes for geary.mc and GMerrorsar
+
 2011-04-12 15:05  rsbivand
 
 	* DESCRIPTION, R/geary.R, R/kpgm_new.R, man/GMerrorsar.Rd,
