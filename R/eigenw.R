@@ -1,4 +1,4 @@
-# Copyright 2002-3 by Roger Bivand 
+# Copyright 2002-11 by Roger Bivand 
 #
 
 eigenw <- function(listw, quiet=NULL)
@@ -11,7 +11,8 @@ eigenw <- function(listw, quiet=NULL)
 	e <- eigen(w, only.values=TRUE)$values
 	if (!quiet) {
 		cat("Largest eigenvalue:", 
-		if(is.complex(e)) max(Re(e)) else max(e),
+# modified 110414 RSB
+		if(is.complex(e)) {max(Re(e[which(Im(e) == 0)]))} else max(e),
 		"Sum of eigenvalues:", sum(e), "\n")
 	}
 	e

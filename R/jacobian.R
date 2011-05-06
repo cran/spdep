@@ -119,7 +119,8 @@ eigen_setup <- function(env, which=1) {
                 only.values=TRUE)$value
 	    assign("similar", TRUE, envir=env)
 	} else eig <- eigenw(get("listw", envir=env))
-	if (is.complex(eig)) eig.range <- 1/range(Re(eig))
+# modified 110414 RSB
+	if (is.complex(eig)) eig.range <- 1/range(Re(eig[which(Im(eig) == 0)]))
 	else eig.range <- 1/range(eig)
         assign("eig", eig, envir=env)
         assign("eig.range", eig.range, envir=env)
@@ -159,7 +160,8 @@ do_ldet <- function(coef, env, which=1) {
 
 eigen_sma_ldet <- function(coef, env, which=1) {
     eig <- get("eig", envir=env)
-    if (is.complex(eig)) det <- sum(log(Re(1/(1 + coef * eig))))
+# modified 110414 RSB
+    if (is.complex(eig)) det <- Re(sum(log(1/(1 + coef * eig))))
     else det <- sum(log(1/(1 + coef * eig)))
     det
 }
@@ -170,8 +172,9 @@ eigen_ldet <- function(coef, env, which=1) {
     } else {
         eig <- get("eig2", envir=env)
     }
+# modified 110414 RSB
     if (is.complex(eig)) 
-        det <- sum(log(1 - coef * Re(eig)))
+        det <- Re(sum(log(1 - coef * eig)))
     else det <- sum(log(1 - coef * eig))
     det
 }
