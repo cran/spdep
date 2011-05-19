@@ -287,7 +287,7 @@ SEXP poly_loop2(SEXP n, SEXP i_findInBox, SEXP bb, SEXP pl, SEXP nrs,
             if (jhit > 0) {
                 khit = 0;
                 nrsj = NRS[jj];
-                if (nrsi*nrsj > 0){
+                if (nrsi > 0 && nrsj > 0){
                     khit = polypolyC(&plx[cNRS[i]], &ply[cNRS[i]], nrsi,
                        &plx[cNRS[jj]], &ply[cNRS[jj]], nrsj, Dsnap, crit+1L);
                 }
