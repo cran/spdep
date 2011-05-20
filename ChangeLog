@@ -1,102 +1,127 @@
+2011-05-19 21:52  rsbivand
+
+	* DESCRIPTION,
+	  src/polypoly.c: integer overflow in poly2nb C code
+
+2011-05-05 18:00  rsbivand
+
+	* ChangeLog,
+	  inst/ChangeLog, inst/doc/CO69.pdf, inst/doc/sids.pdf: tidy
+
 2011-05-05 16:22  rsbivand
 
-	* R/kpgm_new.R, man/GMerrorsar.Rd: GMerrorsar se lambda
+	* R/kpgm_new.R,
+	  man/GMerrorsar.Rd: GMerrorsar se lambda
 
 2011-05-04 20:06  rsbivand
 
-	* R/kpgm_new.R, man/GMerrorsar.Rd: GM lambda standard error
-	  incomplete
+	* R/kpgm_new.R,
+	  man/GMerrorsar.Rd: GM lambda standard error incomplete
 
 2011-05-03 20:39  rsbivand
 
-	* DESCRIPTION, NAMESPACE, R/kpgm_new.R, man/GMerrorsar.Rd,
-	  man/gstsls.Rd: GM lambda standard error incomplete
+	* DESCRIPTION,
+	  NAMESPACE, R/kpgm_new.R, man/GMerrorsar.Rd, man/gstsls.Rd:
+	  GM lambda standard error incomplete
 
 2011-04-16 12:24  rsbivand
 
-	* R/kpgm_new.R: tidy
+	* R/kpgm_new.R:
+	  tidy
 
 2011-04-16 12:16  rsbivand
 
-	* R/kpgm_new.R: tidy
+	* R/kpgm_new.R:
+	  tidy
 
 2011-04-16 11:42  rsbivand
 
-	* R/kpgm_new.R: Arnold-Wied (2010) moments
+	* R/kpgm_new.R:
+	  Arnold-Wied (2010) moments
 
 2011-04-14 20:16  rsbivand
 
-	* DESCRIPTION, R/eigenw.R, R/jacobian.R, R/kpgm_new.R,
-	  man/GMerrorsar.Rd, man/eigenw.Rd, man/gstsls.Rd: complex
-	  eigenvalues
+	* DESCRIPTION,
+	  R/eigenw.R, R/jacobian.R, R/kpgm_new.R, man/GMerrorsar.Rd,
+	  man/eigenw.Rd, man/gstsls.Rd: complex eigenvalues
 
 2011-04-13 09:53  rsbivand
 
-	* inst/doc/CO69.pdf, inst/doc/sids.pdf, man/eigenw.Rd: complex
-	  eigenvalues
+	* inst/doc/CO69.pdf,
+	  inst/doc/sids.pdf, man/eigenw.Rd: complex eigenvalues
 
 2011-04-12 15:06  rsbivand
 
-	* ChangeLog, inst/ChangeLog: fixes for geary.mc and GMerrorsar
+	* ChangeLog,
+	  inst/ChangeLog: fixes for geary.mc and GMerrorsar
 
 2011-04-12 15:05  rsbivand
 
-	* DESCRIPTION, R/geary.R, R/kpgm_new.R, man/GMerrorsar.Rd,
-	  man/card.Rd, man/cell2nb.Rd, man/dnearneigh.Rd, man/geary.mc.Rd,
-	  man/graphneigh.Rd, man/knn2nb.Rd, man/nb2INLA.Rd, man/poly2nb.Rd:
-	  fixes for geary.mc and GMerrorsar
+	* DESCRIPTION,
+	  R/geary.R, R/kpgm_new.R, man/GMerrorsar.Rd, man/card.Rd,
+	  man/cell2nb.Rd, man/dnearneigh.Rd, man/geary.mc.Rd,
+	  man/graphneigh.Rd, man/knn2nb.Rd, man/nb2INLA.Rd,
+	  man/poly2nb.Rd: fixes for geary.mc and GMerrorsar
 
 2011-03-30 18:51  rsbivand
 
-	* DESCRIPTION, NAMESPACE, R/EBI.R, R/read.gwt2nb.R, man/nb2INLA.Rd:
-	  adding INLA nb interface
+	* DESCRIPTION,
+	  NAMESPACE, R/EBI.R, R/read.gwt2nb.R, man/nb2INLA.Rd: adding
+	  INLA nb interface
 
 2011-03-14 09:25  rsbivand
 
-	* ChangeLog, inst/ChangeLog: compressing PDFs and data
+	* ChangeLog,
+	  inst/ChangeLog: compressing PDFs and data
 
 2011-03-14 09:24  rsbivand
 
-	* data/NY_data.rda, data/afcon.rda, data/auckland.rda,
-	  data/baltimore.rda, data/boston.rda, data/columbus.rda,
-	  data/eire.rda, data/elect80.rda, data/getisord.rda,
-	  data/hopkins.rda, data/house.RData, data/huddersfield.rda,
-	  data/nc.sids.rda, data/oldcol.rda, data/used.cars.rda,
-	  inst/doc/CO69.pdf, inst/doc/sids.pdf: compressing PDFs and data
+	* data/NY_data.rda,
+	  data/afcon.rda, data/auckland.rda, data/baltimore.rda,
+	  data/boston.rda, data/columbus.rda, data/eire.rda,
+	  data/elect80.rda, data/getisord.rda, data/hopkins.rda,
+	  data/house.RData, data/huddersfield.rda, data/nc.sids.rda,
+	  data/oldcol.rda, data/used.cars.rda, inst/doc/CO69.pdf,
+	  inst/doc/sids.pdf: compressing PDFs and data
 
 2011-03-14 07:50  rsbivand
 
-	* data/00Index: removing data/00Index
+	* data/00Index:
+	  removing data/00Index
 
 2011-03-13 13:23  rsbivand
 
-	* ChangeLog, inst/ChangeLog: revise vignettes (thanks to Edzer
-	  Pebesma)
+	* ChangeLog,
+	  inst/ChangeLog: revise vignettes (thanks to Edzer Pebesma)
 
 2011-03-13 13:22  rsbivand
 
-	* inst/doc/CO69.Rnw, inst/doc/sids.Rnw: revise vignettes (thanks to
-	  Edzer Pebesma)
+	* inst/doc/CO69.Rnw,
+	  inst/doc/sids.Rnw: revise vignettes (thanks to Edzer Pebesma)
 
 2011-03-13 12:56  rsbivand
 
-	* ChangeLog, inst/ChangeLog: hypot for pythag in C code
+	* ChangeLog,
+	  inst/ChangeLog: hypot for pythag in C code
 
 2011-03-13 12:54  rsbivand
 
-	* DESCRIPTION, src/dnn.c, src/gabriel.c, src/knn.c, src/nbdists.c,
-	  src/polypoly.c, src/relative.c, src/soigraph.c: hypot for pythag
-	  in C code
+	* DESCRIPTION,
+	  src/dnn.c, src/gabriel.c, src/knn.c, src/nbdists.c,
+	  src/polypoly.c, src/relative.c, src/soigraph.c: hypot for
+	  pythag in C code
 
 2011-03-06 18:51  rsbivand
 
-	* DESCRIPTION, R/error.spsarlm.R, R/jacobian.R, R/lag.spsarlm.R,
+	* DESCRIPTION,
+	  R/error.spsarlm.R, R/jacobian.R, R/lag.spsarlm.R,
 	  man/do_ldet.Rd, man/errorsarlm.Rd, man/lagsarlm.Rd: adding
 	  moments to lag and error
 
 2011-02-24 16:04  rsbivand
 
-	* R/EBI.R, R/anova.sarlm.R, R/aple.mc.R, R/diffnb.R, R/droplinks.R,
+	* R/EBI.R,
+	  R/anova.sarlm.R, R/aple.mc.R, R/diffnb.R, R/droplinks.R,
 	  R/edit.nb.R, R/error.hessian.R, R/error.spsarlm.R, R/geary.R,
 	  R/graph2nb.R, R/impacts.R, R/jacobian.R, R/kpgm_new.R,
 	  R/lag.hessian.R, R/lag.spsarlm.R, R/listw2sn.R, R/lm.LMtests.R,
@@ -106,625 +131,748 @@
 	  R/plot.skater.R, R/poly2nb.R, R/read.gal.R, R/read.gwt2nb.R,
 	  R/s2sls.R, R/sacsarlm.R, R/skater.R, R/sp.mantel.R,
 	  R/spChkOption.R, R/spautolm.R, R/subset.nb.R, R/summary.nb.R,
-	  R/summary.spsarlm.R, R/utils.R, R/weights-utils.R: making length
-	  comparisons literal integers
+	  R/summary.spsarlm.R, R/utils.R, R/weights-utils.R: making
+	  length comparisons literal integers
 
 2011-01-24 08:46  rsbivand
 
-	* man/geary.test.Rd: geary.test standard deviate help page
+	* man/geary.test.Rd:
+	  geary.test standard deviate help page
 
 2010-12-21 16:24  rsbivand
 
-	* R/sp.correlogram.R: adding Geary C to sp.correlogram
+	* R/sp.correlogram.R:
+	  adding Geary C to sp.correlogram
 
 2010-12-21 16:22  rsbivand
 
-	* DESCRIPTION, R/nbcosts.R, R/sp.correlogram.R,
-	  man/sp.correlogram.Rd: adding Geary C to sp.correlogram
+	* DESCRIPTION,
+	  R/nbcosts.R, R/sp.correlogram.R, man/sp.correlogram.Rd: adding
+	  Geary C to sp.correlogram
 
 2010-12-19 19:32  rsbivand
 
-	* R/error.spsarlm.R, R/lag.spsarlm.R, R/spautolm.R,
-	  R/summary.spsarlm.R: warnings when rho/lambda at limit
+	* R/error.spsarlm.R,
+	  R/lag.spsarlm.R, R/spautolm.R, R/summary.spsarlm.R: warnings
+	  when rho/lambda at limit
 
 2010-12-14 20:29  rsbivand
 
-	* R/s2sls.R: stsls using QR
+	* R/s2sls.R:
+	  stsls using QR
 
 2010-11-30 22:02  rsbivand
 
-	* DESCRIPTION, R/error.spsarlm.R, R/impacts.R, R/sacsarlm.R,
+	* DESCRIPTION,
+	  R/error.spsarlm.R, R/impacts.R, R/sacsarlm.R,
 	  R/summary.spsarlm.R, man/errorsarlm.Rd, man/lagsarlm.Rd,
 	  man/sacsarlm.Rd: Elhorst 2010 paper trials
 
 2010-11-25 08:13  rsbivand
 
-	* R/lm.morantest.R: as.double N in lm.morantest
+	* R/lm.morantest.R:
+	  as.double N in lm.morantest
 
 2010-11-24 15:14  rsbivand
 
-	* R/lm.morantest.R: as.double N in lm.morantest
+	* R/lm.morantest.R:
+	  as.double N in lm.morantest
 
 2010-11-24 14:43  rsbivand
 
-	* DESCRIPTION, R/sacsarlm.R, src/dnn.c, src/knn.c, src/nbdists.c:
+	* DESCRIPTION,
+	  R/sacsarlm.R, src/dnn.c, src/knn.c, src/nbdists.c:
 	  CheckUserInterrupt in distance C code
 
 2010-11-18 07:52  rsbivand
 
-	* .Rbuildignore: add .Rbuildignore
+	* .Rbuildignore:
+	  add .Rbuildignore
 
 2010-11-17 20:40  rsbivand
 
-	* R/impacts.R, man/trW.Rd, src/mom_calc.c: moment calculations
+	* R/impacts.R,
+	  man/trW.Rd, src/mom_calc.c: moment calculations
 
 2010-11-17 19:07  rsbivand
 
-	* R/impacts.R, R/spChkOption.R, man/trW.Rd, src/mom_calc.c,
-	  src/spdep.h: moment calculations
+	* R/impacts.R,
+	  R/spChkOption.R, man/trW.Rd, src/mom_calc.c, src/spdep.h:
+	  moment calculations
 
 2010-11-17 13:37  rsbivand
 
-	* R/aple.mc.R, R/impacts.R: moment calculations
+	* R/aple.mc.R,
+	  R/impacts.R: moment calculations
 
 2010-11-16 21:37  rsbivand
 
-	* R/impacts.R, man/trW.Rd: moment calculations
+	* R/impacts.R,
+	  man/trW.Rd: moment calculations
 
 2010-11-16 12:45  rsbivand
 
-	* R/impacts.R, src/mom_calc.c: moments calculation
+	* R/impacts.R,
+	  src/mom_calc.c: moments calculation
 
 2010-11-15 20:39  rsbivand
 
-	* R/impacts.R, src/init.c, src/mom_calc.c, src/spdep.h: moment
-	  calculations
+	* R/impacts.R,
+	  src/init.c, src/mom_calc.c, src/spdep.h: moment calculations
 
 2010-11-11 11:31  rsbivand
 
-	* INDEX: tidy
+	* INDEX:
+	  tidy
 
 2010-11-10 17:55  rsbivand
 
-	* ChangeLog, inst/ChangeLog: impacts summary fix; added
-	  tolerance.nb
+	* ChangeLog,
+	  inst/ChangeLog: impacts summary fix; added tolerance.nb
 
 2010-11-10 17:54  rsbivand
 
-	* R/rotation.R, R/tolerance.nb.R, man/rotation.Rd,
-	  man/tolerance.nb.Rd: impacts summary fix; added tolerance.nb
+	* R/rotation.R,
+	  R/tolerance.nb.R, man/rotation.Rd, man/tolerance.nb.Rd:
+	  impacts summary fix; added tolerance.nb
 
 2010-11-10 17:37  rsbivand
 
-	* DESCRIPTION, NAMESPACE, R/impacts.R, man/mat2listw.Rd: impacts
-	  summary fix; added tolerance.nb
+	* DESCRIPTION,
+	  NAMESPACE, R/impacts.R, man/mat2listw.Rd: impacts summary fix;
+	  added tolerance.nb
 
 2010-11-02 11:20  rsbivand
 
-	* R/nb2mat.R: added sparseMatrix to mat2listw
+	* R/nb2mat.R:
+	  added sparseMatrix to mat2listw
 
 2010-10-31 19:57  rsbivand
 
-	* DESCRIPTION, R/nb2mat.R, R/summary.nb.R, man/mat2listw.Rd: added
-	  sparseMatrix to mat2listw
+	* DESCRIPTION,
+	  R/nb2mat.R, R/summary.nb.R, man/mat2listw.Rd: added sparseMatrix
+	  to mat2listw
 
 2010-10-30 13:35  rsbivand
 
-	* R/nb2mat.R, man/mat2listw.Rd: added style argement to mat2listw
+	* R/nb2mat.R,
+	  man/mat2listw.Rd: added style argement to mat2listw
 
 2010-10-08 17:45  rsbivand
 
-	* ChangeLog, inst/ChangeLog: sacsarlm optimizers
+	* ChangeLog,
+	  inst/ChangeLog: sacsarlm optimizers
 
 2010-10-08 12:18  rsbivand
 
-	* DESCRIPTION, NAMESPACE, R/kpgm_new.R, man/GMerrorsar.Rd,
-	  man/gstsls.Rd, man/similar.listw.Rd: GM argmin image
+	* DESCRIPTION,
+	  NAMESPACE, R/kpgm_new.R, man/GMerrorsar.Rd, man/gstsls.Rd,
+	  man/similar.listw.Rd: GM argmin image
 
 2010-10-07 19:55  rsbivand
 
-	* man/sacsarlm.Rd: sacsarlm optimizers
+	* man/sacsarlm.Rd:
+	  sacsarlm optimizers
 
 2010-10-07 19:01  rsbivand
 
-	* R/sacsarlm.R, man/sacsarlm.Rd: sacsarlm optimizers
+	* R/sacsarlm.R,
+	  man/sacsarlm.Rd: sacsarlm optimizers
 
 2010-10-06 18:51  rsbivand
 
-	* R/impacts.R, R/sacsarlm.R: sacsarlm optimizers
+	* R/impacts.R,
+	  R/sacsarlm.R: sacsarlm optimizers
 
 2010-10-04 19:55  rsbivand
 
-	* R/aple.R, R/aple.mc.R, R/apleplot.R, man/aple.Rd, man/aple.mc.Rd,
+	* R/aple.R,
+	  R/aple.mc.R, R/apleplot.R, man/aple.Rd, man/aple.mc.Rd,
 	  man/aple.plot.Rd: aple trace option
 
 2010-09-29 08:17  rsbivand
 
-	* DESCRIPTION: impacts single x fixes
+	* DESCRIPTION:
+	  impacts single x fixes
 
 2010-09-29 08:09  rsbivand
 
-	* R/impacts.R: impacts single x fixes
+	* R/impacts.R:
+	  impacts single x fixes
 
 2010-09-29 07:53  rsbivand
 
-	* R/impacts.R: impacts single x fixes
+	* R/impacts.R:
+	  impacts single x fixes
 
 2010-09-28 14:22  rsbivand
 
-	* DESCRIPTION, R/impacts.R: impacts with one variable
+	* DESCRIPTION,
+	  R/impacts.R: impacts with one variable
 
 2010-09-13 16:22  rsbivand
 
-	* R/s2sls.R: zero.policy in stsls
+	* R/s2sls.R:
+	  zero.policy in stsls
 
 2010-09-06 07:54  rsbivand
 
-	* R/nblag.R: nblag_cumul tidy
+	* R/nblag.R:
+	  nblag_cumul tidy
 
 2010-09-05 19:13  rsbivand
 
-	* DESCRIPTION, R/nblag.R: modified nblag_cumul
+	* DESCRIPTION,
+	  R/nblag.R: modified nblag_cumul
 
 2010-09-03 07:07  rsbivand
 
-	* ChangeLog, inst/ChangeLog: tidy
+	* ChangeLog,
+	  inst/ChangeLog: tidy
 
 2010-09-03 07:04  rsbivand
 
-	* DESCRIPTION, R/impacts.R: tidy
+	* DESCRIPTION,
+	  R/impacts.R: tidy
 
 2010-09-03 06:47  rsbivand
 
-	* R/impacts.R: mom_int export to cl
+	* R/impacts.R:
+	  mom_int export to cl
 
 2010-08-31 07:50  rsbivand
 
-	* R/error.spsarlm.R, R/lag.spsarlm.R, R/sacsarlm.R, R/spautolm.R:
-	  tidy
+	* R/error.spsarlm.R,
+	  R/lag.spsarlm.R, R/sacsarlm.R, R/spautolm.R: tidy
 
 2010-08-28 14:43  rsbivand
 
-	* ChangeLog, inst/ChangeLog: as.double to storage.mode
+	* ChangeLog,
+	  inst/ChangeLog: as.double to storage.mode
 
 2010-08-28 14:42  rsbivand
 
-	* R/dnearneigh.R, R/gabrielneigh.R, R/knearneigh.R, R/relneigh.R,
-	  R/soi.R, R/utils.R: as.double to storage.mode
+	* R/dnearneigh.R,
+	  R/gabrielneigh.R, R/knearneigh.R, R/relneigh.R, R/soi.R,
+	  R/utils.R: as.double to storage.mode
 
 2010-08-27 19:24  rsbivand
 
-	* ChangeLog, inst/ChangeLog: adding moments trace
+	* ChangeLog,
+	  inst/ChangeLog: adding moments trace
 
 2010-08-27 19:23  rsbivand
 
-	* DESCRIPTION, NAMESPACE, R/edit.nb.R, R/impacts.R, R/jacobian.R,
-	  data/elect80.rda, man/do_ldet.Rd, man/edit.nb.Rd, man/elect80.Rd,
-	  man/trW.Rd: adding moments trace
+	* DESCRIPTION,
+	  NAMESPACE, R/edit.nb.R, R/impacts.R, R/jacobian.R,
+	  data/elect80.rda, man/do_ldet.Rd, man/edit.nb.Rd,
+	  man/elect80.Rd, man/trW.Rd: adding moments trace
 
 2010-08-17 14:05  rsbivand
 
-	* DESCRIPTION, R/error.spsarlm.R, R/jacobian.R, R/lag.spsarlm.R,
-	  R/spautolm.R, man/do_ldet.Rd, man/errorsarlm.Rd, man/lagsarlm.Rd,
+	* DESCRIPTION,
+	  R/error.spsarlm.R, R/jacobian.R, R/lag.spsarlm.R, R/spautolm.R,
+	  man/do_ldet.Rd, man/errorsarlm.Rd, man/lagsarlm.Rd,
 	  man/spautolm.Rd: folding spam_update and Matrix_J into fit
 	  functions
 
 2010-08-16 16:29  rsbivand
 
-	* ChangeLog, inst/ChangeLog: adding spam_update method
+	* ChangeLog,
+	  inst/ChangeLog: adding spam_update method
 
 2010-08-16 16:27  rsbivand
 
-	* DESCRIPTION, NAMESPACE, R/jacobian.R, man/do_ldet.Rd: adding
-	  spam_update method
+	* DESCRIPTION,
+	  NAMESPACE, R/jacobian.R, man/do_ldet.Rd: adding spam_update
+	  method
 
 2010-08-13 11:34  rsbivand
 
-	* R/jacobian.R, R/nb2listw.R: spam similarity safemode relaxation
+	* R/jacobian.R,
+	  R/nb2listw.R: spam similarity safemode relaxation
 
 2010-08-13 00:38  rsbivand
 
-	* R/jacobian.R: spam similarity safemode relaxation
+	* R/jacobian.R:
+	  spam similarity safemode relaxation
 
 2010-08-13 00:37  rsbivand
 
-	* R/jacobian.R: adding Matrix_J without updating
+	* R/jacobian.R:
+	  adding Matrix_J without updating
 
 2010-08-12 21:31  rsbivand
 
-	* DESCRIPTION, NAMESPACE, R/jacobian.R, man/do_ldet.Rd: adding
-	  Matrix_J without updating
+	* DESCRIPTION,
+	  NAMESPACE, R/jacobian.R, man/do_ldet.Rd: adding Matrix_J
+	  without updating
 
 2010-07-31 14:08  rsbivand
 
-	* ChangeLog, inst/ChangeLog: retrofit polylist in edit.nb()
+	* ChangeLog,
+	  inst/ChangeLog: retrofit polylist in edit.nb()
 
 2010-07-31 14:08  rsbivand
 
-	* DESCRIPTION, R/edit.nb.R, man/edit.nb.Rd: retrofit polylist in
-	  edit.nb()
+	* DESCRIPTION,
+	  R/edit.nb.R, man/edit.nb.Rd: retrofit polylist in edit.nb()
 
 2010-07-07 21:06  rsbivand
 
-	* ChangeLog, inst/ChangeLog: adding gstsls
+	* ChangeLog,
+	  inst/ChangeLog: adding gstsls
 
 2010-07-07 21:02  rsbivand
 
-	* man/gstsls.Rd: adding gstsls
+	* man/gstsls.Rd:
+	  adding gstsls
 
 2010-07-07 14:22  rsbivand
 
-	* ChangeLog, inst/ChangeLog: spautolm Nagelkerke fix
+	* ChangeLog,
+	  inst/ChangeLog: spautolm Nagelkerke fix
 
 2010-07-07 14:21  rsbivand
 
-	* ChangeLog, inst/ChangeLog: spautolm Nagelkerke fix
+	* ChangeLog,
+	  inst/ChangeLog: spautolm Nagelkerke fix
 
 2010-07-07 14:20  rsbivand
 
-	* R/summary.spsarlm.R: spautolm Nagelkerke fix
+	* R/summary.spsarlm.R:
+	  spautolm Nagelkerke fix
 
 2010-07-03 20:54  rsbivand
 
-	* ChangeLog, inst/ChangeLog: adding gstsls
+	* ChangeLog,
+	  inst/ChangeLog: adding gstsls
 
 2010-07-03 20:50  rsbivand
 
-	* INDEX: adding gstsls
+	* INDEX:
+	  adding gstsls
 
 2010-07-03 20:49  rsbivand
 
-	* DESCRIPTION, NAMESPACE, R/kpgm_new.R, man/GMerrorsar.Rd: adding
-	  gstsls
+	* DESCRIPTION,
+	  NAMESPACE, R/kpgm_new.R, man/GMerrorsar.Rd: adding gstsls
 
 2010-06-25 11:29  rsbivand
 
-	* ChangeLog, inst/ChangeLog: mention large n in ML docs
+	* ChangeLog,
+	  inst/ChangeLog: mention large n in ML docs
 
 2010-06-25 11:28  rsbivand
 
-	* man/errorsarlm.Rd, man/lagsarlm.Rd, man/spautolm.Rd: mention
-	  large n in ML docs
+	* man/errorsarlm.Rd,
+	  man/lagsarlm.Rd, man/spautolm.Rd: mention large n in ML docs
 
 2010-06-24 16:44  rsbivand
 
-	* R/plot.nb.R, R/tri2nb.R, man/tri2nb.Rd: duplicate coords
-	  protection in tri2nb().
+	* R/plot.nb.R,
+	  R/tri2nb.R, man/tri2nb.Rd: duplicate coords protection in
+	  tri2nb().
 
 2010-06-24 12:57  rsbivand
 
-	* DESCRIPTION, R/autocov.R, R/dnearneigh.R, R/knearneigh.R,
-	  R/nbdists.R, R/summary.nb.R: longlat protection in dnearneigh()
-	  etc.
+	* DESCRIPTION,
+	  R/autocov.R, R/dnearneigh.R, R/knearneigh.R, R/nbdists.R,
+	  R/summary.nb.R: longlat protection in dnearneigh() etc.
 
 2010-06-23 08:54  rsbivand
 
-	* ChangeLog, inst/ChangeLog: probmap/choynowski clarification
+	* ChangeLog,
+	  inst/ChangeLog: probmap/choynowski clarification
 
 2010-06-23 08:54  rsbivand
 
-	* DESCRIPTION, R/EBI.R, R/choynowski.R, man/choynowski.Rd:
-	  probmap/choynowski clarification
+	* DESCRIPTION,
+	  R/EBI.R, R/choynowski.R, man/choynowski.Rd: probmap/choynowski
+	  clarification
 
 2010-06-22 08:41  rsbivand
 
-	* ChangeLog, inst/ChangeLog: probmap and choynowski clarification,
-	  thanks to Michael Hoehle
+	* ChangeLog,
+	  inst/ChangeLog: probmap and choynowski clarification, thanks
+	  to Michael Hoehle
 
 2010-06-22 08:40  rsbivand
 
-	* DESCRIPTION, R/EBI.R, R/choynowski.R, man/choynowski.Rd,
-	  man/probmap.Rd: probmap and choynowski clarification, thanks to
-	  Michael Hoehle
+	* DESCRIPTION,
+	  R/EBI.R, R/choynowski.R, man/choynowski.Rd, man/probmap.Rd:
+	  probmap and choynowski clarification, thanks to Michael Hoehle
 
 2010-06-17 12:07  rsbivand
 
-	* ChangeLog, inst/ChangeLog: trap 2-column sparse neighbour file
+	* ChangeLog,
+	  inst/ChangeLog: trap 2-column sparse neighbour file
 
 2010-06-17 12:07  rsbivand
 
-	* ChangeLog, inst/ChangeLog: trap 2-column sparse neighbour file
+	* ChangeLog,
+	  inst/ChangeLog: trap 2-column sparse neighbour file
 
 2010-06-17 12:06  rsbivand
 
-	* DESCRIPTION, R/read.gwt2nb.R, man/read.gwt2nb.Rd: trap 2-column
-	  sparse neighbour file
+	* DESCRIPTION,
+	  R/read.gwt2nb.R, man/read.gwt2nb.Rd: trap 2-column sparse
+	  neighbour file
 
 2010-06-04 19:15  rsbivand
 
-	* ChangeLog, inst/ChangeLog: sphet hooks
+	* ChangeLog,
+	  inst/ChangeLog: sphet hooks
 
 2010-06-04 19:14  rsbivand
 
-	* R/impacts.R: sphet hooks
+	* R/impacts.R:
+	  sphet hooks
 
 2010-06-04 16:16  rsbivand
 
-	* ChangeLog, inst/ChangeLog: sphet hooks
+	* ChangeLog,
+	  inst/ChangeLog: sphet hooks
 
 2010-06-04 16:16  rsbivand
 
-	* DESCRIPTION, R/impacts.R: sphet hooks
+	* DESCRIPTION,
+	  R/impacts.R: sphet hooks
 
 2010-06-01 09:29  rsbivand
 
-	* ChangeLog, inst/ChangeLog: tidy
+	* ChangeLog,
+	  inst/ChangeLog: tidy
 
 2010-06-01 09:27  rsbivand
 
-	* R/kpgm_new.R: tidy
+	* R/kpgm_new.R:
+	  tidy
 
 2010-05-30 10:06  rsbivand
 
-	* ChangeLog, inst/ChangeLog: correct errorsarlm analytical SE
+	* ChangeLog,
+	  inst/ChangeLog: correct errorsarlm analytical SE
 
 2010-05-30 10:06  rsbivand
 
-	* DESCRIPTION, R/error.hessian.R, R/error.spsarlm.R,
-	  R/lag.spsarlm.R: correct errorsarlm analytical SE
+	* DESCRIPTION,
+	  R/error.hessian.R, R/error.spsarlm.R, R/lag.spsarlm.R: correct
+	  errorsarlm analytical SE
 
 2010-05-29 13:52  rsbivand
 
-	* ChangeLog, inst/ChangeLog: tidy
+	* ChangeLog,
+	  inst/ChangeLog: tidy
 
 2010-05-29 13:52  rsbivand
 
-	* DESCRIPTION: tidy
+	* DESCRIPTION:
+	  tidy
 
 2010-05-22 08:47  rsbivand
 
-	* R/sacsarlm.R: llprof
+	* R/sacsarlm.R:
+	  llprof
 
 2010-05-21 16:54  rsbivand
 
-	* DESCRIPTION, R/sacsarlm.R, man/sacsarlm.Rd: sacsar ll profile
+	* DESCRIPTION,
+	  R/sacsarlm.R, man/sacsarlm.Rd: sacsar ll profile
 
 2010-05-19 09:59  rsbivand
 
-	* INDEX: adding SAC/SARAR ML model
+	* INDEX:
+	  adding SAC/SARAR ML model
 
 2010-05-19 09:47  rsbivand
 
-	* ChangeLog, inst/ChangeLog: adding SAC/SARAR ML model
+	* ChangeLog,
+	  inst/ChangeLog: adding SAC/SARAR ML model
 
 2010-05-19 09:46  rsbivand
 
-	* DESCRIPTION, NAMESPACE, R/impacts.R, R/jacobian.R, R/sacsarlm.R,
-	  R/sarlm.R, R/summary.spsarlm.R, man/do_ldet.Rd,
-	  man/errorsarlm.Rd, man/lagsarlm.Rd, man/sacsarlm.Rd, src/lagw.c:
-	  adding SAC/SARAR ML model
+	* DESCRIPTION,
+	  NAMESPACE, R/impacts.R, R/jacobian.R, R/sacsarlm.R, R/sarlm.R,
+	  R/summary.spsarlm.R, man/do_ldet.Rd, man/errorsarlm.Rd,
+	  man/lagsarlm.Rd, man/sacsarlm.Rd, src/lagw.c: adding SAC/SARAR
+	  ML model
 
 2010-05-11 17:51  rsbivand
 
-	* ChangeLog, inst/ChangeLog: Nagelkerke in spautolm summary
+	* ChangeLog,
+	  inst/ChangeLog: Nagelkerke in spautolm summary
 
 2010-05-11 17:50  rsbivand
 
-	* man/spautolm.Rd: Nagelkerke in spautolm summary
+	* man/spautolm.Rd:
+	  Nagelkerke in spautolm summary
 
 2010-05-11 17:32  rsbivand
 
-	* R/spautolm.R, man/spautolm.Rd: Nagelkerke in spautolm summary
+	* R/spautolm.R,
+	  man/spautolm.Rd: Nagelkerke in spautolm summary
 
 2010-05-06 10:34  rsbivand
 
-	* ChangeLog, inst/ChangeLog: poly2nb: use SpatialPolygons instead
-	  of polylist by default
+	* ChangeLog,
+	  inst/ChangeLog: poly2nb: use SpatialPolygons instead of polylist
+	  by default
 
 2010-05-06 10:32  rsbivand
 
-	* DESCRIPTION: poly2nb: use SpatialPolygons instead of polylist by
-	  default
+	* DESCRIPTION:
+	  poly2nb: use SpatialPolygons instead of polylist by default
 
 2010-05-06 10:22  rsbivand
 
-	* R/poly2nb.R, man/poly2nb.Rd: poly2nb: use SpatialPolygons instead
-	  of polylist by default
+	* R/poly2nb.R,
+	  man/poly2nb.Rd: poly2nb: use SpatialPolygons instead of polylist
+	  by default
 
 2010-05-05 08:44  rsbivand
 
-	* ChangeLog, inst/ChangeLog: pass foundInBox to poly2nb
+	* ChangeLog,
+	  inst/ChangeLog: pass foundInBox to poly2nb
 
 2010-05-05 08:43  rsbivand
 
-	* R/poly2nb.R, man/poly2nb.Rd: pass foundInBox to poly2nb
+	* R/poly2nb.R,
+	  man/poly2nb.Rd: pass foundInBox to poly2nb
 
 2010-05-03 11:27  rsbivand
 
-	* R/poly2nb.R, man/poly2nb.Rd, src/init.c, src/polypoly.c,
-	  src/spdep.h: more poly2nb speedups
+	* R/poly2nb.R,
+	  man/poly2nb.Rd, src/init.c, src/polypoly.c, src/spdep.h:
+	  more poly2nb speedups
 
 2010-04-30 07:06  rsbivand
 
-	* man/do_ldet.Rd: examples for do_ldet
+	* man/do_ldet.Rd:
+	  examples for do_ldet
 
 2010-04-29 18:54  rsbivand
 
-	* ChangeLog, inst/ChangeLog: documenting do_ldet
+	* ChangeLog,
+	  inst/ChangeLog: documenting do_ldet
 
 2010-04-29 18:52  rsbivand
 
-	* man/do_ldet.Rd: documenting do_ldet
+	* man/do_ldet.Rd:
+	  documenting do_ldet
 
 2010-04-29 18:52  rsbivand
 
-	* NAMESPACE: documenting do_ldet
+	* NAMESPACE:
+	  documenting do_ldet
 
 2010-04-29 14:34  rsbivand
 
-	* R/poly2nb.R, man/poly2nb.Rd, src/polypoly.c: back out of knn for
-	  poly2nb
+	* R/poly2nb.R,
+	  man/poly2nb.Rd, src/polypoly.c: back out of knn for poly2nb
 
 2010-04-28 08:45  rsbivand
 
-	* R/listw2sn.R: tidy
+	* R/listw2sn.R:
+	  tidy
 
 2010-04-28 08:34  rsbivand
 
-	* DESCRIPTION, INDEX, R/knearneigh.R, R/poly2nb.R,
-	  man/knearneigh.Rd, man/poly2nb.Rd: tidy
+	* DESCRIPTION,
+	  INDEX, R/knearneigh.R, R/poly2nb.R, man/knearneigh.Rd,
+	  man/poly2nb.Rd: tidy
 
 2010-04-26 08:34  rsbivand
 
-	* ChangeLog, R/lag.spsarlm.R, R/poly2nb.R, man/poly2nb.Rd: more
-	  poly2nb changes
+	* ChangeLog,
+	  R/lag.spsarlm.R, R/poly2nb.R, man/poly2nb.Rd: more poly2nb
+	  changes
 
 2010-04-22 02:50  rsbivand
 
-	* DESCRIPTION, R/poly2nb.R, src/init.c, src/polypoly.c,
-	  src/spdep.h: poly2nb speedup
+	* DESCRIPTION,
+	  R/poly2nb.R, src/init.c, src/polypoly.c, src/spdep.h: poly2nb
+	  speedup
 
 2010-04-21 02:49  rsbivand
 
-	* DESCRIPTION, NAMESPACE, R/AAA.R, R/aple.mc.R, R/spChkOption.R,
+	* DESCRIPTION,
+	  NAMESPACE, R/AAA.R, R/aple.mc.R, R/spChkOption.R,
 	  man/set.spChkOption.Rd: zeroPolicy problem
 
 2010-04-17 22:18  rsbivand
 
-	* DESCRIPTION, NAMESPACE, R/error.spsarlm.R, R/jacobian.R,
-	  R/kpgm_new.R, R/lag.spsarlm.R, R/listw2sn.R, R/nb2listw.R,
-	  R/spautolm.R, man/impacts.sarlm.Rd, man/lagsarlm.Rd,
-	  man/listw2sn.Rd: spam as suggested
+	* DESCRIPTION,
+	  NAMESPACE, R/error.spsarlm.R, R/jacobian.R, R/kpgm_new.R,
+	  R/lag.spsarlm.R, R/listw2sn.R, R/nb2listw.R, R/spautolm.R,
+	  man/impacts.sarlm.Rd, man/lagsarlm.Rd, man/listw2sn.Rd: spam
+	  as suggested
 
 2010-04-02 10:20  rsbivand
 
-	* ChangeLog, inst/ChangeLog: control list documentation
+	* ChangeLog,
+	  inst/ChangeLog: control list documentation
 
 2010-04-02 10:19  rsbivand
 
-	* DESCRIPTION, man/errorsarlm.Rd, man/lagsarlm.Rd, man/spautolm.Rd:
-	  control list documentation
+	* DESCRIPTION,
+	  man/errorsarlm.Rd, man/lagsarlm.Rd, man/spautolm.Rd: control
+	  list documentation
 
 2010-04-01 14:50  rsbivand
 
-	* R/impacts.R: impacts conflict
+	* R/impacts.R:
+	  impacts conflict
 
 2010-04-01 14:05  rsbivand
 
-	* R/moran.plot.R: moran.plot zero.policy issue
+	* R/moran.plot.R:
+	  moran.plot zero.policy issue
 
 2010-03-24 13:40  rsbivand
 
-	* R/impacts.R: fix cluster bloat
+	* R/impacts.R:
+	  fix cluster bloat
 
 2010-03-24 11:58  rsbivand
 
-	* DESCRIPTION, R/impacts.R, man/errorsarlm.Rd, man/lagsarlm.Rd,
+	* DESCRIPTION,
+	  R/impacts.R, man/errorsarlm.Rd, man/lagsarlm.Rd,
 	  man/spautolm.Rd: avoiding cluster bloat
 
 2010-03-22 12:08  rsbivand
 
-	* INDEX: tidy
+	* INDEX:
+	  tidy
 
 2010-03-22 11:10  rsbivand
 
-	* ChangeLog, inst/ChangeLog: spautolm rewritten to use shared code
+	* ChangeLog,
+	  inst/ChangeLog: spautolm rewritten to use shared code
 
 2010-03-22 11:09  rsbivand
 
-	* R/spautolm.R, inst/doc/sids.Rnw, man/spautolm.Rd: spautolm
-	  rewritten to use shared code
+	* R/spautolm.R,
+	  inst/doc/sids.Rnw, man/spautolm.Rd: spautolm rewritten to use
+	  shared code
 
 2010-03-22 10:32  rsbivand
 
-	* ChangeLog, inst/ChangeLog: spautolm rewritten to use shared code
+	* ChangeLog,
+	  inst/ChangeLog: spautolm rewritten to use shared code
 
 2010-03-22 10:31  rsbivand
 
-	* DESCRIPTION, R/error.spsarlm.R, R/jacobian.R, R/lag.spsarlm.R,
-	  R/spautolm.R, inst/doc/sids.Rnw, man/errorsarlm.Rd,
-	  man/lagsarlm.Rd, man/spautolm.Rd: spautolm rewritten to use
-	  shared code
+	* DESCRIPTION,
+	  R/error.spsarlm.R, R/jacobian.R, R/lag.spsarlm.R, R/spautolm.R,
+	  inst/doc/sids.Rnw, man/errorsarlm.Rd, man/lagsarlm.Rd,
+	  man/spautolm.Rd: spautolm rewritten to use shared code
 
 2010-03-19 20:58  rsbivand
 
-	* ChangeLog, inst/ChangeLog: adding some cluster awareness
+	* ChangeLog,
+	  inst/ChangeLog: adding some cluster awareness
 
 2010-03-19 20:57  rsbivand
 
-	* R/impacts.R: adding some cluster awareness
+	* R/impacts.R:
+	  adding some cluster awareness
 
 2010-03-19 20:13  rsbivand
 
-	* ChangeLog, inst/ChangeLog: adding some cluster awareness
+	* ChangeLog,
+	  inst/ChangeLog: adding some cluster awareness
 
 2010-03-19 20:12  rsbivand
 
-	* DESCRIPTION, NAMESPACE, R/EBI.R, R/aple.mc.R, R/geary.R,
-	  R/impacts.R, R/moran.R, R/sp.mantel.R, R/spChkOption.R,
-	  man/EBImoran.mc.Rd, man/aple.mc.Rd, man/geary.mc.Rd,
-	  man/localmoran.exact.Rd, man/moran.mc.Rd, man/set.spChkOption.Rd,
-	  man/sp.mantel.mc.Rd: adding some cluster awareness
+	* DESCRIPTION,
+	  NAMESPACE, R/EBI.R, R/aple.mc.R, R/geary.R, R/impacts.R,
+	  R/moran.R, R/sp.mantel.R, R/spChkOption.R, man/EBImoran.mc.Rd,
+	  man/aple.mc.Rd, man/geary.mc.Rd, man/localmoran.exact.Rd,
+	  man/moran.mc.Rd, man/set.spChkOption.Rd, man/sp.mantel.mc.Rd:
+	  adding some cluster awareness
 
 2010-03-18 19:21  rsbivand
 
-	* ChangeLog, inst/ChangeLog: modularising ML code, adding Jacobian
-	  methods
+	* ChangeLog,
+	  inst/ChangeLog: modularising ML code, adding Jacobian methods
 
 2010-03-18 19:20  rsbivand
 
-	* DESCRIPTION, R/error.hessian.R, R/error.spsarlm.R, R/jacobian.R,
+	* DESCRIPTION,
+	  R/error.hessian.R, R/error.spsarlm.R, R/jacobian.R,
 	  R/lag.hessian.R, R/lag.spsarlm.R, man/boston.Rd,
-	  man/errorsarlm.Rd, man/lagsarlm.Rd, man/used.cars.Rd, src/init.c:
-	  modularising ML code, adding Jacobian methods
+	  man/errorsarlm.Rd, man/lagsarlm.Rd, man/used.cars.Rd,
+	  src/init.c: modularising ML code, adding Jacobian methods
 
 2010-03-17 21:00  rsbivand
 
-	* DESCRIPTION, R/error.hessian.R, R/error.spsarlm.R, R/impacts.R,
+	* DESCRIPTION,
+	  R/error.hessian.R, R/error.spsarlm.R, R/impacts.R,
 	  R/lag.hessian.R, R/lag.spsarlm.R, man/lagsarlm.Rd, src/card.c,
 	  src/dfs_ncomp.c, src/dnn.c, src/gabriel.c, src/gearyw.c,
 	  src/gsymtest.c, src/init.c, src/insiders.c, src/jc.c, src/knn.c,
 	  src/lagw.c, src/listw2Matrix.c, src/listw2sn.c, src/ml_sse.c,
 	  src/nbdists.c, src/polypoly.c, src/relative.c, src/skater.c,
-	  src/soigraph.c, src/spdep.h, src/symtest.c: sse C code; impacts
-	  cluster
+	  src/soigraph.c, src/spdep.h, src/symtest.c: sse C code;
+	  impacts cluster
 
 2010-03-16 13:46  rsbivand
 
-	* ChangeLog, inst/ChangeLog: timing and other changes to lag, error
-	  and impact calculations
+	* ChangeLog,
+	  inst/ChangeLog: timing and other changes to lag, error and
+	  impact calculations
 
 2010-03-16 13:46  rsbivand
 
-	* ChangeLog, inst/ChangeLog: timing and other changes to lag, error
-	  and impact calculations
+	* ChangeLog,
+	  inst/ChangeLog: timing and other changes to lag, error and
+	  impact calculations
 
 2010-03-16 13:36  rsbivand
 
-	* R/AAA.R, R/error.hessian.R, R/error.spsarlm.R, R/impacts.R,
+	* R/AAA.R,
+	  R/error.hessian.R, R/error.spsarlm.R, R/impacts.R,
 	  R/lag.hessian.R, R/lag.spsarlm.R, R/nb2mat.R,
 	  R/summary.spsarlm.R, data/elect80.rda, man/elect80.Rd,
 	  man/errorsarlm.Rd, man/lagsarlm.Rd, man/stsls.Rd, src/Makevars,
-	  src/ml_sse.c: timing and other changes to lag, error and impact
-	  calculations
+	  src/ml_sse.c: timing and other changes to lag, error and
+	  impact calculations
 
 2010-03-13 11:16  rsbivand
 
-	* ChangeLog, inst/ChangeLog: tidy stsls
+	* ChangeLog,
+	  inst/ChangeLog: tidy stsls
 
 2010-03-13 11:15  rsbivand
 
-	* R/s2sls., R/s2sls.R, man/stsls.Rd: tidy stsls
+	* R/s2sls.,
+	  R/s2sls.R, man/stsls.Rd: tidy stsls
 
 2010-03-12 22:12  gpiras
 
-	* man/stsls.Rd: add stsls help including the new argument W2X
+	* man/stsls.Rd:
+	  add stsls help including the new argument W2X
 
 2010-03-12 22:11  gpiras
 
-	* man/stsls.Rd: remove stsls help
+	* man/stsls.Rd:
+	  remove stsls help
 
 2010-03-12 22:07  gpiras
 
-	* R/s2sls.: Add the argument W2X to stsls
+	* R/s2sls.:
+	  Add the argument W2X to stsls
 
 2010-03-12 22:05  gpiras
 
-	* R/s2sls.R: remove stsls
+	* R/s2sls.R:
+	  remove stsls
 
 2010-03-12 15:31  rsbivand
 
-	* DESCRIPTION, R/AAA.R, R/EBI.R, R/ME.R, R/SpatialFiltering.R,
+	* DESCRIPTION,
+	  R/AAA.R, R/EBI.R, R/ME.R, R/SpatialFiltering.R,
 	  R/autocov.R, R/diffnb.R, R/eigenw.R, R/error.spsarlm.R,
 	  R/geary.R, R/globalG.R, R/impacts.R, R/jc.R, R/kpgm_new.R,
 	  R/lag.spsarlm.R, R/lm.LMtests.R, R/lm.morantest.R, R/localG.R,
@@ -732,14 +880,14 @@
 	  R/moran.exact.R, R/moran.exact.alt.R, R/moran.plot.R,
 	  R/mtlocalmoran.R, R/mtmoran.R, R/nb2listw.R, R/nb2mat.R,
 	  R/s2sls.R, R/sarlm.R, R/sp.correlogram.R, R/sp.mantel.R,
-	  R/spChkOption.R, R/spautolm.R, R/subset.nb.R, R/summary.nb.R,
-	  R/utils.R, R/weights-utils.R, man/EBImoran.mc.Rd, man/EBlocal.Rd,
-	  man/GMerrorsar.Rd, man/ME.Rd, man/SpatialFiltering.Rd,
-	  man/autocov_dist.Rd, man/diffnb.Rd, man/eigenw.Rd,
-	  man/errorsarlm.Rd, man/geary.Rd, man/geary.mc.Rd,
-	  man/geary.test.Rd, man/globalG.test.Rd, man/joincount.test.Rd,
-	  man/lag.listw.Rd, man/lagmess.Rd, man/lagsarlm.Rd,
-	  man/lm.LMtests.Rd, man/lm.morantest.Rd,
+	  R/spChkOption.R, R/spautolm.R, R/subset.nb.R,
+	  R/summary.nb.R, R/utils.R, R/weights-utils.R,
+	  man/EBImoran.mc.Rd, man/EBlocal.Rd, man/GMerrorsar.Rd,
+	  man/ME.Rd, man/SpatialFiltering.Rd, man/autocov_dist.Rd,
+	  man/diffnb.Rd, man/eigenw.Rd, man/errorsarlm.Rd, man/geary.Rd,
+	  man/geary.mc.Rd, man/geary.test.Rd, man/globalG.test.Rd,
+	  man/joincount.test.Rd, man/lag.listw.Rd, man/lagmess.Rd,
+	  man/lagsarlm.Rd, man/lm.LMtests.Rd, man/lm.morantest.Rd,
 	  man/lm.morantest.exact.Rd, man/lm.morantest.sad.Rd,
 	  man/localG.Rd, man/localmoran.Rd, man/localmoran.exact.Rd,
 	  man/localmoran.sad.Rd, man/moran.Rd, man/moran.mc.Rd,
@@ -752,392 +900,450 @@
 
 2010-02-24 18:29  rsbivand
 
-	* ChangeLog, inst/ChangeLog: errorsarlm resvar bugfix
+	* ChangeLog,
+	  inst/ChangeLog: errorsarlm resvar bugfix
 
 2010-02-24 18:29  rsbivand
 
-	* DESCRIPTION, R/error.spsarlm.R: errorsarlm resvar bugfix
+	* DESCRIPTION,
+	  R/error.spsarlm.R: errorsarlm resvar bugfix
 
 2010-02-03 13:49  rsbivand
 
-	* ChangeLog, inst/ChangeLog: adding MESS function
+	* ChangeLog,
+	  inst/ChangeLog: adding MESS function
 
 2010-02-03 13:47  rsbivand
 
-	* DESCRIPTION, INDEX, NAMESPACE, R/mess.R, R/summary.spsarlm.R,
-	  man/lagmess.Rd: adding MESS function
+	* DESCRIPTION,
+	  INDEX, NAMESPACE, R/mess.R, R/summary.spsarlm.R, man/lagmess.Rd:
+	  adding MESS function
 
 2010-01-28 12:24  rsbivand
 
-	* DESCRIPTION, R/globalG.R, man/globalG.test.Rd, man/skater.Rd,
-	  man/ssw.Rd: global G warning not error for non-binary weights
+	* DESCRIPTION,
+	  R/globalG.R, man/globalG.test.Rd, man/skater.Rd, man/ssw.Rd:
+	  global G warning not error for non-binary weights
 
 2009-12-15 17:16  rsbivand
 
-	* ChangeLog, inst/ChangeLog: convert impacts to method, provide
-	  sarlm and stsls methods
+	* ChangeLog,
+	  inst/ChangeLog: convert impacts to method, provide sarlm and
+	  stsls methods
 
 2009-12-15 17:16  rsbivand
 
-	* R/impacts.R: convert impacts to method, provide sarlm and stsls
-	  methods
+	* R/impacts.R:
+	  convert impacts to method, provide sarlm and stsls methods
 
 2009-12-15 08:40  rsbivand
 
-	* ChangeLog, inst/ChangeLog: adding Hausman test for GMerrorsar
+	* ChangeLog,
+	  inst/ChangeLog: adding Hausman test for GMerrorsar
 
 2009-12-15 08:39  rsbivand
 
-	* NAMESPACE, R/kpgm_new.R, R/summary.spsarlm.R, man/GMerrorsar.Rd,
-	  man/LR.sarlm.Rd, man/errorsarlm.Rd, man/summary.sarlm.Rd: adding
-	  Hausman test for GMerrorsar
+	* NAMESPACE,
+	  R/kpgm_new.R, R/summary.spsarlm.R, man/GMerrorsar.Rd,
+	  man/LR.sarlm.Rd, man/errorsarlm.Rd, man/summary.sarlm.Rd:
+	  adding Hausman test for GMerrorsar
 
 2009-12-14 20:01  rsbivand
 
-	* ChangeLog, inst/ChangeLog: convert impacts to method, provide
-	  sarlm and stsls methods
+	* ChangeLog,
+	  inst/ChangeLog: convert impacts to method, provide sarlm and
+	  stsls methods
 
 2009-12-14 19:59  rsbivand
 
-	* DESCRIPTION, NAMESPACE, R/impacts.R, R/s2sls.R,
-	  man/impacts.sarlm.Rd, man/lagsarlm.Rd: convert impacts to method,
-	  provide sarlm and stsls methods
+	* DESCRIPTION,
+	  NAMESPACE, R/impacts.R, R/s2sls.R, man/impacts.sarlm.Rd,
+	  man/lagsarlm.Rd: convert impacts to method, provide sarlm and
+	  stsls methods
 
 2009-12-12 09:51  rsbivand
 
-	* ChangeLog, inst/ChangeLog: updating stsls
+	* ChangeLog,
+	  inst/ChangeLog: updating stsls
 
 2009-12-12 09:50  rsbivand
 
-	* DESCRIPTION, NAMESPACE, R/s2sls.R, man/stsls.Rd: updating stsls
+	* DESCRIPTION,
+	  NAMESPACE, R/s2sls.R, man/stsls.Rd: updating stsls
 
 2009-11-26 14:32  rsbivand
 
-	* ChangeLog, inst/ChangeLog: NAMESPACE cleaning
+	* ChangeLog,
+	  inst/ChangeLog: NAMESPACE cleaning
 
 2009-11-26 14:31  rsbivand
 
-	* ChangeLog, DESCRIPTION, NAMESPACE, inst/ChangeLog: NAMESPACE
-	  cleaning
+	* ChangeLog,
+	  DESCRIPTION, NAMESPACE, inst/ChangeLog: NAMESPACE cleaning
 
 2009-11-26 08:07  rsbivand
 
-	* ChangeLog, inst/ChangeLog: nb2WB no neighbours fix
+	* ChangeLog,
+	  inst/ChangeLog: nb2WB no neighbours fix
 
 2009-11-26 08:07  rsbivand
 
-	* man/nb2lines.Rd: nb2WB no neighbours fix
+	* man/nb2lines.Rd:
+	  nb2WB no neighbours fix
 
 2009-11-26 07:43  rsbivand
 
-	* ChangeLog, inst/ChangeLog: nb2WB no neighbours fix
+	* ChangeLog,
+	  inst/ChangeLog: nb2WB no neighbours fix
 
 2009-11-26 07:42  rsbivand
 
-	* DESCRIPTION, R/nb2listw.R: nb2WB no neighbours fix
+	* DESCRIPTION,
+	  R/nb2listw.R: nb2WB no neighbours fix
 
 2009-11-03 22:35  rsbivand
 
-	* ChangeLog, inst/ChangeLog: replacing tripack with deldir
+	* ChangeLog,
+	  inst/ChangeLog: replacing tripack with deldir
 
 2009-11-03 22:35  rsbivand
 
-	* DESCRIPTION, R/nblag.R, R/tri2nb.R, man/tri2nb.Rd: replacing
-	  tripack with deldir
+	* DESCRIPTION,
+	  R/nblag.R, R/tri2nb.R, man/tri2nb.Rd: replacing tripack
+	  with deldir
 
 2009-11-03 21:18  rsbivand
 
-	* ChangeLog, inst/ChangeLog: errorsarlm no-intercept problem
+	* ChangeLog,
+	  inst/ChangeLog: errorsarlm no-intercept problem
 
 2009-11-03 21:17  rsbivand
 
-	* DESCRIPTION, R/error.spsarlm.R: errorsarlm no-intercept problem
+	* DESCRIPTION,
+	  R/error.spsarlm.R: errorsarlm no-intercept problem
 
 2009-11-01 10:05  rsbivand
 
-	* inst/ChangeLog: fix for writing GWT; impact Q components
+	* inst/ChangeLog:
+	  fix for writing GWT; impact Q components
 
 2009-11-01 10:04  rsbivand
 
-	* ChangeLog: fix for writing GWT; impact Q components
+	* ChangeLog:
+	  fix for writing GWT; impact Q components
 
 2009-11-01 10:01  rsbivand
 
-	* DESCRIPTION, R/impacts.R, R/read.gwt2nb.R, man/impacts.sarlm.Rd,
+	* DESCRIPTION,
+	  R/impacts.R, R/read.gwt2nb.R, man/impacts.sarlm.Rd,
 	  man/invIrM.Rd, man/joincount.multi.Rd, man/nb2blocknb.Rd,
 	  man/read.gwt2nb.Rd: fix for writing GWT; impact Q components
 
 2009-10-19 17:22  rsbivand
 
-	* ChangeLog, inst/ChangeLog: tidy
+	* ChangeLog,
+	  inst/ChangeLog: tidy
 
 2009-10-19 17:21  rsbivand
 
-	* R/error.hessian.R, R/summary.spsarlm.R: tidy
+	* R/error.hessian.R,
+	  R/summary.spsarlm.R: tidy
 
 2009-10-17 19:38  rsbivand
 
-	* ChangeLog, inst/ChangeLog: move errorsarlm/Matrix to Cholesky
+	* ChangeLog,
+	  inst/ChangeLog: move errorsarlm/Matrix to Cholesky
 
 2009-10-17 19:37  rsbivand
 
-	* R/error.hessian.R, R/error.spsarlm.R: move errorsarlm/Matrix to
-	  Cholesky
+	* R/error.hessian.R,
+	  R/error.spsarlm.R: move errorsarlm/Matrix to Cholesky
 
 2009-10-16 15:42  rsbivand
 
-	* ChangeLog, inst/ChangeLog: make Hausman test optional in
-	  summary.sarlm
+	* ChangeLog,
+	  inst/ChangeLog: make Hausman test optional in summary.sarlm
 
 2009-10-16 15:40  rsbivand
 
-	* DESCRIPTION, R/nb2mat.R, R/summary.spsarlm.R,
-	  man/summary.sarlm.Rd: make Hausman test optional in summary.sarlm
+	* DESCRIPTION,
+	  R/nb2mat.R, R/summary.spsarlm.R, man/summary.sarlm.Rd: make
+	  Hausman test optional in summary.sarlm
 
 2009-10-12 19:22  rsbivand
 
-	* ChangeLog, inst/ChangeLog: reduce check time use by thinning
-	  examples
+	* ChangeLog,
+	  inst/ChangeLog: reduce check time use by thinning examples
 
 2009-10-12 19:21  rsbivand
 
-	* DESCRIPTION, inst/doc/CO69.Rnw,
-	  inst/doc/backstore/boot_res.RData: reduce check time use by
-	  thinning examples
+	* DESCRIPTION,
+	  inst/doc/CO69.Rnw, inst/doc/backstore/boot_res.RData: reduce
+	  check time use by thinning examples
 
 2009-10-12 18:57  rsbivand
 
-	* ChangeLog, inst/ChangeLog: reduce check time use by thinning
-	  examples
+	* ChangeLog,
+	  inst/ChangeLog: reduce check time use by thinning examples
 
 2009-10-12 18:55  rsbivand
 
-	* DESCRIPTION, inst/doc/CO69.Rnw, inst/doc/backstore,
+	* DESCRIPTION,
+	  inst/doc/CO69.Rnw, inst/doc/backstore,
 	  inst/doc/backstore/boot_res.RData, man/ME.Rd, man/aple.mc.Rd,
 	  man/aple.plot.Rd, man/impacts.sarlm.Rd, man/joincount.multi.Rd,
 	  man/spautolm.Rd: reduce check time use by thinning examples
 
 2009-10-12 11:08  rsbivand
 
-	* ChangeLog, inst/ChangeLog: bug fix in trW for MC method
+	* ChangeLog,
+	  inst/ChangeLog: bug fix in trW for MC method
 
 2009-10-12 11:02  rsbivand
 
-	* DESCRIPTION, R/impacts.R, man/trW.Rd: bug fix in trW for MC
-	  method
+	* DESCRIPTION,
+	  R/impacts.R, man/trW.Rd: bug fix in trW for MC method
 
 2009-10-06 19:19  rsbivand
 
-	* INDEX, man/GMerrorsar.Rd: tidy
+	* INDEX,
+	  man/GMerrorsar.Rd: tidy
 
 2009-09-25 12:55  rsbivand
 
-	* ChangeLog, inst/ChangeLog: lambda standard error for large data
-	  sets
+	* ChangeLog,
+	  inst/ChangeLog: lambda standard error for large data sets
 
 2009-09-25 12:55  rsbivand
 
-	* DESCRIPTION, R/error.spsarlm.R, R/lag.spsarlm.R,
-	  man/errorsarlm.Rd, man/lagsarlm.Rd: lambda standard error for
-	  large data sets
+	* DESCRIPTION,
+	  R/error.spsarlm.R, R/lag.spsarlm.R, man/errorsarlm.Rd,
+	  man/lagsarlm.Rd: lambda standard error for large data sets
 
 2009-09-25 12:43  rsbivand
 
-	* ChangeLog, inst/ChangeLog: lambda standard error for large data
-	  sets
+	* ChangeLog,
+	  inst/ChangeLog: lambda standard error for large data sets
 
 2009-09-25 12:42  rsbivand
 
-	* ChangeLog, inst/ChangeLog: lambda standard error for large data
-	  sets
+	* ChangeLog,
+	  inst/ChangeLog: lambda standard error for large data sets
 
 2009-09-25 12:42  rsbivand
 
-	* R/error.hessian.R: lambda standard error for large data sets
+	* R/error.hessian.R:
+	  lambda standard error for large data sets
 
 2009-09-24 19:21  rsbivand
 
-	* ChangeLog, inst/ChangeLog: lambda standard error for large data
-	  sets
+	* ChangeLog,
+	  inst/ChangeLog: lambda standard error for large data sets
 
 2009-09-24 19:20  rsbivand
 
-	* man/impacts.sarlm.Rd: lambda standard error for large data sets
+	* man/impacts.sarlm.Rd:
+	  lambda standard error for large data sets
 
 2009-09-24 19:09  rsbivand
 
-	* ChangeLog, inst/ChangeLog: lambda standard error for large data
-	  sets
+	* ChangeLog,
+	  inst/ChangeLog: lambda standard error for large data sets
 
 2009-09-24 19:04  rsbivand
 
-	* R/error.spsarlm.R, R/lag.spsarlm.R, R/spautolm.R,
-	  R/summary.spsarlm.R, man/errorsarlm.Rd, man/lagsarlm.Rd: lambda
-	  standard error for large data sets
+	* R/error.spsarlm.R,
+	  R/lag.spsarlm.R, R/spautolm.R, R/summary.spsarlm.R,
+	  man/errorsarlm.Rd, man/lagsarlm.Rd: lambda standard error for
+	  large data sets
 
 2009-09-24 14:54  rsbivand
 
-	* DESCRIPTION, R/error.spsarlm.R, man/errorsarlm.Rd, man/invIrM.Rd:
-	  lambda standard error for large data sets
+	* DESCRIPTION,
+	  R/error.spsarlm.R, man/errorsarlm.Rd, man/invIrM.Rd: lambda
+	  standard error for large data sets
 
 2009-09-24 08:46  rsbivand
 
-	* DESCRIPTION, NAMESPACE, R/error.spsarlm.R, R/nb2mat.R,
-	  R/summary.spsarlm.R, man/LR.sarlm.Rd, man/errorsarlm.Rd,
-	  man/invIrM.Rd: spatial Hausman for large data sets
+	* DESCRIPTION,
+	  NAMESPACE, R/error.spsarlm.R, R/nb2mat.R, R/summary.spsarlm.R,
+	  man/LR.sarlm.Rd, man/errorsarlm.Rd, man/invIrM.Rd: spatial
+	  Hausman for large data sets
 
 2009-09-23 07:32  rsbivand
 
-	* ChangeLog, inst/ChangeLog: added spatial Hausman test for error
-	  model
+	* ChangeLog,
+	  inst/ChangeLog: added spatial Hausman test for error model
 
 2009-09-23 07:31  rsbivand
 
-	* DESCRIPTION, NAMESPACE, R/error.spsarlm.R, R/summary.spsarlm.R,
-	  man/LR.sarlm.Rd, man/summary.sarlm.Rd: added spatial Hausman test
-	  for error model
+	* DESCRIPTION,
+	  NAMESPACE, R/error.spsarlm.R, R/summary.spsarlm.R,
+	  man/LR.sarlm.Rd, man/summary.sarlm.Rd: added spatial Hausman
+	  test for error model
 
 2009-09-22 16:56  rsbivand
 
-	* ChangeLog, inst/ChangeLog: fix no intercept bug
+	* ChangeLog,
+	  inst/ChangeLog: fix no intercept bug
 
 2009-09-22 16:55  rsbivand
 
-	* R/impacts.R: fix no intercept bug
+	* R/impacts.R:
+	  fix no intercept bug
 
 2009-09-22 09:18  rsbivand
 
-	* man/lagsarlm.Rd: mixed approximate/asymptotic Hessian
+	* man/lagsarlm.Rd:
+	  mixed approximate/asymptotic Hessian
 
 2009-09-22 08:38  rsbivand
 
-	* DESCRIPTION, R/impacts.R, R/lag.hessian.R, R/lag.spsarlm.R,
+	* DESCRIPTION,
+	  R/impacts.R, R/lag.hessian.R, R/lag.spsarlm.R,
 	  man/impacts.sarlm.Rd, man/lagsarlm.Rd: mixed
 	  approximate/asymptotic Hessian
 
 2009-09-20 18:35  rsbivand
 
-	* ChangeLog, inst/ChangeLog: mixed approximate/asymptotic Hessian
+	* ChangeLog,
+	  inst/ChangeLog: mixed approximate/asymptotic Hessian
 
 2009-09-20 18:34  rsbivand
 
-	* DESCRIPTION, R/lag.spsarlm.R, R/summary.spsarlm.R,
-	  man/summary.sarlm.Rd: mixed approximate/asymptotic Hessian
+	* DESCRIPTION,
+	  R/lag.spsarlm.R, R/summary.spsarlm.R, man/summary.sarlm.Rd:
+	  mixed approximate/asymptotic Hessian
 
 2009-09-19 19:49  rsbivand
 
-	* ChangeLog, inst/ChangeLog: add house data set
+	* ChangeLog,
+	  inst/ChangeLog: add house data set
 
 2009-09-19 19:48  rsbivand
 
-	* man/impacts.sarlm.Rd, man/lagsarlm.Rd: add house data set
+	* man/impacts.sarlm.Rd,
+	  man/lagsarlm.Rd: add house data set
 
 2009-09-19 19:18  rsbivand
 
-	* ChangeLog, inst/ChangeLog: add house data set
+	* ChangeLog,
+	  inst/ChangeLog: add house data set
 
 2009-09-19 19:16  rsbivand
 
-	* data/house.RData, man/house.Rd: add house data set
+	* data/house.RData,
+	  man/house.Rd: add house data set
 
 2009-09-19 18:45  rsbivand
 
-	* ChangeLog, inst/ChangeLog: mixed approximate/asymptotic Hessian
+	* ChangeLog,
+	  inst/ChangeLog: mixed approximate/asymptotic Hessian
 
 2009-09-19 18:44  rsbivand
 
-	* man/lagsarlm.Rd: mixed approximate/asymptotic Hessian
+	* man/lagsarlm.Rd:
+	  mixed approximate/asymptotic Hessian
 
 2009-09-19 16:17  rsbivand
 
-	* ChangeLog, inst/ChangeLog: mixed approximate/asymptotic Hessian
+	* ChangeLog,
+	  inst/ChangeLog: mixed approximate/asymptotic Hessian
 
 2009-09-19 16:15  rsbivand
 
-	* DESCRIPTION, R/error.spsarlm.R, R/lag.hessian.R, R/lag.spsarlm.R,
+	* DESCRIPTION,
+	  R/error.spsarlm.R, R/lag.hessian.R, R/lag.spsarlm.R,
 	  R/summary.spsarlm.R, man/as_dgRMatrix_listw.Rd,
-	  man/errorsarlm.Rd, man/lagsarlm.Rd, man/summary.sarlm.Rd: mixed
-	  approximate/asymptotic Hessian
+	  man/errorsarlm.Rd, man/lagsarlm.Rd, man/summary.sarlm.Rd:
+	  mixed approximate/asymptotic Hessian
 
 2009-09-14 14:06  rsbivand
 
-	* R/summary.spsarlm.R: impacts for lag and mixed spatial
-	  regressions
+	* R/summary.spsarlm.R:
+	  impacts for lag and mixed spatial regressions
 
 2009-09-14 13:31  rsbivand
 
-	* R/summary.spsarlm.R: impacts for lag and mixed spatial
-	  regressions
+	* R/summary.spsarlm.R:
+	  impacts for lag and mixed spatial regressions
 
 2009-09-14 13:10  rsbivand
 
-	* R/summary.spsarlm.R: impacts for lag and mixed spatial
-	  regressions
+	* R/summary.spsarlm.R:
+	  impacts for lag and mixed spatial regressions
 
 2009-09-14 12:32  rsbivand
 
-	* R/lag.spsarlm.R, R/summary.spsarlm.R, man/lagsarlm.Rd: impacts
-	  for lag and mixed spatial regressions
+	* R/lag.spsarlm.R,
+	  R/summary.spsarlm.R, man/lagsarlm.Rd: impacts for lag and
+	  mixed spatial regressions
 
 2009-09-14 08:26  rsbivand
 
-	* ChangeLog, inst/ChangeLog: impacts for lag and mixed spatial
-	  regressions
+	* ChangeLog,
+	  inst/ChangeLog: impacts for lag and mixed spatial regressions
 
 2009-09-14 08:24  rsbivand
 
-	* DESCRIPTION, R/lag.spsarlm.R, R/summary.spsarlm.R,
-	  man/impacts.sarlm.Rd, man/lagsarlm.Rd: impacts for lag and mixed
-	  spatial regressions
+	* DESCRIPTION,
+	  R/lag.spsarlm.R, R/summary.spsarlm.R, man/impacts.sarlm.Rd,
+	  man/lagsarlm.Rd: impacts for lag and mixed spatial regressions
 
 2009-09-13 19:42  rsbivand
 
-	* R/error.spsarlm.R, R/kpgm_new.R, R/lag.hessian.R,
-	  R/lag.spsarlm.R, R/spautolm.R, man/as_dgRMatrix_listw.Rd,
-	  man/impacts.sarlm.Rd: impacts for lag and mixed spatial
-	  regressions
+	* R/error.spsarlm.R,
+	  R/kpgm_new.R, R/lag.hessian.R, R/lag.spsarlm.R, R/spautolm.R,
+	  man/as_dgRMatrix_listw.Rd, man/impacts.sarlm.Rd: impacts for
+	  lag and mixed spatial regressions
 
 2009-09-13 17:42  rsbivand
 
-	* R/impacts.R, R/lag.hessian.R, R/lag.spsarlm.R,
-	  man/impacts.sarlm.Rd, man/lagsarlm.Rd: impacts for lag and mixed
-	  spatial regressions
+	* R/impacts.R,
+	  R/lag.hessian.R, R/lag.spsarlm.R, man/impacts.sarlm.Rd,
+	  man/lagsarlm.Rd: impacts for lag and mixed spatial regressions
 
 2009-09-12 21:15  rsbivand
 
-	* DESCRIPTION, R/impacts.R, R/lag.hessian.R, R/lag.spsarlm.R,
-	  man/impacts.sarlm.Rd, man/lagsarlm.Rd: impacts for lag and mixed
-	  spatial regressions
+	* DESCRIPTION,
+	  R/impacts.R, R/lag.hessian.R, R/lag.spsarlm.R,
+	  man/impacts.sarlm.Rd, man/lagsarlm.Rd: impacts for lag and
+	  mixed spatial regressions
 
 2009-09-12 11:54  rsbivand
 
-	* ChangeLog, inst/ChangeLog: impacts for lag and mixed spatial
-	  regressions
+	* ChangeLog,
+	  inst/ChangeLog: impacts for lag and mixed spatial regressions
 
 2009-09-12 11:52  rsbivand
 
-	* NAMESPACE, R/impacts.R, R/lag.spsarlm.R, man/impacts.sarlm.Rd,
-	  man/trW.Rd: impacts for lag and mixed spatial regressions
+	* NAMESPACE,
+	  R/impacts.R, R/lag.spsarlm.R, man/impacts.sarlm.Rd, man/trW.Rd:
+	  impacts for lag and mixed spatial regressions
 
 2009-09-11 19:45  rsbivand
 
-	* DESCRIPTION, NAMESPACE, R/impacts.R, R/lag.spsarlm.R: impacts for
-	  lag and mixed spatial regressions
+	* DESCRIPTION,
+	  NAMESPACE, R/impacts.R, R/lag.spsarlm.R: impacts for lag and
+	  mixed spatial regressions
 
 2009-09-06 10:04  rsbivand
 
-	* ChangeLog, inst/ChangeLog: fix bugs in residuals.spautolm for
-	  non-NULL na.act
+	* ChangeLog,
+	  inst/ChangeLog: fix bugs in residuals.spautolm for non-NULL
+	  na.act
 
 2009-09-06 10:02  rsbivand
 
-	* ChangeLog, R/error.spsarlm.R, R/lag.spsarlm.R, R/spautolm.R,
-	  man/errorsarlm.Rd, man/lagsarlm.Rd, man/spautolm.Rd: fix bugs in
-	  residuals.spautolm for non-NULL na.act
+	* ChangeLog,
+	  R/error.spsarlm.R, R/lag.spsarlm.R, R/spautolm.R,
+	  man/errorsarlm.Rd, man/lagsarlm.Rd, man/spautolm.Rd: fix bugs
+	  in residuals.spautolm for non-NULL na.act
 
 2009-08-17 13:26  rsbivand
 
-	* DESCRIPTION, inst/doc/00Index.dcf, inst/doc/CO69.Rnw,
+	* DESCRIPTION,
+	  inst/doc/00Index.dcf, inst/doc/CO69.Rnw,
 	  inst/doc/sids.Rnw, inst/etc/misc/geary_eire.txt,
 	  inst/etc/misc/raw_grass_borders.RData,
 	  inst/etc/misc/unstand_sn.txt, man/lm.morantest.sad.Rd,
@@ -1145,260 +1351,300 @@
 
 2009-08-09 17:47  rsbivand
 
-	* inst/ChangeLog: speedup for make.sym.nb when all observations
-	  have neighbours
+	* inst/ChangeLog:
+	  speedup for make.sym.nb when all observations have neighbours
 
 2009-08-09 17:47  rsbivand
 
-	* ChangeLog: speedup for make.sym.nb when all observations have
-	  neighbours
+	* ChangeLog:
+	  speedup for make.sym.nb when all observations have neighbours
 
 2009-08-09 14:39  rsbivand
 
-	* DESCRIPTION, NAMESPACE, R/weights-utils.R, man/testnb.Rd: speedup
-	  for make.sym.nb when all observations have neighbours
+	* DESCRIPTION,
+	  NAMESPACE, R/weights-utils.R, man/testnb.Rd: speedup for
+	  make.sym.nb when all observations have neighbours
 
 2009-06-29 12:32  rsbivand
 
-	* ChangeLog, inst/ChangeLog: aple similarity check override
+	* ChangeLog,
+	  inst/ChangeLog: aple similarity check override
 
 2009-06-29 12:30  rsbivand
 
-	* ChangeLog, R/aple.R: aple similarity check override
+	* ChangeLog,
+	  R/aple.R: aple similarity check override
 
 2009-06-29 12:26  rsbivand
 
-	* R/aple.R, R/aple.mc.R, R/apleplot.R, man/aple.Rd, man/aple.mc.Rd,
+	* R/aple.R,
+	  R/aple.mc.R, R/apleplot.R, man/aple.Rd, man/aple.mc.Rd,
 	  man/aple.plot.Rd, man/moran.test.Rd: Geary reversal
 
 2009-06-09 16:36  rsbivand
 
-	* R/geary.R: Geary's C standard deviate
+	* R/geary.R:
+	  Geary's C standard deviate
 
 2009-06-09 16:26  rsbivand
 
-	* R/geary.R, man/geary.test.Rd: Geary's C standard deviate
+	* R/geary.R,
+	  man/geary.test.Rd: Geary's C standard deviate
 
 2009-06-09 14:41  rsbivand
 
-	* DESCRIPTION, R/geary.R, man/geary.test.Rd: Geary's C standard
-	  deviate
+	* DESCRIPTION,
+	  R/geary.R, man/geary.test.Rd: Geary's C standard deviate
 
 2009-04-27 19:28  rsbivand
 
-	* R/sarlm.R: predict sarlm details
+	* R/sarlm.R:
+	  predict sarlm details
 
 2009-02-27 12:10  rsbivand
 
-	* R/moran.exact.R, R/mtmoran.R: first zero eiegenvalue in
-	  lm.morantest.*
+	* R/moran.exact.R,
+	  R/mtmoran.R: first zero eiegenvalue in lm.morantest.*
 
 2009-01-21 12:24  rsbivand
 
-	* ChangeLog, inst/ChangeLog: gabriel/relative memory overruns; new
-	  parser help file changes
+	* ChangeLog,
+	  inst/ChangeLog: gabriel/relative memory overruns; new parser
+	  help file changes
 
 2009-01-21 10:31  rsbivand
 
-	* ChangeLog, DESCRIPTION, R/gabrielneigh.R, R/relneigh.R,
-	  inst/ChangeLog, man/GMerrorsar.Rd, man/bhicv.Rd, man/eigenw.Rd,
-	  man/errorsarlm.Rd, man/graphneigh.Rd, man/lagsarlm.Rd,
-	  man/listw2sn.Rd, man/lm.LMtests.Rd, man/nblag.Rd,
-	  man/spautolm.Rd, src/gabriel.c, src/relative.c: gabriel/relative
-	  memory overruns; new parser help file changes
+	* ChangeLog,
+	  DESCRIPTION, R/gabrielneigh.R, R/relneigh.R,
+	  inst/ChangeLog, man/GMerrorsar.Rd, man/bhicv.Rd,
+	  man/eigenw.Rd, man/errorsarlm.Rd, man/graphneigh.Rd,
+	  man/lagsarlm.Rd, man/listw2sn.Rd, man/lm.LMtests.Rd,
+	  man/nblag.Rd, man/spautolm.Rd, src/gabriel.c, src/relative.c:
+	  gabriel/relative memory overruns; new parser help file changes
 
 2009-01-02 19:08  rsbivand
 
-	* ChangeLog, R/utils.R, man/lag.listw.Rd, src/lagw.c: fix NAs in
-	  lag.listw
+	* ChangeLog,
+	  R/utils.R, man/lag.listw.Rd, src/lagw.c: fix NAs in lag.listw
 
 2008-11-25 20:29  rsbivand
 
-	* DESCRIPTION, R/localmoran.exact.R, R/moran.exact.R,
+	* DESCRIPTION,
+	  R/localmoran.exact.R, R/moran.exact.R,
 	  man/lm.morantest.exact.Rd, man/localmoran.exact.Rd: substitute
 	  Normal for exact for out of domain II
 
 2008-11-23 02:02  rsbivand
 
-	* DESCRIPTION, R/moran.exact.R, R/spautolm.R, R/weights-utils.R:
-	  SMA revisions
+	* DESCRIPTION,
+	  R/moran.exact.R, R/spautolm.R, R/weights-utils.R: SMA revisions
 
 2008-11-19 22:54  rsbivand
 
-	* DESCRIPTION, R/kpgm_new.R, man/GMerrorsar.Rd: GM revisions
+	* DESCRIPTION,
+	  R/kpgm_new.R, man/GMerrorsar.Rd: GM revisions
 
 2008-11-10 20:02  rsbivand
 
-	* R/prunecost.R: fix drop bug in ssw
+	* R/prunecost.R:
+	  fix drop bug in ssw
 
 2008-11-10 18:21  rsbivand
 
-	* DESCRIPTION: fix drop bug in ssw
+	* DESCRIPTION:
+	  fix drop bug in ssw
 
 2008-11-10 18:18  rsbivand
 
-	* R/prunecost.R: fix drop bug in ssw
+	* R/prunecost.R:
+	  fix drop bug in ssw
 
 2008-10-25 15:34  rsbivand
 
-	* ChangeLog, inst/ChangeLog: changelog
+	* ChangeLog,
+	  inst/ChangeLog: changelog
 
 2008-10-24 11:16  rsbivand
 
-	* DESCRIPTION, NAMESPACE, R/apleplot.R, man/aple.plot.Rd: local
-	  aple
+	* DESCRIPTION,
+	  NAMESPACE, R/apleplot.R, man/aple.plot.Rd: local aple
 
 2008-10-12 14:13  rsbivand
 
-	* ChangeLog, inst/ChangeLog: changelog
+	* ChangeLog,
+	  inst/ChangeLog: changelog
 
 2008-10-12 14:12  rsbivand
 
-	* ChangeLog, DESCRIPTION, INDEX, NAMESPACE, R/apleplot.R,
-	  inst/ChangeLog, man/aple.Rd, man/aple.plot.Rd: adding aple
+	* ChangeLog,
+	  DESCRIPTION, INDEX, NAMESPACE, R/apleplot.R, inst/ChangeLog,
+	  man/aple.Rd, man/aple.plot.Rd: adding aple
 
 2008-10-11 12:19  rsbivand
 
-	* R/aple.R, R/aple.mc.R, data/wheat.txt, inst/etc/shapes/wheat.dbf,
+	* R/aple.R,
+	  R/aple.mc.R, data/wheat.txt, inst/etc/shapes/wheat.dbf,
 	  inst/etc/shapes/wheat.shp, inst/etc/shapes/wheat.shx,
 	  man/aple.Rd, man/aple.mc.Rd, man/wheat.Rd: adding aple
 
 2008-10-11 12:17  rsbivand
 
-	* ChangeLog, DESCRIPTION, INDEX, NAMESPACE, inst/ChangeLog: adding
-	  aple
+	* ChangeLog,
+	  DESCRIPTION, INDEX, NAMESPACE, inst/ChangeLog: adding aple
 
 2008-10-03 06:20  rsbivand
 
-	* man/aggregate.nb.Rd: aggregate.nb, edit.nb
+	* man/aggregate.nb.Rd:
+	  aggregate.nb, edit.nb
 
 2008-10-02 21:17  rsbivand
 
-	* ChangeLog, inst/ChangeLog: merging SKATER regionalisation
-	  functions
+	* ChangeLog,
+	  inst/ChangeLog: merging SKATER regionalisation functions
 
 2008-10-02 21:16  rsbivand
 
-	* ChangeLog, inst/ChangeLog: merging SKATER regionalisation
-	  functions
+	* ChangeLog,
+	  inst/ChangeLog: merging SKATER regionalisation functions
 
 2008-10-02 21:14  rsbivand
 
-	* R/mstree.R, R/nbcosts.R, R/plot.mst.R, R/plot.skater.R,
-	  R/prunecost.R, R/prunemst.R, R/skater.R,
-	  inst/etc/shapes/bhicv.dbf, inst/etc/shapes/bhicv.shp,
-	  inst/etc/shapes/bhicv.shx, man/bhicv.Rd, man/mstree.Rd,
-	  man/nbcosts.Rd, man/plot.mst.Rd, man/plot.skater.Rd,
-	  man/prunecost.Rd, man/prunemst.Rd, man/skater.Rd, man/ssw.Rd,
-	  src/skater.c: merging SKATER regionalisation functions
+	* R/mstree.R,
+	  R/nbcosts.R, R/plot.mst.R, R/plot.skater.R, R/prunecost.R,
+	  R/prunemst.R, R/skater.R, inst/etc/shapes/bhicv.dbf,
+	  inst/etc/shapes/bhicv.shp, inst/etc/shapes/bhicv.shx,
+	  man/bhicv.Rd, man/mstree.Rd, man/nbcosts.Rd, man/plot.mst.Rd,
+	  man/plot.skater.Rd, man/prunecost.Rd, man/prunemst.Rd,
+	  man/skater.Rd, man/ssw.Rd, src/skater.c: merging SKATER
+	  regionalisation functions
 
 2008-10-02 21:09  rsbivand
 
-	* ChangeLog, DESCRIPTION, NAMESPACE, R/edit.nb.R, R/plot.nb.R,
+	* ChangeLog,
+	  DESCRIPTION, NAMESPACE, R/edit.nb.R, R/plot.nb.R,
 	  R/weights-utils.R, inst/ChangeLog, man/plot.nb.Rd: aggregate.nb,
 	  edit.nb
 
 2008-09-18 12:21  rsbivand
 
-	* DESCRIPTION, inst/doc/sids.Rnw: vignette
+	* DESCRIPTION,
+	  inst/doc/sids.Rnw: vignette
 
 2008-09-18 07:18  rsbivand
 
-	* DESCRIPTION, R/nb2mat.R, inst/doc/sids.Rnw: vignette (FIXME),
-	  double mat2listw
+	* DESCRIPTION,
+	  R/nb2mat.R, inst/doc/sids.Rnw: vignette (FIXME), double
+	  mat2listw
 
 2008-08-14 12:55  rsbivand
 
-	* inst/doc/sids.Rnw, man/spautolm.Rd: mdata in spautolm help file
+	* inst/doc/sids.Rnw,
+	  man/spautolm.Rd: mdata in spautolm help file
 
 2008-06-27 09:56  rsbivand
 
-	* ChangeLog, inst/ChangeLog: truncation point in exact Moran
+	* ChangeLog,
+	  inst/ChangeLog: truncation point in exact Moran
 
 2008-06-27 09:40  rsbivand
 
-	* DESCRIPTION, R/localmoran.exact.R, R/moran.exact.R,
-	  R/moran.exact.alt.R, man/lm.morantest.exact.Rd,
-	  man/localmoran.exact.Rd: truncation point in exact Moran
+	* DESCRIPTION,
+	  R/localmoran.exact.R, R/moran.exact.R, R/moran.exact.alt.R,
+	  man/lm.morantest.exact.Rd, man/localmoran.exact.Rd: truncation
+	  point in exact Moran
 
 2008-06-19 04:08  rsbivand
 
-	* man/SpatialFiltering.Rd: link
+	* man/SpatialFiltering.Rd:
+	  link
 
 2008-06-03 13:56  rsbivand
 
-	* DESCRIPTION, R/EBI.R, R/droplinks.R, R/edit.nb.R,
-	  R/localmoran.exact.R, R/moran.exact.alt.R, R/mtlocalmoran.R,
-	  R/nb2listw.R, R/p.adjustSP.R, R/read.gal.R, R/subset.nb.R:
-	  changed class test to inherits for nb
+	* DESCRIPTION,
+	  R/EBI.R, R/droplinks.R, R/edit.nb.R, R/localmoran.exact.R,
+	  R/moran.exact.alt.R, R/mtlocalmoran.R, R/nb2listw.R,
+	  R/p.adjustSP.R, R/read.gal.R, R/subset.nb.R: changed class
+	  test to inherits for nb
 
 2008-05-25 21:09  rsbivand
 
-	* R/nb2listw.R: tidy spam similar
+	* R/nb2listw.R:
+	  tidy spam similar
 
 2008-05-24 19:56  rsbivand
 
-	* DESCRIPTION, R/error.spsarlm.R, R/kpgm_new.R, R/lag.spsarlm.R,
+	* DESCRIPTION,
+	  R/error.spsarlm.R, R/kpgm_new.R, R/lag.spsarlm.R,
 	  R/listw2Matrix.R, R/listw2sn.R, R/nb2listw.R, R/spautolm.R:
 	  listw2U and similar.listw in Matrix and spam
 
 2008-05-24 09:06  rsbivand
 
-	* R/listw2Matrix.R: first notes on listw2U in Matrix
+	* R/listw2Matrix.R:
+	  first notes on listw2U in Matrix
 
 2008-05-14 20:24  rsbivand
 
-	* inst/ChangeLog: removed try() on Matrix logdet; arg to localmoran
+	* inst/ChangeLog:
+	  removed try() on Matrix logdet; arg to localmoran
 
 2008-05-14 20:24  rsbivand
 
-	* ChangeLog: removed try() on Matrix logdet; arg to localmoran
+	* ChangeLog:
+	  removed try() on Matrix logdet; arg to localmoran
 
 2008-05-14 20:21  rsbivand
 
-	* svn2cl.xsl: removed try() on Matrix logdet; arg to localmoran
+	* svn2cl.xsl:
+	  removed try() on Matrix logdet; arg to localmoran
 
 2008-05-14 20:20  rsbivand
 
-	* inst/ChangeLog: removed try() on Matrix logdet; arg to localmoran
+	* inst/ChangeLog:
+	  removed try() on Matrix logdet; arg to localmoran
 
 2008-05-14 20:19  rsbivand
 
-	* inst/ChangeLog: removed try() on Matrix logdet; arg to localmoran
+	* inst/ChangeLog:
+	  removed try() on Matrix logdet; arg to localmoran
 
 2008-05-14 20:18  rsbivand
 
-	* ChangeLog, Changelog, DESCRIPTION, R/localmoran.R,
-	  man/localmoran.Rd, oChangelog: removed try() on Matrix logdet;
-	  arg to localmoran
+	* ChangeLog,
+	  Changelog, DESCRIPTION, R/localmoran.R, man/localmoran.Rd,
+	  oChangelog: removed try() on Matrix logdet; arg to localmoran
 
 2008-04-27 16:57  rsbivand
 
-	* DESCRIPTION, R/spautolm.R, man/spautolm.Rd:
+	* DESCRIPTION,
+	  R/spautolm.R, man/spautolm.Rd:
+
 
 2008-04-26 20:46  rsbivand
 
-	* Changelog, DESCRIPTION, INDEX, LICENCE, NAMESPACE, data, inst,
-	  src:
+	* Changelog,
+	  DESCRIPTION, INDEX, LICENCE, NAMESPACE, data, inst, src:
+
 
 2008-04-26 20:45  rsbivand
 
-	* man/COL.OLD.Rd, man/EBImoran.mc.Rd, man/EBest.Rd, man/EBlocal.Rd,
+	* man/COL.OLD.Rd,
+	  man/EBImoran.mc.Rd, man/EBest.Rd, man/EBlocal.Rd,
 	  man/GMerrorsar.Rd, man/LR.sarlm.Rd, man/ME.Rd, man/NY_data.Rd,
 	  man/SpatialFiltering.Rd, man/afcon.Rd, man/airdist.Rd,
 	  man/anova.sarlm.Rd, man/as_dgRMatrix_listw.Rd, man/auckland.Rd,
 	  man/autocov_dist.Rd, man/baltimore.Rd, man/boston.Rd,
 	  man/bptest.sarlm.Rd, man/card.Rd, man/cell2nb.Rd,
-	  man/choynowski.Rd, man/columbus.Rd, man/compon.Rd, man/diffnb.Rd,
-	  man/dnearneigh.Rd, man/droplinks.Rd, man/edit.nb.Rd,
-	  man/eigenw.Rd, man/eire.Rd, man/errorsarlm.Rd, man/geary.Rd,
-	  man/geary.mc.Rd, man/geary.test.Rd, man/getisord.Rd,
-	  man/globalG.test.Rd, man/graphneigh.Rd, man/hopkins.Rd,
-	  man/huddersfield.Rd, man/include.self.Rd, man/invIrM.Rd,
-	  man/joincount.mc.Rd, man/joincount.multi.Rd,
-	  man/joincount.test.Rd, man/knearneigh.Rd, man/knn2nb.Rd,
-	  man/lag.listw.Rd, man/lagsarlm.Rd, man/listw2sn.Rd,
-	  man/lm.LMtests.Rd, man/lm.morantest.Rd,
+	  man/choynowski.Rd, man/columbus.Rd, man/compon.Rd,
+	  man/diffnb.Rd, man/dnearneigh.Rd, man/droplinks.Rd,
+	  man/edit.nb.Rd, man/eigenw.Rd, man/eire.Rd, man/errorsarlm.Rd,
+	  man/geary.Rd, man/geary.mc.Rd, man/geary.test.Rd,
+	  man/getisord.Rd, man/globalG.test.Rd, man/graphneigh.Rd,
+	  man/hopkins.Rd, man/huddersfield.Rd, man/include.self.Rd,
+	  man/invIrM.Rd, man/joincount.mc.Rd, man/joincount.multi.Rd,
+	  man/joincount.test.Rd, man/knearneigh.Rd,
+	  man/knn2nb.Rd, man/lag.listw.Rd, man/lagsarlm.Rd,
+	  man/listw2sn.Rd, man/lm.LMtests.Rd, man/lm.morantest.Rd,
 	  man/lm.morantest.exact.Rd, man/lm.morantest.sad.Rd,
 	  man/localG.Rd, man/localmoran.Rd, man/localmoran.exact.Rd,
 	  man/localmoran.sad.Rd, man/mat2listw.Rd, man/moran.Rd,
@@ -1409,35 +1655,40 @@
 	  man/plot.nb.Rd, man/poly2nb.Rd, man/predict.sarlm.Rd,
 	  man/probmap.Rd, man/read.gal.Rd, man/read.gwt2nb.Rd,
 	  man/residuals.sarlm.Rd, man/set.spChkOption.Rd,
-	  man/similar.listw.Rd, man/sp.correlogram.Rd, man/sp.mantel.mc.Rd,
-	  man/spautolm.Rd, man/spdep.Rd, man/spweights.constants.Rd,
-	  man/stsls.Rd, man/subset.listw.Rd, man/subset.nb.Rd,
-	  man/summary.nb.Rd, man/summary.sarlm.Rd, man/testnb.Rd,
-	  man/tri2nb.Rd, man/used.cars.Rd, man/write.nb.gal.Rd:
+	  man/similar.listw.Rd, man/sp.correlogram.Rd,
+	  man/sp.mantel.mc.Rd, man/spautolm.Rd, man/spdep.Rd,
+	  man/spweights.constants.Rd, man/stsls.Rd, man/subset.listw.Rd,
+	  man/subset.nb.Rd, man/summary.nb.Rd, man/summary.sarlm.Rd,
+	  man/testnb.Rd, man/tri2nb.Rd, man/used.cars.Rd,
+	  man/write.nb.gal.Rd:
+
 
 2008-04-26 19:50  rsbivand
 
-	* R/AAA.R, R/EBI.R, R/LR.spsarlm.R, R/ME.R, R/SpatialFiltering.R,
+	* R/AAA.R,
+	  R/EBI.R, R/LR.spsarlm.R, R/ME.R, R/SpatialFiltering.R,
 	  R/airdist.R, R/anova.sarlm.R, R/autocov.R, R/bptest.sarlm.R,
 	  R/card.R, R/cellneighbours.R, R/choynowski.R, R/components.R,
 	  R/diffnb.R, R/dnearneigh.R, R/droplinks.R, R/edit.nb.R,
 	  R/eigenw.R, R/error.spsarlm.R, R/gabrielneigh.R, R/geary.R,
-	  R/globalG.R, R/graph2nb.R, R/jc.R, R/knearneigh.R, R/knn2nb.R,
-	  R/kpgm_new.R, R/lag.spsarlm.R, R/listw2Matrix.R, R/listw2sn.R,
-	  R/lm.LMtests.R, R/lm.morantest.R, R/localG.R, R/localmoran.R,
-	  R/localmoran.exact.R, R/moran.R, R/moran.exact.R,
-	  R/moran.exact.alt.R, R/moran.plot.R, R/mtlocalmoran.R,
-	  R/mtmoran.R, R/nb2blocknb.R, R/nb2lines.R, R/nb2listw.R,
-	  R/nb2mat.R, R/nbdists.R, R/nblag.R, R/nboperations.R,
-	  R/p.adjustSP.R, R/plot.nb.R, R/poly2nb.R, R/read.gal.R,
-	  R/read.gwt2nb.R, R/relneigh.R, R/s2sls.R, R/sarlm.R, R/soi.R,
-	  R/sp.correlogram.R, R/sp.mantel.R, R/spChkOption.R, R/spautolm.R,
-	  R/subset.nb.R, R/summary.nb.R, R/summary.spsarlm.R, R/tri2nb.R,
-	  R/utils.R, R/weights-utils.R:
+	  R/globalG.R, R/graph2nb.R, R/jc.R, R/knearneigh.R,
+	  R/knn2nb.R, R/kpgm_new.R, R/lag.spsarlm.R, R/listw2Matrix.R,
+	  R/listw2sn.R, R/lm.LMtests.R, R/lm.morantest.R, R/localG.R,
+	  R/localmoran.R, R/localmoran.exact.R, R/moran.R,
+	  R/moran.exact.R, R/moran.exact.alt.R, R/moran.plot.R,
+	  R/mtlocalmoran.R, R/mtmoran.R, R/nb2blocknb.R, R/nb2lines.R,
+	  R/nb2listw.R, R/nb2mat.R, R/nbdists.R, R/nblag.R,
+	  R/nboperations.R, R/p.adjustSP.R, R/plot.nb.R, R/poly2nb.R,
+	  R/read.gal.R, R/read.gwt2nb.R, R/relneigh.R, R/s2sls.R,
+	  R/sarlm.R, R/soi.R, R/sp.correlogram.R, R/sp.mantel.R,
+	  R/spChkOption.R, R/spautolm.R, R/subset.nb.R, R/summary.nb.R,
+	  R/summary.spsarlm.R, R/tri2nb.R, R/utils.R, R/weights-utils.R:
+
 
 2007-06-25 10:38  stefan7th
 
-	* ., R, man: Email in Readme changed
+	* .,
+	  R, man: Email in Readme changed
 
 2008-04-22 09:17  rsbivand
 
