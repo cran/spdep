@@ -1,3 +1,43 @@
+2011-06-09 15:42  rsbivand
+
+	* DESCRIPTION,
+	  R/impacts.R, R/kpgm_new.R, R/s2sls.R, man/stsls.Rd: SEAI
+	  modifications
+
+2011-06-01 05:28  rsbivand
+
+	* man/rotation.Rd:
+	  change rotation example output
+
+2011-06-01 05:14  rsbivand
+
+	* R/nbcosts.R,
+	  R/prunecost.R, R/skater.R, man/nbcosts.Rd, man/prunecost.Rd,
+	  man/skater.Rd, man/ssw.Rd: update to skater from Elias T.
+	  Krainski
+
+2011-05-30 08:07  rsbivand
+
+	* NAMESPACE,
+	  R/impacts.R, R/kpgm_new.R, man/gstsls.Rd, man/impacts.sarlm.Rd:
+	  impacts method for gmsar/SARAR
+
+2011-05-28 15:17  rsbivand
+
+	* R/kpgm_new.R,
+	  man/GMerrorsar.Rd, man/gstsls.Rd: scaleU in GMerrorsar and
+	  gstsls
+
+2011-05-27 21:55  rsbivand
+
+	* DESCRIPTION,
+	  R/nb2listw.R, man/nb2listw.Rd: examining minmax in nb2listw
+
+2011-05-19 21:55  rsbivand
+
+	* ChangeLog,
+	  inst/ChangeLog: integer overflow in poly2nb C code
+
 2011-05-19 21:52  rsbivand
 
 	* DESCRIPTION,

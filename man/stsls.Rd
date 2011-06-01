@@ -13,7 +13,7 @@
 }
 \usage{
 stsls(formula, data = list(), listw, zero.policy = NULL,
- na.action = na.fail, robust = FALSE, legacy=FALSE, W2X = TRUE)
+ na.action = na.fail, robust = FALSE, HC=NULL, legacy=FALSE, W2X = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -27,6 +27,7 @@ is called.}
 neighbours, if FALSE (default) assign NA - causing \code{lagsarlm()} to terminate with an error}
   \item{na.action}{a function (default \code{na.fail}), can also be \code{na.omit} or \code{na.exclude} with consequences for residuals and fitted values - in these cases the weights list will be subsetted to remove NAs in the data. It may be necessary to set zero.policy to TRUE because this subsetting may create no-neighbour observations. Note that only weights lists created without using the glist argument to \code{nb2listw} may be subsetted.}
   \item{robust}{default FALSE, if TRUE, apply a heteroskedasticity correction to the coefficients covariances}
+  \item{HC}{default NULL, if \code{robust} is TRUE, assigned \dQuote{HC0}, may take values \dQuote{HC0} or \dQuote{HC1} for White estimates or MacKinnon-White estimates respectively}
  \item{legacy}{the argument chooses between two implementations of the robustness correction: default FALSE - use the estimate of Omega only in the White consistent estimator of the variance-covariance matrix, if TRUE, use the original implementation which runs a GLS using the estimate of Omega, and yields different coefficient estimates as well - see example below}
  \item{W2X}{default TRUE, if FALSE only WX are used as instruments in the spatial two stage least squares; until release 0.4-60, only WX were used - see example below }
 }

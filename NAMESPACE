@@ -151,6 +151,7 @@ S3method(fitted, gmsar)
 S3method(print, gmsar)
 S3method(summary, gmsar)
 S3method(Hausman.test, gmsar)
+S3method(impacts, gmsar)
 
 S3method(print, summary.gmsar)
 

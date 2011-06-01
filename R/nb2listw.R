@@ -7,7 +7,7 @@ nb2listw <- function(neighbours, glist=NULL, style="W", zero.policy=NULL)
         if (is.null(zero.policy))
             zero.policy <- get("zeroPolicy", env = .spdepOptions)
         stopifnot(is.logical(zero.policy))
-	if (!(style %in% c("W", "B", "C", "S", "U")))
+	if (!(style %in% c("W", "B", "C", "S", "U", "minmax")))
 		stop(paste("Style", style, "invalid"))
 	n <- length(neighbours)
 	if (n < 1) stop("non-positive number of entities")
@@ -57,7 +57,7 @@ nb2listw <- function(neighbours, glist=NULL, style="W", zero.policy=NULL)
 			if (cardnb[i] > 0) vlist[[i]] <- glist[[i]]
 		}
 	}
-	if (style == "C" || style == "U") {
+	if (style == "C" || style == "U" || style == "minmax") {
 		D <- sum(unlist(glist))
 		if (is.na(D) || !(D > 0))
 			stop(paste("Failure in sum of weights:", D))
@@ -65,7 +65,9 @@ nb2listw <- function(neighbours, glist=NULL, style="W", zero.policy=NULL)
 			if (cardnb[i] > 0) {
 				if (style == "C")
 					vlist[[i]] <- (eff.n/D) * glist[[i]]
-				else vlist[[i]] <- (1/D) * glist[[i]]
+				else if(style == "U")
+                                        vlist[[i]] <- (1/D) * glist[[i]]
+                                else vlist[[i]] <- glist[[i]]
 			}
 		}
 	}
@@ -91,6 +93,12 @@ nb2listw <- function(neighbours, glist=NULL, style="W", zero.policy=NULL)
 	if (!zero.policy)
 		if (any(is.na(unlist(vlist))))
 			stop ("NAs in coding scheme weights list")
+        if (style == "minmax") {
+            res <- list(style=style, neighbours=neighbours, weights=vlist)
+	    class(res) <- c("listw", "nb")
+            mm <- minmax.listw(res)
+            vlist <- lapply(vlist, function(x) (1/c(mm)) * x)
+        }
 	res <- list(style=style, neighbours=neighbours, weights=vlist)
 	class(res) <- c("listw", "nb")
 	attr(res, "region.id") <- attr(neighbours, "region.id")
@@ -287,5 +295,15 @@ listw2WB <- function(listw)
         weights <- unlist(listw$weights)
 
         list(adj=adj, weights=weights, num=num)
+}
+
+minmax.listw <- function(listw) {
+    W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
+    rm <- max(rowSums(W))
+    cm <- max(colSums(W))
+    res <- min(c(rm, cm))
+    attr(res, "rowmax") <- rm
+    attr(res, "colmax") <- cm
+    res
 }
 
