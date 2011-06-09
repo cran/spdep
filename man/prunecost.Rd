@@ -12,27 +12,30 @@
 }
 \usage{
 prunecost(edges, data, method = c("euclidean", "maximum", "manhattan", 
-    "canberra", "binary", "minkowski", "mahalanobis", "other"), 
-    p = 2, cov, inverted = FALSE, otherfun)
+    "canberra", "binary", "minkowski", "mahalanobis"), 
+    p = 2, cov, inverted = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{edges}{A matrix with 2 colums with each row is one edge}
   \item{data}{A data.frame with observations in the nodes.}
-  \item{method}{Character for declare the distance method.
-     For "euclidean", "maximum", "manhattan", "canberra",
-     "binary" and "minkowisk", see \code{\link{dist}} for details,
+  \item{method}{Character or function to declare distance method.
+    If \code{method} is character, method must be "mahalanobis" or
+    "euclidean", "maximum", "manhattan", "canberra", "binary"
+    or "minkowisk".
+    If \code{method} is one of "euclidean", "maximum",
+    "manhattan", "canberra", "binary" or "minkowisk", see
+    \code{\link{dist}} for details,
      because this function as used to compute the distance.
      If \code{method="mahalanobis"}, the mahalanobis distance
      is computed between neighbour areas.
-     If \code{method="other"}, any function must be informed in
-    \code{otherfun} argument.}
+     If \code{method} is a \code{function}, this function is
+     used to compute the distance.}
   \item{p}{The power of the Minkowski distance.}
   \item{cov}{The covariance matrix used to compute the mahalanobis
    distance.}
   \item{inverted}{logical.  If 'TRUE', 'cov' is supposed to contain the
           inverse of the covariance matrix.}
-  \item{otherfun}{A user defined function to compute the distance}
 }
 %%\details{}
 \value{

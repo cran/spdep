@@ -3,6 +3,7 @@
 \alias{impacts}
 \alias{impacts.sarlm}
 \alias{impacts.stsls}
+\alias{impacts.gmsar}
 \alias{plot.lagImpact}
 \alias{print.lagImpact}
 \alias{summary.lagImpact}
@@ -13,6 +14,7 @@
 \usage{
 \method{impacts}{sarlm}(obj, \dots, tr, R = NULL, listw = NULL, useHESS = NULL, tol = 1e-06, empirical = FALSE, Q=NULL)
 \method{impacts}{stsls}(obj, \dots, tr, R = NULL, listw = NULL, tol = 1e-06, empirical = FALSE, Q=NULL)
+\method{impacts}{gmsar}(obj, \dots, tr, R = NULL, listw = NULL, tol = 1e-06, empirical = FALSE, Q=NULL)
 \method{plot}{lagImpact}(x, ..., choice="direct", trace=FALSE, density=TRUE)
 \method{print}{lagImpact}(x, ..., reportQ=NULL)
 \method{summary}{lagImpact}(object, ..., zstats=FALSE, short=FALSE, reportQ=NULL)
@@ -45,6 +47,8 @@ If \code{R} is given, simulations will be used to create distributions for the i
 The simulations are stored as \code{mcmc} objects as defined in the \pkg{coda} package. The simulated values of the coefficients are checked to see that the spatial coefficient remains within its valid interval --- draws outside the interval are discarded.
 
 When \code{Q} and \code{tr} are given, addition impact component results are provided for each step in the traces of powers of the weights matrix up to and including the \code{Q}'th power. This increases computing time because the output object is substantially increased in size in proportion to the size of \code{Q}.
+
+The method for \code{gmsar} objects is only for those of \code{type} \code{SARAR} output by \code{gstsls}, and assume that the spatial error coefficient is fixed, and thus omitted from the coefficients and covariance matrix used for simulation.
 }
 
 \value{

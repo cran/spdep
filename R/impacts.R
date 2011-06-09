@@ -111,9 +111,43 @@ impacts.stsls <- function(obj, ..., tr=NULL, R=NULL, listw=NULL,
         type="lag", tr=tr, R=R, listw=listw, tol=tol, empirical=empirical,
         Q=Q, icept=icept, iicept=iicept, p=p)
     attr(res, "iClass") <- class(obj)
-    if (!is.null(obj$robust)) attr(res, "robust") <- obj$robust
+    if (!is.null(obj$robust)) {
+        attr(res, "robust") <- obj$robust
+        attr(res, "HC") <- obj$HC
+    }
     res
 }
+
+impacts.gmsar <- function(obj, ..., tr=NULL, R=NULL, listw=NULL,
+  tol=1e-6, empirical=FALSE, Q=NULL) {
+    if (!is.null(obj$listw_style) && obj$listw_style != "W") 
+        stop("Only row-standardised weights supported")
+    stopifnot(obj$type == "SARAR") 
+    rho <- obj$coefficients[1]
+    beta <- obj$coefficients[-1]
+    icept <- grep("(Intercept)", names(beta))
+    iicept <- length(icept) > 0
+    if (iicept) {
+        P <- matrix(beta[-icept], ncol=1)
+        bnames <- names(beta[-icept])
+    } else {
+        P <- matrix(beta, ncol=1)
+        bnames <- names(beta)
+    }
+    p <- length(beta)
+    n <- length(obj$residuals)
+    mu <- c(rho, beta)
+    Sigma <- obj$secstep_var
+    irho <- 1
+    drop2beta <- 1
+    res <- intImpacts(rho=rho, beta=beta, P=P, n=n, mu=mu, Sigma=Sigma,
+        irho=irho, drop2beta=drop2beta, bnames=bnames, interval=NULL,
+        type="lag", tr=tr, R=R, listw=listw, tol=tol, empirical=empirical,
+        Q=Q, icept=icept, iicept=iicept, p=p)
+    attr(res, "iClass") <- class(obj)
+    res
+}
+
 
 lagImpacts <- function(T, g, P) {
     PT <- P %*% T
@@ -649,8 +683,11 @@ summary.lagImpact <- function(object, ..., zstats=FALSE, short=FALSE, reportQ=NU
            "asymptotic")
     } else if ("stsls" %in% attr(object, "iClass")) {
         tp <- "asymptotic IV"
-        if (!is.null(attr(object, "robust")) && attr(object, "robust"))
-            tp <- "robust IV"
+        if (!is.null(attr(object, "robust")) && attr(object, "robust")) {
+            HC <- attr(object, "HC")
+            if (is.null(HC)) HC <- "HC0"
+            tp <- paste(HC, "IV")
+        }
     }
     if ("sphet" %in% attr(object, "iClass")) {
             tp <- "IV HAC"

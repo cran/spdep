@@ -28,10 +28,12 @@ coords<-cbind(runif(20),runif(20))
 ### Create a series of angles
 rad<-seq(0,pi,l=20)
 
+opar <- par(mfrow=c(5,4))
 for(i in rad){
 	coords.rot<-Rotation(coords,i)
 	plot(coords.rot)
 }
+par(opar)
 
 ### Rotate the coordinates by an angle of 90 degrees
 coords.90<-Rotation(coords,90*pi/180)

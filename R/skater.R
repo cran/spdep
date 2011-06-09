@@ -1,22 +1,20 @@
 skater <- function(edges, data, ncuts, crit, vec.crit,
                    method=c("euclidean", "maximum", "manhattan",
                      "canberra", "binary", "minkowski",
-                     "mahalanobis", "other"), p=2, 
-                   cov, inverted=FALSE, otherfun) {
-  n <- nrow(data)
-  if (!missing(ncuts))
-    if (ncuts<1 & n<ncuts)
-      stop(paste("Number of cuts must be from 1 to", n-1))
-  if (any(class(edges)=="skater"))
+                     "mahalanobis"), p=2, cov, inverted=FALSE) {
+  if (any(class(edges)=="skater")) {
     res <- edges
+    n <- length(res$groups)
+  }
   else {
+    n <- nrow(edges) + 1
     res <- list(groups=rep(1, n),
                 edges.groups=list(list(node=1:n, edge=edges)),
                 not.prune=NULL, candidates=1,
-                ssto=ssw(data, 1:n, method, p, cov, inverted, otherfun))
+                ssto=ssw(data, 1:n, method, p, cov, inverted))
     res$ssw <- res$edges.groups[[1]]$ssw <- res$ssto
     tmp <- sort(prunecost(res$edges.groups[[1]]$edge[,1:2, drop=FALSE], 
-                          data, method, p, cov, inverted, otherfun), 
+                          data, method, p, cov, inverted), 
                 decreasing=TRUE, method='quick', index.return=TRUE)
     res$edges.groups[[1]]$edge =
       cbind(res$edges.groups[[1]]$edge[tmp$ix, ], tmp$x)
@@ -45,13 +43,19 @@ skater <- function(edges, data, ncuts, crit, vec.crit,
   repeat {
     if (cuts>ncuts)
       break
-    if (length(res$candidates)==0L)
+    if (length(res$candidates)==0)
       break
     l.costs.ord <- lapply(res$edges.groups[res$candidates],
                           function(x) x$edge[,3])
-    dc <- cbind(id=rep(res$candidates, sapply(l.costs.ord, length)),
-                cost=unlist(l.costs.ord),
-                idi=unlist(lapply(l.costs.ord, function(x) 1:length(x))))
+    t.id <- rep(res$candidates, sapply(l.costs.ord, length))
+    t.cost <- unlist(l.costs.ord)
+    t.idi <- unlist(lapply(l.costs.ord, function(x) {
+      if (length(x)>0)
+        1:length(x)
+      else
+        NULL
+    }))
+    dc <- cbind(t.id, t.cost, t.idi)
     dc <- dc[sort(dc[,2], method="quick", decreasing=TRUE,
                   index.return=TRUE)$ix,, drop=FALSE]
     k <- 1
@@ -74,15 +78,14 @@ skater <- function(edges, data, ncuts, crit, vec.crit,
         gc.pruned <- lapply(g.pruned, function(e) {
           if (nrow(e$edge)==0)
             return(list(node=e$node, edge=matrix(0,0,3),
-                        ssw=ssw(data, e$node, method, p, cov,
-                          inverted, otherfun)))
+                        ssw=ssw(data, e$node, method, p, cov, inverted)))
           else {
             tmp <- sort(prunecost(e$edge[, 1:2, drop=FALSE], data,
-                                  method, p, cov, inverted, otherfun),
+                                  method, p, cov, inverted),
                         decreasing=TRUE, method='quick', index.return=TRUE) 
             list(node=e$node,
                  edge=cbind(e$edge[tmp$ix, , drop=FALSE], tmp$x),
-                 ssw=ssw(data, e$node, method, p, cov, inverted, otherfun))
+                 ssw=ssw(data, e$node, method, p, cov, inverted))
           }
         })
         res$edges.groups[[dc[k,1]]] <- gc.pruned[[1]]
@@ -103,3 +106,4 @@ skater <- function(edges, data, ncuts, crit, vec.crit,
   attr(res, "class") <- "skater"
   return(res)
 }
+

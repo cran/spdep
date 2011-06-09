@@ -11,7 +11,7 @@ nb2listw(neighbours, glist=NULL, style="W", zero.policy=NULL)
 \arguments{
   \item{neighbours}{an object of class \code{nb}}
   \item{glist}{list of general weights corresponding to neighbours}
-  \item{style}{\code{style} can take values W, B, C, U, and S}
+  \item{style}{\code{style} can take values \dQuote{W}, \dQuote{B}, \dQuote{C}, \dQuote{U}, \dQuote{minmax} and \dQuote{S}}
   \item{zero.policy}{default NULL, use global option value; if FALSE stop with error for any empty neighbour sets, if TRUE permit the weights list to be formed with zero-length weights vectors}
 }
 \details{
@@ -20,6 +20,8 @@ Starting from a binary neighbours list, in which regions are either listed as ne
 If zero policy is set to TRUE, weights vectors of zero length are inserted for regions without neighbour in the neighbours list. These will in turn generate lag values of zero, equivalent to the sum of products of the zero row \code{t(rep(0, length=length(neighbours))) \%*\% x}, for arbitraty numerical vector \code{x} of length \code{length(neighbours)}. The spatially lagged value of x for the zero-neighbour region will then be zero, which may (or may not) be a sensible choice.
 
 If the sum of the glist vector for one or more observations is zero, a warning message is issued. The consequence for later operations will be the same as if no-neighbour observations were present and the zero.policy argument set to true.
+
+The \dQuote{minmax}
 }
 \value{
 A \code{listw} object with the following members:
@@ -49,6 +51,7 @@ col.s <- nb2listw(col.gal.nb, style="S")
 points(cards, unlist(lapply(col.s$weights, sum)), col="blue")
 legend(x=c(0, 1), y=c(7, 9), legend=c("W", "B", "C", "U", "S"),
 col=c("black", "red", "green", "orange", "blue"), pch=rep(1,5))
+summary(nb2listw(col.gal.nb, style="minmax"))
 dlist <- nbdists(col.gal.nb, coords)
 dlist <- lapply(dlist, function(x) 1/x)
 col.w.d <- nb2listw(col.gal.nb, glist=dlist)

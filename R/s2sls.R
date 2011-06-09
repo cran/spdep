@@ -2,7 +2,7 @@
 # modified by Gianfranco Piras on December 11, 2009 (added the argument legacy)
 # and on March 12, 2010 (added the argument W2X)
 stsls <- function(formula, data = list(), listw, zero.policy=NULL,
-	na.action=na.fail, robust=FALSE, legacy=FALSE, W2X=TRUE) {
+	na.action=na.fail, robust=FALSE, HC=NULL, legacy=FALSE, W2X=TRUE) {
 
 
     	if (!inherits(listw, "listw")) 
@@ -23,6 +23,11 @@ stsls <- function(formula, data = list(), listw, zero.policy=NULL,
     	if (any(is.na(y))) stop("NAs in dependent variable")
     	X <- model.matrix(mt, mf)
     	if (any(is.na(X))) stop("NAs in independent variable")
+        if (robust) {
+            if (is.null(HC)) HC <- "HC0"
+            if (!any(HC %in% c("HC0", "HC1")))
+                stop("HC must be one of HC0, HC1")
+        }
 # modified to pass zero.policy Juan Tomas Sayago 100913
 	Wy <- lag.listw(listw, y, zero.policy=zero.policy)
 	dim(Wy) <- c(nrow(X),1)
@@ -63,10 +68,11 @@ stsls <- function(formula, data = list(), listw, zero.policy=NULL,
 
 	}
 #	if (listw$style == "W") colnames(WX) <- xcolnames[-1]
-
-    result <- tsls(y=y, yend=Wy, X=X, Zinst=inst, robust=robust, legacy=legacy)
+        result <- tsls(y=y, yend=Wy, X=X, Zinst=inst, robust=robust, HC=HC,
+            legacy=legacy)
 	result$zero.policy <- zero.policy
 	result$robust <- robust
+        if (robust) result$HC <- HC
 	result$legacy <- legacy
         result$listw_style <- listw$style
 	result$call <- match.call()
@@ -91,7 +97,7 @@ summary.stsls <- function(object, correlation = FALSE, ...) {
 		object$coefficients/rest.se,
 		2*(1-pnorm(abs(object$coefficients/rest.se))))
 	if (object$robust) colnames(object$Coef) <- c("Estimate", 
-		"Robust std. Error", "z value", "Pr(>|z|)")
+		paste(object$HC, "std. Error"), "z value", "Pr(>|z|)")
 	else colnames(object$Coef) <- c("Estimate", "Std. Error", 
 		"t value", "Pr(>|t|)")
 
@@ -265,7 +271,7 @@ htsls <- function(y,Z,Q,e) {
 #   s2: residual variance (using degrees of freedom N-K)
 #   residuals: observed y - predicted y, to be used in diagnostics
 
-tsls <- function(y,yend,X,Zinst,robust=FALSE, legacy=FALSE) {
+tsls <- function(y,yend,X,Zinst,robust=FALSE, HC="HC0", legacy=FALSE) {
 #	colnames(X) <- c("CONSTANT",colnames(X)[2:ncol(X)])
 	Q <- cbind(X,Zinst)
 	Z <- cbind(yend,X)
@@ -292,8 +298,12 @@ tsls <- function(y,yend,X,Zinst,robust=FALSE, legacy=FALSE) {
 		if (legacy) {		
 		result <- htsls(y,Z,Q,e)
 		} else {
-	        	sse <- c(crossprod(e,e))		
-			ZoZ<-crossprod(Z,(Z*as.numeric(e^2)))
+	        	sse <- c(crossprod(e,e))
+                        if (HC == "HC0") omega <- as.numeric(e^2)
+                        else if (HC == "HC1")
+                            omega <- (nrow(X)/df) * as.numeric(e^2)
+                        else stop("invalid HC choice")
+			ZoZ<-crossprod(Z,(Z*omega))
 			varb<-ZpZpi%*%ZoZ%*%ZpZpi
 	   
 	   		result <- list(coefficients=biv,

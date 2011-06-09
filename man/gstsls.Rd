@@ -7,8 +7,8 @@
 }
 \usage{
 gstsls(formula, data = list(), listw, listw2 = NULL, na.action = na.fail, 
-    zero.policy = NULL, pars, control = list(), verbose = NULL, method = "nlminb",
-    robust = FALSE, legacy = FALSE, W2X = TRUE ) 
+    zero.policy = NULL, pars, scaleU=FALSE, control = list(), 
+    verbose=NULL, method="nlminb", robust=FALSE, legacy=FALSE, W2X=TRUE) 
 }
 \arguments{
   \item{formula}{a symbolic description of the model to be fit. The details 
@@ -24,6 +24,7 @@ neighbours, if FALSE (default) assign NA - causing \code{GMerrorsar()} to termin
   \item{pars}{starting values for \eqn{\lambda}{lambda} and \eqn{\sigma^2}{sigma squared} for GMM optimisation, 
   if missing (default), approximated from initial 2sls model as the autocorrelation coefficient corrected for weights style 
   and model sigma squared}
+  \item{scaleU}{Default FALSE: scale the OLS residuals before computing the moment matrices; only used if the \code{pars} argument is missing}
   \item{control}{A list of control parameters. See details in \link{optim} or \link{nlminb}}
   \item{verbose}{default NULL, use global option value; if TRUE, reports function values during optimization.}
   \item{method}{default \link{nlminb}, or optionally a method passed to \link{optim} to use an alternative optimizer}
@@ -71,5 +72,11 @@ levs <- quantile(aa$z, seq(0, 1, 1/12))
 image(aa, breaks=levs, xlab="lambda", ylab="s2")
 points(COL.errW.GM$lambda, COL.errW.GM$s2, pch=3, lwd=2)
 contour(aa, levels=signif(levs, 4), add=TRUE)
+COL.errW.GM <- gstsls(CRIME ~ INC + HOVAL, data=COL.OLD, nb2listw(COL.nb, style="W"), scaleU=TRUE)
+summary(COL.errW.GM)
+listw <- nb2listw(COL.nb)
+W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
+trMat <- trW(W, type="mult")
+impacts(COL.errW.GM, tr=trMat)
 }
 \keyword{spatial}

@@ -1394,6 +1394,12 @@ levs <- quantile(aa$z, seq(0, 1, 1/12))
 image(aa, breaks=levs, xlab="lambda", ylab="s2")
 points(COL.errW.GM$lambda, COL.errW.GM$s2, pch=3, lwd=2)
 contour(aa, levels=signif(levs, 4), add=TRUE)
+COL.errW.GM <- gstsls(CRIME ~ INC + HOVAL, data=COL.OLD, nb2listw(COL.nb, style="W"), scaleU=TRUE)
+summary(COL.errW.GM)
+listw <- nb2listw(COL.nb)
+W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
+trMat <- trW(W, type="mult")
+impacts(COL.errW.GM, tr=trMat)
 
 
 
@@ -1487,9 +1493,9 @@ flush(stderr()); flush(stdout())
 
 ### Name: impacts
 ### Title: Impacts in spatial lag models
-### Aliases: impacts impacts.sarlm impacts.stsls plot.lagImpact
-###   print.lagImpact summary.lagImpact print.summary.lagImpact
-###   HPDinterval.lagImpact
+### Aliases: impacts impacts.sarlm impacts.stsls impacts.gmsar
+###   plot.lagImpact print.lagImpact summary.lagImpact
+###   print.summary.lagImpact HPDinterval.lagImpact
 ### Keywords: spatial
 
 ### ** Examples
@@ -2595,6 +2601,7 @@ col.s <- nb2listw(col.gal.nb, style="S")
 points(cards, unlist(lapply(col.s$weights, sum)), col="blue")
 legend(x=c(0, 1), y=c(7, 9), legend=c("W", "B", "C", "U", "S"),
 col=c("black", "red", "green", "orange", "blue"), pch=rep(1,5))
+summary(nb2listw(col.gal.nb, style="minmax"))
 dlist <- nbdists(col.gal.nb, coords)
 dlist <- lapply(dlist, function(x) 1/x)
 col.w.d <- nb2listw(col.gal.nb, glist=dlist)
@@ -3090,10 +3097,12 @@ coords<-cbind(runif(20),runif(20))
 ### Create a series of angles
 rad<-seq(0,pi,l=20)
 
+opar <- par(mfrow=c(5,4))
 for(i in rad){
 	coords.rot<-Rotation(coords,i)
 	plot(coords.rot)
 }
+par(opar)
 
 ### Rotate the coordinates by an angle of 90 degrees
 coords.90<-Rotation(coords,90*pi/180)
@@ -3104,6 +3113,7 @@ points(coords.90,pch=19)
 
 
 
+graphics::par(get("par.postscript", pos = 'CheckExEnv'))
 cleanEx()
 nameEx("sacsarlm")
 ### * sacsarlm
@@ -3218,13 +3228,13 @@ flush(stderr()); flush(stdout())
 ### loading data
 bh <- readShapePoly(system.file("etc/shapes/bhicv.shp",
       package="spdep")[1])
-### data padronized
+### data standardized 
 dpad <- data.frame(scale(bh@data[,5:8]))
 
 ### neighboorhod list
 bh.nb <- poly2nb(bh)
 
-### calculing costs
+### calculating costs
 lcosts <- nbcosts(bh.nb, dpad)
 
 ### making listw
