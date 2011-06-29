@@ -1,4 +1,4 @@
-# Copyright 2010 by Roger Bivand
+# Copyright 2010-11 by Roger Bivand
 sacsarlm <- function(formula, data = list(), listw, listw2=NULL, na.action, 
 	type="sac", method="eigen", quiet=NULL, zero.policy=NULL, 
 	tol.solve=1.0e-10, llprof=NULL, control=list()) {
@@ -139,7 +139,8 @@ sacsarlm <- function(formula, data = list(), listw, listw2=NULL, na.action,
 	colnames(WX) <- xcolnames
 	rm(wx)
 
-        env <- new.env(parent=globalenv())
+#        env <- new.env(parent=globalenv())
+        env <- new.env()
         assign("y", y, envir=env)
         assign("x", x, envir=env)
         assign("wy", wy, envir=env)
@@ -350,8 +351,12 @@ sacsarlm <- function(formula, data = list(), listw, listw2=NULL, na.action,
 	SSE <- deviance(lm.target)
 	s2 <- SSE/n
 	coef.sac <- coefficients(lm.target)
+        tarX <- model.matrix(lm.target)
+        tary <- model.response(model.frame(lm.target))
 	names(coef.sac) <- xcolnames
 	lm.model <- lm(formula, data)
+        logLik_lm.model <- logLik(lm.model)
+        AIC_lm.model <- AIC(lm.model)
         ase <- FALSE
 	asyvar1 <- FALSE
         if (method == "eigen") {
@@ -422,9 +427,12 @@ sacsarlm <- function(formula, data = list(), listw, listw2=NULL, na.action,
 	names(fit) <- names(y)
 	ret <- structure(list(type=type, rho=rho, lambda=lambda,
 	    coefficients=coef.sac, rest.se=rest.se, ase=ase,
-	    LL=LL, s2=s2, SSE=SSE, parameters=(p+3), lm.model=lm.model, 
-	    method=method, call=call, residuals=r, lm.target=lm.target,
-	    opt=optres, pars=pars, mxs=mxs, fitted.values=fit, formula=formula,
+	    LL=LL, s2=s2, SSE=SSE, parameters=(p+3), 
+            logLik_lm.model=logLik_lm.model, AIC_lm.model=AIC_lm.model,
+            #lm.model=lm.model, 
+	    method=method, call=call, residuals=r, #lm.target=lm.target,
+            tarX=tarX, tary=tary, y=y, X=x,
+	    opt=optres, pars=pars, mxs=mxs, fitted.values=fit, #formula=formula,
 	    similar=get("similar", envir=env), rho.se=rho.se,
 	    lambda.se=lambda.se, zero.policy=zero.policy, 
 	    aliased=aliased, LLNullLlm=LL_null_lm,

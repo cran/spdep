@@ -126,7 +126,8 @@ errorsarlm <- function(formula, data = list(), listw, na.action, etype="error",
 	colnames(WX) <- xcolnames
 	rm(wx)
 
-        env <- new.env(parent=globalenv())
+#        env <- new.env(parent=globalenv())
+        env <- new.env()
         assign("y", y, envir=env)
         assign("x", x, envir=env)
         assign("wy", wy, envir=env)
@@ -285,7 +286,12 @@ errorsarlm <- function(formula, data = list(), listw, na.action, etype="error",
 	rest.se <- (summary(lm.target)$coefficients[,2])*sqrt((n-p)/n)
 	coef.lambda <- coefficients(lm.target)
 	names(coef.lambda) <- xcolnames
+        Vs <- summary.lm(lm.target, corr = FALSE)$cov.unscaled
+        tarX <- model.matrix(lm.target)
+        tary <- model.response(model.frame(lm.target))
 	lm.model <- lm(y ~ x - 1)
+        logLik_lm.model <- logLik(lm.model)
+        AIC_lm.model <- AIC(lm.model)
 	ase <- FALSE
 	lambda.se <- NULL
 	LMtest <- NULL
@@ -381,17 +387,20 @@ errorsarlm <- function(formula, data = list(), listw, na.action, etype="error",
 	names(fit) <- names(y)
 	ret <- structure(list(type="error", lambda=lambda,
 		coefficients=coef.lambda, rest.se=rest.se, 
-		LL=LL, s2=s2, SSE=SSE, parameters=(m+2), lm.model=lm.model, 
-		method=method, call=call, residuals=r, lm.target=lm.target,
-		opt=opt, fitted.values=fit, ase=ase, formula=formula,
+		LL=LL, s2=s2, SSE=SSE, parameters=(m+2), #lm.model=lm.model, 
+                logLik_lm.model=logLik_lm.model, AIC_lm.model=AIC_lm.model,
+                coef_lm.model=coef(lm.model),
+                tarX=tarX, tary=tary, y=y, X=x,
+		method=method, call=call, residuals=r, #lm.target=lm.target,
+		opt=opt, fitted.values=fit, ase=ase, #formula=formula,
 		se.fit=NULL, resvar=asyvar1, similar=get("similar", envir=env),
 		lambda.se=lambda.se, LMtest=LMtest, zero.policy=zero.policy, 
-		aliased=aliased, LLNullLlm=LL_null_lm, Hcov=Hcov,
+		aliased=aliased, LLNullLlm=LL_null_lm, Hcov=Hcov, Vs=Vs,
                 interval=interval, fdHess=fdHess,
                 optimHess=con$optimHess, insert=!is.null(trs),
                 timings=do.call("rbind", timings)[, c(1, 3)]),
                 class=c("sarlm"))
-        rm(env)
+        rm(env, envir=)
         GC <- gc()
 	if (zero.policy) {
 		zero.regs <- attr(listw$neighbours, 

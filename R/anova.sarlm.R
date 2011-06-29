@@ -1,11 +1,11 @@
-# Copyright 2003-7 by Roger Bivand 
+# Copyright 2003-2011 by Roger Bivand 
 #
 
 anova.sarlm <- function(object, ...) {
     if (length(list(object, ...)) > 1L) {
         getResponseFormula <- function (object) 
         {
-            form <- formula(object)
+            form <- formula(object$call)
             if (!(inherits(form, "formula") && (length(form) == 3L))) {
                 stop("\"Form\" must be a two sided formula")
             }

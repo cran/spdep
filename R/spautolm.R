@@ -64,7 +64,8 @@ spautolm <- function(formula, data = list(), listw, weights,
 	can.sim <- can.be.simmed(listw)
 
     sum_lw <- sum(log(weights))
-    env <- new.env(parent=globalenv())
+#    env <- new.env(parent=globalenv())
+    env <- new.env()
     assign("Y", Y, envir=env)
     assign("X", X, envir=env)
     assign("n", n, envir=env)

@@ -69,17 +69,23 @@ neighbours, if FALSE (default) assign NA - causing \code{sacsarlm()} to terminat
   \item{s2}{GLS residual variance}
   \item{SSE}{sum of squared GLS errors}
   \item{parameters}{number of parameters estimated}
-  \item{lm.model}{the \code{lm} object returned when estimating for \eqn{\rho=0}{rho=0}}
+  \item{logLik_lm.model}{Log likelihood of the non-spatial linear model}
+  \item{AIC_lm.model}{AIC of the non-spatial linear model}
+%  \item{lm.model}{the \code{lm} object returned when estimating for \eqn{\rho=0}{rho=0}}
   \item{method}{the method used to calculate the Jacobian}
   \item{call}{the call used to create this object}
   \item{residuals}{GLS residuals}
-  \item{lm.target}{the \code{lm} object returned for the GLS fit}
+%  \item{lm.target}{the \code{lm} object returned for the GLS fit}
+  \item{tarX}{model matrix of the GLS model}
+  \item{tary}{response of the GLS model}
+  \item{y}{response of the linear model for \eqn{\rho=0}{rho=0}}
+  \item{X}{model matrix of the linear model for \eqn{\rho=0}{rho=0}}
   \item{opt}{object returned from numerical optimisation}
   \item{pars}{starting parameter values for final optimization, either given or found by trial point evaluation}
   \item{mxs}{if default input pars, optimal objective function values at trial points}
   \item{fitted.values}{Difference between residuals and response variable}
   \item{se.fit}{Not used yet}
-  \item{formula}{model formula}
+%  \item{formula}{model formula}
   \item{rho.se}{if ase=TRUE, the asymptotic standard error of \eqn{\rho}{rho}, otherwise approximate numeriacal Hessian-based value}
   \item{lambda.se}{if ase=TRUE, the asymptotic standard error of \eqn{\lambda}{lambda}}
   \item{resvar}{the asymptotic coefficient covariance matrix for (s2, rho, lambda, B)}
