@@ -13,9 +13,11 @@ preAple <- function(x, listw, override_similarity_check=FALSE, useTrace=TRUE) {
             can.sim <- FALSE
             eig <- eigenw(listw)
         }
-        if (is.complex(eig)) 
-            eig <- Re(eig)
-        trWW <- crossprod(eig)
+        if (is.complex(eig)) trWW <- Re(crossprod(eig))
+        else trWW <- crossprod(eig)
+# modified 110414 RSB
+#            eig <- Re(eig)
+#        trWW <- crossprod(eig)
     }
     corterm <- (trWW/n) * Diagonal(n)
     corterm <- as(corterm, "CsparseMatrix")

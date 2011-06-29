@@ -630,9 +630,9 @@ error.col <- errorsarlm(CRIME ~ HOVAL + INC, data=columbus,
 bptest.sarlm(error.col)
 bptest.sarlm(error.col, studentize=FALSE)
 ## Not run: 
+##D lm.target <- lm(error.col$tary ~ error.col$tarX - 1)
 ##D if (require(lmtest) && require(sandwich)) {
-##D   coeftest(error.col$lm.target, vcov=vcovHC(error.col$lm.target,
-##D     type="HC0"), df=Inf)
+##D   coeftest(lm.target, vcov=vcovHC(lm.target, type="HC0"), df=Inf)
 ##D }
 ## End(Not run)
 
@@ -2205,11 +2205,12 @@ localmoran.exact(e.lm, nb=eire.nb)
 localmoran.exact(e.lm, nb=eire.nb, useTP=TRUE)
 e.errorsar <- errorsarlm(OWNCONS ~ ROADACC, data=eire,
  listw=nb2listw(eire.nb))
-localmoran.exact.alt(e.errorsar$lm.target, nb=eire.nb)
+lm.target <- lm(e.errorsar$tary ~ e.errorsar$tarX - 1)
+localmoran.exact.alt(lm.target, nb=eire.nb)
 Omega <- invIrW(nb2listw(eire.nb), rho=0.6)
 Omega1 <- tcrossprod(Omega)
-localmoran.exact.alt(e.errorsar$lm.target, nb=eire.nb, Omega=Omega1)
-localmoran.exact.alt(e.errorsar$lm.target, nb=eire.nb, Omega=Omega1, useTP=TRUE)
+localmoran.exact.alt(lm.target, nb=eire.nb, Omega=Omega1)
+localmoran.exact.alt(lm.target, nb=eire.nb, Omega=Omega1, useTP=TRUE)
 
 
 
@@ -2245,7 +2246,8 @@ e.locmorw2
 e.errorsar <- errorsarlm(OWNCONS ~ ROADACC, data=eire,
   listw=nb2listw(eire.nb))
 e.errorsar
-e.clocmor <- summary(localmoran.sad(e.errorsar$lm.target, nb=eire.nb))
+lm.target <- lm(e.errorsar$tary ~ e.errorsar$tarX - 1)
+e.clocmor <- summary(localmoran.sad(lm.target, nb=eire.nb))
 e.clocmor
 hist(e.clocmor[,"Pr. (Sad)"])
 

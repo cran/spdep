@@ -74,11 +74,12 @@ localmoran.exact(e.lm, nb=eire.nb)
 localmoran.exact(e.lm, nb=eire.nb, useTP=TRUE)
 e.errorsar <- errorsarlm(OWNCONS ~ ROADACC, data=eire,
  listw=nb2listw(eire.nb))
-localmoran.exact.alt(e.errorsar$lm.target, nb=eire.nb)
+lm.target <- lm(e.errorsar$tary ~ e.errorsar$tarX - 1)
+localmoran.exact.alt(lm.target, nb=eire.nb)
 Omega <- invIrW(nb2listw(eire.nb), rho=0.6)
 Omega1 <- tcrossprod(Omega)
-localmoran.exact.alt(e.errorsar$lm.target, nb=eire.nb, Omega=Omega1)
-localmoran.exact.alt(e.errorsar$lm.target, nb=eire.nb, Omega=Omega1, useTP=TRUE)
+localmoran.exact.alt(lm.target, nb=eire.nb, Omega=Omega1)
+localmoran.exact.alt(lm.target, nb=eire.nb, Omega=Omega1, useTP=TRUE)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

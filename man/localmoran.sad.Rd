@@ -123,7 +123,8 @@ e.locmorw2
 e.errorsar <- errorsarlm(OWNCONS ~ ROADACC, data=eire,
   listw=nb2listw(eire.nb))
 e.errorsar
-e.clocmor <- summary(localmoran.sad(e.errorsar$lm.target, nb=eire.nb))
+lm.target <- lm(e.errorsar$tary ~ e.errorsar$tarX - 1)
+e.clocmor <- summary(localmoran.sad(lm.target, nb=eire.nb))
 e.clocmor
 hist(e.clocmor[,"Pr. (Sad)"])
 }

@@ -23,7 +23,7 @@ boot_wrapper_in <- function(cl, nsim) {
         require(rlecuyer)
         rlseed <- get("rlecuyerSeed", env = .spdepOptions)
         if (storage.mode(rlseed) != "integer") rlseed <- as.integer(rlseed)
-        if (length(rlseed) != 6L) rlseed <- rep(12345, 6)
+        if (length(rlseed) != 6L) rlseed <- rep(12345L, 6)
         clusterSetupRNGstream(cl, seed=rlseed)
         clusterEvalQ(cl, library(boot))
         nnsim <- ceiling(nsim/length(cl))

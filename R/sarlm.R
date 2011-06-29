@@ -1,4 +1,4 @@
-# Copyright 2002-10 by Roger Bivand
+# Copyright 2002-11 by Roger Bivand
 #
 
 residuals.sarlm <- function(object, ...) {
@@ -8,7 +8,7 @@ residuals.sarlm <- function(object, ...) {
 }
 
 deviance.sarlm <- function(object, ...) {
-	deviance(object$lm.target)
+	object$SSE
 }
 
 coef.sarlm <- function(object, ...) {
@@ -18,7 +18,8 @@ coef.sarlm <- function(object, ...) {
 	if (object$type == "error") ret <- c(ret, object$lambda)
 	else if (object$type == "lag" || object$type == "mixed")
             ret <- c(ret, object$rho)
-        else if (object$type == "sac") ret <- c(ret, object$rho, object$lambda)
+        else if (object$type == "sac" || object$type == "sacmixed")
+            ret <- c(ret, object$rho, object$lambda)
 	ret <- c(ret, object$coefficients)
 
 	ret
@@ -44,26 +45,29 @@ predict.sarlm <- function(object, newdata=NULL, listw=NULL,
         if (object$type == "sac") stop("no predict method for sac")
 	if (is.null(newdata)) {
 		res <- fitted.values(object)
-		X <- model.matrix(terms(object$lm.model), 
-				model.frame(object$lm.model))
-		B <- coefficients(object$lm.target)
-		y <- model.response(model.frame(object$lm.model))
-		tarX <- model.matrix(terms(object$lm.target), 
-				model.frame(object$lm.target))
-		tary <- model.response(model.frame(object$lm.target))
+		X <- object$X
+		B <- object$coefficients
+		y <- object$y
+		tarX <- object$tarX
+		tary <- object$tary
 		if (object$type == "error") {
 			attr(res, "trend") <- as.vector(X %*% B)
 			attr(res, "signal") <- as.vector( -1 * (tary - y) - 					-1 * (tarX - X) %*% B)
 		} else {
-			attr(res, "trend") <- fitted.values(object$lm.target)
+			attr(res, "trend") <- as.vector(X %*% B)
 			attr(res, "signal") <- as.vector( -1 * (tary - y))
 		}
 	}
 	else {
 		if (object$type == "error") {
-			B <- coefficients(object$lm.target)
-			tt <- terms(object$lm.model) 
-			X <- model.matrix(delete.response(tt), data=newdata)
+			B <- object$coefficients
+#			tt <- terms(object$lm.model) 
+#			X <- model.matrix(delete.response(tt), data=newdata)
+                        frm <- formula(object$call)
+			mt <- delete.response(terms(frm))
+#			mf <- lm(object$formula, newdata, method="model.frame")
+			mf <- model.frame(mt, newdata)
+			X <- model.matrix(mt, mf)
 			trend <- X %*% B
 			signal <- rep(0, length(trend))
 			res <- trend + signal
@@ -74,9 +78,10 @@ predict.sarlm <- function(object, newdata=NULL, listw=NULL,
 				stop ("spatial weights list required")
 			if (nrow(newdata) != length(listw$neighbours))
 				stop("mismatch between newdata and spatial weights")
-			B <- coefficients(object$lm.target)
+			B <- object$coefficients
 #			mt <- terms(object$formula, data = newdata)
-			mt <- delete.response(terms(object$formula))
+                        frm <- formula(object$call)
+			mt <- delete.response(terms(frm))
 #			mf <- lm(object$formula, newdata, method="model.frame")
 			mf <- model.frame(mt, newdata)
 			X <- model.matrix(mt, mf)
@@ -104,9 +109,11 @@ predict.sarlm <- function(object, newdata=NULL, listw=NULL,
 				stop ("spatial weights list required")
 			if (nrow(newdata) != length(listw$neighbours))
 				stop("mismatch between newdata and spatial weights")
-			B <- coefficients(object$lm.target)
+			B <- object$coefficients
 #			mt <- terms(object$formula, data = newdata)
-			mt <- delete.response(terms(object$formula))
+                        frm <- formula(object$call)
+			mt <- delete.response(terms(frm))
+#			mt <- delete.response(terms(object$formula))
 #			mf <- lm(object$formula, newdata, method="model.frame")
 # resolved problem of missing response column in newdata reported by
 # Christine N. Meynard, 060201

@@ -53,9 +53,9 @@ error.col <- errorsarlm(CRIME ~ HOVAL + INC, data=columbus,
 bptest.sarlm(error.col)
 bptest.sarlm(error.col, studentize=FALSE)
 \dontrun{
+lm.target <- lm(error.col$tary ~ error.col$tarX - 1)
 if (require(lmtest) && require(sandwich)) {
-  coeftest(error.col$lm.target, vcov=vcovHC(error.col$lm.target,
-    type="HC0"), df=Inf)
+  coeftest(lm.target, vcov=vcovHC(lm.target, type="HC0"), df=Inf)
 }
 }
 }
