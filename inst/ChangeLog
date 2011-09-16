@@ -1,3 +1,35 @@
+2011-09-16 08:30  rsbivand
+
+	* DESCRIPTION, R/AAA.R, man/LR.sarlm.Rd, man/anova.sarlm.Rd,
+	  man/edit.nb.Rd, man/graphneigh.Rd, man/joincount.multi.Rd,
+	  man/joincount.test.Rd, man/lag.listw.Rd, man/lm.LMtests.Rd,
+	  man/lm.morantest.sad.Rd, man/localmoran.sad.Rd, man/plot.nb.Rd,
+	  man/predict.sarlm.Rd, man/residuals.sarlm.Rd,
+	  man/sp.correlogram.Rd, man/sp.mantel.mc.Rd, man/subset.listw.Rd,
+	  man/subset.nb.Rd, man/summary.nb.Rd, man/trW.Rd: help file S3
+	  cleanup
+
+2011-07-18 19:11  rsbivand
+
+	* R/kpgm_new.R: pass zero.policy in GMerrorsar non-legacy branch
+
+2011-07-17 12:18  rsbivand
+
+	* DESCRIPTION, R/EBI.R, R/aple.R, R/autocov.R, R/geary.R,
+	  R/globalG.R, R/localG.R, R/localmoran.R, R/moran.plot.R,
+	  R/sp.correlogram.R, R/sp.mantel.R, man/aple.Rd, man/aple.mc.Rd,
+	  man/aple.plot.Rd, man/moran.plot.Rd: enforce vector input for
+	  tests
+
+2011-07-03 18:20  rsbivand
+
+	* DESCRIPTION, NAMESPACE, R/error.spsarlm.R, R/lag.spsarlm.R,
+	  R/sarlm.R, man/residuals.sarlm.Rd: first sketch of sarlm vcov
+
+2011-06-29 08:03  rsbivand
+
+	* ChangeLog, inst/ChangeLog: tidy
+
 2011-06-29 08:01  rsbivand
 
 	* DESCRIPTION: tidy

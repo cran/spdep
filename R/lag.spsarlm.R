@@ -25,7 +25,10 @@ lagsarlm <- function(formula, data = list(), listw,
 		method="model.frame")
 	na.act <- attr(mf, "na.action")
 	if (!inherits(listw, "listw")) stop("No neighbourhood list")
-        if (is.null(con$fdHess)) con$fdHess <- method != "eigen"
+        if (is.null(con$fdHess)) {
+            con$fdHess <- method != "eigen"
+            fdHess <- NULL
+        }
         stopifnot(is.logical(con$fdHess))
 	can.sim <- FALSE
 	if (listw$style %in% c("W", "S")) 

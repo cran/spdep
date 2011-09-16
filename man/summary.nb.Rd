@@ -11,11 +11,11 @@ matrix of coordinates is given as well, summary descriptive measures for
 the link lengths are also printed. Print and summary functions are also available for \code{"listw"} weights list objects.
 }
 \usage{
-summary.nb(object, coords=NULL, longlat = NULL, scale = 1, ...)
-print.nb(x, ...)
-summary.listw(object, coords, longlat, zero.policy = NULL,
+\method{summary}{nb}(object, coords=NULL, longlat = NULL, scale = 1, ...)
+\method{print}{nb}(x, ...)
+\method{summary}{listw}(object, coords, longlat, zero.policy = NULL,
  scale = 1, ...)
-print.listw(x, zero.policy = NULL, ...)
+\method{print}{listw}(x, zero.policy = NULL, ...)
 }
 
 \arguments{

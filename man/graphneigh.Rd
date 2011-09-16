@@ -21,8 +21,8 @@ relativeneigh(coords, nnmult=3)
 %beta.skel(coords,beta)
 soi.graph(tri.nb, coords)
 graph2nb(gob, row.names=NULL,sym=FALSE)
-plot.Gabriel(x, show.points=FALSE, add=FALSE, linecol=par(col), ...)
-plot.relative(x, show.points=FALSE, add=FALSE, linecol=par(col),...)
+\method{plot}{Gabriel}(x, show.points=FALSE, add=FALSE, linecol=par(col), ...)
+\method{plot}{relative}(x, show.points=FALSE, add=FALSE, linecol=par(col),...)
 }
 
 \arguments{

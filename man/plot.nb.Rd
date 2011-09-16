@@ -7,9 +7,9 @@
 A function to plot a neighbours list given point coordinates to represent the region in two dimensions; \code{plot.listw} is a wrapper that passes its neighbours component to \code{plot.nb}.
 }
 \usage{
-plot.nb(x, coords, col="black", points=TRUE, add=FALSE, arrows=FALSE,
+\method{plot}{nb}(x, coords, col="black", points=TRUE, add=FALSE, arrows=FALSE,
  length=0.1, xlim=NULL, ylim=NULL, ...)
-plot.listw(x, coords, col="black", points=TRUE, add=FALSE, arrows=FALSE,
+\method{plot}{listw}(x, coords, col="black", points=TRUE, add=FALSE, arrows=FALSE,
  length=0.1, xlim=NULL, ylim=NULL, ...)
 }
 

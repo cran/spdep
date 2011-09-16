@@ -14,9 +14,9 @@ lm.morantest.sad(model, listw, zero.policy=NULL, alternative="greater",
   spChk=NULL, resfun=weighted.residuals, tol=.Machine$double.eps^0.5,
   maxiter=1000, tol.bounds=0.0001, zero.tol = 1e-07, Omega=NULL,
   save.M=NULL, save.U=NULL)
-print.moransad(x, ...)
-summary.moransad(object, ...)
-print.summary.moransad(x, ...) 
+\method{print}{moransad}(x, ...)
+\method{summary}{moransad}(object, ...)
+\method{print}{summary.moransad}(x, ...) 
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{

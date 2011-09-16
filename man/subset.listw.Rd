@@ -5,7 +5,7 @@
 \description{
   The function subsets a spatial weights list, retaining objects for which the subset argument vector is TRUE. At present it will only subset non-general weights lists (that is those created by \code{nb2listw} with \code{glist=NULL}).}
 \usage{
-subset.listw(x, subset, zero.policy = NULL, ...)
+\method{subset}{listw}(x, subset, zero.policy = NULL, ...)
 }
 
 \arguments{

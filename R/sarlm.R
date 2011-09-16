@@ -25,10 +25,18 @@ coef.sarlm <- function(object, ...) {
 	ret
 }
 
-#vcov.sarlm <- function(object, ...) {
-#	if (!object$ase) stop("no asymptotic covariance matrix available")
-#        (object$s2^2) * object$resvar
-#}
+vcov.sarlm <- function(object, ...) {
+	if (object$ase) res <- object$resvar[-1,-1]
+        else {
+            if (!is.null(object$fdHess)) {
+                if (object$insert) res <- object$resvar[-1,-1]
+                else res <- object$resvar
+            } else {
+                stop("vcov not available for this model")
+            }
+        }
+        res
+}
 
 
 fitted.sarlm <- function(object, ...) {

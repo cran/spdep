@@ -10,9 +10,9 @@ assign("rlecuyerSeed", rep(12345, 6), env = .spdepOptions)
 
 #.conflicts.OK <- TRUE
 
-.onLoad <- function(lib, pkg) {
-	require(methods)
-}
+#.onLoad <- function(lib, pkg) {
+#	require(methods)
+#}
 
 #.onLoad <- function(pkg, lib) {
 #cat("spdep: a package for analysing spatial dependence\n")

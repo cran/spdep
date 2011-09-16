@@ -3,7 +3,7 @@
 \alias{trW}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Spatial weights matrix powers traces}
-\description{The function is used to prepare a vector of traces of pwers of a spatial weights matrix}
+\description{The function is used to prepare a vector of traces of powers of a spatial weights matrix}
 \usage{
 trW(W=NULL, m = 30, p = 16, type = "mult", listw=NULL)
 }

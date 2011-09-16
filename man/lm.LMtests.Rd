@@ -16,7 +16,7 @@ dependent variable, RLMlag the other way round), and a portmanteau test
 }
 \usage{
 lm.LMtests(model, listw, zero.policy=NULL, test="LMerr", spChk=NULL, naSubset=TRUE)
-print.LMtestlist(x, ...)
+\method{print}{LMtestlist}(x, ...)
 %tracew(listw)
 }
 
