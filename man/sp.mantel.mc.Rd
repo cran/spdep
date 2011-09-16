@@ -15,7 +15,7 @@ permutation test.
 \usage{
 sp.mantel.mc(var, listw, nsim, type = "moran", zero.policy = NULL,
  alternative = "greater", spChk=NULL, return_boot=FALSE)
-plot.mc.sim(x, xlim, xlab, main, sub, ..., ptype="density")
+\method{plot}{mc.sim}(x, xlim, xlab, main, sub, ..., ptype="density")
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{

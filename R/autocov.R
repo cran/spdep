@@ -19,6 +19,7 @@ autocov_dist <- function(z, xy, nbs=1, type="inverse", zero.policy=NULL,
         if (is.null(zero.policy))
             zero.policy <- get("zeroPolicy", env = .spdepOptions)
         stopifnot(is.logical(zero.policy))
+    stopifnot(is.vector(z))
    if (type=="one") expo <- 0
    if (type=="inverse") expo <- 1
    if (type=="inverse.squared") expo <- 2

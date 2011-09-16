@@ -15,7 +15,7 @@ permutations.
 \usage{
 joincount.test(fx, listw, zero.policy=NULL, alternative="greater", spChk=NULL,
  adjust.n=TRUE)
-print.jclist(x, ...)
+\method{print}{jclist}(x, ...)
 }
 \arguments{
   \item{fx}{a factor of the same length as the neighbours and weights objects in listw}

@@ -6,6 +6,7 @@ geary <- function(x, listw, n, n1, S0, zero.policy=NULL) {
         if (is.null(zero.policy))
             zero.policy <- get("zeroPolicy", env = .spdepOptions)
         stopifnot(is.logical(zero.policy))
+        stopifnot(is.vector(x))
 	z <- scale(x, scale=FALSE)
 	zz <- sum(z^2)
 	K <- (n*sum(z^4))/(zz^2)
@@ -97,6 +98,7 @@ geary.mc <- function(x, listw, nsim, zero.policy=NULL,
         if (is.null(zero.policy))
             zero.policy <- get("zeroPolicy", env = .spdepOptions)
         stopifnot(is.logical(zero.policy))
+        stopifnot(is.vector(x))
 	alternative <- match.arg(alternative, c("less", "greater"))
 	if(!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))

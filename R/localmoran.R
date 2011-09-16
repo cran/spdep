@@ -4,6 +4,7 @@
 localmoran <- function(x, listw, zero.policy=NULL, na.action=na.fail, 
 	alternative = "greater", p.adjust.method="none", mlvar=TRUE,
 	spChk=NULL) {
+        stopifnot(is.vector(x))
 	if (!inherits(listw, "listw"))
 		stop(paste(deparse(substitute(listw)), "is not a listw object"))
         if (is.null(zero.policy))

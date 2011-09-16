@@ -36,7 +36,7 @@ localAple(x, listw, override_similarity_check=FALSE, useTrace=TRUE)
 \examples{
 \dontrun{
 example(aple)
-plt_out <- aple.plot(scale(wheat$yield_detrend, scale=FALSE),
+plt_out <- aple.plot(as.vector(scale(wheat$yield_detrend, scale=FALSE)),
  nb2listw(nbr12, style="W"), cex=0.6)
 crossprod(plt_out$Y, plt_out$X)/crossprod(plt_out$X)
 lm_obj <- lm(Y ~ X, plt_out)
@@ -45,7 +45,7 @@ abline(v=0, h=0, lty=2)
 zz <- summary(influence.measures(lm_obj))
 infl <- as.integer(rownames(zz))
 points(plt_out$X[infl], plt_out$Y[infl], pch=3, cex=0.6, col="red")
-wheat$localAple <- localAple(scale(wheat$yield_detrend, scale=FALSE),
+wheat$localAple <- localAple(as.vector(scale(wheat$yield_detrend, scale=FALSE)),
  nb2listw(nbr12, style="W"))
 mean(wheat$localAple)
 hist(wheat$localAple)

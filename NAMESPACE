@@ -40,7 +40,7 @@ export(EBImoran.mc, probmap, choynowski, EBest, EBlocal, LR.sarlm,
 	summary.localmoransad, print.summary.localmoransad, print.moransad, 
 	summary.moransad, print.summary.moransad, print.spcor, plot.spcor, 
 	print.sarlm, summary.sarlm, residuals.sarlm, deviance.sarlm, 
-	coef.sarlm, fitted.sarlm, logLik.sarlm, anova.sarlm, 
+	coef.sarlm, fitted.sarlm, logLik.sarlm, anova.sarlm, vcov.sarlm,
 	predict.sarlm, print.summary.sarlm, print.sarlm.pred, bptest.sarlm,
 	write.sn2dat, read.dat2listw, nb2blocknb, p.adjustSP,
 #	asMatrixCsrListw, asMatrixCsrI, asMatrixCsrIrW, asListwMatrixCsr, 
@@ -123,7 +123,7 @@ S3method(summary, sarlm)
 S3method(residuals, sarlm)
 S3method(deviance, sarlm)
 S3method(coef, sarlm)
-#S3method(vcov, sarlm)
+S3method(vcov, sarlm)
 S3method(fitted, sarlm)
 S3method(logLik, sarlm)
 S3method(anova, sarlm)

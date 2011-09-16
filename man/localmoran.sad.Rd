@@ -26,9 +26,9 @@ localmoran.sad(model, select, nb, glist=NULL, style="W",
  tol = .Machine$double.eps^0.5, maxiter = 1000, tol.bounds=0.0001,
  save.M=FALSE, Omega = NULL)
 %as.data.frame.localmoransad(x, row.names=NULL, optional=FALSE) 
-print.localmoransad(x, ...)
-summary.localmoransad(object, ...)
-print.summary.localmoransad(x, ...)
+\method{print}{localmoransad}(x, ...)
+\method{summary}{localmoransad}(object, ...)
+\method{print}{summary.localmoransad}(x, ...)
 listw2star(listw, ireg, style, n, D, a, zero.policy=NULL)
 }
 %- maybe also `usage' for other objects documented here.

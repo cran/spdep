@@ -10,7 +10,7 @@ committing. If the result is not assigned to a new object, the editing
 will be lost - as in \code{edit}.
 }
 \usage{
-edit.nb(name, coords, polys=NULL, ..., use_region.id=FALSE)
+\method{edit}{nb}(name, coords, polys=NULL, ..., use_region.id=FALSE)
 }
 
 \arguments{

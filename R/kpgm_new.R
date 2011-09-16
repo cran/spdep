@@ -142,7 +142,7 @@ GMerrorsar <- function(#W, y, X,
             fit <- as.vector(x %*% coef.lambda)
             r <- as.vector(y - fit)
             e <- residuals(ols)
-            et <- e - lambda*lag(listw, e)
+            et <- e - lambda*lag.listw(listw, e, zero.policy=zero.policy)
             SSE <- c(crossprod(et))
             s2 <- SSE/n
             Bx <- x - lambda*WX

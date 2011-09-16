@@ -365,7 +365,7 @@ isTRUE(all.equal(c(with(as(wheat, "data.frame"),
  tapply(yield_detrend, c, median))), rep(0.0, 25),
  check.attributes=FALSE))
 moran.test(wheat$yield_detrend, nb2listw(nbr12, style="W"))
-aple(scale(wheat$yield_detrend, scale=FALSE), nb2listw(nbr12, style="W"))
+aple(as.vector(scale(wheat$yield_detrend, scale=FALSE)), nb2listw(nbr12, style="W"))
 errorsarlm(yield_detrend ~ 1, wheat, nb2listw(nbr12, style="W"))
 
 
@@ -385,7 +385,7 @@ flush(stderr()); flush(stdout())
 
 ## Not run: 
 ##D example(aple)
-##D boot_out <- aple.mc(scale(wheat$yield_detrend, scale=FALSE),
+##D boot_out <- aple.mc(as.vector(scale(wheat$yield_detrend, scale=FALSE)),
 ##D  nb2listw(nbr12, style="W"), nsim=500)
 ##D plot(boot_out)
 ##D boot_out
@@ -408,7 +408,7 @@ flush(stderr()); flush(stdout())
 
 ## Not run: 
 ##D example(aple)
-##D plt_out <- aple.plot(scale(wheat$yield_detrend, scale=FALSE),
+##D plt_out <- aple.plot(as.vector(scale(wheat$yield_detrend, scale=FALSE)),
 ##D  nb2listw(nbr12, style="W"), cex=0.6)
 ##D crossprod(plt_out$Y, plt_out$X)/crossprod(plt_out$X)
 ##D lm_obj <- lm(Y ~ X, plt_out)
@@ -417,7 +417,7 @@ flush(stderr()); flush(stdout())
 ##D zz <- summary(influence.measures(lm_obj))
 ##D infl <- as.integer(rownames(zz))
 ##D points(plt_out$X[infl], plt_out$Y[infl], pch=3, cex=0.6, col="red")
-##D wheat$localAple <- localAple(scale(wheat$yield_detrend, scale=FALSE),
+##D wheat$localAple <- localAple(as.vector(scale(wheat$yield_detrend, scale=FALSE)),
 ##D  nb2listw(nbr12, style="W"))
 ##D mean(wheat$localAple)
 ##D hist(wheat$localAple)
@@ -2371,7 +2371,7 @@ flush(stderr()); flush(stdout())
 data(afcon)
 moran.plot(afcon$totcon, nb2listw(paper.nb),
  labels=as.character(afcon$name), pch=19)
-moran.plot(scale(afcon$totcon), nb2listw(paper.nb),
+moran.plot(as.vector(scale(afcon$totcon)), nb2listw(paper.nb),
  labels=as.character(afcon$name), xlim=c(-2, 4), ylim=c(-2,4), pch=19)
 
 

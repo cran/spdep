@@ -24,7 +24,10 @@ errorsarlm <- function(formula, data = list(), listw, na.action, etype="error",
 	mf <- lm(formula, data, na.action=na.action, method="model.frame")
 	na.act <- attr(mf, "na.action")
 	if (!inherits(listw, "listw")) stop("No neighbourhood list")
-        if (is.null(con$fdHess)) con$fdHess <- method != "eigen"
+        if (is.null(con$fdHess)) {
+            con$fdHess <- method != "eigen"
+            fdHess <- NULL
+        }
         stopifnot(is.logical(con$fdHess))
         stopifnot(is.logical(con$optimHess))
         stopifnot(is.logical(con$LAPACK))

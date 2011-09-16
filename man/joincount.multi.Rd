@@ -9,7 +9,7 @@
 \usage{
 joincount.multi(fx, listw, zero.policy = FALSE,
  spChk = NULL, adjust.n=TRUE)
-print.jcmulti(x, ...)
+\method{print}{jcmulti}(x, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

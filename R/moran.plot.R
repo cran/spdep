@@ -7,6 +7,7 @@ moran.plot <- function(x, listw, zero.policy=NULL, spChk=NULL,
 	if (!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
         if (is.null(quiet)) quiet <- !get("verbose", env = .spdepOptions)
+        stopifnot(is.vector(x))
         stopifnot(is.logical(quiet))
         if (is.null(zero.policy))
             zero.policy <- get("zeroPolicy", env = .spdepOptions)

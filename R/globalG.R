@@ -8,6 +8,7 @@ globalG.test <- function(x, listw, zero.policy=NULL,
         if (is.null(zero.policy))
             zero.policy <- get("zeroPolicy", env = .spdepOptions)
         stopifnot(is.logical(zero.policy))
+        stopifnot(is.vector(x))
 	alternative <- match.arg(alternative, c("greater", "less", "two.sided"))
 	if (!inherits(listw, "listw"))
 	stop(paste(deparse(substitute(listw)), "is not a listw object"))

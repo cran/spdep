@@ -6,6 +6,7 @@ sp.mantel.mc <- function(var, listw, nsim, type="moran", zero.policy=NULL,
         if (is.null(zero.policy))
             zero.policy <- get("zeroPolicy", env = .spdepOptions)
         stopifnot(is.logical(zero.policy))
+        stopifnot(is.vector(var))
 	alternative <- match.arg(alternative, c("greater", "less"))
 	if(!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))

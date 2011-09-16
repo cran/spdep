@@ -40,7 +40,7 @@ Geographical Analysis, 27, 93--115}
 data(afcon)
 moran.plot(afcon$totcon, nb2listw(paper.nb),
  labels=as.character(afcon$name), pch=19)
-moran.plot(scale(afcon$totcon), nb2listw(paper.nb),
+moran.plot(as.vector(scale(afcon$totcon)), nb2listw(paper.nb),
  labels=as.character(afcon$name), xlim=c(-2, 4), ylim=c(-2,4), pch=19)
 }
 \keyword{spatial}

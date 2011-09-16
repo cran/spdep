@@ -6,7 +6,7 @@
   One of a number of tools for comparing simultaneous autoregressive models, in particular nested models. The function is based on \code{anova.lme()} for comparing linear mixed models, and follows that function in using the "anova" generic name.
 }
 \usage{
-anova.sarlm(object, ...)
+\method{anova}{sarlm}(object, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

@@ -9,6 +9,7 @@ localG <- function(x, listw, zero.policy=NULL, spChk=NULL) {
         if (is.null(zero.policy))
             zero.policy <- get("zeroPolicy", env = .spdepOptions)
         stopifnot(is.logical(zero.policy))
+        stopifnot(is.vector(x))
 	if (any(is.na(x))) stop(paste("NA in ", deparse(substitute(x))))
 	n <- length(listw$neighbours)
 	if (n != length(x))stop("Different numbers of observations")

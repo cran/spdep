@@ -6,7 +6,7 @@
  Using a \code{listw} sparse representation of a spatial weights matrix, compute the lag vector \eqn{V x}
 }
 \usage{
-lag.listw(x, var, zero.policy=NULL, NAOK=FALSE, ...)
+\method{lag}{listw}(x, var, zero.policy=NULL, NAOK=FALSE, ...)
 }
 
 \arguments{

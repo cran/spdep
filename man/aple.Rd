@@ -38,7 +38,7 @@ isTRUE(all.equal(c(with(as(wheat, "data.frame"),
  tapply(yield_detrend, c, median))), rep(0.0, 25),
  check.attributes=FALSE))
 moran.test(wheat$yield_detrend, nb2listw(nbr12, style="W"))
-aple(scale(wheat$yield_detrend, scale=FALSE), nb2listw(nbr12, style="W"))
+aple(as.vector(scale(wheat$yield_detrend, scale=FALSE)), nb2listw(nbr12, style="W"))
 errorsarlm(yield_detrend ~ 1, wheat, nb2listw(nbr12, style="W"))
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

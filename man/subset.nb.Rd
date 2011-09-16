@@ -6,7 +6,7 @@
   The function subsets a neighbors list, retaining objects for which the subset argument vector is TRUE.
 }
 \usage{
-subset.nb(x, subset, ...)
+\method{subset}{nb}(x, subset, ...)
 }
 
 \arguments{

@@ -14,7 +14,7 @@
 }
 \usage{
 LR.sarlm(x, y)
-logLik.sarlm(object, ...)
+\method{logLik}{sarlm}(object, ...)
 LR1.sarlm(object)
 Wald1.sarlm(object)
 \method{Hausman.test}{sarlm}(object, ..., tol=NULL)

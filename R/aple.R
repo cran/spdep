@@ -1,5 +1,6 @@
 preAple <- function(x, listw, override_similarity_check=FALSE, useTrace=TRUE) {
     stopifnot(isTRUE(all.equal(mean(x), 0.0)))
+    stopifnot(is.vector(x))
     W <- as_dgRMatrix_listw(listw)
     W <- as(W, "CsparseMatrix")
     n <- dim(W)[1]

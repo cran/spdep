@@ -11,8 +11,8 @@ print and plot helper functions.
 \usage{
 sp.correlogram(neighbours, var, order = 1, method = "corr",
  style = "W", randomisation = TRUE, zero.policy = NULL, spChk=NULL)
-plot.spcor(x, main, ylab, ylim, ...)
-print.spcor(x, p.adj.method="none", ...)
+\method{plot}{spcor}(x, main, ylab, ylim, ...)
+\method{print}{spcor}(x, p.adj.method="none", ...)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
