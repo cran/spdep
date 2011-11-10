@@ -1,5 +1,5 @@
-912e29207abd637421f22083e00aaea5 *ChangeLog
-1f9fa7c4a5e7ec7a9335e05d44e9dfb3 *DESCRIPTION
+dfde2a17a3f1c139941f879d8a2d5dd5 *ChangeLog
+2833181324323cbcf8caa4fdd9043318 *DESCRIPTION
 7d2db75aac230ee3226f6fab96523d84 *LICENCE
 a450782ce3d7c97096d73234d9b62fc1 *NAMESPACE
 9cd5b06199025caa61e1e20a21f8288f *R/AAA.R
@@ -30,7 +30,7 @@ cbe45866b710921490b6eea92e0fa7a2 *R/gabrielneigh.R
 3a6dd24dcd754e9c395a8fc68ee85dd6 *R/globalG.R
 d6320c56e705e0f9e81e46a851a74fa0 *R/graph2nb.R
 7196c6adfc779671254451b85f0913b8 *R/impacts.R
-3a119f76874678f8473a5a8acc915d6e *R/jacobian.R
+7a261fece70ccc34359c4302791b9eb9 *R/jacobian.R
 e77870094fdf47719ea73bd4d495e128 *R/jc.R
 16f3e0c948747b251c91947903dee850 *R/knearneigh.R
 c71eef240bf2e5614276b28ab0f01af7 *R/knn2nb.R
@@ -68,7 +68,7 @@ d9db297971dee1c0b5ab282d32fb6cd2 *R/plot.nb.R
 df688833035725c5cbf0fdc4ad8c1e09 *R/prunecost.R
 58fc4f67d40bb82e24a32af9ee5ee0c2 *R/prunemst.R
 7c91cef75e1de2fe04dbd738d60985ef *R/read.gal.R
-2737627ea547b74dc0235cfede015d34 *R/read.gwt2nb.R
+69658b04b5d38a6a670f3b4f6c7decf7 *R/read.gwt2nb.R
 64633a828f14988e6d3aa97d6ce8ea2d *R/relneigh.R
 40534663fb14a40fc659768038487304 *R/rotation.R
 68edce980501e8a9386644277b6f08b8 *R/s2sls.R
@@ -105,13 +105,13 @@ c3befc2b93128839af7f5afc2f4f4692 *data/oldcol.rda
 9f4230eb9cbbf1d870a031a56c55e81f *data/used.cars.rda
 5d3af103bdc5e4214234b429d56bc0bd *data/wheat.txt.gz
 671a11d7ac128f13b3e6bbc8ee0047b9 *inst/CHANGES
-912e29207abd637421f22083e00aaea5 *inst/ChangeLog
+dfde2a17a3f1c139941f879d8a2d5dd5 *inst/ChangeLog
 7d2db75aac230ee3226f6fab96523d84 *inst/LICENCE
 1b2bceb96253ffe85eec9502adc1986f *inst/doc/CO69.Rnw
-6ce797801f6e95966f5e83c1c8b86f52 *inst/doc/CO69.pdf
+cc8223d0a4a9f6377e114cdacd169174 *inst/doc/CO69.pdf
 68a52b4a10480b4a2adedb18494c7deb *inst/doc/backstore/boot_res.RData
 b7e20e6bcab41e6df17154e5aa79f7d8 *inst/doc/sids.Rnw
-3d0cce7d750547c8a3497279bb886446 *inst/doc/sids.pdf
+99b6434c1212d0075ef49a62acdb05f9 *inst/doc/sids.pdf
 53178ac43dd150bbb835b63e018f0cd4 *inst/etc/misc/geary_eire.txt
 e3fb11232e6cb27770d15aaf4f632aa4 *inst/etc/misc/nc_xtra.dbf
 2591ac95bd9191d0aee07450f7caf9bb *inst/etc/misc/nyadjwts.dbf
@@ -176,7 +176,7 @@ b9f9335fe6ec6834117669aa63b7677f *man/columbus.Rd
 637e688b92432fa98ac2b212d545bee4 *man/compon.Rd
 0c9b880e845c7c5897563d1e4b811321 *man/diffnb.Rd
 33e608f07186e46da643ba217dd9137b *man/dnearneigh.Rd
-4ef65d7157cf4a281275acbc3cfdaaff *man/do_ldet.Rd
+9d16a5a9acb3a506666d95e958b2859f *man/do_ldet.Rd
 2b0d75634da00f79b94e2def24a51ada *man/droplinks.Rd
 b72c48867e3ac546238b5f60ff1e5b8b *man/edit.nb.Rd
 44d150170f0fbdf2e132209a398ce7b0 *man/eigenw.Rd

@@ -146,6 +146,7 @@ write.sn2Arc <- function(sn, file, field=NULL) {
 # Copyright 2011 Virgilio Gomez-Rubio
 # a function to export from nb object to a particular file format
 # which is used by INLA when fitting spatial models for lattice data
+# revision Marcos Prates 2011-10-07
 
 nb2INLA <-function(file, nb)
 {
@@ -159,10 +160,13 @@ nb2INLA <-function(file, nb)
 
         txt<-paste(n, "\n", sep="")
         cat(txt, file=file, append = TRUE)
+        crd <- card(nb)
 
         for(i in 1:length(nb))
         {
-                txt<-paste(c(i, length(nb[[i]]), nb[[i]]), collapse=" ")
+                if (crd[i] == 0) txt <- paste(c(i, 0), collapse=" ")
+# Marcos Prates 2011-10-07 no-neighbour case
+                else txt<-paste(c(i, length(nb[[i]]), nb[[i]]), collapse=" ")
                 txt<-paste(txt, "\n",sep="")
                 cat(txt, file=file, append = TRUE)
         }

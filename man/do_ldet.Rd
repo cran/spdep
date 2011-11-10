@@ -148,7 +148,7 @@ moments_setup(env, trs=NULL, m, p, type="MC", correct=TRUE, trunc=TRUE, which=1)
     \item{can.sim}{logical scalar: can the spatial weights be made symmetric by similarity}
   } and assigns to the environment:
   \describe{
-    \item{trs}{vector of Chebyshev approximation terms}
+    \item{trs}{vector of traces, possibly approximated}
     \item{correct}{logical scalar: use Smirnov correction term}
     \item{trunc}{logical scalar: truncate Smirnov correction term}
     \item{method}{string: \dQuote{moments}}
