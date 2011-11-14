@@ -76,9 +76,13 @@ mcdet_setup <- function(env, p=16, m=30, which=1) {
 	x <- matrix(rnorm(n*p), nrow=n, ncol=p)
         int1  <- vector(mode="list", length=m)
 	xx <- x
+# 111110 set first two traces
+        td2 <- sum(diag(W %*% W))
         for (k in 1:m) {
             xx <- W %*% xx
-            int1[[k]] <- apply(x * as.matrix(xx), 2, sum)
+            if (k == 1) int1[[k]] <- rep(0, p)
+            else if (k == 2) int1[[k]] <- rep(td2, p)
+            else int1[[k]] <- apply(x * as.matrix(xx), 2, sum)
         }
         int2 <- apply(x * x, 2, sum)
         clx <- list(m=m, p=p, n=n, int1=int1, int2=int2)
@@ -105,8 +109,10 @@ mcdet_ldet <- function(alpha, env, which=1) {
 	for (k in 1:clx$m) {
 		vk <- clx$n*(alpha^k)*(clx$int1[[k]]/k) + vk
 	}
-	v <- c(as.matrix(vk/clx$int2))
-	-mean(v)
+	v <- -c(as.matrix(vk/clx$int2))
+	res <- mean(v)
+        attr(res, "sd") <- sd(v)/sqrt(clx$p)
+        res
 }
 
 eigen_setup <- function(env, which=1) {
@@ -460,7 +466,7 @@ moments_setup <- function(env, trs=NULL, m, p, type="MC", correct=TRUE,
                 csrw <- listw2U_Matrix(similar.listw_Matrix(get("listw",
                     envir=env)))
 	        assign("similar", TRUE, envir=env)
-            } else csrw <- as_dsTMatrix_listw(get("listw", envir=env))
+            } else csrw <- as_dgRMatrix_listw(get("listw", envir=env))
             csrw <- as(csrw, "CsparseMatrix")
             trs <- trW(csrw, m=m, p=p, type=type)
         }
@@ -472,7 +478,7 @@ moments_setup <- function(env, trs=NULL, m, p, type="MC", correct=TRUE,
                 csrw <- listw2U_Matrix(similar.listw_Matrix(get("listw2",
                     envir=env)))
 	        assign("similar2", TRUE, envir=env)
-            } else csrw <- as_dsTMatrix_listw(get("listw2", envir=env))
+            } else csrw <- as_dgRMatrix_listw(get("listw2", envir=env))
             csrw <- as(csrw, "CsparseMatrix")
             trs <- trW(csrw, m=m, p=p, type=type)
         }
