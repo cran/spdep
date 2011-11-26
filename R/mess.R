@@ -4,10 +4,10 @@ lagmess <- function(formula, data = list(), listw, zero.policy=NULL,
     na.action=na.fail, q=10, start=-2.5, control=list(), method="BFGS",
     verbose=NULL) {
     stopifnot(inherits(listw, "listw"))
-    if (is.null(verbose)) verbose <- get("verbose", env = .spdepOptions)
+    if (is.null(verbose)) verbose <- get("verbose", envir = .spdepOptions)
     stopifnot(is.logical(verbose))
         if (is.null(zero.policy))
-            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+            zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
     if (listw$style != "W") warning("weights should be row-stochastic")
     mt <- terms(formula, data = data)

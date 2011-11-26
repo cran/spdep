@@ -127,7 +127,7 @@ moments_setup(env, trs=NULL, m, p, type="MC", correct=TRUE, trunc=TRUE, which=1)
     \item{listw}{A listw spatial weights object}
   } and assigns to the environment:
   \describe{
-    \item{clx}{list of Monte Carlo approximation terms}
+    \item{clx}{list of Monte Carlo approximation terms  (the first two simulated traces are replaced by their analytical equivalents)}
     \item{W}{sparse spatial weights matrix}
     \item{method}{string: \dQuote{MC}}
   }
@@ -159,7 +159,7 @@ moments_setup(env, trs=NULL, m, p, type="MC", correct=TRUE, trunc=TRUE, which=1)
 Some set-up functions may also assign \code{similar} to the environment if the weights were made symmetric by similarity.
 }
 
-\value{\code{do_ldet} returns the value of the Jacobian for the calculation method recorded in the environment argument; the remaining functions modify the environment in place as a side effect and return nothing.}
+\value{\code{do_ldet} returns the value of the Jacobian for the calculation method recorded in the environment argument, and for the Monte Carlo approximation, returns a measure of the spread of the approximation as an \dQuote{sd} attribute; the remaining functions modify the environment in place as a side effect and return nothing.}
 
 \references{LeSage J and RK Pace (2009) Introduction to Spatial Econometrics. CRC Press, Boca Raton, pp. 77--110}
 

@@ -25,10 +25,10 @@ GMerrorsar <- function(#W, y, X,
         control=list(), pars, scaleU=FALSE, verbose=NULL, legacy=FALSE,
         se.lambda=TRUE, returnHcov=FALSE, pWOrder=250, tol.Hcov=1.0e-10) {
 #	ols <- lm(I(y) ~ I(X) - 1)
-        if (is.null(verbose)) verbose <- get("verbose", env = .spdepOptions)
+        if (is.null(verbose)) verbose <- get("verbose", envir = .spdepOptions)
         stopifnot(is.logical(verbose))
         if (is.null(zero.policy))
-            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+            zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
 	mt <- terms(formula, data = data)
 	mf <- lm(formula, data, na.action=na.action, method="model.frame")
@@ -453,7 +453,7 @@ gstsls<-function (formula, data = list(), listw, listw2=NULL,
 	
 	
 	 if (is.null(verbose)) 
-        verbose <- get("verbose", env = .spdepOptions)
+        verbose <- get("verbose", envir = .spdepOptions)
     stopifnot(is.logical(verbose))
 
     if (is.null(zero.policy)) 

@@ -15,10 +15,10 @@ errorsarlm <- function(formula, data = list(), listw, na.action, etype="error",
         con[(namc <- names(control))] <- control
         if (length(noNms <- namc[!namc %in% nmsC])) 
             warning("unknown names in control: ", paste(noNms, collapse = ", "))
-        if (is.null(quiet)) quiet <- !get("verbose", env = .spdepOptions)
+        if (is.null(quiet)) quiet <- !get("verbose", envir = .spdepOptions)
         stopifnot(is.logical(quiet))
         if (is.null(zero.policy))
-            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+            zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
 	mt <- terms(formula, data = data)
 	mf <- lm(formula, data, na.action=na.action, method="model.frame")
@@ -289,7 +289,7 @@ errorsarlm <- function(formula, data = list(), listw, na.action, etype="error",
 	rest.se <- (summary(lm.target)$coefficients[,2])*sqrt((n-p)/n)
 	coef.lambda <- coefficients(lm.target)
 	names(coef.lambda) <- xcolnames
-        Vs <- summary.lm(lm.target, corr = FALSE)$cov.unscaled
+        Vs <- summary.lm(lm.target, correlation = FALSE)$cov.unscaled
         tarX <- model.matrix(lm.target)
         tary <- model.response(model.frame(lm.target))
 	lm.model <- lm(y ~ x - 1)

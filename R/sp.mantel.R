@@ -4,7 +4,7 @@
 sp.mantel.mc <- function(var, listw, nsim, type="moran", zero.policy=NULL,
 	alternative="greater", spChk=NULL, return_boot=FALSE) {
         if (is.null(zero.policy))
-            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+            zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
         stopifnot(is.vector(var))
 	alternative <- match.arg(alternative, c("greater", "less"))
@@ -53,7 +53,7 @@ sp.mantel.mc <- function(var, listw, nsim, type="moran", zero.policy=NULL,
                 var <- var[i]
                 return(f(x=var, ...))
             }
-            cl <- get("cl", env = .spdepOptions)
+            cl <- get("cl", envir = .spdepOptions)
             if (!is.null(cl) && length(cl) > 1L) {
                 nnsim <- boot_wrapper_in(cl, nsim)
                 lres <- clusterCall(cl, boot, xs, statistic=mantel_boot,

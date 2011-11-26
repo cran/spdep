@@ -5,7 +5,7 @@
 EBImoran <- function (z, listw, nn, S0, zero.policy = NULL) 
 {
         if (is.null(zero.policy))
-            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+            zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
     stopifnot(is.vector(z))
     zm <- mean(z)
@@ -20,7 +20,7 @@ EBImoran.mc <- function (n, x, listw, nsim, zero.policy = NULL,
  alternative = "greater", spChk = NULL, return_boot=FALSE) 
 {
         if (is.null(zero.policy))
-            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+            zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
     alternative <- match.arg(alternative, c("greater", "less"))
     if (!inherits(listw, "listw")) 
@@ -54,7 +54,7 @@ EBImoran.mc <- function (n, x, listw, nsim, zero.policy = NULL,
                 var <- var[i]
                 return(EBImoran(z=var, ...))
             }
-            cl <- get("cl", env = .spdepOptions)
+            cl <- get("cl", envir = .spdepOptions)
             if (!is.null(cl) && length(cl) > 1L) {
                 nnsim <- boot_wrapper_in(cl, nsim)
                 lres <- clusterCall(cl, boot, z, statistic=EBI_boot, R=nnsim,
@@ -192,7 +192,7 @@ EBest <- function(n, x, family="poisson") {
 EBlocal <- function(ri, ni, nb, zero.policy = NULL,
     spChk = NULL, geoda = FALSE) {
         if (is.null(zero.policy))
-            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+            zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
 # class to inherits Jari Oksanen 080603
     if (!inherits(nb, "nb")) 

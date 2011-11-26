@@ -23,7 +23,7 @@ ME <- function(formula, data, family = gaussian, weights, offset, listw,
 		res <- list(estimate=mi, statistic=zi, p.value=pri)
 		res
 	}
-        if (is.null(verbose)) verbose <- get("verbose", env = .spdepOptions)
+        if (is.null(verbose)) verbose <- get("verbose", envir = .spdepOptions)
         stopifnot(is.logical(verbose))
 
 	listw <- listw2U(listw) # make weights symmetric

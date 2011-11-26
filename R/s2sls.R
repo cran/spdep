@@ -9,7 +9,7 @@ stsls <- function(formula, data = list(), listw, zero.policy=NULL,
         	stop("No neighbourhood list")
 
         if (is.null(zero.policy))
-            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+            zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
     	mt <- terms(formula, data = data)
     	mf <- lm(formula, data, na.action=na.action, method="model.frame")

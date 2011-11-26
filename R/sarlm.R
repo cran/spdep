@@ -48,7 +48,7 @@ fitted.sarlm <- function(object, ...) {
 predict.sarlm <- function(object, newdata=NULL, listw=NULL, 
 	zero.policy=NULL, ...) {
         if (is.null(zero.policy))
-            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+            zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
         if (object$type == "sac") stop("no predict method for sac")
 	if (is.null(newdata)) {

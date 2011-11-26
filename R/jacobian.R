@@ -441,12 +441,15 @@ Rmrho <- function(Omega, m, rho, n, trunc=FALSE) {
         Om_ej <- Om_ej*Om_e
         Om_oj <- Om_oj*Om_o
     }
+    attr(res, "j") <- j
     res
 }
 
 ldetMoments <- function(Omega, rho, n, correct=TRUE, trunc=FALSE) {
     m <- length(Omega)
-    Rm <- ifelse(correct, Rmrho(Omega, m, rho, n, trunc), 0)
+    Rm <- 0
+    attr(Rm, "j") <- as.integer(NA)
+    if (correct) Rm <- Rmrho(Omega, m, rho, n, trunc)
     res <- 0
     rhoj <- rho
     for (j in seq(along=Omega)) {
@@ -454,6 +457,7 @@ ldetMoments <- function(Omega, rho, n, correct=TRUE, trunc=FALSE) {
         rhoj <- rhoj*rho
     }
     res <- - res - Rm
+    attr(res, "j") <- attr(Rm, "j")
     res
 }
 

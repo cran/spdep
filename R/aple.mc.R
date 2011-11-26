@@ -6,7 +6,7 @@ aple.mc <- function(x, listw, nsim, override_similarity_check=FALSE,
     }
     pre <- preAple(x=x, listw=listw,
         override_similarity_check=override_similarity_check, useTrace=useTrace)
-    cl <- get("cl", env = .spdepOptions)
+    cl <- get("cl", envir = .spdepOptions)
     if (!is.null(cl) && length(cl) > 1L) {
         nnsim <- boot_wrapper_in(cl, nsim)
         lres <- clusterCall(cl, boot, x, statistic=aple.boot, R=nnsim,
@@ -21,7 +21,7 @@ aple.mc <- function(x, listw, nsim, override_similarity_check=FALSE,
 boot_wrapper_in <- function(cl, nsim) {
         require(snow)
         require(rlecuyer)
-        rlseed <- get("rlecuyerSeed", env = .spdepOptions)
+        rlseed <- get("rlecuyerSeed", envir = .spdepOptions)
         if (storage.mode(rlseed) != "integer") rlseed <- as.integer(rlseed)
         if (length(rlseed) != 6L) rlseed <- rep(12345L, 6)
         clusterSetupRNGstream(cl, seed=rlseed)

@@ -4,7 +4,7 @@
 
 geary <- function(x, listw, n, n1, S0, zero.policy=NULL) {
         if (is.null(zero.policy))
-            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+            zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
         stopifnot(is.vector(x))
 	z <- scale(x, scale=FALSE)
@@ -18,7 +18,7 @@ geary <- function(x, listw, n, n1, S0, zero.policy=NULL) {
 
 geary.intern <- function(x, listw, n, zero.policy=NULL, type="geary") {
         if (is.null(zero.policy))
-            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+            zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
 	cardnb <- card(listw$neighbours)
 	if (type == "geary") ft <- TRUE
@@ -34,7 +34,7 @@ geary.intern <- function(x, listw, n, zero.policy=NULL, type="geary") {
 geary.test <- function(x, listw, randomisation=TRUE, zero.policy=NULL,
     alternative="greater", spChk=NULL, adjust.n=TRUE) {
         if (is.null(zero.policy))
-            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+            zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
 	alternative <- match.arg(alternative, c("less", "greater", "two.sided"))
 	if(!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
@@ -96,7 +96,7 @@ geary.test <- function(x, listw, randomisation=TRUE, zero.policy=NULL,
 geary.mc <- function(x, listw, nsim, zero.policy=NULL,
 	alternative="greater", spChk=NULL, adjust.n=TRUE, return_boot=FALSE) {
         if (is.null(zero.policy))
-            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+            zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
         stopifnot(is.vector(x))
 	alternative <- match.arg(alternative, c("less", "greater"))
@@ -120,7 +120,7 @@ geary.mc <- function(x, listw, nsim, zero.policy=NULL,
                 var <- var[i]
                 return(geary(x=var, ...)$C)
             }
-            cl <- get("cl", env = .spdepOptions)
+            cl <- get("cl", envir = .spdepOptions)
             if (!is.null(cl) && length(cl) > 1L) {
                 nnsim <- boot_wrapper_in(cl, nsim)
                 lres <- clusterCall(cl, boot, x, statistic=geary_boot,

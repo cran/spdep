@@ -6,7 +6,7 @@ spweights.constants <- function(listw, zero.policy=NULL, adjust.n=TRUE) {
 		"is not a listw object"))
 	cards <- card(listw$neighbours)
         if (is.null(zero.policy))
-            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+            zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
 	if (!zero.policy && any(cards == 0))
 		stop("regions with no neighbours found")
@@ -54,7 +54,7 @@ Szero <- function(listw) {
 lag.listw <- function(x, var, zero.policy=NULL, NAOK=FALSE, ...) {
 	listw <- x
         if (is.null(zero.policy))
-            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+            zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
 	if (!inherits(listw, "listw")) stop(paste(deparse(substitute(x)),
 		"is not a listw object"))
@@ -149,7 +149,7 @@ listw2U <- function(listw) {
 
 listw2star <- function(listw, ireg, style, n, D, a, zero.policy=NULL) {
         if (is.null(zero.policy))
-            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+            zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
     nb <- vector(mode="list", length=n)
     class(nb) <- "nb"

@@ -76,7 +76,7 @@ print.nb <- function(x, ...) {
 summary.listw <- function(object, coords=NULL, longlat=FALSE, 
 	zero.policy=NULL, scale=1, ...) {
         if (is.null(zero.policy))
-            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+            zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
 	cat("Characteristics of weights list object:\n")
 	summary(object$neighbours, coords=coords, longlat=longlat, 
@@ -92,7 +92,7 @@ summary.listw <- function(object, coords=NULL, longlat=FALSE,
 
 print.listw <- function(x, zero.policy=NULL, ...) {
         if (is.null(zero.policy))
-            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+            zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
 	cat("Characteristics of weights list object:\n")
 	print.nb(x$neighbours, ...)

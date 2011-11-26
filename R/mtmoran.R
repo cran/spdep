@@ -11,7 +11,7 @@ lm.morantest.sad <- function (model, listw, zero.policy = NULL,
     if (!inherits(model, "lm")) 
         stop(paste(deparse(substitute(model)), "not an lm object"))
         if (is.null(zero.policy))
-            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+            zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
     N <- length(listw$neighbours)
     u <- resfun(model)

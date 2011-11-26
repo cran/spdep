@@ -14,10 +14,10 @@ spautolm <- function(formula, data = list(), listw, weights,
         warning("unknown names in control: ", paste(noNms, collapse = ", "))
     if (!inherits(listw, "listw")) 
         stop("No neighbourhood list")
-    if (is.null(verbose)) verbose <- get("verbose", env = .spdepOptions)
+    if (is.null(verbose)) verbose <- get("verbose", envir = .spdepOptions)
     stopifnot(is.logical(verbose))
         if (is.null(zero.policy))
-            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+            zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
 
     if (family == "SMA" && method != "full") stop("SMA only for full method")
