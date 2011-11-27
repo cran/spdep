@@ -5,7 +5,7 @@
 nb2mat <- function(neighbours, glist=NULL, style="W", zero.policy=NULL)
 {
         if (is.null(zero.policy))
-            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+            zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
 	if(!inherits(neighbours, "nb")) stop("Not a neighbours list")
 	listw <- nb2listw(neighbours, glist=glist, style=style,

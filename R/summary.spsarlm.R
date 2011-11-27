@@ -198,7 +198,7 @@ Hausman.test.gmsar <- function(object, ..., tol=NULL) {
     fmeth <- "(approximate)"
     s2 <- object$s2
     Vo <- s2 * object$Hcov
-    Vs <- s2 * summary.lm(object$lm.target, corr = FALSE)$cov.unscaled
+    Vs <- s2 * summary.lm(object$lm.target, correlation = FALSE)$cov.unscaled
     d <- coef(object$lm.model) - coef(object$lm.target)
     if (!is.null(tol)) VV <- try(solve((Vo - Vs), tol=tol))
     else VV <- try(solve(Vo - Vs))

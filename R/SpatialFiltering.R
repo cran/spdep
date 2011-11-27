@@ -37,10 +37,10 @@ SpatialFiltering <- function (formula, lagformula, data=list(), nb,
     
     if (missing(nb)) stop("Neighbour list argument missing")
     if (missing(formula)) stop("Formula argument missing")
-    if (is.null(verbose)) verbose <- get("verbose", env = .spdepOptions)
+    if (is.null(verbose)) verbose <- get("verbose", envir = .spdepOptions)
     stopifnot(is.logical(verbose))
         if (is.null(zero.policy))
-            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+            zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
     lw <- nb2listw(nb, glist=glist, style=style, zero.policy=zero.policy)
     if (symmetric) lw <- listw2U(lw)

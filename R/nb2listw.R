@@ -5,7 +5,7 @@ nb2listw <- function(neighbours, glist=NULL, style="W", zero.policy=NULL)
 {
 	if(!inherits(neighbours, "nb")) stop("Not a neighbours list")
         if (is.null(zero.policy))
-            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+            zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
 	if (!(style %in% c("W", "B", "C", "S", "U", "minmax")))
 		stop(paste("Style", style, "invalid"))

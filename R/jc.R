@@ -18,7 +18,7 @@ joincount.test <- function(fx, listw, zero.policy=NULL,
 	alternative="greater", #adjust.n=TRUE, 
 	spChk=NULL, adjust.n=TRUE) {
         if (is.null(zero.policy))
-            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+            zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
 	alternative <- match.arg(alternative, c("greater", "less", "two.sided"))
 	if (!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),

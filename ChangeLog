@@ -1,3 +1,36 @@
+2011-11-26 11:51  rsbivand
+
+	* ChangeLog, DESCRIPTION, R/impacts.R, man/do_ldet.Rd, man/trW.Rd:
+	  add sd to MC tr
+
+2011-11-20 17:02  rsbivand
+
+	* R/jacobian.R: returning number of corrections used in truncated
+	  moments
+
+2011-11-19 09:51  rsbivand
+
+	* DESCRIPTION, R/impacts.R, man/trW.Rd: relax symmetry assertion in
+	  moments tr
+
+2011-11-14 21:15  rsbivand
+
+	* DESCRIPTION, R/AAA.R, R/EBI.R, R/ME.R, R/SpatialFiltering.R,
+	  R/aple.mc.R, R/autocov.R, R/diffnb.R, R/eigenw.R,
+	  R/error.spsarlm.R, R/geary.R, R/globalG.R, R/impacts.R, R/jc.R,
+	  R/kpgm_new.R, R/lag.spsarlm.R, R/lm.LMtests.R, R/lm.morantest.R,
+	  R/localG.R, R/localmoran.R, R/localmoran.exact.R, R/mess.R,
+	  R/moran.R, R/moran.exact.R, R/moran.exact.alt.R, R/moran.plot.R,
+	  R/mtlocalmoran.R, R/mtmoran.R, R/nb2listw.R, R/nb2mat.R,
+	  R/poly2nb.R, R/s2sls.R, R/sacsarlm.R, R/sarlm.R,
+	  R/sp.correlogram.R, R/sp.mantel.R, R/spChkOption.R, R/spautolm.R,
+	  R/subset.nb.R, R/summary.nb.R, R/summary.spsarlm.R, R/utils.R,
+	  R/weights-utils.R: complete partial argument matches
+
+2011-11-14 10:32  rsbivand
+
+	* ChangeLog, inst/ChangeLog: tidy
+
 2011-11-10 14:45  rsbivand
 
 	* R/jacobian.R: MC adjustments

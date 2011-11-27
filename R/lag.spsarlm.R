@@ -15,7 +15,7 @@ lagsarlm <- function(formula, data = list(), listw,
         con[(namc <- names(control))] <- control
         if (length(noNms <- namc[!namc %in% nmsC])) 
             warning("unknown names in control: ", paste(noNms, collapse = ", "))
-        if (is.null(quiet)) quiet <- !get("verbose", env = .spdepOptions)
+        if (is.null(quiet)) quiet <- !get("verbose", envir = .spdepOptions)
         stopifnot(is.logical(quiet))
         if (is.null(zero.policy))
             zero.policy <- get.ZeroPolicyOption()

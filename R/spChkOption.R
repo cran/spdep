@@ -2,35 +2,35 @@
 
 set.spChkOption <- function(check) {
 	if (!is.logical(check)) stop ("logical argument required")
-	res <- get("spChkID", env = .spdepOptions)
-	assign("spChkID", check, env = .spdepOptions)
+	res <- get("spChkID", envir = .spdepOptions)
+	assign("spChkID", check, envir = .spdepOptions)
 	res
 }
 
 get.spChkOption <- function() {
-	get("spChkID", env = .spdepOptions)
+	get("spChkID", envir = .spdepOptions)
 }
 
 set.VerboseOption <- function(check) {
 	if (!is.logical(check)) stop ("logical argument required")
-	res <- get("verbose", env = .spdepOptions)
-	assign("verbose", check, env = .spdepOptions)
+	res <- get("verbose", envir = .spdepOptions)
+	assign("verbose", check, envir = .spdepOptions)
 	res
 }
 
 get.VerboseOption <- function() {
-	get("verbose", env = .spdepOptions)
+	get("verbose", envir = .spdepOptions)
 }
 
 set.ZeroPolicyOption <- function(check) {
 	if (!is.logical(check)) stop ("logical argument required")
-	res <- get("zeroPolicy", env = .spdepOptions)
-	assign("zeroPolicy", check, env = .spdepOptions)
+	res <- get("zeroPolicy", envir = .spdepOptions)
+	assign("zeroPolicy", check, envir = .spdepOptions)
 	res
 }
 
 get.ZeroPolicyOption <- function() {
-	get("zeroPolicy", env = .spdepOptions)
+	get("zeroPolicy", envir = .spdepOptions)
 }
 
 set.ClusterOption <- function(cl) {
@@ -41,22 +41,22 @@ set.ClusterOption <- function(cl) {
         }
         if (is.null(cl)) clusterEvalQ(get.ClusterOption(),
             detach(package:spdep))
-	assign("cl", cl, env = .spdepOptions)
+	assign("cl", cl, envir = .spdepOptions)
         invisible(NULL)
 }
 
 get.ClusterOption  <- function() {
-	get("cl", env = .spdepOptions)
+	get("cl", envir = .spdepOptions)
 }
 
 get.rlecuyerSeedOption  <- function() {
-	get("rlecuyerSeed", env = .spdepOptions)
+	get("rlecuyerSeed", envir = .spdepOptions)
 }
 
 set.rlecuyerSeedOption  <- function(seed) {
     if (length(seed) != 6L) stop("Six integer values required")
     if (storage.mode(seed) != "integer") seed <- as.integer(seed)
-    assign("rlecuyerSeed", seed, env = .spdepOptions)
+    assign("rlecuyerSeed", seed, envir = .spdepOptions)
     invisible(NULL)
 }
 

@@ -4,7 +4,7 @@
 eigenw <- function(listw, quiet=NULL)
 {
 	if(!inherits(listw, "listw")) stop("not a listw object")
-        if (is.null(quiet)) quiet <- !get("verbose", env = .spdepOptions)
+        if (is.null(quiet)) quiet <- !get("verbose", envir = .spdepOptions)
         stopifnot(is.logical(quiet))
 
 	w <- listw2mat(listw)

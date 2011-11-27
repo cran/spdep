@@ -7,7 +7,7 @@
 
 poly2nb <- function(pl, row.names=NULL, snap=sqrt(.Machine$double.eps),
 	queen=TRUE, useC=TRUE, foundInBox=NULL) {
-        verbose <- get("verbose", env = .spdepOptions)
+        verbose <- get("verbose", envir = .spdepOptions)
         .ptime_start <- proc.time()
 #	if (!inherits(pl, "polylist")) {
 #		if (extends(class(pl), "SpatialPolygons"))
@@ -140,13 +140,13 @@ poly2nb <- function(pl, row.names=NULL, snap=sqrt(.Machine$double.eps),
 	}
 
         if (is.null(foundInBox)) {
-          CL <- get("cl", env = .spdepOptions)
+          CL <- get("cl", envir = .spdepOptions)
           if (!is.null(CL) && length(CL) > 1L) {
             require(snow)
             idx <- clusterSplit(CL, 1:(n-1))
 #            clusterExport_l <- function(CL, list) {
 #               gets <- function(n, v) {
-#                    assign(n, v, env = .GlobalEnv)
+#                    assign(n, v, envir = .GlobalEnv)
 #                    NULL
 #                }
 #                for (name in list) {

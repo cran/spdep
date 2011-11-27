@@ -13,13 +13,13 @@ sacsarlm <- function(formula, data = list(), listw, listw2=NULL, na.action,
         con[(namc <- names(control))] <- control
         if (length(noNms <- namc[!namc %in% nmsC])) 
             warning("unknown names in control: ", paste(noNms, collapse = ", "))
-        if (is.null(quiet)) quiet <- !get("verbose", env = .spdepOptions)
+        if (is.null(quiet)) quiet <- !get("verbose", envir = .spdepOptions)
 	switch(type, sac = if (!quiet) cat("\nSpatial ARAR model\n"),
 	    sacmixed = if (!quiet) cat("\nSpatial ARAR mixed model (Manski)\n"),
 	    stop("\nUnknown model type\n"))
         stopifnot(is.logical(quiet))
         if (is.null(zero.policy))
-            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+            zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
 	mt <- terms(formula, data = data)
 	mf <- lm(formula, data, na.action=na.action, method="model.frame")

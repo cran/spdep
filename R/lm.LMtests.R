@@ -12,7 +12,7 @@ lm.LMtests <- function(model, listw, zero.policy=NULL, test="LMerr",
 	if (!inherits(listw, "listw")) stop(paste(listw_name,
 		"is not a listw object"))
         if (is.null(zero.policy))
-            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+            zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
 	if (!is.null(na.act) && naSubset) {
 	    subset <- !(1:length(listw$neighbours) %in% na.act)

@@ -3,7 +3,7 @@
 
 moran <- function(x, listw, n, S0, zero.policy=NULL, NAOK=FALSE) {
         if (is.null(zero.policy))
-            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+            zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
 	n1 <- length(listw$neighbours)
 	x <- c(x)
@@ -28,7 +28,7 @@ moran.test <- function(x, listw, randomisation=TRUE, zero.policy=NULL,
 	if (!is.numeric(x)) stop(paste(deparse(substitute(x)),
 		"is not a numeric vector"))
         if (is.null(zero.policy))
-            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+            zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
 	if (is.null(spChk)) spChk <- get.spChkOption()
 	if (spChk && !chkIDs(x, listw))
@@ -98,7 +98,7 @@ moran.mc <- function(x, listw, nsim, zero.policy=NULL,
 	if(!is.numeric(x)) stop(paste(deparse(substitute(x)),
 		"is not a numeric vector"))
         if (is.null(zero.policy))
-            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+            zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
 	if(missing(nsim)) stop("nsim must be given")
 	if (is.null(spChk)) spChk <- get.spChkOption()
@@ -130,7 +130,7 @@ moran.mc <- function(x, listw, nsim, zero.policy=NULL,
                 var <- var[i]
                 return(moran(x=var, ...)$I)
             }
-            cl <- get("cl", env = .spdepOptions)
+            cl <- get("cl", envir = .spdepOptions)
             if (!is.null(cl) && length(cl) > 1L) {
                 nnsim <- boot_wrapper_in(cl, nsim)
                 lres <- clusterCall(cl, boot, x, statistic=moran_boot,

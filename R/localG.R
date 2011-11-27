@@ -7,7 +7,7 @@ localG <- function(x, listw, zero.policy=NULL, spChk=NULL) {
 	if (!is.numeric(x))
 		stop(paste(deparse(substitute(x)), "is not a numeric vector"))
         if (is.null(zero.policy))
-            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+            zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
         stopifnot(is.vector(x))
 	if (any(is.na(x))) stop(paste("NA in ", deparse(substitute(x))))

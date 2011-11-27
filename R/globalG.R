@@ -6,7 +6,7 @@
 globalG.test <- function(x, listw, zero.policy=NULL,
 	alternative="greater", spChk=NULL, adjust.n=TRUE) {
         if (is.null(zero.policy))
-            zero.policy <- get("zeroPolicy", env = .spdepOptions)
+            zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
         stopifnot(is.vector(x))
 	alternative <- match.arg(alternative, c("greater", "less", "two.sided"))
