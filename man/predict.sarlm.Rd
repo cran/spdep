@@ -13,7 +13,8 @@ trend, signal, and noise --- see reference.
 }
 \usage{
 \method{predict}{sarlm}(object, newdata = NULL, listw = NULL,
- zero.policy = NULL, ...)
+ zero.policy = NULL, legacy=TRUE, power=NULL, order=250,
+ tol=.Machine$double.eps^(3/5), pred.se=FALSE, lagImpact=NULL, ...)
 \method{print}{sarlm.pred}(x, ...)
 }
 %- maybe also `usage' for other objects documented here.
@@ -24,9 +25,15 @@ trend, signal, and noise --- see reference.
 for the data on which the model was fitted}
   \item{listw}{a \code{listw} object created for example by \code{nb2listw}}
   \item{zero.policy}{default NULL, use global option value; if TRUE assign zero to the lagged value of zones without 
-neighbours, if FALSE (default) assign NA - causing \code{lagsarlm()} to 
+neighbours, if FALSE (default) assign NA - causing the function to 
 terminate with an error}
-  \item{x}{the object to be printed}
+  \item{legacy}{(Only applies to lag and Durbin (mixed) models) default TRUE: use ad-hoc predictor, if FALSE use DGP-based predictor}
+  \item{power}{(Only applies to lag and Durbin (mixed) models) use \code{powerWeights}, if default NULL, set FALSE if \code{object$method} is \dQuote{eigen}, otherwise TRUE}
+  \item{order}{Power series maximum limit if \code{power} is TRUE}
+   \item{tol}{Tolerance for convergence of power series if \code{power} is TRUE}
+   \item{x}{the object to be printed}
+   \item{pred.se}{logical, default FALSE, not available for error models}
+   \item{lagImpact}{object created by \code{impacts} with R sample draws from the fitted model}
   \item{...}{further arguments passed through}
 }
 \details{
@@ -50,11 +57,10 @@ and corresponds to the newdata situation described below.
 When however newdata is used for prediction, no observations of the response 
 variable being predicted are available. Consequently, while the trend
 components are the same, the signal cannot take full account of the spatial
-smooth. In the error model, the signal is set to zero, since the spatial
-smooth is expressed in terms of the error: 
+smooth. In the error model and Durbin error model, the signal is set to zero, since the spatial smooth is expressed in terms of the error: 
 \eqn{(I - \lambda W)^{-1} \varepsilon}{inv(I - lambda W) e}.
 
-In the lag model, the signal can be expressed in the following way:
+In the lag model, the signal can be expressed in the following way (for legacy=TRUE):
 
 \deqn{(I - \rho W) y = X \beta + \varepsilon}{(I - rho W) y = X beta + e},
 \deqn{y = (I - \rho W)^{-1} X \beta + (I - \rho W)^{-1} \varepsilon}{y = inv(I - rho W) X beta + inv(I - rho W) e}
@@ -62,6 +68,16 @@ In the lag model, the signal can be expressed in the following way:
 giving a feasible signal component of:
 
 \deqn{\rho W y = \rho W (I - \rho W)^{-1} X \beta}{rho W y = rho W inv(I - rho W) X beta}
+
+For legacy=FALSE, the trend is computed first as:
+
+\deqn{X \beta}{X beta}
+
+next the prediction using the DGP:
+
+\deqn{(I - \rho W)^{-1} X \beta}{inv(I - rho W) X beta}
+
+and the signal is found as the difference between prediction and trend. The numerical results for the legacy and DGP methods are identical.
 
 setting the error term to zero. This also means that predictions of the
 signal component for lag and mixed models require the inversion of an 
@@ -89,12 +105,15 @@ and environmental sciences}, Cambridge: Cambridge University Press, p. 258; Cres
 
 \examples{
 data(oldcol)
-COL.lag.eig <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD, nb2listw(COL.nb))
-COL.mix.eig <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD, nb2listw(COL.nb),
+lw <- nb2listw(COL.nb)
+COL.lag.eig <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD, lw)
+COL.mix.eig <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD, lw,
   type="mixed")
-COL.err.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD, nb2listw(COL.nb))
+COL.err.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD, lw)
+COL.SDerr.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD, lw,
+ etype="emixed")
 print(p1 <- predict(COL.mix.eig))
-print(p2 <- predict(COL.mix.eig, newdata=COL.OLD, listw=nb2listw(COL.nb)))
+print(p2 <- predict(COL.mix.eig, newdata=COL.OLD, listw=lw))
 AIC(COL.mix.eig)
 sqrt(deviance(COL.mix.eig)/length(COL.nb))
 sqrt(sum((COL.OLD$CRIME - as.vector(p1))^2)/length(COL.nb))
@@ -103,12 +122,23 @@ AIC(COL.err.eig)
 sqrt(deviance(COL.err.eig)/length(COL.nb))
 sqrt(sum((COL.OLD$CRIME - as.vector(predict(COL.err.eig)))^2)/length(COL.nb))
 sqrt(sum((COL.OLD$CRIME - as.vector(predict(COL.err.eig, newdata=COL.OLD,
-  listw=nb2listw(COL.nb))))^2)/length(COL.nb))
+  listw=lw)))^2)/length(COL.nb))
+AIC(COL.SDerr.eig)
+sqrt(deviance(COL.SDerr.eig)/length(COL.nb))
+sqrt(sum((COL.OLD$CRIME - as.vector(predict(COL.SDerr.eig)))^2)/length(COL.nb))
+sqrt(sum((COL.OLD$CRIME - as.vector(predict(COL.SDerr.eig, newdata=COL.OLD,
+  listw=lw)))^2)/length(COL.nb))
 AIC(COL.lag.eig)
 sqrt(deviance(COL.lag.eig)/length(COL.nb))
 sqrt(sum((COL.OLD$CRIME - as.vector(predict(COL.lag.eig)))^2)/length(COL.nb))
 sqrt(sum((COL.OLD$CRIME - as.vector(predict(COL.lag.eig, newdata=COL.OLD,
-  listw=nb2listw(COL.nb))))^2)/length(COL.nb))
+  listw=lw)))^2)/length(COL.nb))
+p3 <- predict(COL.mix.eig, newdata=COL.OLD, listw=lw, legacy=FALSE)
+all.equal(p2, p3)
+p4 <- predict(COL.mix.eig, newdata=COL.OLD, listw=lw, legacy=FALSE, power=TRUE)
+all.equal(p2, p4)
+p5 <- predict(COL.mix.eig, newdata=COL.OLD, listw=lw, legacy=TRUE, power=TRUE)
+all.equal(p2, p5)
 }
 
 \keyword{spatial}

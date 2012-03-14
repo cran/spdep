@@ -1,3 +1,30 @@
+2012-03-17 19:30  rsbivand
+
+	* ChangeLog, R/error.spsarlm.R, R/sarlm.R, man/predict.sarlm.Rd:
+	  add emixed to predict
+
+2012-03-16 07:08  rsbivand
+
+	* R/impacts.R, R/sarlm.R, man/predict.sarlm.Rd: return samples from
+	  impacts; use samples in predict
+
+2012-03-15 06:55  rsbivand
+
+	* DESCRIPTION, R/sarlm.R: alias fix in predict.sarlm
+
+2012-02-24 20:53  rsbivand
+
+	* DESCRIPTION, R/bptest.sarlm.R, man/bptest.sarlm.Rd: df bug in
+	  bptest
+
+2011-12-05 12:51  rsbivand
+
+	* man/impacts.sarlm.Rd: remove limitation on impacts help page
+
+2011-11-26 11:52  rsbivand
+
+	* ChangeLog, inst/ChangeLog: add sd to MC tr
+
 2011-11-26 11:51  rsbivand
 
 	* ChangeLog, DESCRIPTION, R/impacts.R, man/do_ldet.Rd, man/trW.Rd:

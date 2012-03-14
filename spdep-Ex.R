@@ -2904,12 +2904,15 @@ flush(stderr()); flush(stdout())
 ### ** Examples
 
 data(oldcol)
-COL.lag.eig <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD, nb2listw(COL.nb))
-COL.mix.eig <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD, nb2listw(COL.nb),
+lw <- nb2listw(COL.nb)
+COL.lag.eig <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD, lw)
+COL.mix.eig <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD, lw,
   type="mixed")
-COL.err.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD, nb2listw(COL.nb))
+COL.err.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD, lw)
+COL.SDerr.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD, lw,
+ etype="emixed")
 print(p1 <- predict(COL.mix.eig))
-print(p2 <- predict(COL.mix.eig, newdata=COL.OLD, listw=nb2listw(COL.nb)))
+print(p2 <- predict(COL.mix.eig, newdata=COL.OLD, listw=lw))
 AIC(COL.mix.eig)
 sqrt(deviance(COL.mix.eig)/length(COL.nb))
 sqrt(sum((COL.OLD$CRIME - as.vector(p1))^2)/length(COL.nb))
@@ -2918,12 +2921,23 @@ AIC(COL.err.eig)
 sqrt(deviance(COL.err.eig)/length(COL.nb))
 sqrt(sum((COL.OLD$CRIME - as.vector(predict(COL.err.eig)))^2)/length(COL.nb))
 sqrt(sum((COL.OLD$CRIME - as.vector(predict(COL.err.eig, newdata=COL.OLD,
-  listw=nb2listw(COL.nb))))^2)/length(COL.nb))
+  listw=lw)))^2)/length(COL.nb))
+AIC(COL.SDerr.eig)
+sqrt(deviance(COL.SDerr.eig)/length(COL.nb))
+sqrt(sum((COL.OLD$CRIME - as.vector(predict(COL.SDerr.eig)))^2)/length(COL.nb))
+sqrt(sum((COL.OLD$CRIME - as.vector(predict(COL.SDerr.eig, newdata=COL.OLD,
+  listw=lw)))^2)/length(COL.nb))
 AIC(COL.lag.eig)
 sqrt(deviance(COL.lag.eig)/length(COL.nb))
 sqrt(sum((COL.OLD$CRIME - as.vector(predict(COL.lag.eig)))^2)/length(COL.nb))
 sqrt(sum((COL.OLD$CRIME - as.vector(predict(COL.lag.eig, newdata=COL.OLD,
-  listw=nb2listw(COL.nb))))^2)/length(COL.nb))
+  listw=lw)))^2)/length(COL.nb))
+p3 <- predict(COL.mix.eig, newdata=COL.OLD, listw=lw, legacy=FALSE)
+all.equal(p2, p3)
+p4 <- predict(COL.mix.eig, newdata=COL.OLD, listw=lw, legacy=FALSE, power=TRUE)
+all.equal(p2, p4)
+p5 <- predict(COL.mix.eig, newdata=COL.OLD, listw=lw, legacy=TRUE, power=TRUE)
+all.equal(p2, p5)
 
 
 

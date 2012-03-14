@@ -7,9 +7,9 @@ bptest.sarlm <- function (object, varformula=NULL, studentize = TRUE, data=list(
 {
     if(!inherits(object, "sarlm")) stop("not sarlm object")
     Z <- object$tarX
+    if (!is.null(varformula)) Z <- model.matrix(varformula, data = data)
     k <- ncol(Z)
     n <- nrow(Z)
-    if (!is.null(varformula)) Z <- model.matrix(varformula, data = data)
     resi <- object$residuals
     if (length(resi) != nrow(Z))
         stop("number of residuals differs from varformula matrix rows")

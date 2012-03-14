@@ -1,4 +1,4 @@
-% Copyright 2004-7 by Roger S. Bivand
+% Copyright 2004-2012 by Roger S. Bivand
 \encoding{latin1}
 \name{bptest.sarlm}
 \alias{bptest.sarlm}
@@ -28,7 +28,7 @@ It is also technically possible to make heteroskedasticity corrections to standa
  A list with class \code{"htest"} containing the following components:
   \item{statistic}{the value of the test statistic.}
   \item{p.value}{the p-value of the test.}
-  \item{parameter}{degrees of freedom.}
+  \item{parameter}{degrees of freedom (wrongly reported if varformula given before 0.5-44.}
   \item{method}{a character string indicating what type of test was
     performed.}
 }
