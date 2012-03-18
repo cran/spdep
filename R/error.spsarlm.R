@@ -57,7 +57,7 @@ errorsarlm <- function(formula, data = list(), listw, na.action, etype="error",
 	m <- NCOL(x)
 	xcolnames <- colnames(x)
 	K <- ifelse(xcolnames[1] == "(Intercept)", 2, 1)
-	if (etype != "error") {
+	if (etype == "emixed") {
 		# check if there are enough regressors
 	        if (m > 1) {
 			WX <- matrix(nrow=n,ncol=(m-(K-1)))
@@ -388,7 +388,7 @@ errorsarlm <- function(formula, data = list(), listw, na.action, etype="error",
 	call <- match.call()
 	names(r) <- names(y)
 	names(fit) <- names(y)
-	ret <- structure(list(type="error", lambda=lambda,
+	ret <- structure(list(type="error", etype=etype, lambda=lambda,
 		coefficients=coef.lambda, rest.se=rest.se, 
 		LL=LL, s2=s2, SSE=SSE, parameters=(m+2), #lm.model=lm.model, 
                 logLik_lm.model=logLik_lm.model, AIC_lm.model=AIC_lm.model,

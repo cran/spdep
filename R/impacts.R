@@ -1,4 +1,4 @@
-# Copyright 2009-2011 by Roger Bivand
+# Copyright 2009-2012 by Roger Bivand
 
 trW <- function(W=NULL, m=30, p=16, type="mult", listw=NULL, momentsSymmetry=TRUE) {
 # returns traces
@@ -441,6 +441,8 @@ intImpacts <- function(rho, beta, P, n, mu, Sigma, irho, drop2beta, bnames,
         }
         attr(res, "method") <- "exact"
     }
+    if (!is.null(R)) attr(res, "samples") <- list(samples=samples, irho=irho,
+        drop2beta=drop2beta)
     attr(res, "type") <- type
     attr(res, "bnames") <- bnames
     attr(res, "haveQ") <- !is.null(Q)
