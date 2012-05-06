@@ -100,6 +100,8 @@ S3method(plot, relative)
 S3method(print, jclist)
 S3method(print, jcmulti)
 S3method(print, LMtestlist)
+S3method(summary, LMtestlist)
+S3method(print, LMtestlist.summary)
 S3method(plot, mc.sim)
 
 S3method(as.data.frame, localmoransad)
@@ -133,6 +135,7 @@ S3method(Hausman.test, sarlm)
 
 S3method(print, summary.sarlm)
 S3method(print, sarlm.pred)
+S3method(as.data.frame, sarlm.pred)
 
 S3method(residuals, spautolm)
 S3method(deviance, spautolm)

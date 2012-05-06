@@ -21,15 +21,15 @@ If zero policy is set to TRUE, weights vectors of zero length are inserted for r
 
 If the sum of the glist vector for one or more observations is zero, a warning message is issued. The consequence for later operations will be the same as if no-neighbour observations were present and the zero.policy argument set to true.
 
-The \dQuote{minmax}
+The \dQuote{minmax} style is based on Kelejian and Prucha (2010), and divides the weights by the minimum of the maximum row sums and maximum column sums of the input weights. It is similar to the C and U styles; it is also available in Stata.
 }
 \value{
 A \code{listw} object with the following members:
-  \item{style}{one of W, B, C, U, S as above}
+  \item{style}{one of W, B, C, U, S, minmax as above}
   \item{neighbours}{the input neighbours list}
   \item{weights}{the weights for the neighbours and chosen style, with attributes set to report the type of relationships (binary or general, if general the form of the glist argument), and style as above}
 }
-\references{Tiefelsdorf, M., Griffith, D. A., Boots, B. 1999 A variance-stabilizing coding scheme for spatial link matrices, Environment and Planning A, 31, pp. 165-180.}
+\references{Tiefelsdorf, M., Griffith, D. A., Boots, B. 1999 A variance-stabilizing coding scheme for spatial link matrices, Environment and Planning A, 31, pp. 165--180; Kelejian, H. H., and I. R. Prucha. 2010. Specification and estimation of spatial autoregressive models with autoregressive and heteroskedastic disturbances. Journal of Econometrics, 140: pp. 53--130.}
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 
 \seealso{\code{\link{summary.nb}}, \code{\link{read.gal}}}

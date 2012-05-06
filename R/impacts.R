@@ -80,7 +80,7 @@ mom_calc <- function(lw, m) {
      
     CL <- get.ClusterOption()
     if (!is.null(CL) && length(CL) > 1L) {
-        require(snow)
+        require(parallel)
         lis <- splitIndices(n, length(CL))
         lOmega <- clusterApply(CL, lis, spdep:::mom_calc_int2, m, nb,
            weights, Card)
@@ -291,7 +291,7 @@ intImpacts <- function(rho, beta, P, n, mu, Sigma, irho, drop2beta, bnames,
             .ptime_start <- proc.time()
             CL <- get("cl", envir = .spdepOptions)
             if (!is.null(CL) && length(CL) > 1L) {
-                require(snow)
+                require(parallel)
                 l_sp <- lapply(splitIndices(nrow(samples), length(CL)), 
 		    function(i) samples[i,])
                 clusterEvalQ(CL, library(spdep))
@@ -385,7 +385,7 @@ intImpacts <- function(rho, beta, P, n, mu, Sigma, irho, drop2beta, bnames,
 # type, iicept, icept, SW, n, listw
             CL <- get("cl", envir = .spdepOptions)
             if (!is.null(CL) && length(CL) > 1L) {
-                require(snow)
+                require(parallel)
                 l_sp <- lapply(splitIndices(nrow(samples), length(CL)), 
 		    function(i) samples[i,])
                 clusterEvalQ(CL, library(spdep))

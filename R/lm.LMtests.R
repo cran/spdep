@@ -116,6 +116,21 @@ print.LMtestlist <- function(x, ...) {
 	invisible(x)
 }
 
+summary.LMtestlist <- function(object, p.adjust.method="none", ...) {
+    res <- as.data.frame(t(sapply(object, "[", 1:3)))
+    res[,3] <- p.adjust(res[,3], method=p.adjust.method)
+    object$results <- res
+    class(object) <- "LMtestlist.summary"
+    object
+}
+
+print.LMtestlist.summary <- function(x, digits=max(3, getOption("digits") - 2), ...) {
+    cat(strwrap(x[[1]]$method, prefix = "\t"), sep = "\n")
+    cat("data: ", x[[1]]$data.name, "\n")
+    printCoefmat(x$results, has.Pvalue=TRUE, digits=digits, ...)
+    invisible(x)
+}
+
 tracew <- function (listw) {
 	dlmtr <- 0
 	n <- length(listw$neighbours)

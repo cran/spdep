@@ -78,6 +78,8 @@ summary.listw <- function(object, coords=NULL, longlat=FALSE,
         if (is.null(zero.policy))
             zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
+        if (any(card(object$neighbours) == 0) && !zero.policy)
+            stop("regions with no neighbours found, use zero.policy=TRUE")
 	cat("Characteristics of weights list object:\n")
 	summary(object$neighbours, coords=coords, longlat=longlat, 
 		scale=scale, ...)
@@ -94,6 +96,8 @@ print.listw <- function(x, zero.policy=NULL, ...) {
         if (is.null(zero.policy))
             zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
+        if (any(card(x$neighbours) == 0) && !zero.policy)
+            stop("regions with no neighbours found, use zero.policy=TRUE")
 	cat("Characteristics of weights list object:\n")
 	print.nb(x$neighbours, ...)
 	style <- x$style

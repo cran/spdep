@@ -1,4 +1,4 @@
-# Copyright 2001-8 by Roger Bivand
+# Copyright 2001-12 by Roger Bivand
 #
 
 localmoran <- function(x, listw, zero.policy=NULL, na.action=na.fail, 
@@ -21,6 +21,7 @@ localmoran <- function(x, listw, zero.policy=NULL, na.action=na.fail,
 	NAOK <- deparse(substitute(na.action)) == "na.pass"
 	x <- na.action(x)
 	na.act <- attr(x, "na.action")
+        rn <- attr(listw, "region.id")
 	if (!is.null(na.act)) {
 	    subset <- !(1:length(listw$neighbours) %in% na.act)
 	    listw <- subset(listw, subset, zero.policy=zero.policy)
@@ -61,6 +62,7 @@ localmoran <- function(x, listw, zero.policy=NULL, na.action=na.fail,
 	if (!is.null(na.act) && excl) {
 		res <- naresid(na.act, res)
 	}
+        if (!is.null(rn)) rownames(res) <- rn
 	attr(res, "call") <- match.call()
 	if (!is.null(na.act)) attr(res, "na.action") <- na.act
 	class(res) <- c("localmoran", class(res))

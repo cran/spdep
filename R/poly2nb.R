@@ -142,7 +142,7 @@ poly2nb <- function(pl, row.names=NULL, snap=sqrt(.Machine$double.eps),
         if (is.null(foundInBox)) {
           CL <- get("cl", envir = .spdepOptions)
           if (!is.null(CL) && length(CL) > 1L) {
-            require(snow)
+            require(parallel)
             idx <- clusterSplit(CL, 1:(n-1))
 #            clusterExport_l <- function(CL, list) {
 #               gets <- function(n, v) {

@@ -31,6 +31,15 @@ boot_out <- aple.mc(as.vector(scale(wheat$yield_detrend, scale=FALSE)),
  nb2listw(nbr12, style="W"), nsim=500)
 plot(boot_out)
 boot_out
+library(parallel)
+cl <- makeCluster(detectCores())
+set.ClusterOption(cl)
+set.rlecuyerSeedOption(1:6)
+boot_out <- aple.mc(as.vector(scale(wheat$yield_detrend, scale=FALSE)),
+ nb2listw(nbr12, style="W"), nsim=500)
+boot_out
+set.ClusterOption(NULL)
+stopCluster(cl)
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

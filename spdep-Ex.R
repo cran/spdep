@@ -389,6 +389,15 @@ flush(stderr()); flush(stdout())
 ##D  nb2listw(nbr12, style="W"), nsim=500)
 ##D plot(boot_out)
 ##D boot_out
+##D library(parallel)
+##D cl <- makeCluster(detectCores())
+##D set.ClusterOption(cl)
+##D set.rlecuyerSeedOption(1:6)
+##D boot_out <- aple.mc(as.vector(scale(wheat$yield_detrend, scale=FALSE)),
+##D  nb2listw(nbr12, style="W"), nsim=500)
+##D boot_out
+##D set.ClusterOption(NULL)
+##D stopCluster(cl)
 ## End(Not run)
 
 
@@ -1973,7 +1982,8 @@ flush(stderr()); flush(stdout())
 ### Name: lm.LMtests
 ### Title: Lagrange Multiplier diagnostics for spatial dependence in linear
 ###   models
-### Aliases: lm.LMtests print.LMtestlist
+### Aliases: lm.LMtests print.LMtestlist summary.LMtestlist
+###   print.LMtestlist.summary
 ### Keywords: spatial
 
 ### ** Examples
@@ -1981,8 +1991,9 @@ flush(stderr()); flush(stdout())
 data(oldcol)
 oldcrime.lm <- lm(CRIME ~ HOVAL + INC, data = COL.OLD)
 summary(oldcrime.lm)
-lm.LMtests(oldcrime.lm, nb2listw(COL.nb), test=c("LMerr", "LMlag", "RLMerr",
-  "RLMlag", "SARMA"))
+res <- lm.LMtests(oldcrime.lm, nb2listw(COL.nb), test=c("LMerr", "LMlag",
+  "RLMerr", "RLMlag", "SARMA"))
+summary(res)
 lm.LMtests(oldcrime.lm, nb2listw(COL.nb))
 lm.LMtests(residuals(oldcrime.lm), nb2listw(COL.nb))
 
@@ -2898,7 +2909,7 @@ flush(stderr()); flush(stdout())
 ### Name: predict.sarlm
 ### Title: Prediction for spatial simultaneous autoregressive linear model
 ###   objects
-### Aliases: predict.sarlm print.sarlm.pred
+### Aliases: predict.sarlm print.sarlm.pred as.data.frame.sarlm.pred
 ### Keywords: spatial
 
 ### ** Examples
