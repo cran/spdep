@@ -33,7 +33,7 @@ get.rlecuyerSeedOption()
 %- maybe also `usage' for other objects documented here.
 \arguments{
   \item{check}{a logical value, TRUE or FALSE}
-  \item{cl}{a cluster object created by \code{makeCluster} in \pkg{snow}}
+  \item{cl}{a cluster object created by \code{makeCluster} in \pkg{parallel}}
   \item{seed}{an integer vector of length 6 to seed the Lecuyer streams for cluster RNG}
   \item{x}{a vector the same length, or a two-dimensional array, or data frame with the same number of rows as the neighbours list in listw}
   \item{listw}{a \code{listw} object or \code{nb} object inheriting from "nb"}

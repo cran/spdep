@@ -2,6 +2,8 @@
 \name{lm.LMtests}
 \alias{lm.LMtests}
 \alias{print.LMtestlist}
+\alias{summary.LMtestlist}
+\alias{print.LMtestlist.summary}
 %\alias{tracew}
 \title{Lagrange Multiplier diagnostics for spatial dependence in linear models}
 \description{
@@ -17,6 +19,8 @@ dependent variable, RLMlag the other way round), and a portmanteau test
 \usage{
 lm.LMtests(model, listw, zero.policy=NULL, test="LMerr", spChk=NULL, naSubset=TRUE)
 \method{print}{LMtestlist}(x, ...)
+\method{summary}{LMtestlist}(object, p.adjust.method="none", ...)
+\method{print}{LMtestlist.summary}(x, digits=max(3, getOption("digits") - 2), ...)
 %tracew(listw)
 }
 
@@ -30,7 +34,9 @@ neighbours, if FALSE assign NA}
 RLMerr, RLMlag, SARMA; test="all" computes all the tests.}
   \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
   \item{naSubset}{default TRUE to subset listw object for omitted observations in model object (this is a change from earlier behaviour, when the \code{model$na.action} component was ignored, and the listw object had to be subsetted by hand)}
-  \item{x}{object to be printed}
+  \item{x, object}{object to be printed}
+  \item{p.adjust.method}{a character string specifying the probability value adjustment (see \code{\link{p.adjust}}) for multiple tests, default "none"}
+  \item{digits}{minimum number of significant digits to be used for most numbers}
   \item{...}{printing arguments to be passed through}
 }
 
@@ -72,8 +78,9 @@ Science and Urban Economics, 26, 77--104.}
 data(oldcol)
 oldcrime.lm <- lm(CRIME ~ HOVAL + INC, data = COL.OLD)
 summary(oldcrime.lm)
-lm.LMtests(oldcrime.lm, nb2listw(COL.nb), test=c("LMerr", "LMlag", "RLMerr",
-  "RLMlag", "SARMA"))
+res <- lm.LMtests(oldcrime.lm, nb2listw(COL.nb), test=c("LMerr", "LMlag",
+  "RLMerr", "RLMlag", "SARMA"))
+summary(res)
 lm.LMtests(oldcrime.lm, nb2listw(COL.nb))
 lm.LMtests(residuals(oldcrime.lm), nb2listw(COL.nb))
 }

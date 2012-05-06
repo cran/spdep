@@ -58,11 +58,16 @@ moran.test <- function(x, listw, randomisation=TRUE, zero.policy=NULL,
 	if(randomisation) {
 		VI <- wc$n*(wc$S1*(wc$nn - 3*wc$n + 3) - wc$n*wc$S2 + 3*S02)
 		tmp <- K*(wc$S1*(wc$nn - wc$n) - 2*wc$n*wc$S2 + 6*S02)
+                if (tmp > VI) warning("Kurtosis overflow,\ndistribution of variable does not meet test assumptions")
 		VI <- (VI - tmp) / (wc$n1*wc$n2*wc$n3*S02)
-		VI <- VI - EI^2
+                tmp <- (VI - EI^2)
+                if (tmp < 0) warning("Negative variance,\ndistribution of variable does not meet test assumptions")
+		VI <- tmp
 	} else {
 		VI <- (wc$nn*wc$S1 - wc$n*wc$S2 + 3*S02) / (S02*(wc$nn - 1))
-		VI <- VI - EI^2
+                tmp <- (VI - EI^2)
+                if (tmp < 0) warning("Negative variance,\ndistribution of variable does not meet test assumptions")
+		VI <- tmp
 	}
 	ZI <- (I - EI) / sqrt(VI)
 	statistic <- ZI

@@ -1,3 +1,39 @@
+2012-05-06 15:04  rsbivand
+
+	* DESCRIPTION, R/aple.mc.R, R/impacts.R, R/poly2nb.R,
+	  man/aple.mc.Rd, man/set.spChkOption.Rd: shift to parallel
+
+2012-05-02 11:23  rsbivand
+
+	* man/nb2lines.Rd, man/nb2listw.Rd: minmax in nb2listw help page
+
+2012-04-09 15:13  rsbivand
+
+	* R/summary.nb.R: clearer messages in listw summary
+
+2012-04-07 13:20  rsbivand
+
+	* R/localmoran.R: add rownames to localmoran
+
+2012-04-05 10:59  rsbivand
+
+	* R/moran.R: warnings in moran.test
+
+2012-03-31 08:34  rsbivand
+
+	* NAMESPACE, R/lm.LMtests.R, R/sarlm.R, man/lm.LMtests.Rd,
+	  man/predict.sarlm.Rd: summary for LM tests, as.data.frame for
+	  sarlm predictions
+
+2012-03-21 19:23  rsbivand
+
+	* DESCRIPTION, R/sarlm.R: added non-W intercept handling to
+	  predict.sarlm
+
+2012-03-17 19:34  rsbivand
+
+	* ChangeLog, inst/ChangeLog: tidy
+
 2012-03-17 19:30  rsbivand
 
 	* ChangeLog, R/error.spsarlm.R, R/sarlm.R, man/predict.sarlm.Rd:

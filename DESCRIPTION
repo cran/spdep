@@ -1,6 +1,6 @@
 Package: spdep
-Version: 0.5-45
-Date: 2012-03-14
+Version: 0.5-46
+Date: 2012-05-06
 Title: Spatial dependence: weighting schemes, statistics and models
 Encoding: latin1
 Author: Roger Bivand <Roger.Bivand@nhh.no>, with contributions by Micah
@@ -12,9 +12,9 @@ Author: Roger Bivand <Roger.Bivand@nhh.no>, with contributions by Micah
         Mueller, Hisaji Ono, Pedro Peres-Neto, Gianfranco Piras, Markus
         Reder, Michael Tiefelsdorf, and Danlin Yu.
 Maintainer: Roger Bivand <Roger.Bivand@nhh.no>
-Depends: R (>= 2.10.0), methods, sp (>= 0.9), boot, Matrix (>=
+Depends: R (>= 2.14.0), methods, sp (>= 0.9), boot, Matrix (>=
         0.999375-9), MASS, nlme, maptools (>= 0.5-4), deldir, coda
-Suggests: snow, rlecuyer, spam(>= 0.13-1), RANN, RColorBrewer, lattice
+Suggests: parallel, spam(>= 0.13-1), RANN, RColorBrewer, lattice
 Description: A collection of functions to create spatial weights matrix
         objects from polygon contiguities, from point patterns by
         distance and tesselations, for summarising these objects, and
@@ -32,6 +32,6 @@ Description: A collection of functions to create spatial weights matrix
         eigenvector spatial filtering, GM SAR error models, and
         generalized spatial two stage least squares models.
 License: GPL (>= 2)
-Packaged: 2012-03-18 19:07:08 UTC; rsb
+Packaged: 2012-05-06 15:10:44 UTC; rsb
 Repository: CRAN
-Date/Publication: 2012-03-18 20:55:12
+Date/Publication: 2012-05-06 16:15:28

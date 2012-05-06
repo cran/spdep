@@ -1,7 +1,7 @@
-d36609536070d59b447214bf1a4f1eab *ChangeLog
-0006fd937865ee3c441d1d41d664406c *DESCRIPTION
+942dfbe31ad62bbd26df1137cacedf10 *ChangeLog
+9dd8e512314057d1384f87690caa6643 *DESCRIPTION
 7d2db75aac230ee3226f6fab96523d84 *LICENCE
-a450782ce3d7c97096d73234d9b62fc1 *NAMESPACE
+004ea6c1aa84da6c66de266218696f9e *NAMESPACE
 908bbadc06b1aedb8ad79c16793d397a *R/AAA.R
 36554d9a3b705852495a7bf434518295 *R/EBI.R
 0fbd6d0a73bd6f6b204b4a5fadc045c9 *R/LR.spsarlm.R
@@ -10,7 +10,7 @@ a450782ce3d7c97096d73234d9b62fc1 *NAMESPACE
 e43b96beddbde591c5bf7d18545f0839 *R/airdist.R
 061d38b93c9b6f60e07412177cb9b3e4 *R/anova.sarlm.R
 0776c1cbfeaf99bb6a0ae304ba28798d *R/aple.R
-59fd50797c21c598cdb0dab7ba29a1cf *R/aple.mc.R
+18144ff71920c1e64effbbfdf9a3e7c3 *R/aple.mc.R
 f65d5c34f6d67953a890e6354a4614bb *R/apleplot.R
 4823e375daacd742ce65a58c3c93e962 *R/autocov.R
 d84e14dbceed71fdd09f81b5c403edda *R/bptest.sarlm.R
@@ -29,7 +29,7 @@ cbe45866b710921490b6eea92e0fa7a2 *R/gabrielneigh.R
 8c8fc0977130eee622416ac985cc3cfc *R/geary.R
 80ff9e62ccf73ef7110125fcd773dc54 *R/globalG.R
 d6320c56e705e0f9e81e46a851a74fa0 *R/graph2nb.R
-5b711881a36b27555de3c70403c3de0a *R/impacts.R
+e9c0b704096ea6998143beceb1495416 *R/impacts.R
 3ad7ce8483142a5f88f45a52c9a0aa76 *R/jacobian.R
 4eac610dd1a2b7e624f3cc47696e1d91 *R/jc.R
 16f3e0c948747b251c91947903dee850 *R/knearneigh.R
@@ -39,13 +39,13 @@ e103f5430211bfb6c2788c77253f516e *R/lag.hessian.R
 348f9b7efbac3bfa9ff0901c74f16051 *R/lag.spsarlm.R
 91a7b7b42d9b2da9bf3a53e177ef1174 *R/listw2Matrix.R
 502d066d145c609ecb4749ed8510167b *R/listw2sn.R
-40b5f7ecab3c42439314b2b64755ce91 *R/lm.LMtests.R
+c78a653a412d31b047f200eeef1aed7b *R/lm.LMtests.R
 415bdaea6d65bf4056ccf37633ceb18c *R/lm.morantest.R
 dbdbb1050fe2a95bfb0e7a7d63ea08b1 *R/localG.R
-a9374c108bb00233f47a274029ee6e15 *R/localmoran.R
+dd88e2bc487f73558a8b0a1b921429d8 *R/localmoran.R
 280167069a8beec3b01970367866c5f3 *R/localmoran.exact.R
 748223b3184938865be04e66fa1459fa *R/mess.R
-ad7b064189bf95d74ad051976e0236c8 *R/moran.R
+a3b7313644559137fa5df88fe58f02fd *R/moran.R
 90648ccc56051f60910797a3da5ddc68 *R/moran.exact.R
 acc3f60a11d6251a64157e3b4802b3f6 *R/moran.exact.alt.R
 13c1ddfb0473badd8c20d92c7c5aa3e0 *R/moran.plot.R
@@ -64,7 +64,7 @@ a63a07dadf5f8fa200f7e3c71747a403 *R/nblag.R
 a73ab332d82c29834dce2b5b650822b1 *R/plot.mst.R
 d9db297971dee1c0b5ab282d32fb6cd2 *R/plot.nb.R
 1062440bac3bb1409c7716a8af176a79 *R/plot.skater.R
-ec70d0224f21f86a9c5d3628f87ff205 *R/poly2nb.R
+2e7d6c8bd0f252d23976f435f0b86ebd *R/poly2nb.R
 df688833035725c5cbf0fdc4ad8c1e09 *R/prunecost.R
 58fc4f67d40bb82e24a32af9ee5ee0c2 *R/prunemst.R
 7c91cef75e1de2fe04dbd738d60985ef *R/read.gal.R
@@ -73,7 +73,7 @@ df688833035725c5cbf0fdc4ad8c1e09 *R/prunecost.R
 40534663fb14a40fc659768038487304 *R/rotation.R
 75d174361dcdb3c5ced7510fe4913d02 *R/s2sls.R
 27499932831a66113709d5d91b9cd221 *R/sacsarlm.R
-96e08f270e30a72fd4e67180c49cbc76 *R/sarlm.R
+487237f0bb62dcf550c9559de8d93703 *R/sarlm.R
 db84833d3bc0c4ae3944f0f348c713d3 *R/skater.R
 f84b06820c0c710c8891403573bc2024 *R/soi.R
 6285e9cb6fd7643f215f135de87f90d9 *R/sp.correlogram.R
@@ -81,7 +81,7 @@ b455ad20dcac85dce05ecee6fe23eadf *R/sp.mantel.R
 711e83bf665f79dbc9dc56b9f1520f88 *R/spChkOption.R
 30ee5fe72d83513c0d6a10987d3f3f26 *R/spautolm.R
 0ef5c83109fe952f3358bfd8dacc3c8d *R/subset.nb.R
-48464924c1564ee3297c2f279662cd0d *R/summary.nb.R
+5c1ff7bbb2ee157e94a5484612065efa *R/summary.nb.R
 5498a733622bf7aac6e4c5b237e68d5e *R/summary.spsarlm.R
 700f61092fae8a0b1fce15adf29df47a *R/tolerance.nb.R
 96615dd852fd66e78f50874810e10184 *R/tri2nb.R
@@ -105,13 +105,13 @@ c3befc2b93128839af7f5afc2f4f4692 *data/oldcol.rda
 9f4230eb9cbbf1d870a031a56c55e81f *data/used.cars.rda
 5d3af103bdc5e4214234b429d56bc0bd *data/wheat.txt.gz
 671a11d7ac128f13b3e6bbc8ee0047b9 *inst/CHANGES
-d36609536070d59b447214bf1a4f1eab *inst/ChangeLog
+942dfbe31ad62bbd26df1137cacedf10 *inst/ChangeLog
 7d2db75aac230ee3226f6fab96523d84 *inst/LICENCE
 1b2bceb96253ffe85eec9502adc1986f *inst/doc/CO69.Rnw
-d3b5e94902c988fc7feb02f5fd837f0d *inst/doc/CO69.pdf
+0e276da642e22a4f339929e574865583 *inst/doc/CO69.pdf
 68a52b4a10480b4a2adedb18494c7deb *inst/doc/backstore/boot_res.RData
 b7e20e6bcab41e6df17154e5aa79f7d8 *inst/doc/sids.Rnw
-b10153a08d4d86e1fc24d2aa09382c25 *inst/doc/sids.pdf
+076c341ae1b5b3a0069c99b612142e80 *inst/doc/sids.pdf
 53178ac43dd150bbb835b63e018f0cd4 *inst/etc/misc/geary_eire.txt
 e3fb11232e6cb27770d15aaf4f632aa4 *inst/etc/misc/nc_xtra.dbf
 2591ac95bd9191d0aee07450f7caf9bb *inst/etc/misc/nyadjwts.dbf
@@ -160,7 +160,7 @@ ad01e6e4f4d029f86bd241ec137f799d *man/aggregate.nb.Rd
 eb2ffb68fc6f66ccc67367423e7bcca4 *man/airdist.Rd
 463d0068a3cbe376a70a7064cfd78319 *man/anova.sarlm.Rd
 69be5fe82392f4fbb415b2445e781f26 *man/aple.Rd
-b030836e970ebc2d908020f2f2f29554 *man/aple.mc.Rd
+d3fdee7f247a0f93c89d22a3d74cf5ba *man/aple.mc.Rd
 be4e62a10e43a80d6483956c3540678b *man/aple.plot.Rd
 0b33986ce447a6a12262eed132896e34 *man/as_dgRMatrix_listw.Rd
 db17fe0811c2189a5b1a07fff3c26505 *man/auckland.Rd
@@ -205,7 +205,7 @@ d255c690296c8ed9bf66fd7045499ba2 *man/knearneigh.Rd
 c7db419f89713d0df3e32a817cfc6820 *man/lagmess.Rd
 addfa7cd85e5bec5159ad736195f6c72 *man/lagsarlm.Rd
 81113749a325316d4872497a30e613ca *man/listw2sn.Rd
-69c66a79738cd16734807069f37a3ec4 *man/lm.LMtests.Rd
+ab1776c96e814381f2428a84cb19bec1 *man/lm.LMtests.Rd
 1bd3eda5ab5ae980885976822f3013f2 *man/lm.morantest.Rd
 6aa4913672fcb40d7792de75501dc3c4 *man/lm.morantest.exact.Rd
 d210e05f699fd5a25d5933999aaa7caa *man/lm.morantest.sad.Rd
@@ -222,8 +222,8 @@ e942a6e8f14e00ac2fb2d696e3d42cc1 *man/mstree.Rd
 7dcb9a349fad670da5c2a532ad73a725 *man/nb2INLA.Rd
 97cbab2eab05a0e0a650437b9701af81 *man/nb2WB.Rd
 e7021e97d284066516df24d629405118 *man/nb2blocknb.Rd
-b8aacd82399c1c430eab7024993b78bb *man/nb2lines.Rd
-daad76ff230e52ff46f0ad7898ee2661 *man/nb2listw.Rd
+f1b47779738f5cca1c96f6429dcd82d1 *man/nb2lines.Rd
+da6d42fed3d48faadc80deab9326b254 *man/nb2listw.Rd
 26e7d67e418f5d311f21ca871000a33b *man/nb2mat.Rd
 c250160598bfbb778adb611718126b5c *man/nbcosts.Rd
 b599c90934ea15dfeb97d44da5142943 *man/nbdists.Rd
@@ -235,7 +235,7 @@ be32e0a70eccc214e95b19c0aa1de9db *man/plot.mst.Rd
 bebff8a87402092bd74cf4e0a44b1ba7 *man/plot.nb.Rd
 c4be5e2e8828f7d6e041e5ae093a0c2c *man/plot.skater.Rd
 798558d3bd29823387d501c6832190e9 *man/poly2nb.Rd
-52214bd585d2a20b86fca80d7d28c780 *man/predict.sarlm.Rd
+53e30b6edb5714a907fa211d8f6a5361 *man/predict.sarlm.Rd
 791d6a317bd5d0dd23d8b85a24b42259 *man/probmap.Rd
 09b2776bb47f80cdbe5562d88b36ef18 *man/prunecost.Rd
 f592261ce51e820587da92afaa7cd853 *man/prunemst.Rd
@@ -244,7 +244,7 @@ f592261ce51e820587da92afaa7cd853 *man/prunemst.Rd
 22587da32f258cb04ac771791ff2a5f4 *man/residuals.sarlm.Rd
 e3f28cd38c69d847efdf6143af31637d *man/rotation.Rd
 c345b9154639f6ef9d61a7f37d78a02a *man/sacsarlm.Rd
-5d0b8ed7d1cd65f714fbd6e1e040a9e1 *man/set.spChkOption.Rd
+0ff793caa014b916425640063aac8e68 *man/set.spChkOption.Rd
 923c93d9b47db0ba93a8d3156e3fcff0 *man/similar.listw.Rd
 d195fb3679d4c2e9538eae87efecc4b9 *man/skater.Rd
 327249d867a1229119f803acd3a12cc3 *man/sp.correlogram.Rd
@@ -265,7 +265,7 @@ c2c798fb9bf18bfe444741351c9ed399 *man/tri2nb.Rd
 d0c7a38e62fecf38b067ce57997da11e *man/used.cars.Rd
 95df2d0db2a4dbcaa5dfc2f079a11138 *man/wheat.Rd
 3c5d1eac9e2b3a9837e61c3e3596b977 *man/write.nb.gal.Rd
-c64126103adb361f4ff9597a591152a6 *spdep-Ex.R
+5dc29a50342f127c170695af7247585b *spdep-Ex.R
 3996e7c16bfb96fad295ee425815cb4d *src/Makevars
 c1ee13c76e88db49ebd177ad92c9773b *src/card.c
 d1f648c115dd2ee07e125cb267e7ca9a *src/dfs_ncomp.c

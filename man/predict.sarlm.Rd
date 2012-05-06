@@ -2,6 +2,7 @@
 \name{predict.sarlm}
 \alias{predict.sarlm}
 \alias{print.sarlm.pred}
+\alias{as.data.frame.sarlm.pred}
 
 \title{Prediction for spatial simultaneous autoregressive linear
 model objects}
@@ -14,8 +15,10 @@ trend, signal, and noise --- see reference.
 \usage{
 \method{predict}{sarlm}(object, newdata = NULL, listw = NULL,
  zero.policy = NULL, legacy=TRUE, power=NULL, order=250,
- tol=.Machine$double.eps^(3/5), pred.se=FALSE, lagImpact=NULL, ...)
+ tol=.Machine$double.eps^(3/5), #pred.se=FALSE, lagImpact=NULL, 
+ ...)
 \method{print}{sarlm.pred}(x, ...)
+\method{as.data.frame}{sarlm.pred}(x, ...)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
@@ -32,8 +35,8 @@ terminate with an error}
   \item{order}{Power series maximum limit if \code{power} is TRUE}
    \item{tol}{Tolerance for convergence of power series if \code{power} is TRUE}
    \item{x}{the object to be printed}
-   \item{pred.se}{logical, default FALSE, not available for error models}
-   \item{lagImpact}{object created by \code{impacts} with R sample draws from the fitted model}
+%   \item{pred.se}{logical, default FALSE, not available for error models}
+%   \item{lagImpact}{object created by \code{impacts} with R sample draws from the fitted model}
   \item{...}{further arguments passed through}
 }
 \details{
