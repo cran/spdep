@@ -117,6 +117,10 @@ read.dat2listw <- function(file) {
 	wmat <- read.table(file)
         stopifnot(ncol(wmat) == 3)
         stopifnot(is.numeric(wmat[,3]))
+        if (storage.mode(wmat[,1]) != "integer")
+            storage.mode(wmat[,1])<- "integer"
+        if (storage.mode(wmat[,2]) != "integer")
+            storage.mode(wmat[,2]) <- "integer"
 	sn <- wmat[order(wmat[,1]),]
 	IDS <- unique(sn[,1])
 	class(sn) <- c("spatial.neighbour", "data.frame")

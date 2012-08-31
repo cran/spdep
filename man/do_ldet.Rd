@@ -9,6 +9,9 @@
 \alias{Matrix_J_setup}
 \alias{LU_setup}
 \alias{moments_setup}
+\alias{SE_classic_setup}
+\alias{SE_whichMin_setup}
+\alias{SE_interp_setup}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Spatial regression model Jacobian computations}
 
@@ -25,6 +28,12 @@ Matrix_setup(env, Imult, super=as.logical(NA), which=1)
 Matrix_J_setup(env, super=FALSE, which=1)
 LU_setup(env, which=1)
 moments_setup(env, trs=NULL, m, p, type="MC", correct=TRUE, trunc=TRUE, which=1)
+SE_classic_setup(env, SE_method="LU", p=16, m=30, nrho=200, interpn=2000,
+ interval=c(-1,0.999), SElndet=NULL, which=1)
+SE_whichMin_setup(env, SE_method="LU", p=16, m=30, nrho=200, interpn=2000,
+ interval=c(-1,0.999), SElndet=NULL, which=1)
+SE_interp_setup(env, SE_method="LU", p=16, m=30, nrho=200,
+ interval=c(-1,0.999), which=1)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -42,6 +51,11 @@ moments_setup(env, trs=NULL, m, p, type="MC", correct=TRUE, trunc=TRUE, which=1)
   \item{type}{moments trace type, see \code{\link{trW}}}
   \item{correct}{default TRUE: use Smirnov correction term, see \code{\link{trW}}}
   \item{trunc}{default TRUE: truncate Smirnov correction term, see \code{\link{trW}}}
+  \item{SE_method}{default \dQuote{LU}, alternatively \dQuote{MC}; underlying lndet method to use for generating SE toolbox emulation grid}
+  \item{nrho}{default 200, number of lndet values in first stage SE toolbox emulation grid}
+  \item{interval}{default c(-1,0.999) if interval argument NULL, bounds for SE toolbox emulation grid}
+  \item{interpn}{default 2000, number of lndet values to interpolate in second stage SE toolbox emulation grid}
+  \item{SElndet}{default NULL, used to pass a pre-computed two-column matrix of coefficient values and corresponding interpolated lndet values}
 }
 
 \details{Since environments are containers in the R workspace passed by reference rather than by value, they are useful for passing objects to functions called in numerical optimisation, here for the maximum likelihood estimation of spatial regression models. This technique can save a little time on each function call, balanced against the need to access the objects in the environment inside the function. The environment should contain a \code{family} string object either \dQuote{SAR}, \dQuote{CAR} or \dQuote{SMA} (used in \code{do_ldet} to choose spatial moving average in \code{spautolm}, and these specific objects before calling the set-up functions:
@@ -154,9 +168,45 @@ moments_setup(env, trs=NULL, m, p, type="MC", correct=TRUE, trunc=TRUE, which=1)
     \item{method}{string: \dQuote{moments}}
   }
 }
+  \item{SE_classic}{:
+  \describe{
+    \item{listw}{A listw spatial weights object}
+    \item{n}{number of spatial objects}
+  } and assigns to the environment:
+  \describe{
+    \item{detval}{two column matrix of lndet grid values}
+    \item{method}{string: \dQuote{SE_classic}}
+    \item{SE_method}{string: \dQuote{LU} or \dQuote{MC}}
+  }
+}
+  \item{SE_whichMin}{:
+  \describe{
+    \item{listw}{A listw spatial weights object}
+    \item{n}{number of spatial objects}
+  } and assigns to the environment:
+  \describe{
+    \item{detval}{two column matrix of lndet grid values}
+    \item{method}{string: \dQuote{SE_whichMin}}
+    \item{SE_method}{string: \dQuote{LU} or \dQuote{MC}}
+  }
+}
+  \item{SE_interp}{:
+  \describe{
+    \item{listw}{A listw spatial weights object}
+    \item{n}{number of spatial objects}
+  } and assigns to the environment:
+  \describe{
+    \item{fit}{fitted spline object from which to predict lndet values}
+    \item{method}{string: \dQuote{SE_interp}}
+    \item{SE_method}{string: \dQuote{LU} or \dQuote{MC}}
+  }
+}
 }
 
 Some set-up functions may also assign \code{similar} to the environment if the weights were made symmetric by similarity.
+
+Three set-up functions emulate the behaviour of the Spatial Econometrics toolbox (March 2010) maximum likelihood lndet grid performance. The toolbox lndet functions compute a smaller number of lndet values for a grid of coefficient values (spacing 0.01), and then interpolate to a finer grid of values (spacing 0.001). \dQuote{SE_classic}, which is an implementation of the SE toolbox code, for example in f_sar.m, appears to have selected a row in the grid matrix one below the correct row when the candidate coefficient value was between 0.005 and 0.01-fuzz, always rounding the row index down. A possible alternative is to choose the index that is closest to the candidate coefficient value (\dQuote{SE_whichMin}). Another alternative is to fit a spline model to the first stage coarser grid, and pass this fitted model to the log likelihood function to make a point prediction using the candidate coefficient value, rather than finding the grid index (\dQuote{SE_interp}).
+
 }
 
 \value{\code{do_ldet} returns the value of the Jacobian for the calculation method recorded in the environment argument, and for the Monte Carlo approximation, returns a measure of the spread of the approximation as an \dQuote{sd} attribute; the remaining functions modify the environment in place as a side effect and return nothing.}

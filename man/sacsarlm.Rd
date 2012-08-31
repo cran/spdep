@@ -40,8 +40,7 @@ neighbours, if FALSE (default) assign NA - causing \code{sacsarlm()} to terminat
 
 \section{Control arguments}{
 \describe{
-  \item{fdHess:}{default NULL, then set to (method != "eigen") internally; use \code{fdHess} to compute an approximate Hessian using finite differences when using sparse matrix methods; used to make a coefficient covariance matrix when the number of observations is large; may be turned off to save resources if need be}
-  \item{optimHess:}{default FALSE, use \code{fdHess} from \pkg{nlme}, if TRUE, use \code{optim} to calculate Hessian at optimum}
+  \item{fdHess:}{default NULL, then set to (method != "eigen") internally; use \code{fdHess} to compute an approximate Hessian using finite differences when using sparse matrix methods with \code{fdHess} from \pkg{nlme}; used to make a coefficient covariance matrix when the number of observations is large; may be turned off to save resources if need be}
   \item{LAPACK:}{default FALSE; logical value passed to \code{qr} in the SSE log likelihood function}
   \item{Imult:}{default 2; used for preparing the Cholesky decompositions for updating in the Jacobian function}
   \item{super:}{default FALSE using a simplicial decomposition for the sparse Cholesky decomposition, if TRUE, use a supernodal decomposition}
@@ -92,9 +91,9 @@ neighbours, if FALSE (default) assign NA - causing \code{sacsarlm()} to terminat
   \item{zero.policy}{zero.policy for this model}
   \item{aliased}{the aliased explanatory variables (if any)}
   \item{LLNullLlm}{Log-likelihood of the null linear model}
-  \item{fdHess}{the numerical Hessian-based coefficient covariance matrix for (rho, B) if computed}
-  \item{resvar}{}
-  \item{optimHess}{if TRUE and fdHess returned, \code{optim} used to calculate Hessian at optimum}
+  \item{fdHess}{the numerical Hessian-based coefficient covariance matrix for (rho, lambda, B) if computed}
+  \item{resvar}{asymptotic coefficient covariance matrix}
+  \item{optimHess}{FALSE}
   \item{timings}{processing timings}
   \item{na.action}{(possibly) named vector of excluded or omitted observations if non-default na.action argument used}
 }

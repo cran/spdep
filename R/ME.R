@@ -75,9 +75,13 @@ ME <- function(formula, data, family = gaussian, weights, offset, listw,
 	tres <- c(NA, mRES$statistic, pIZ)
 	if (pIZ > alpha) stop("base correlation larger than alpha")
 
-	Cent <- diag(n) - (matrix(1, n, n)/n)
-	eV <- eigen(Cent %*% Wmat %*% Cent, EISPACK=TRUE)$vectors
+	Cent <- diag(n) - (matrix(1/n, n, n))
+        CWC <- Cent %*% Wmat %*% Cent
 	rm(Cent, Wmat)
+        CWC2 <- 0.5*(CWC+t(CWC))
+        rm(CWC)
+	eV <- eigen(CWC2)$vectors
+        rm(CWC2)
 	iZ <- numeric(n)
 	for (i in 1:n) {
 		iX <- cbind(X, eV[,i])

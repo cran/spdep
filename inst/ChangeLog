@@ -1,3 +1,75 @@
+2012-08-31 12:13  rsbivand
+
+	* DESCRIPTION, R/ME.R, man/ME.Rd: remove EISPACK, enforce symmetry
+	  in ME
+
+2012-08-27 19:11  rsbivand
+
+	* man/errorsarlm.Rd, man/lagsarlm.Rd: further SE classic additions,
+	  error model
+
+2012-08-27 18:54  rsbivand
+
+	* R/error.spsarlm.R: further SE classic additions, error model
+
+2012-08-27 18:52  rsbivand
+
+	* R/error.hessian.R, R/error.spsarlm.R, R/lag.hessian.R,
+	  R/lag.spsarlm.R: further SE classic additions, error model
+
+2012-08-27 14:58  rsbivand
+
+	* R/jacobian.R, R/lag.spsarlm.R, man/do_ldet.Rd: further SE classic
+	  additions
+
+2012-08-27 07:24  rsbivand
+
+	* DESCRIPTION, NAMESPACE, R/jacobian.R, R/lag.spsarlm.R,
+	  man/do_ldet.Rd, man/lagsarlm.Rd: SE_* do_ldet methods to emulate
+	  SE toolbox
+
+2012-08-15 09:00  rsbivand
+
+	* R/spautolm.R, R/subset.nb.R: NROW bug in spautolm
+
+2012-07-11 14:58  rsbivand
+
+	* DESCRIPTION, R/s2sls.R, R/spautolm.R: correct White HC in stsls
+
+2012-05-23 20:11  rsbivand
+
+	* man/impacts.sarlm.Rd: revised impacts help page
+
+2012-05-21 10:46  rsbivand
+
+	* R/read.gwt2nb.R: integer in read.dat2listw
+
+2012-05-18 11:59  rsbivand
+
+	* DESCRIPTION, R/sacsarlm.R, man/sacsarlm.Rd: limit sacsar fdHess
+	  to nlme
+
+2012-05-17 07:46  rsbivand
+
+	* R/skater.R, man/skater.Rd: skater updated
+
+2012-05-11 17:59  rsbivand
+
+	* R/summary.spsarlm.R: adding adj.se to summary.sarlm
+
+2012-05-11 17:52  rsbivand
+
+	* R/summary.spsarlm.R: adding adj.se to summary.sarlm
+
+2012-05-11 17:40  rsbivand
+
+	* DESCRIPTION, R/summary.spsarlm.R, man/summary.sarlm.Rd: adding
+	  adj.se to summary.sarlm
+
+2012-05-06 15:06  rsbivand
+
+	* ChangeLog, inst/ChangeLog: tidy
+
 2012-05-06 15:04  rsbivand
 
 	* DESCRIPTION, R/aple.mc.R, R/impacts.R, R/poly2nb.R,

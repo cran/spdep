@@ -21,29 +21,43 @@ print.sarlm <- function(x, ...)
 }
 
 summary.sarlm <- function(object, correlation = FALSE, Nagelkerke=FALSE,
- Hausman=FALSE, ...)
+ Hausman=FALSE, adj.se=FALSE, ...)
 {
+	adj <- NULL
 	if (object$type == "error" || ((object$type == "lag" || 
 		object$type == "mixed" || object$type == "sac" || 
                 object$type == "sacmixed") && object$ase)) {
 		object$coeftitle <- "(asymptotic standard errors)"
-		object$Coef <- cbind(object$coefficients, object$rest.se, 
-			object$coefficients/object$rest.se,
-			2*(1-pnorm(abs(object$coefficients/object$rest.se))))
+                SE <- object$rest.se
+                if (adj.se) {
+                    N <- length(residuals(object))
+                    adj <- N/(N-(length(object$coefficients)))
+                    SE <- sqrt((SE^2) * adj)
+                }
+		object$Coef <- cbind(object$coefficients, SE, 
+			object$coefficients/SE,
+			2*(1-pnorm(abs(object$coefficients/SE))))
 		colnames(object$Coef) <- c("Estimate", "Std. Error", 
-			"z value", "Pr(>|z|)")
+			ifelse(adj.se, "t value", "z value"), "Pr(>|z|)")
 	} else {
 	    # intercept-only bug fix Larry Layne 20060404
             if (!is.null(object$rest.se)) {
 		object$coeftitle <- "(numerical Hessian approximate standard errors)"
-		object$Coef <- cbind(object$coefficients, object$rest.se, 
-			object$coefficients/object$rest.se,
-			2*(1-pnorm(abs(object$coefficients/object$rest.se))))
+                SE <- object$rest.se
+                if (adj.se) {
+                    N <- length(residuals(object))
+                    adj <- N/(N-(length(object$coefficients)))
+                    SE <- sqrt((SE^2) * adj)
+                }
+		object$Coef <- cbind(object$coefficients, SE, 
+			object$coefficients/SE,
+			2*(1-pnorm(abs(object$coefficients/SE))))
 		colnames(object$Coef) <- c("Estimate", "Std. Error", 
-			"z value", "Pr(>|z|)")
+			ifelse(adj.se, "t value", "z value"), "Pr(>|z|)")
 	        rownames(object$Coef) <- names(object$coefficients)
               }
 	}
+        object$adj.se <- adj
 
         if (Nagelkerke) {
             nk <- NK.sarlm(object)
@@ -270,9 +284,13 @@ print.summary.sarlm <- function(x, digits = max(5, .Options$digits - 3),
                         digits)), ", p-value: ", format.pval(res$p.value,
                         digits), "\n", sep="")
 		if (!is.null(x$lambda.se)) {
+                    if (!is.null(x$adj.se)) {
+                        x$lambda.se <- sqrt((x$lambda.se^2)*x$adj.se)   
+                    }
 		    cat(pref, " standard error: ", 
 		        format(signif(x$lambda.se, digits)),
-			"\n    z-value: ",format(signif((x$lambda/
+			ifelse(is.null(x$adj.se), "\n    z-value: ",
+                               "\n    t-value: "), format(signif((x$lambda/
 				x$lambda.se), digits)),
 			", p-value: ", format.pval(2*(1-pnorm(abs(x$lambda/
 				x$lambda.se))), digits), "\n", sep="")
@@ -284,8 +302,13 @@ print.summary.sarlm <- function(x, digits = max(5, .Options$digits - 3),
 		cat("\nRho: ", format(signif(x$rho, digits)), "\n",
                     sep="")
                 if (!is.null(x$rho.se)) {
+                    if (!is.null(x$adj.se)) {
+                        x$rho.se <- sqrt((x$rho.se^2)*x$adj.se)   
+                    }
 		  cat(pref, " standard error: ", 
-			format(signif(x$rho.se, digits)), "\n    z-value: ", 
+			format(signif(x$rho.se, digits)), 
+                        ifelse(is.null(x$adj.se), "\n    z-value: ",
+                               "\n    t-value: "), 
 			format(signif((x$rho/x$rho.se), digits)),
 			", p-value: ", format.pval(2 * (1 - pnorm(abs(x$rho/
 				x$rho.se))), digits), "\n", sep="")
@@ -294,9 +317,13 @@ print.summary.sarlm <- function(x, digits = max(5, .Options$digits - 3),
 		if (!is.null(x$lambda.se)) {
                     pref <- ifelse(x$ase, "Asymptotic",
                         "Approximate (numerical Hessian)")
+                    if (!is.null(x$adj.se)) {
+                        x$lambda.se <- sqrt((x$lambda.se^2)*x$adj.se)   
+                    }
 		    cat(pref, " standard error: ", 
 		        format(signif(x$lambda.se, digits)),
-			"\n    z-value: ",format(signif((x$lambda/
+			ifelse(is.null(x$adj.se), "\n    z-value: ",
+                               "\n    t-value: "), format(signif((x$lambda/
 				x$lambda.se), digits)),
 			", p-value: ", format.pval(2*(1-pnorm(abs(x$lambda/
 				x$lambda.se))), digits), "\n", sep="")
@@ -310,8 +337,13 @@ print.summary.sarlm <- function(x, digits = max(5, .Options$digits - 3),
 		    ", p-value: ", format.pval(res$p.value, digits), "\n",
                     sep="")
                 if (!is.null(x$rho.se)) {
+                    if (!is.null(x$adj.se)) {
+                        x$rho.se <- sqrt((x$rho.se^2)*x$adj.se)   
+                    }
 		  cat(pref, " standard error: ", 
-			format(signif(x$rho.se, digits)), "\n    z-value: ", 
+			format(signif(x$rho.se, digits)), 
+                        ifelse(is.null(x$adj.se), "\n    z-value: ",
+                               "\n    t-value: "), 
 			format(signif((x$rho/x$rho.se), digits)),
 			", p-value: ", format.pval(2 * (1 - pnorm(abs(x$rho/
 				x$rho.se))), digits), "\n", sep="")

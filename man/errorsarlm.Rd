@@ -1,4 +1,4 @@
-% Copyright 2002-9 by Roger S. Bivand
+% Copyright 2002-12 by Roger S. Bivand
 \name{errorsarlm}
 \alias{errorsarlm}
 %\alias{sar.error.f}
@@ -28,7 +28,8 @@ is called.}
   \item{na.action}{a function (default \code{options("na.action")}), can also be \code{na.omit} or \code{na.exclude} with consequences for residuals and fitted values - in these cases the weights list will be subsetted to remove NAs in the data. It may be necessary to set zero.policy to TRUE because this subsetting may create no-neighbour observations. Note that only weights lists created without using the glist argument to \code{nb2listw} may be subsetted.}
   \item{etype}{default "error", may be set to "emixed" to include the spatially lagged independent variables added to X; when "emixed", the lagged intercept is dropped for spatial weights style "W", that is row-standardised weights, but otherwise included}
   \item{method}{"eigen" (default) - the Jacobian is computed as the product 
-of (1 - rho*eigenvalue) using \code{eigenw}, and "spam" or "Matrix_J" for strictly symmetric weights lists of styles "B" and "C", or made symmetric by similarity (Ord, 1975, Appendix C) if possible for styles "W" and "S", using code from the spam package or Matrix package to calculate the determinant; \dQuote{Matrix} and \dQuote{spam_update} provide updating Cholesky decomposition methods; "LU" provides an alternative sparse matrix decomposition approach. In addition, there are "Chebyshev" and Monte Carlo "MC" approximate log-determinant methods; the Smirnov/Anselin (2009) trace approximation is available as "moments".}
+of (1 - rho*eigenvalue) using \code{eigenw}, and "spam" or "Matrix_J" for strictly symmetric weights lists of styles "B" and "C", or made symmetric by similarity (Ord, 1975, Appendix C) if possible for styles "W" and "S", using code from the spam package or Matrix package to calculate the determinant; \dQuote{Matrix} and \dQuote{spam_update} provide updating Cholesky decomposition methods; "LU" provides an alternative sparse matrix decomposition approach. In addition, there are "Chebyshev" and Monte Carlo "MC" approximate log-determinant methods; the Smirnov/Anselin (2009) trace approximation is available as "moments". Three methods: "SE_classic", "SE_whichMin", and "SE_interp" are provided experimentally, the first to attempt to emulate the behaviour of Spatial Econometrics toolbox ML fitting functions. All use grids of log determinant values, and the latter two attempt to ameliorate some features of "SE_classic".
+}
   \item{quiet}{default NULL, use !verbose global option value; if FALSE, reports function values during optimization.}
   \item{zero.policy}{default NULL, use global option value; if TRUE assign zero to the lagged value of zones without 
 neighbours, if FALSE assign NA - causing \code{errorsarlm()} to terminate with an error}
@@ -75,6 +76,12 @@ variable in making predictions for the fitting data.
   \item{type}{default \dQuote{MC}, used with method \dQuote{moments}; alternatives \dQuote{mult} and \dQuote{moments}, for use if \code{trs} is missing, \code{\link{trW}}}
   \item{correct}{default TRUE, used with method \dQuote{moments} to compute the Smirnov/Anselin correction term}
   \item{trunc}{default TRUE, used with method \dQuote{moments} to truncate the Smirnov/Anselin correction term}
+  \item{SE_method}{default \dQuote{LU}, may be \dQuote{MC}}
+  \item{nrho}{default 200, as in SE toolbox; the size of the first stage lndet grid; it may be reduced to for example 40}
+  \item{interpn}{default 2000, as in SE toolbox; the size of the second stage lndet grid}
+  \item{small_asy}{default TRUE; if the method is not \dQuote{eigen}, use asymmetric covariances rather than numerical Hessian ones if n <= small}
+  \item{small}{default 1500; threshold number of observations for asymmetric covariances when the method is not \dQuote{eigen}}
+  \item{SElndet}{default NULL, may be used to pass a pre-computed SE toolbox style matrix of coefficients and their lndet values to the "SE_classic" and "SE_whichMin" methods}
 }}
 
 \value{
@@ -115,6 +122,9 @@ standard errors)}
   \item{optimHess}{\code{optim} or \code{fdHess} used}
   \item{insert}{logical; is TRUE, asymptotic values inserted in fdHess where feasible}
   \item{timings}{processing timings}
+  \item{f_calls}{number of calls to the log likelihood function during optimization}
+  \item{hf_calls}{number of calls to the log likelihood function during numerical Hessian computation}
+  \item{intern_classic}{a data frame of detval matrix row choices used by the SE toolbox classic method}
   \item{zero.policy}{zero.policy for this model}
   \item{na.action}{(possibly) named vector of excluded or omitted observations if non-default na.action argument used}
 
@@ -126,7 +136,7 @@ Ord, J. K. 1975 Estimation methods for models of spatial interaction,
 Anselin, L. 1988 \emph{Spatial econometrics: methods and models.}
 (Dordrecht: Kluwer); Anselin, L. 1995 SpaceStat, a software program for
 the analysis of spatial data, version 1.80. Regional Research Institute,
-West Virginia University, Morgantown, WV (\url{www.spacestat.com});
+West Virginia University, Morgantown, WV;
 Anselin L, Bera AK (1998) Spatial dependence in linear regression models
 with an introduction to spatial econometrics. In: Ullah A, Giles DEA
 (eds) Handbook of applied economic statistics. Marcel Dekker, New York,

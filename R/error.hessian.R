@@ -42,7 +42,8 @@ f_errlm_hess <- function(coefs, env) {
         (1/(2 * s2)) * SSE)
     if (get("verbose", envir=env)) cat("lambda:", lambda, " function:", ret,
         " Jacobian:", det, " SSE:", SSE, "\n")
-   ret
+    assign("hf_calls", get("hf_calls", envir=env)+1L, envir=env)
+    ret
 }
 
 insert_asye <- function(coefs, env, s2, mat, trs) {

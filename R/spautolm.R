@@ -43,6 +43,8 @@ spautolm <- function(formula, data = list(), listw, weights,
     X <- model.matrix(mt, mf)
     if (any(is.na(X))) stop("NAs in independent variable")
     n <- nrow(X)
+    if (NROW(X) != length(listw$neighbours))
+	 stop("Input data and neighbourhood list have different dimensions")
     weights <- as.vector(model.extract(mf, "weights"))
 # set up default weights
     if (!is.null(weights) && !is.numeric(weights)) 

@@ -5,7 +5,8 @@
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Moran eigenvector GLM filtering}
 \description{
-  The Moran eigenvector filtering function is intended to remove spatial autocorrelation from the residuals of generalised linear models. It uses brute force eigenvector selection to reach a subset of such vectors to be added to the RHS of the GLM model to reduce residual autocorrelation to below the specified alpha value.}
+  The Moran eigenvector filtering function is intended to remove spatial autocorrelation from the residuals of generalised linear models. It uses brute force eigenvector selection to reach a subset of such vectors to be added to the RHS of the GLM model to reduce residual autocorrelation to below the specified alpha value. Since eigenvector selection only works on symmetric weights, the weights are made symmetric before the eigenvectors are found (from spdep 0.5-50).
+}
 \usage{
 ME(formula, data, family = gaussian, weights, offset, listw,
  alpha=0.05, nsim=99, verbose=NULL, stdev=FALSE)
@@ -73,7 +74,7 @@ glmbase <- glm(SID74 ~ 1, data=nc.sids, offset=log(BIR74),
  family="poisson")
 set.seed(123)
 MEpois1 <- ME(SID74 ~ 1, data=nc.sids, offset=log(BIR74),
- family="poisson", listw=nb2listw(ncCR85_nb), alpha=0.2, verbose=TRUE)
+ family="poisson", listw=nb2listw(ncCR85_nb, style="B"), alpha=0.2, verbose=TRUE)
 MEpois1
 glmME <- glm(SID74 ~ 1 + fitted(MEpois1), data=nc.sids, offset=log(BIR74),
  family="poisson")
@@ -86,7 +87,7 @@ hopkins.rook.nb <- cell2nb(16, 16, type="rook")
 glmbase <- glm(c(hopkins_part) ~ 1, family="binomial")
 set.seed(123)
 MEbinom1 <- ME(c(hopkins_part) ~ 1, family="binomial",
- listw=nb2listw(hopkins.rook.nb), alpha=0.2, verbose=TRUE)
+ listw=nb2listw(hopkins.rook.nb, style="B"), alpha=0.2, verbose=TRUE)
 glmME <- glm(c(hopkins_part) ~ 1 + fitted(MEbinom1), family="binomial")
 anova(glmME, test="Chisq")
 anova(glmbase, glmME, test="Chisq")

@@ -1,4 +1,4 @@
-# Copyright 1998-2011 by Roger Bivand and Andrew Bernat
+# Copyright 1998-2012 by Roger Bivand and Andrew Bernat
 #
 
 lagsarlm <- function(formula, data = list(), listw, 
@@ -10,7 +10,9 @@ lagsarlm <- function(formula, data = list(), listw,
         con <- list(tol.opt=.Machine$double.eps^0.5,
             fdHess=NULL, optimHess=FALSE, compiled_sse=FALSE, Imult=2,
             cheb_q=5, MC_p=16, MC_m=30, super=NULL, spamPivot="MMD",
-            in_coef=0.1, type="MC", correct=TRUE, trunc=TRUE)
+            in_coef=0.1, type="MC", correct=TRUE, trunc=TRUE,
+            SE_method="LU", nrho=200, interpn=2000, small_asy=TRUE,
+            small=1500, SElndet=NULL)
         nmsC <- names(con)
         con[(namc <- names(control))] <- control
         if (length(noNms <- namc[!namc %in% nmsC])) 
@@ -25,11 +27,6 @@ lagsarlm <- function(formula, data = list(), listw,
 		method="model.frame")
 	na.act <- attr(mf, "na.action")
 	if (!inherits(listw, "listw")) stop("No neighbourhood list")
-        if (is.null(con$fdHess)) {
-            con$fdHess <- method != "eigen"
-            fdHess <- NULL
-        }
-        stopifnot(is.logical(con$fdHess))
 	can.sim <- FALSE
 	if (listw$style %in% c("W", "S")) 
 		can.sim <- can.be.simmed(listw)
@@ -46,6 +43,16 @@ lagsarlm <- function(formula, data = list(), listw,
 		stop("Input data and weights have different dimensions")
 	n <- NROW(x)
 	m <- NCOL(x)
+        stopifnot(is.logical(con$small_asy))
+        if (method != "eigen") {
+            if (con$small >= n && con$small_asy) do_asy <- TRUE
+            else do_asy <- FALSE
+        } else do_asy <- TRUE
+        if (is.null(con$fdHess)) {
+            con$fdHess <- method != "eigen" && !do_asy
+            fdHess <- NULL
+        }
+        stopifnot(is.logical(con$fdHess))
 	xcolnames <- colnames(x)
 	K <- ifelse(xcolnames[1] == "(Intercept)", 2, 1)
 	wy <- lag.listw(listw, y, zero.policy=zero.policy)
@@ -124,6 +131,8 @@ lagsarlm <- function(formula, data = list(), listw,
         assign("can.sim", can.sim, envir=env)
         assign("listw", listw, envir=env)
         assign("similar", FALSE, envir=env)
+        assign("f_calls", 0L, envir=env)
+        assign("hf_calls", 0L, envir=env)
         timings[["set_up"]] <- proc.time() - .ptime_start
         .ptime_start <- proc.time()
 	if (!quiet) cat("Jacobian calculated using ")
@@ -237,6 +246,38 @@ lagsarlm <- function(formula, data = list(), listw,
         	    I <- as_dsCMatrix_I(n)
                     if (is.null(interval)) interval <- c(-1,0.999)
                 },
+                SE_classic = {
+		    if (!quiet) cat("SE toolbox classic grid\n")
+                    if (is.null(interval)) interval <- c(-1,0.999)
+		    if (con$SE_method == "MC" && !listw$style %in% c("W"))
+		        stop("MC method requires row-standardised weights")
+                    SE_classic_setup(env, SE_method=con$SE_method, p=con$MC_p,
+                        m=con$MC_m, nrho=con$nrho, interpn=con$interpn,
+                        interval=interval, SElndet=con$SElndet)
+                    W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
+        	    I <- as_dsCMatrix_I(n)
+                },
+                SE_whichMin = {
+		    if (!quiet) cat("SE toolbox which.min grid\n")
+                    if (is.null(interval)) interval <- c(-1,0.999)
+		    if (con$SE_method == "MC" && !listw$style %in% c("W"))
+		        stop("MC method requires row-standardised weights")
+                    SE_whichMin_setup(env, SE_method=con$SE_method, p=con$MC_p,
+                        m=con$MC_m, nrho=con$nrho, interpn=con$interpn,
+                        interval=interval, SElndet=con$SElndet)
+                    W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
+        	    I <- as_dsCMatrix_I(n)
+                },
+                SE_interp = {
+		    if (!quiet) cat("SE toolbox which.min grid\n")
+                    if (is.null(interval)) interval <- c(-1,0.999)
+		    if (con$SE_method == "MC" && !listw$style %in% c("W"))
+		        stop("MC method requires row-standardised weights")
+                    SE_interp_setup(env, SE_method=con$SE_method, p=con$MC_p,
+                        m=con$MC_m, nrho=con$nrho, interval=interval)
+                    W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
+        	    I <- as_dsCMatrix_I(n)
+                },
 		stop("...\nUnknown method\n"))
 
         nm <- paste(method, "set_up", sep="_")
@@ -293,7 +334,7 @@ lagsarlm <- function(formula, data = list(), listw,
         LMtest <- NULL
 	varb <- FALSE
 	ase <- FALSE
-	if (method != "eigen" && con$fdHess) {
+	if (method != "eigen" && con$fdHess && !do_asy) {
             if (is.null(trs)) {
  	        rest.se <- sqrt(diag(fdHess)[-1])
 		rho.se <- sqrt(fdHess[1,1])
@@ -309,6 +350,7 @@ lagsarlm <- function(formula, data = list(), listw,
 		varb <- FALSE
 		tr <- function(A) sum(diag(A))
 # beware of complex eigenvalues!
+                if (do_asy && method != "eigen") eigen_setup(env)
                 eig <- get("eig", envir=env)
 		O <- (eig/(1-rho*eig))^2
 		omega <- sum(O)
@@ -343,8 +385,9 @@ lagsarlm <- function(formula, data = list(), listw,
                 timings[["eigen_se"]] <- proc.time() - .ptime_start
 	}
 	call <- match.call()
-        rm(env)
-        GC <- gc()
+        if (method=="SE_classic") {
+            iC <- get("intern_classic", envir=env)
+        } else iC <- NULL
 	ret <- structure(list(type=type, rho=rho, 
 		coefficients=coef.rho, rest.se=rest.se, 
 		LL=LL, s2=s2, SSE=SSE, parameters=(m+2), #lm.model=lm.null,
@@ -360,7 +403,12 @@ lagsarlm <- function(formula, data = list(), listw,
                 listw_style=listw$style, interval=interval, fdHess=fdHess,
                 optimHess=con$optimHess, insert=!is.null(trs),
                 LLNullLlm=LL_null_lm,
-                timings=do.call("rbind", timings)[, c(1, 3)]), class=c("sarlm"))
+                timings=do.call("rbind", timings)[, c(1, 3)], 
+                f_calls=get("f_calls", envir=env),
+                hf_calls=get("hf_calls", envir=env), intern_classic=iC),
+                class=c("sarlm"))
+        rm(env)
+        GC <- gc()
 	if (zero.policy) {
 		zero.regs <- attr(listw$neighbours, 
 			"region.id")[which(card(listw$neighbours) == 0)]
@@ -383,6 +431,8 @@ sar.lag.mixed.f <- function(rho, env) {
 	ret <- (ldet - ((n/2)*log(2*pi)) - (n/2)*log(s2)
 		- (1/(2*s2))*SSE)
 	if (get("verbose", envir=env)) cat("rho:\t", rho, "\tfunction value:\t", ret, "\n")
+        assign("f_calls", get("f_calls", envir=env)+1L, envir=env)
+
 	ret
 }
 

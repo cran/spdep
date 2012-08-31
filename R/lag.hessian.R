@@ -40,22 +40,23 @@ f_laglm_hess <- function(coefs, env) {
     ret <- (det - ((n/2) * log(2 * pi)) - (n/2) * log(s2) - 
         (1/(2 * s2)) * SSE)
     if (get("verbose", envir=env)) cat("Hessian: rho:\t", rho, "\tfunction value:\t", ret, "\n")
-   ret
+    assign("hf_calls", get("hf_calls", envir=env)+1L, envir=env)
+    ret
 }
 
-f_errlm_hess <- function(coefs, env) {
-    lambda <- coefs[1]
-    beta <- coefs[-1]
-    SSE <- sar_error_hess_sse(lambda, beta, env)
-    n <- get("n", envir=env)
-    s2 <- SSE/n
-    det <- do_ldet(lambda, env)
-    ret <- (det - ((n/2) * log(2 * pi)) - (n/2) * log(s2) - 
-        (1/(2 * s2)) * SSE)
-    if (get("verbose", envir=env)) cat("lambda:", lambda, " function:", ret,
-        " Jacobian:", det, " SSE:", SSE, "\n")
-   ret
-}
+#f_errlm_hess <- function(coefs, env) {
+#    lambda <- coefs[1]
+#    beta <- coefs[-1]
+#    SSE <- sar_error_hess_sse(lambda, beta, env)
+#    n <- get("n", envir=env)
+#    s2 <- SSE/n
+#    det <- do_ldet(lambda, env)
+#    ret <- (det - ((n/2) * log(2 * pi)) - (n/2) * log(s2) - 
+#        (1/(2 * s2)) * SSE)
+#    if (get("verbose", envir=env)) cat("lambda:", lambda, " function:", ret,
+#        " Jacobian:", det, " SSE:", SSE, "\n")
+#   ret
+#}
 
 trB <- function(rho, tr)  sum(sapply(0:(length(tr)-1L),
     function(i) rho^i * tr[i+1]))
