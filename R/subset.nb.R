@@ -51,7 +51,7 @@ subset.listw <- function(x, subset, zero.policy=NULL, ...) {
     style <- x$style
     n <- length(nb)
     if (n != length(subset))
-	stop("neighours list and subset vector different lengths")
+	stop("neighbours list and subset vector different lengths")
     subnb <- subset.nb(x=nb, subset=subset)
     sublistw <- nb2listw(neighbours=subnb, glist=NULL, style=style,
 	zero.policy=zero.policy)

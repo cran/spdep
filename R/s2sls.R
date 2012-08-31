@@ -303,7 +303,7 @@ tsls <- function(y,yend,X,Zinst,robust=FALSE, HC="HC0", legacy=FALSE) {
                         else if (HC == "HC1")
                             omega <- (nrow(X)/df) * as.numeric(e^2)
                         else stop("invalid HC choice")
-			ZoZ<-crossprod(Z,(Z*omega))
+			ZoZ<-crossprod(Zp,(Zp*omega))
 			varb<-ZpZpi%*%ZoZ%*%ZpZpi
 	   
 	   		result <- list(coefficients=biv,

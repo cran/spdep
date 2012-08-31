@@ -19,7 +19,7 @@ skater <- function(edges, data, ncuts, crit, vec.crit,
     res$edges.groups[[1]]$edge =
       cbind(res$edges.groups[[1]]$edge[tmp$ix, ], tmp$x)
     if (missing(crit))
-      res$crit <- 1
+      res$crit <- c(1, Inf)
     else
       res$crit <- crit
     if (missing(vec.crit))
@@ -35,10 +35,9 @@ skater <- function(edges, data, ncuts, crit, vec.crit,
   if (is.null(res$vec.crit))
     res$vec.crit <- rep(1, n)
   if (is.null(res$crit))
-    res$crit <- 1
-  npr <- which(sapply(res$edges.groups, function(x)
-                      sum(res$vec.crit[x$node])<2*res$crit))
-  res$not.prune <- unique(c(res$not.prune, npr))
+    res$crit <- c(1, Inf)
+  if (length(res$crit)==1)
+    res$crit <- c(res$crit, Inf)
   res$candidates <- setdiff(1:length(res$edges.groups), res$not.prune)
   repeat {
     if (cuts>ncuts)
@@ -63,8 +62,9 @@ skater <- function(edges, data, ncuts, crit, vec.crit,
       toprun <- rbind(res$edges.groups[[dc[k,1]]]$edge[dc[k,3],1:2],
                       res$edges.groups[[dc[k,1]]]$edge[-dc[k,3],1:2])
       g.pruned <- prunemst(toprun, only.nodes=FALSE)
-      if (any(sapply(g.pruned, function(x)
-                     sum(res$vec.crit[x$node]))<res$crit)) {
+      scrit <- sapply(g.pruned, function(x) sum(res$vec.crit[x$node]))
+      cond <- any(findInterval(scrit, res$crit, TRUE)!=1)
+      if (cond) {
         id.not <- !is.element(res$candidates, unique(dc[-(1:k),1]))
         res$not.prune <- unique(c(res$not.prune, res$candidates[id.not]))
         res$candidates <- setdiff(1:length(res$edges.groups),
@@ -93,9 +93,6 @@ skater <- function(edges, data, ncuts, crit, vec.crit,
         res$edges.groups[[cuts]] <- gc.pruned[[2]]
         res$ssw <- c(res$ssw, sum(sapply(res$edges.groups,
                                          function(e) sum(e$ssw))))
-        npr <- which(sapply(res$edges.groups, function(x)
-                            sum(res$vec.crit[x$node])<2*res$crit))
-        res$not.prune <- unique(c(res$not.prune, npr))
         res$candidates <- setdiff(1:length(res$edges.groups), res$not.prune)
         break
       }

@@ -9,7 +9,7 @@
   Methods used for presenting the results of estimating spatial SAR models.
 }
 \usage{
-\method{summary}{sarlm}(object, correlation = FALSE, Nagelkerke = FALSE, Hausman=FALSE, ...)
+\method{summary}{sarlm}(object, correlation = FALSE, Nagelkerke = FALSE, Hausman=FALSE, adj.se=FALSE, ...)
 \method{print}{sarlm}(x, ...)
 \method{print}{summary.sarlm}(x, digits = max(5, .Options$digits - 3),
 	signif.stars = FALSE, ...)
@@ -20,6 +20,7 @@
   \item{correlation}{logical; if 'TRUE', the correlation matrix of the estimated parameters including sigma is returned and printed (default=FALSE)}
   \item{Nagelkerke}{if TRUE, the Nagelkerke pseudo R-squared is reported}
   \item{Hausman}{if TRUE, the results of the Hausman test for error models are reported}
+  \item{adj.se}{if TRUE, adjust the coefficient standard errors for the number of fitted coefficients}
   \item{x}{\code{sarlm} object from \code{lagsarlm} or \code{errorsarlm} in
 \code{print.sarlm}, summary object from \code{summary.sarlm} for 
 \code{print.summary.sarlm}}

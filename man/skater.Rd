@@ -18,15 +18,17 @@ skater(edges, data, ncuts, crit, vec.crit, method = c("euclidean",
   \item{edges}{A matrix with 2 colums with each row is an edge}
   \item{data}{A data.frame with data observed over nodes.}
   \item{ncuts}{The number of cuts}
-  \item{crit}{A numeric or integer with criteria for groups.
-    Example: minimum population size.}
-  \item{vec.crit}{A vector for evaluating critera.}
+  \item{crit}{A scalar ow two dimensional vector with with
+    criteria for groups. Examples: limits of group size or
+    limits of population size. If scalar, is the minimum
+    criteria for groups.}
+  \item{vec.crit}{A vector for evaluating criteria.}
   \item{method}{Character or function to declare distance method.
     If \code{method} is character, method must be "mahalanobis" or
     "euclidean", "maximum", "manhattan", "canberra", "binary"
     or "minkowisk".
     If \code{method} is one of "euclidean", "maximum",
-    "manhattan", "canberra", "binary" or "minkowisk", see
+    "manhattan", "canberra", "binary" or "minkowski", see
     \code{\link{dist}} for details,
      because this function as used to compute the distance.
      If \code{method="mahalanobis"}, the mahalanobis distance
@@ -39,9 +41,7 @@ skater(edges, data, ncuts, crit, vec.crit, method = c("euclidean",
   \item{inverted}{logical.  If 'TRUE', 'cov' is supposed to contain the
           inverse of the covariance matrix.}
 }
-\details{
-  to do
-}
+
 \value{
   A object of \code{skater} class with:
   
@@ -98,20 +98,21 @@ plot(bh, border=gray(.5), add=TRUE)
 ### three groups with no restriction
 res1 <- skater(mst.bh[,1:2], dpad, 2)
 
-### thee groups with minimum population 
-res2 <- skater(mst.bh[,1:2], dpad, 2, 200000, bh@data$Pop)
-
-### thee groups with minimun number of areas
-res3 <- skater(mst.bh[,1:2], dpad, 2, 3, rep(1,nrow(bh@data)))
-
-### groups frequency
+### groups size
 table(res1$groups)
-table(res2$groups)
-table(res3$groups)
 
 ### the skater plot
 par(mar=c(0,0,0,0))
 plot(res1, coordinates(bh), cex.circles=0.035, cex.lab=.7)
+
+### the skater plot, using other colors
+plot(res1, coordinates(bh), cex.circles=0.035, cex.lab=.7,
+     groups.colors=rainbow(length(res1$ed)))
+
+### the Spatial Polygons plot
+plot(bh, col=heat.colors(length(res1$edg))[res1$groups])
+
+### EXPERT OPTIONS
 
 ### more one partition
 res1b <- skater(res1, dpad, 1)
@@ -120,13 +121,41 @@ res1b <- skater(res1, dpad, 1)
 table(res1$groups)
 table(res1b$groups)
 
-### the skater plot, using other colors
-plot(res1b, coordinates(bh), cex.circles=0.035, cex.lab=.7,
-     groups.colors=colors()[(1:length(res1b$ed))*10])
+### thee groups with minimum population 
+res2 <- skater(mst.bh[,1:2], dpad, 2, 200000, bh@data$Pop)
 
-### the Spatial Polygons plot
-plot(bh, col=heat.colors(4)[res1b$groups])
+### thee groups with minimun number of areas
+res3 <- skater(mst.bh[,1:2], dpad, 2, 3, rep(1,nrow(bh@data)))
 
+### thee groups with minimun and maximun number of areas
+res4 <- skater(mst.bh[,1:2], dpad, 2, c(20,50), rep(1,nrow(bh@data)))
+
+table(res2$groups)
+table(res3$groups)
+table(res4$groups)
+
+### if I want to get groups with 20 to 40 elements
+res5 <- skater(mst.bh[,1:2], dpad, 2,
+   c(20,40), rep(1,nrow(bh@data))) ## DON'T MAKE DIVISIONS 
+table(res5$groups)
+
+### In this MST don't have groups with this restrictions
+### In this case, first I do one division
+### with the minimun criteria
+res5a <- skater(mst.bh[,1:2], dpad, 1, 20, rep(1,nrow(bh@data))) 
+table(res5a$groups)
+
+### and do more one division with the full criteria
+res5b <- skater(res5a, dpad, 1, c(20, 40), rep(1,nrow(bh@data)))
+table(res5b$groups)
+
+### and do more one division with the full criteria
+res5c <- skater(res5b, dpad, 1, c(20, 40), rep(1,nrow(bh@data)))
+table(res5c$groups)
+
+### It don't have another divison with this criteria
+res5d <- skater(res5c, dpad, 1, c(20, 40), rep(1,nrow(bh@data)))
+table(res5d$groups)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

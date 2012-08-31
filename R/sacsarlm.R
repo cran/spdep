@@ -4,7 +4,7 @@ sacsarlm <- function(formula, data = list(), listw, listw2=NULL, na.action,
 	tol.solve=1.0e-10, llprof=NULL, control=list()) {
         timings <- list()
         .ptime_start <- proc.time()
-        con <- list(fdHess=NULL, optimHess=FALSE, LAPACK=FALSE,
+        con <- list(fdHess=NULL, LAPACK=FALSE,
            Imult=2, cheb_q=5, MC_p=16, MC_m=30,
            super=FALSE, opt_method="nlminb", opt_control=list(),
            pars=NULL, npars=4L, lower=c(-1.0, -1.0)+.Machine$double.eps^0.5,
@@ -38,7 +38,6 @@ sacsarlm <- function(formula, data = list(), listw, listw2=NULL, na.action,
         stopifnot(is.numeric(con$upper))
         stopifnot(length(con$upper)==length(con$lower))
         stopifnot(is.logical(con$fdHess))
-        stopifnot(is.logical(con$optimHess))
         stopifnot(is.logical(con$LAPACK))
         stopifnot(is.logical(con$super))
 	can.sim <- FALSE
@@ -410,8 +409,7 @@ sacsarlm <- function(formula, data = list(), listw, listw2=NULL, na.action,
         }
         if (con$fdHess) {
             coefs <- c(rho, lambda, coef.sac)
-            fdHess <- getVmatsac(coefs, env, tol.solve=tol.solve,
-                optim=con$optimHess)
+            fdHess <- getVmatsac(coefs, env, tol.solve=tol.solve)
             rownames(fdHess) <- colnames(fdHess) <- c("rho", "lambda",
                 xcolnames)
             if (!ase) {
@@ -437,7 +435,7 @@ sacsarlm <- function(formula, data = list(), listw, listw2=NULL, na.action,
 	    lambda.se=lambda.se, zero.policy=zero.policy, 
 	    aliased=aliased, LLNullLlm=LL_null_lm,
             fdHess=fdHess, resvar=asyvar1, listw_style=listw$style,
-            optimHess=con$optimHess, insert=FALSE,
+            optimHess=FALSE, insert=FALSE,
             timings=do.call("rbind", timings)[, c(1, 3)]),
             class=c("sarlm"))
         rm(env)
@@ -482,15 +480,9 @@ sacsar.f <- function(coefs, env) {
 }
 
 
-getVmatsac <- function(coefs, env, tol.solve=1.0e-10, optim=FALSE) {
-    if (optim) {
-        opt <- optim(par=coefs, fn=f_sac_hess, env=env,
-            method="BFGS", hessian=TRUE)
-        mat <- opt$hessian
-    } else {
-        fd <- fdHess(coefs, f_sac_hess, env)
-        mat <- fd$Hessian
-    }
+getVmatsac <- function(coefs, env, tol.solve=1.0e-10) {
+    fd <- fdHess(coefs, f_sac_hess, env)
+    mat <- fd$Hessian
     res <- solve(-(mat), tol.solve=tol.solve)
     res
 }

@@ -184,7 +184,7 @@ flush(stderr()); flush(stdout())
 ##D  family="poisson")
 ##D set.seed(123)
 ##D MEpois1 <- ME(SID74 ~ 1, data=nc.sids, offset=log(BIR74),
-##D  family="poisson", listw=nb2listw(ncCR85_nb), alpha=0.2, verbose=TRUE)
+##D  family="poisson", listw=nb2listw(ncCR85_nb, style="B"), alpha=0.2, verbose=TRUE)
 ##D MEpois1
 ##D glmME <- glm(SID74 ~ 1 + fitted(MEpois1), data=nc.sids, offset=log(BIR74),
 ##D  family="poisson")
@@ -197,7 +197,7 @@ flush(stderr()); flush(stdout())
 ##D glmbase <- glm(c(hopkins_part) ~ 1, family="binomial")
 ##D set.seed(123)
 ##D MEbinom1 <- ME(c(hopkins_part) ~ 1, family="binomial",
-##D  listw=nb2listw(hopkins.rook.nb), alpha=0.2, verbose=TRUE)
+##D  listw=nb2listw(hopkins.rook.nb, style="B"), alpha=0.2, verbose=TRUE)
 ##D glmME <- glm(c(hopkins_part) ~ 1 + fitted(MEbinom1), family="binomial")
 ##D anova(glmME, test="Chisq")
 ##D anova(glmbase, glmME, test="Chisq")
@@ -862,6 +862,7 @@ flush(stderr()); flush(stdout())
 ### Title: Spatial regression model Jacobian computations
 ### Aliases: do_ldet eigen_setup mcdet_setup cheb_setup spam_setup
 ###   spam_update_setup Matrix_setup Matrix_J_setup LU_setup moments_setup
+###   SE_classic_setup SE_whichMin_setup SE_interp_setup
 ### Keywords: spatial
 
 ### ** Examples
@@ -3279,20 +3280,21 @@ plot(bh, border=gray(.5), add=TRUE)
 ### three groups with no restriction
 res1 <- skater(mst.bh[,1:2], dpad, 2)
 
-### thee groups with minimum population 
-res2 <- skater(mst.bh[,1:2], dpad, 2, 200000, bh@data$Pop)
-
-### thee groups with minimun number of areas
-res3 <- skater(mst.bh[,1:2], dpad, 2, 3, rep(1,nrow(bh@data)))
-
-### groups frequency
+### groups size
 table(res1$groups)
-table(res2$groups)
-table(res3$groups)
 
 ### the skater plot
 par(mar=c(0,0,0,0))
 plot(res1, coordinates(bh), cex.circles=0.035, cex.lab=.7)
+
+### the skater plot, using other colors
+plot(res1, coordinates(bh), cex.circles=0.035, cex.lab=.7,
+     groups.colors=rainbow(length(res1$ed)))
+
+### the Spatial Polygons plot
+plot(bh, col=heat.colors(length(res1$edg))[res1$groups])
+
+### EXPERT OPTIONS
 
 ### more one partition
 res1b <- skater(res1, dpad, 1)
@@ -3301,13 +3303,41 @@ res1b <- skater(res1, dpad, 1)
 table(res1$groups)
 table(res1b$groups)
 
-### the skater plot, using other colors
-plot(res1b, coordinates(bh), cex.circles=0.035, cex.lab=.7,
-     groups.colors=colors()[(1:length(res1b$ed))*10])
+### thee groups with minimum population 
+res2 <- skater(mst.bh[,1:2], dpad, 2, 200000, bh@data$Pop)
 
-### the Spatial Polygons plot
-plot(bh, col=heat.colors(4)[res1b$groups])
+### thee groups with minimun number of areas
+res3 <- skater(mst.bh[,1:2], dpad, 2, 3, rep(1,nrow(bh@data)))
 
+### thee groups with minimun and maximun number of areas
+res4 <- skater(mst.bh[,1:2], dpad, 2, c(20,50), rep(1,nrow(bh@data)))
+
+table(res2$groups)
+table(res3$groups)
+table(res4$groups)
+
+### if I want to get groups with 20 to 40 elements
+res5 <- skater(mst.bh[,1:2], dpad, 2,
+   c(20,40), rep(1,nrow(bh@data))) ## DON'T MAKE DIVISIONS 
+table(res5$groups)
+
+### In this MST don't have groups with this restrictions
+### In this case, first I do one division
+### with the minimun criteria
+res5a <- skater(mst.bh[,1:2], dpad, 1, 20, rep(1,nrow(bh@data))) 
+table(res5a$groups)
+
+### and do more one division with the full criteria
+res5b <- skater(res5a, dpad, 1, c(20, 40), rep(1,nrow(bh@data)))
+table(res5b$groups)
+
+### and do more one division with the full criteria
+res5c <- skater(res5b, dpad, 1, c(20, 40), rep(1,nrow(bh@data)))
+table(res5c$groups)
+
+### It don't have another divison with this criteria
+res5d <- skater(res5c, dpad, 1, c(20, 40), rep(1,nrow(bh@data)))
+table(res5d$groups)
 
 
 
