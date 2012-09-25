@@ -8,6 +8,7 @@
 \alias{Matrix_setup}
 \alias{Matrix_J_setup}
 \alias{LU_setup}
+\alias{LU_prepermutate_setup}
 \alias{moments_setup}
 \alias{SE_classic_setup}
 \alias{SE_whichMin_setup}
@@ -27,6 +28,7 @@ spam_update_setup(env, in_coef=0.1, pivot="MMD", which=1)
 Matrix_setup(env, Imult, super=as.logical(NA), which=1)
 Matrix_J_setup(env, super=FALSE, which=1)
 LU_setup(env, which=1)
+LU_prepermutate_setup(env, coef=0.1, order=FALSE, which=1)
 moments_setup(env, trs=NULL, m, p, type="MC", correct=TRUE, trunc=TRUE, which=1)
 SE_classic_setup(env, SE_method="LU", p=16, m=30, nrho=200, interpn=2000,
  interval=c(-1,0.999), SElndet=NULL, which=1)
@@ -47,6 +49,7 @@ SE_interp_setup(env, SE_method="LU", p=16, m=30, nrho=200,
   \item{in_coef}{fill-in initiation coefficient value, default 0.1}
   \item{Imult}{see \code{\link[Matrix]{Cholesky}}; numeric scalar which defaults to zero. The matrix that is decomposed is A+m*I where m is the value of Imult and I is the identity matrix of order ncol(A). Default in calling spdep functions is 2, here it cannot be missing and does not have a default, but is rescaled for binary weights matrices in proportion to the maximim row sum in those calling functions}
   \item{super}{see \code{\link[Matrix]{Cholesky}}; logical scalar indicating is a supernodal decomposition should be created.  The alternative is a simplicial decomposition. Default in calling spdep functions is FALSE for \dQuote{Matrix_J} and \code{as.logical(NA)} for \dQuote{Matrix}.  Setting it to NA leaves the choice to a CHOLMOD-internal heuristic}
+  \item{order}{default FALSE; used in LU_prepermutate, note warnings given for \code{lu} method}
   \item{trs}{A numeric vector of \code{m} traces, as from \code{trW}}
   \item{type}{moments trace type, see \code{\link{trW}}}
   \item{correct}{default TRUE: use Smirnov correction term, see \code{\link{trW}}}
@@ -132,6 +135,19 @@ SE_interp_setup(env, SE_method="LU", p=16, m=30, nrho=200,
   } and assigns to the environment:
   \describe{
     \item{W}{sparse spatial weights matrix}
+    \item{I}{sparse identity matrix}
+    \item{method}{string: \dQuote{LU}}
+  }
+}
+  \item{LU_prepermutate}{Standard LU decomposition with updating (pre-computed fill-reducing permutation):
+  \describe{
+    \item{listw}{A listw spatial weights object}
+    \item{n}{number of spatial objects}
+  } and assigns to the environment:
+  \describe{
+    \item{W}{sparse spatial weights matrix}
+    \item{lu_order}{order argument to lu}
+    \item{pq}{2-column matrix for row and column permutation for fill-reduction}
     \item{I}{sparse identity matrix}
     \item{method}{string: \dQuote{LU}}
   }
@@ -257,6 +273,15 @@ assign("n", length(boston.soi), envir=env)
 assign("similar", FALSE, envir=env)
 assign("family", "SAR", envir=env)
 LU_setup(env)
+get("similar", envir=env)
+do_ldet(0.5, env)
+rm(env)
+env <- new.env(parent=globalenv())
+assign("listw", lw, envir=env)
+assign("n", length(boston.soi), envir=env)
+assign("similar", FALSE, envir=env)
+assign("family", "SAR", envir=env)
+LU_prepermutate_setup(env)
 get("similar", envir=env)
 do_ldet(0.5, env)
 rm(env)

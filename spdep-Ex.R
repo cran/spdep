@@ -861,8 +861,9 @@ flush(stderr()); flush(stdout())
 ### Name: do_ldet
 ### Title: Spatial regression model Jacobian computations
 ### Aliases: do_ldet eigen_setup mcdet_setup cheb_setup spam_setup
-###   spam_update_setup Matrix_setup Matrix_J_setup LU_setup moments_setup
-###   SE_classic_setup SE_whichMin_setup SE_interp_setup
+###   spam_update_setup Matrix_setup Matrix_J_setup LU_setup
+###   LU_prepermutate_setup moments_setup SE_classic_setup
+###   SE_whichMin_setup SE_interp_setup
 ### Keywords: spatial
 
 ### ** Examples
@@ -906,6 +907,15 @@ assign("n", length(boston.soi), envir=env)
 assign("similar", FALSE, envir=env)
 assign("family", "SAR", envir=env)
 LU_setup(env)
+get("similar", envir=env)
+do_ldet(0.5, env)
+rm(env)
+env <- new.env(parent=globalenv())
+assign("listw", lw, envir=env)
+assign("n", length(boston.soi), envir=env)
+assign("similar", FALSE, envir=env)
+assign("family", "SAR", envir=env)
+LU_prepermutate_setup(env)
 get("similar", envir=env)
 do_ldet(0.5, env)
 rm(env)
