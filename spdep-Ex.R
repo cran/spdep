@@ -109,7 +109,7 @@ COL.errW.GM1 <- GMerrorsar(CRIME ~ INC + HOVAL, data=COL.OLD,
 summary(COL.errW.GM1)
 example(NY_data)
 esar1f <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
- listw=listw_NY, family="SAR", method="full")
+ listw=listw_NY, family="SAR", method="eigen")
 summary(esar1f)
 esar1gm <- GMerrorsar(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
  data=nydata, listw=listw_NY)
@@ -140,6 +140,75 @@ mixed <- lagsarlm(CRIME ~ HOVAL + INC, data=columbus, nb2listw(col.gal.nb),
 error <- errorsarlm(CRIME ~ HOVAL + INC, data=columbus, nb2listw(col.gal.nb))
 LR.sarlm(mixed, error)
 Hausman.test(error)
+
+
+
+cleanEx()
+nameEx("MCMCsamp")
+### * MCMCsamp
+
+flush(stderr()); flush(stdout())
+
+### Name: MCMCsamp
+### Title: MCMC sample from fitted spatial regression
+### Aliases: MCMCsamp MCMCsamp.spautolm MCMCsamp.sarlm
+### Keywords: spatial
+
+### ** Examples
+
+## Not run: 
+##D example(NY_data)
+##D esar1f <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
+##D  listw=listw_NY, family="SAR", method="eigen")
+##D summary(esar1f)
+##D res <- MCMCsamp(esar1f, mcmc=5000, burnin=500, listw=listw_NY)
+##D summary(res)
+##D ecar1f <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
+##D  listw=listw_NY, family="CAR", method="eigen")
+##D summary(ecar1f)
+##D res <- MCMCsamp(ecar1f, mcmc=5000, burnin=500, listw=listw_NY)
+##D summary(res)
+##D esar1fw <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
+##D  listw=listw_NY, weights=POP8, family="SAR", method="eigen")
+##D summary(esar1fw)
+##D res <- MCMCsamp(esar1fw, mcmc=5000, burnin=500, listw=listw_NY)
+##D summary(res)
+##D ecar1fw <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
+##D  listw=listw_NY, weights=POP8, family="CAR", method="eigen")
+##D summary(ecar1fw)
+##D res <- MCMCsamp(ecar1fw, mcmc=5000, burnin=500, listw=listw_NY)
+##D summary(res)
+##D esar0 <- errorsarlm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
+##D  listw=listw_NY)
+##D summary(esar0)
+##D res <- MCMCsamp(esar0, mcmc=5000, burnin=500, listw=listw_NY)
+##D summary(res)
+##D esar1 <- errorsarlm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
+##D  listw=listw_NY, etype="emixed")
+##D summary(esar1)
+##D res <- MCMCsamp(esar1, mcmc=5000, burnin=500, listw=listw_NY)
+##D summary(res)
+##D lsar0 <- lagsarlm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
+##D  listw=listw_NY)
+##D summary(lsar0)
+##D res <- MCMCsamp(lsar0, mcmc=5000, burnin=500, listw=listw_NY)
+##D summary(res)
+##D lsar1 <- lagsarlm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
+##D  listw=listw_NY, type="mixed")
+##D summary(lsar1)
+##D res <- MCMCsamp(lsar1, mcmc=5000, burnin=500, listw=listw_NY)
+##D summary(res)
+##D ssar0 <- sacsarlm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
+##D  listw=listw_NY)
+##D summary(ssar0)
+##D res <- MCMCsamp(ssar0, mcmc=5000, burnin=500, listw=listw_NY)
+##D summary(res)
+##D ssar1 <- sacsarlm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
+##D  listw=listw_NY, type="sacmixed")
+##D summary(ssar1)
+##D res <- MCMCsamp(ssar1, mcmc=5000, burnin=500, listw=listw_NY)
+##D summary(res)
+## End(Not run)
 
 
 
@@ -1179,35 +1248,6 @@ COL.err.NA <- errorsarlm(CRIME ~ INC + HOVAL, data=NA.COL.OLD,
 COL.err.NA$na.action
 COL.err.NA
 resid(COL.err.NA)
-system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb, style="W"), method="eigen"))
-system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb, style="W"), method="eigen", control=list(LAPACK=TRUE)))
-system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb, style="W"), method="eigen", control=list(compiled_sse=TRUE)))
-system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb, style="W"), method="Matrix_J", control=list(super=TRUE)))
-system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb, style="W"), method="Matrix_J", control=list(super=FALSE)))
-system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb, style="W"), method="Matrix_J", control=list(super=as.logical(NA))))
-system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb, style="W"), method="Matrix", control=list(super=TRUE)))
-system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb, style="W"), method="Matrix", control=list(super=FALSE)))
-system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb, style="W"), method="Matrix", control=list(super=as.logical(NA))))
-system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb, style="W"), method="spam", control=list(spamPivot="MMD")))
-system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb, style="W"), method="spam", control=list(spamPivot="RCM")))
-system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb, style="W"), method="spam_update", control=list(spamPivot="MMD")))
-system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb, style="W"), method="spam_update", control=list(spamPivot="RCM")))
-COL.merrW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb, style="W"), method="eigen", etype="emixed")
-summary(COL.merrW.eig, correlation=TRUE)
 
 
 
@@ -3440,7 +3480,7 @@ esar0 <- errorsarlm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
  listw=listw_NY)
 summary(esar0)
 system.time(esar1f <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
- data=nydata, listw=listw_NY, family="SAR", method="full", verbose=TRUE))
+ data=nydata, listw=listw_NY, family="SAR", method="eigen", verbose=TRUE))
 summary(esar1f)
 system.time(esar1M <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
  data=nydata, listw=listw_NY, family="SAR", method="Matrix", verbose=TRUE))
@@ -3454,7 +3494,7 @@ summary(esar1M)
 ##D  data=nydata, listw=listw_NY, family="SAR", method="spam", verbose=TRUE))
 ##D summary(esar1s)
 ##D esar1wf <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
-##D  listw=listw_NY, weights=POP8, family="SAR", method="full")
+##D  listw=listw_NY, weights=POP8, family="SAR", method="eigen")
 ##D summary(esar1wf)
 ##D system.time(esar1wM <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
 ##D  data=nydata, listw=listw_NY, weights=POP8, family="SAR", method="Matrix"))
@@ -3469,7 +3509,7 @@ summary(esar1M)
 ##D  listw=listw_NY, weights=POP8, family="SAR", method="Chebyshev")
 ##D summary(esar1wch)
 ##D ecar1f <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
-##D  listw=listw_NY, family="CAR", method="full")
+##D  listw=listw_NY, family="CAR", method="eigen")
 ##D summary(ecar1f)
 ##D system.time(ecar1M <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
 ##D  data=nydata, listw=listw_NY, family="CAR", method="Matrix"))
@@ -3478,7 +3518,7 @@ summary(esar1M)
 ##D  listw=listw_NY, family="CAR", method="spam")
 ##D summary(ecar1s)
 ##D ecar1wf <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
-##D  listw=listw_NY, weights=nydata$POP8, family="CAR", method="full")
+##D  listw=listw_NY, weights=nydata$POP8, family="CAR", method="eigen")
 ##D summary(ecar1wf)
 ##D system.time(ecar1wM <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
 ##D  data=nydata, listw=listw_NY, weights=POP8, family="CAR", method="Matrix"))

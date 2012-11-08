@@ -19,6 +19,9 @@ sp.correlogram <- function (neighbours, var, order = 1, method = "corr",
     nblags <- nblag(neighbours, maxlag = order)
     cardnos <- vector(mode = "list", length = order)
     for (i in 1:order) cardnos[[i]] <- table(card(nblags[[i]]))
+    nobs <- sapply(cardnos, function(x) sum(x[names(x) > "0"]))
+    if (any(nobs < 3))
+        stop("sp.correlogram: too few included observations in higher lags:\n\treduce order.")
     if (method == "corr") {
         lags.x <- matrix(0, nrow = length(var), ncol = order)
         for (i in 1:order) lags.x[, i] <- lag.listw(nb2listw(nblags[[i]], 
@@ -65,7 +68,8 @@ print.spcor <- function (x, p.adj.method="none", ...)
 	ZI <- (res[,1]-res[,2])/sqrt(res[,3])
 	pv <- p.adjust(2*pnorm(abs(ZI), lower.tail=FALSE), method=p.adj.method)
 	res <- cbind(res, ZI, pv)
-        rownames(res) <- rownames(x$res)
+        rownames(res) <- paste(rownames(x$res), " (", sapply(x$cardnos,
+          function(x) sum(x[names(x) > "0"])), ")", sep="")
         colnames(res) <- c("estimate", "expectation", "variance", 
 	    "standard deviate", "Pr(I) two sided")
         printCoefmat(res, ...)

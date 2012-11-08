@@ -13,7 +13,8 @@ where \eqn{\rho}{rho} and \eqn{\lambda}{lambda} are found by \code{nlminb} or \c
 \usage{
 sacsarlm(formula, data = list(), listw, listw2 = NULL, na.action, type="sac",
  method = "eigen", quiet = NULL, zero.policy = NULL, tol.solve = 1e-10,
- llprof=NULL, control = list())
+ llprof=NULL, interval1=NULL, interval2=NULL, trs1=NULL, trs2=NULL,
+ control = list())
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -33,6 +34,8 @@ of (1 - rho*eigenvalue) using \code{eigenw}, and "spam" or "Matrix" for strictly
 neighbours, if FALSE (default) assign NA - causing \code{sacsarlm()} to terminate with an error}
   \item{tol.solve}{the tolerance for detecting linear dependencies in the columns of matrices to be inverted - passed to \code{solve()} (default=1.0e-10). This may be used if necessary to extract coefficient standard errors (for instance lowering to 1e-12), but errors in \code{solve()} may constitute indications of poorly scaled variables: if the variables have scales differing much from the autoregressive coefficient, the values in this matrix may be very different in scale, and inverting such a matrix is analytically possible by definition, but numerically unstable; rescaling the RHS variables alleviates this better than setting tol.solve to a very small value}
   \item{llprof}{default NULL, can either be an integer, to divide the feasible ranges into a grid of points, or a two-column matrix of spatial coefficient values, at which to evaluate the likelihood function}
+  \item{trs1, trs2}{default NULL, if given, vectors for each weights object of powered spatial weights matrix traces output by \code{trW}; when given, used in some Jacobian methods}
+  \item{interval1, interval2}{default is NULL, search intervals for each weights object for autoregressive parameters}
   \item{control}{list of extra control arguments - see section below}
 }
 

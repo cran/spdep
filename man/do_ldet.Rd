@@ -29,7 +29,7 @@ Matrix_setup(env, Imult, super=as.logical(NA), which=1)
 Matrix_J_setup(env, super=FALSE, which=1)
 LU_setup(env, which=1)
 LU_prepermutate_setup(env, coef=0.1, order=FALSE, which=1)
-moments_setup(env, trs=NULL, m, p, type="MC", correct=TRUE, trunc=TRUE, which=1)
+moments_setup(env, trs=NULL, m, p, type="MC", correct=TRUE, trunc=TRUE, eq7=TRUE, which=1)
 SE_classic_setup(env, SE_method="LU", p=16, m=30, nrho=200, interpn=2000,
  interval=c(-1,0.999), SElndet=NULL, which=1)
 SE_whichMin_setup(env, SE_method="LU", p=16, m=30, nrho=200, interpn=2000,
@@ -54,6 +54,7 @@ SE_interp_setup(env, SE_method="LU", p=16, m=30, nrho=200,
   \item{type}{moments trace type, see \code{\link{trW}}}
   \item{correct}{default TRUE: use Smirnov correction term, see \code{\link{trW}}}
   \item{trunc}{default TRUE: truncate Smirnov correction term, see \code{\link{trW}}}
+  \item{eq7}{default TRUE}{use equation 7 in Smirnov and Anselin (2009), if FALSE no unit root correction}
   \item{SE_method}{default \dQuote{LU}, alternatively \dQuote{MC}; underlying lndet method to use for generating SE toolbox emulation grid}
   \item{nrho}{default 200, number of lndet values in first stage SE toolbox emulation grid}
   \item{interval}{default c(-1,0.999) if interval argument NULL, bounds for SE toolbox emulation grid}
@@ -179,6 +180,8 @@ SE_interp_setup(env, SE_method="LU", p=16, m=30, nrho=200,
   } and assigns to the environment:
   \describe{
     \item{trs}{vector of traces, possibly approximated}
+    \item{q12}{integer vector of length 2, unit roots terms, ignored until 0.5-52}
+    \item{eq7}{logical scalar: use equation 7}
     \item{correct}{logical scalar: use Smirnov correction term}
     \item{trunc}{logical scalar: truncate Smirnov correction term}
     \item{method}{string: \dQuote{moments}}

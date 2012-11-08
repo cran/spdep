@@ -1,3 +1,60 @@
+2012-11-08 20:26  rsbivand
+
+	* NAMESPACE, R/error.hessian.R, R/error.spsarlm.R, R/lag.hessian.R,
+	  R/lag.spsarlm.R, R/mcmcsamp.R, R/sacsarlm.R, man/MCMCsamp.Rd,
+	  man/errorsarlm.Rd: adding MCMCsamp method for sarlm
+
+2012-11-08 17:16  rsbivand
+
+	* R/mcmcsamp.R, R/spautolm.R, man/MCMCsamp.Rd, man/spautolm.Rd:
+	  adding MCMCsamp method for spautolm
+
+2012-11-08 11:05  rsbivand
+
+	* man/spautolm.Rd: add fdHess lambda.se to spautolm
+
+2012-11-08 10:49  rsbivand
+
+	* R/spautolm.R: add fdHess lambda.se to spautolm
+
+2012-11-07 20:29  rsbivand
+
+	* DESCRIPTION, NAMESPACE, R/jacobian_setup.R, R/lag.spsarlm.R,
+	  R/mcmcsamp.R, R/sacsarlm.R, R/spautolm.R, man/GMerrorsar.Rd,
+	  man/sacsarlm.Rd, man/spautolm.Rd: code simplification for
+	  Jacobian
+
+2012-11-07 07:04  rsbivand
+
+	* R/error.spsarlm.R, R/jacobian.R, R/jacobian_setup.R,
+	  R/mcmcsamp.R, R/sp.correlogram.R, man/sp.correlogram.Rd: code
+	  simplification for Jacobian
+
+2012-10-18 18:58  rsbivand
+
+	* R/jacobian.R: eq7 moments
+
+2012-10-04 03:00  rsbivand
+
+	* DESCRIPTION, R/cyclical.R, R/jacobian.R, R/weights-utils.R,
+	  man/do_ldet.Rd: adding cyclical computation
+
+2012-10-03 10:06  rsbivand
+
+	* R/weights-utils.R: find cyclical weights
+
+2012-10-03 09:59  rsbivand
+
+	* R/weights-utils.R: find cyclical weights
+
+2012-10-03 09:54  rsbivand
+
+	* R/weights-utils.R: find cyclical weights
+
+2012-09-25 09:09  rsbivand
+
+	* ChangeLog, DESCRIPTION, inst/ChangeLog: tidy
+
 2012-09-23 14:51  rsbivand
 
 	* NAMESPACE, R/jacobian.R, man/do_ldet.Rd: add LU pre-permute ldet

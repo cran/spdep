@@ -14,13 +14,13 @@
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Spatial conditional and simultaneous autoregression model estimation}
 \description{
- Function taking family and weights arguments for spatial autoregression model estimation by Maximum Likelihood, using full matrix methods, not suited to large data sets with thousands of observations. With one of the sparse matrix methods, larger numbers of observations can be handled, but the \code{interval=} argument should be set. The implementation is GLS using the single spatial coefficient value, here termed lambda, found by line search using \code{optimize} to maximise the log likelihood.
+ Function taking family and weights arguments for spatial autoregression model estimation by Maximum Likelihood, using dense matrix methods, not suited to large data sets with thousands of observations. With one of the sparse matrix methods, larger numbers of observations can be handled, but the \code{interval=} argument should be set. The implementation is GLS using the single spatial coefficient value, here termed lambda, found by line search using \code{optimize} to maximise the log likelihood.
 }
 \usage{
 spautolm(formula, data = list(), listw, weights,
- na.action, family = "SAR", method="full", verbose = NULL, interval=NULL,
- zero.policy = NULL, tol.solve=.Machine$double.eps, llprof=NULL,
- control=list())
+ na.action, family = "SAR", method="eigen", verbose = NULL, trs=NULL,
+ interval=NULL, zero.policy = NULL, tol.solve=.Machine$double.eps,
+ llprof=NULL, control=list())
 \method{summary}{spautolm}(object, correlation = FALSE, adj.se=FALSE,
  Nagelkerke=FALSE, ...)
 }
@@ -34,9 +34,10 @@ is called.}
   \item{listw}{a \code{listw} object created for example by \code{nb2listw}}
   \item{weights}{an optional vector of weights to be used in the fitting process}
   \item{na.action}{a function (default \code{options("na.action")}), can also be \code{na.omit} or \code{na.exclude} with consequences for residuals and fitted values - in these cases the weights list will be subsetted to remove NAs in the data. Note that only weights lists created without using the glist argument to \code{nb2listw} may be subsetted.}
-  \item{family}{character string: either \code{"SAR"} or \code{"CAR"} for simultaneous or conditional autoregressions; \code{"SMA"} for spatial moving average added thanks to Jielai Ma - \code{"SMA"} is only implemented for method=\code{"full"} because it necessarily involves dense matrices}
-  \item{method}{character string: default \code{"full"} for use of full matrices, \code{"Matrix_J"} or \code{"spam"} for sparse matrices (restricted to spatial weights symmetric or similar to symmetric) using methods in either the Matrix or spam packages; \dQuote{Matrix} and \dQuote{spam_update} provide updating Cholesky decomposition methods. Note that users should change from spam to Matrix. Values of method may also include "LU", which provides an alternative sparse matrix decomposition approach, and the "Chebyshev" and Monte Carlo "MC" approximate log-determinant methods.}
+  \item{family}{character string: either \code{"SAR"} or \code{"CAR"} for simultaneous or conditional autoregressions; \code{"SMA"} for spatial moving average added thanks to Jielai Ma - \code{"SMA"} is only implemented for method=\code{"eigen"} because it necessarily involves dense matrices}
+  \item{method}{character string: default \code{"eigen"} for use of dense matrices, \code{"Matrix_J"} or \code{"spam"} for sparse matrices (restricted to spatial weights symmetric or similar to symmetric) using methods in either the Matrix or spam packages; \dQuote{Matrix} and \dQuote{spam_update} provide updating Cholesky decomposition methods. Note that users should change from spam to Matrix. Values of method may also include "LU", which provides an alternative sparse matrix decomposition approach, and the "Chebyshev" and Monte Carlo "MC" approximate log-determinant methods.}
   \item{verbose}{default NULL, use global option value; if TRUE, reports function values during optimization.}
+  \item{trs,}{default NULL, if given, a vector of powered spatial weights matrix traces output by \code{trW}; when given, used in some Jacobian methods}
   \item{interval}{search interval for autoregressive parameter when not using method="eigen"; default is c(-1,0.999), \code{optimize} will reset NA/NaN to a bound and gives a warning when the interval is poorly set; method="Matrix" will attempt to search for an appropriate interval, if find\_interval=TRUE (fails on some platforms)}
   \item{zero.policy}{default NULL, use global option value; Include list of no-neighbour observations in output if TRUE --- otherwise zero.policy is handled within the listw argument}
   \item{tol.solve}{the tolerance for detecting linear dependencies in the columns of matrices to be inverted - passed to \code{solve()} (default=double precision machine tolerance). Errors in \code{solve()} may constitute indications of poorly scaled variables: if the variables have scales differing much from the autoregressive coefficient, the values in this matrix may be very different in scale, and inverting such a matrix is analytically possible by definition, but numerically unstable; rescaling the RHS variables alleviates this better than setting tol.solve to a very small value}
@@ -95,12 +96,18 @@ variable in making predictions for the fitting data.
   \item{parameters}{number of parameters estimated}
   \item{aliased}{if not NULL, details of aliased variables}
   \item{method}{Jacobian method chosen}
+  \item{family}{family chosen}
   \item{zero.policy}{zero.policy used}
   \item{weights}{case weights used}
   \item{interval}{the line search interval used}
   \item{timings}{processing timings}
   \item{na.action}{(possibly) named vector of excluded or omitted observations if non-default na.action argument used}
   \item{llprof}{if not NULL, a list with components lambda and ll of equal length}
+  \item{lambda.se}{Numerical Hessian-based standard error of lambda}
+  \item{fdHess}{Numerical Hessian-based variance-covariance matrix}
+  \item{X}{covariates used in model fitting}
+  \item{Y}{response used in model fitting}
+  \item{weights}{weights used in model fitting}
 }
 \references{Cliff, A. D., Ord, J. K. 1981 \emph{Spatial processes}, Pion;
 Ord, J. K. 1975 Estimation methods for models of spatial interaction,
@@ -119,7 +126,7 @@ esar0 <- errorsarlm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
  listw=listw_NY)
 summary(esar0)
 system.time(esar1f <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
- data=nydata, listw=listw_NY, family="SAR", method="full", verbose=TRUE))
+ data=nydata, listw=listw_NY, family="SAR", method="eigen", verbose=TRUE))
 summary(esar1f)
 system.time(esar1M <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
  data=nydata, listw=listw_NY, family="SAR", method="Matrix", verbose=TRUE))
@@ -133,7 +140,7 @@ system.time(esar1s <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
  data=nydata, listw=listw_NY, family="SAR", method="spam", verbose=TRUE))
 summary(esar1s)
 esar1wf <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
- listw=listw_NY, weights=POP8, family="SAR", method="full")
+ listw=listw_NY, weights=POP8, family="SAR", method="eigen")
 summary(esar1wf)
 system.time(esar1wM <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
  data=nydata, listw=listw_NY, weights=POP8, family="SAR", method="Matrix"))
@@ -148,7 +155,7 @@ esar1wch <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
  listw=listw_NY, weights=POP8, family="SAR", method="Chebyshev")
 summary(esar1wch)
 ecar1f <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
- listw=listw_NY, family="CAR", method="full")
+ listw=listw_NY, family="CAR", method="eigen")
 summary(ecar1f)
 system.time(ecar1M <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
  data=nydata, listw=listw_NY, family="CAR", method="Matrix"))
@@ -157,7 +164,7 @@ ecar1s <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
  listw=listw_NY, family="CAR", method="spam")
 summary(ecar1s)
 ecar1wf <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
- listw=listw_NY, weights=nydata$POP8, family="CAR", method="full")
+ listw=listw_NY, weights=nydata$POP8, family="CAR", method="eigen")
 summary(ecar1wf)
 system.time(ecar1wM <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
  data=nydata, listw=listw_NY, weights=POP8, family="CAR", method="Matrix"))

@@ -32,6 +32,8 @@ sar_lag_hess_sse <- function(rho, beta, env) {
 
 f_laglm_hess <- function(coefs, env) {
     rho <- coefs[1]
+    int <- get("interval", envir=env)
+    if (rho <= int[1] || rho >= int[2]) return(-Inf)
     beta <- coefs[-1]
     SSE <- sar_lag_hess_sse(rho, beta, env)
     n <- get("n", envir=env)
@@ -41,6 +43,7 @@ f_laglm_hess <- function(coefs, env) {
         (1/(2 * s2)) * SSE)
     if (get("verbose", envir=env)) cat("Hessian: rho:\t", rho, "\tfunction value:\t", ret, "\n")
     assign("hf_calls", get("hf_calls", envir=env)+1L, envir=env)
+    if (!is.finite(ret)) return(-Inf)
     ret
 }
 

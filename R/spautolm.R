@@ -1,13 +1,17 @@
-# Copyright 2005-2010 by Roger Bivand
+# Copyright 2005-2012 by Roger Bivand
 spautolm <- function(formula, data = list(), listw, weights,
-    na.action, family="SAR", method="full", verbose=NULL,
+    na.action, family="SAR", method="eigen", verbose=NULL, trs=NULL,
     interval=NULL, zero.policy=NULL, tol.solve=.Machine$double.eps, llprof=NULL,
     control=list()) {
     timings <- list()
     .ptime_start <- proc.time()
     con <- list(tol.opt=.Machine$double.eps^(2/3), 
-       Imult=2, super=NULL, cheb_q=5, MC_p=16, MC_m=30, spamPivot="MMD",
-       in_coef=0.1)
+        fdHess=NULL, optimHess=FALSE,
+        Imult=2, cheb_q=5, MC_p=16, MC_m=30, super=NULL, spamPivot="MMD",
+        in_coef=0.1, type="MC",
+        correct=TRUE, trunc=TRUE, SE_method="LU", nrho=200,
+        interpn=2000, small_asy=TRUE, small=1500, SElndet=NULL,
+        LU_order=FALSE)
     nmsC <- names(con)
     con[(namc <- names(control))] <- control
     if (length(noNms <- namc[!namc %in% nmsC])) 
@@ -20,7 +24,7 @@ spautolm <- function(formula, data = list(), listw, weights,
             zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
 
-    if (family == "SMA" && method != "full") stop("SMA only for full method")
+    if (family == "SMA" && method != "eigen") stop("SMA only for eigen method")
     mf <- match.call(expand.dots = FALSE)
     m <- match(c("formula", "data", "weights", "na.action"), names(mf), 0)
     mf <- mf[c(1, m)]
@@ -43,7 +47,7 @@ spautolm <- function(formula, data = list(), listw, weights,
     X <- model.matrix(mt, mf)
     if (any(is.na(X))) stop("NAs in independent variable")
     n <- nrow(X)
-    if (NROW(X) != length(listw$neighbours))
+    if (n != length(listw$neighbours))
 	 stop("Input data and neighbourhood list have different dimensions")
     weights <- as.vector(model.extract(mf, "weights"))
 # set up default weights
@@ -78,150 +82,26 @@ spautolm <- function(formula, data = list(), listw, weights,
     assign("verbose", verbose, envir=env)
     assign("listw", listw, envir=env)
     assign("sum_lw", sum_lw, envir=env)
+    W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
+    if (family == "CAR") if (!isTRUE(all.equal(W, t(W))))
+        warning("Non-symmetric spatial weights in CAR model")
+    assign("W", W, envir=env)
+    I <- as_dsCMatrix_I(n)
+    assign("I", I, envir=env)
+    Sweights <- as(as(Diagonal(x=weights), "symmetricMatrix"), 
+        "CsparseMatrix")
+    assign("Sweights", Sweights, envir=env)
     timings[["set_up"]] <- proc.time() - .ptime_start
     .ptime_start <- proc.time()
 
+    if (verbose) cat(paste("\nJacobian calculated using "))
 
-    if (method == "full") {
-        eigen_setup(env)
-        er <- get("eig.range", envir=env)
-        if (is.null(interval)) 
-            interval <- c(er[1]+.Machine$double.eps, 
-                er[2]-.Machine$double.eps)
+    interval <- jacobianSetup(method, env, con, trs=trs,
+        interval=interval)
+    assign("interval", interval, envir=env)
+
 # fix SMA bounds
-	if (family == "SMA") interval <- -rev(interval)
-# spatial weights matrix
-        W <- listw2mat(listw)
-	attr(W, "dimnames") <- NULL
-        if (family == "CAR") if (!isTRUE(all.equal(W, t(W))))
-	    warning("Non-symmetric spatial weights in CAR model")
-        I <- diag(n)
-        Sweights <- diag(weights)
-        assign("W", W, envir=env)
-        assign("I", I, envir=env)
-        assign("Sweights", Sweights, envir=env)
-    }  else if (method == "Matrix") {
-        if (listw$style %in% c("W", "S") && !can.sim)
-        stop("Matrix method requires symmetric weights")
-        if (listw$style %in% c("B", "C") && 
- 	    !(is.symmetric.glist(listw$neighbours, listw$weights)))
-	    stop("Matrix method requires symmetric weights")
-        if (listw$style == "U") stop("U style not permitted, use C")
-	W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
-        if (family == "CAR") if (!isTRUE(all.equal(W, t(W))))
-	    warning("Non-symmetric spatial weights in CAR model")
-        assign("W", W, envir=env)
-        Imult <- con$Imult
-        if (is.null(interval)) {
-	    if (listw$style == "B") {
-                Imult <- ceiling((2/3)*max(sapply(listw$weights, sum)))
-                interval <- c(-0.5, +0.25)
-            } else interval <- c(-1, 0.999)
-        }
-# FIXME
-        if (is.null(con$super)) con$super <- as.logical(NA)
-        Matrix_setup(env, Imult, con$super)
-        I <- as_dsCMatrix_I(n)
-        assign("I", I, envir=env)
-        Sweights <- as(as(Diagonal(x=weights), "symmetricMatrix"), 
-	    "CsparseMatrix")
-        assign("Sweights", Sweights, envir=env)
-    }  else if (method == "Matrix_J") {
-        if (listw$style %in% c("W", "S") && !can.sim)
-        stop("Matrix method requires symmetric weights")
-        if (listw$style %in% c("B", "C") && 
- 	    !(is.symmetric.glist(listw$neighbours, listw$weights)))
-	    stop("Matrix method requires symmetric weights")
-        if (listw$style == "U") stop("U style not permitted, use C")
-	W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
-        if (family == "CAR") if (!isTRUE(all.equal(W, t(W))))
-	    warning("Non-symmetric spatial weights in CAR model")
-        assign("W", W, envir=env)
-        Imult <- con$Imult
-        if (is.null(interval)) {
-	    if (listw$style == "B") {
-                Imult <- ceiling((2/3)*max(sapply(listw$weights, sum)))
-                interval <- c(-0.5, +0.25)
-            } else interval <- c(-1, 0.999)
-        }
-# FIXME
-        if (is.null(con$super)) con$super <- FALSE
-        Matrix_J_setup(env, super=con$super)
-        I <- as_dsCMatrix_I(n)
-        assign("I", I, envir=env)
-        Sweights <- as(as(Diagonal(x=weights), "symmetricMatrix"), 
-	    "CsparseMatrix")
-        assign("Sweights", Sweights, envir=env)
-
-
-    }  else if (method == "spam") {
-        if (!require(spam)) stop("spam not available")
-        if (listw$style %in% c("W", "S") && !can.sim)
-        stop("spam method requires symmetric weights")
-        if (listw$style %in% c("B", "C", "U") && 
- 	    !(is.symmetric.glist(listw$neighbours, listw$weights)))
-	    stop("spam method requires symmetric weights")
-	W <- as.spam.listw(listw)
-        if (family == "CAR") if (!isTRUE(all.equal(W, t(W))))
-	    warning("Non-symmetric spatial weights in CAR model")
-        assign("W", W, envir=env)
-# Jacobian only from symmetric W_J, W can be asymmetric though
-        spam_setup(env, pivot=con$spamPivot)
-        Sweights <- diag.spam(x=weights, n, n)
-        assign("Sweights", Sweights, envir=env)
-        if (is.null(interval)) interval <- c(-1, 0.999)
-    }  else if (method == "spam_update") {
-        if (!require(spam)) stop("spam not available")
-        if (listw$style %in% c("W", "S") && !can.sim)
-        stop("spam method requires symmetric weights")
-        if (listw$style %in% c("B", "C", "U") && 
- 	    !(is.symmetric.glist(listw$neighbours, listw$weights)))
-	    stop("spam method requires symmetric weights")
-	W <- as.spam.listw(listw)
-        if (family == "CAR") if (!isTRUE(all.equal(W, t(W))))
-	    warning("Non-symmetric spatial weights in CAR model")
-        assign("W", W, envir=env)
-# Jacobian only from symmetric W_J, W can be asymmetric though
-        spam_update_setup(env, in_coef=con$in_coef, pivot=con$spamPivot)
-        Sweights <- diag.spam(x=weights, n, n)
-        assign("Sweights", Sweights, envir=env)
-        if (is.null(interval)) interval <- c(-1, 0.999)
-    } else if (method == "LU") {
-        LU_setup(env)
-        W <- get("W", envir=env)
-        Sweights <- as(as(Diagonal(x=weights), "symmetricMatrix"), 
-	    "CsparseMatrix")
-        assign("Sweights", Sweights, envir=env)
-        if (is.null(interval)) interval <- c(-1,0.999)
-    } else if (method == "MC") {
-	if (!listw$style %in% c("W"))
-	    stop("MC method requires row-standardised weights")
-        mcdet_setup(env, p=con$MC_p, m=con$MC_m)
-        I <- as_dsCMatrix_I(n)
-        assign("I", I, envir=env)
-        Sweights <- as(as(Diagonal(x=weights), "symmetricMatrix"), 
-	    "CsparseMatrix")
-        assign("Sweights", Sweights, envir=env)
-        W <- get("W", envir=env)
-        if (is.null(interval)) interval <- c(-1,0.999)
-    } else if (method == "Chebyshev") {
-	if (listw$style %in% c("W", "S") && !can.sim)
-	    stop("Chebyshev method requires symmetric weights")
-	if (listw$style %in% c("B", "C", "U") && 
-	    !(is.symmetric.glist(listw$neighbours, listw$weights)))
-	        stop("Chebyshev method requires symmetric weights")
-        cheb_setup(env, q=con$cheb_q)
-        I <- as_dsCMatrix_I(n)
-        assign("I", I, envir=env)
-        Sweights <- as(as(Diagonal(x=weights), "symmetricMatrix"), 
-	    "CsparseMatrix")
-        assign("Sweights", Sweights, envir=env)
-        W <- get("W", envir=env)
-        if (is.null(interval)) {
- 	    if (listw$style == "B") interval <- c(-0.5, +0.25)
-            else interval <- c(-1,0.999)
-        }
-    } else stop("unknown method")
+    if (family == "SMA") interval <- -rev(interval)
 
     nm <- paste(method, "set_up", sep="_")
     timings[[nm]] <- proc.time() - .ptime_start
@@ -264,12 +144,34 @@ spautolm <- function(formula, data = list(), listw, weights,
     LLNullLlm <- logLik(lm(Y ~ 1, weights=weights))
     nm <- paste(method, "output", sep="_")
     timings[[nm]] <- proc.time() - .ptime_start
+    .ptime_start <- proc.time()
+#    if (method != "eigen") {
+#        if (con$small >= n && con$small_asy) do_asy <- TRUE
+#        else do_asy <- FALSE
+#    } else do_asy <- TRUE
+    do_asy <- FALSE
+    if (is.null(con$fdHess)) {
+        con$fdHess <-  !do_asy #&& method != "eigen"
+        fdHess <- NULL
+    }
+    stopifnot(is.logical(con$fdHess))
+    lambda.se <- NULL
+
+    if (con$fdHess) {
+        coefs <- c(lambda, fit$coefficients)
+        fdHess <- getVcovmat(coefs, env, tol.solve=tol.solve,
+            optim=con$optimHess)
+        lambda.se <- sqrt(fdHess[1, 1])
+    }
+
+    timings[["fdHess"]] <- proc.time() - .ptime_start
     rm(env)
     GC <- gc()
     res <- list(fit=fit, lambda=lambda, LL=LL, LL0=LL0, call=match.call(),
-        parameters=(ncol(X)+2), aliased=aliased, method=method,
-        zero.policy=zero.policy, weights=weights, interval=interval,
-        timings=do.call("rbind", timings)[, c(1, 3)], LLNullLlm=LLNullLlm)
+        parameters=(ncol(X)+2), aliased=aliased, method=method, family=family,
+        zero.policy=zero.policy, weights=weights, interval=interval, trs=trs,
+        timings=do.call("rbind", timings)[, c(1, 3)], LLNullLlm=LLNullLlm,
+        fdHess=fdHess, lambda.se=lambda.se, X=X, Y=Y, weights=weights)
     if (!is.null(na.act))
 	res$na.action <- na.act
     if (is.null(llprof)) res$llprof <- llprof
@@ -476,6 +378,9 @@ print.summary.spautolm <- function(x, digits = max(5, .Options$digits - 3),
 		"LR test value:", format(signif(res$statistic, digits)),
 		"p-value:", format.pval(res$p.value, digits), 
 		"\n")
+        if (!is.null(x$lambda.se))
+            cat("Numerical Hessian standard error of lambda:",
+                format(signif(x$lambda.se, digits)), "\n")
 	cat("\nLog likelihood:", logLik(x), "\n")
 	if (x$adj.se) cat("Residual variance (sigma squared): ") 
 	else cat("ML residual variance (sigma squared): ") 
@@ -500,4 +405,49 @@ print.summary.spautolm <- function(x, digits = max(5, .Options$digits - 3),
     	cat("\n")
         invisible(x)
 }
+
+getVcovmat <- function(coefs, env, tol.solve=.Machine$double.eps, optim=FALSE) {
+    if (optim) {
+        opt <- optim(par=coefs, fn=f_spautolm_hess, env=env,
+            method="BFGS", hessian=TRUE)
+        mat <- opt$hessian
+    } else {
+        fd <- fdHess(coefs, f_spautolm_hess, env)
+        mat <- fd$Hessian
+    }
+    res <- solve(-(mat), tol.solve=tol.solve)
+    res
+}
+
+f_spautolm_hess <- function(coefs, env) {
+    lambda <- coefs[1]
+    int <- get("interval", envir=env)
+    if (lambda <= int[1] || lambda >= int[2]) return(-Inf)
+    beta <- coefs[-1]
+    X <- get("X", envir=env)
+    Y <- get("Y", envir=env)
+    fitted <- X %*% beta
+    residuals <- Y - fitted
+    dmmf <- eval(parse(text=get("family", envir=env)))
+    if (get("family", envir=env) == "SMA") IlW <- dmmf((get("I", envir=env) + 
+        lambda * get("W", envir=env)), get("Sweights", envir=env))
+    else IlW <- dmmf((get("I", envir=env) - lambda * get("W", envir=env)), 
+        get("Sweights", envir=env))
+    SSE <- c(crossprod(residuals, as.matrix(IlW %*% residuals)))
+    n <- get("n", envir=env)
+    s2 <- SSE/n
+    ldet <- do_ldet(lambda, env)
+    det <- ifelse(get("family", envir=env) == "CAR", 0.5*ldet, ldet)
+    ret <- (det + (1/2)*get("sum_lw", envir=env) - ((n/2)*log(2*pi)) - 
+        (n/2)*log(s2) - (1/(2*(s2)))*SSE)
+    if (get("verbose", envir=env))
+        cat("lambda:", lambda, "function:", ret, "Jacobian", ldet, "SSE",
+            SSE, "\n")
+    if (!is.finite(ret)) return(-Inf)
+    ret
+}
+
+
+
+
 

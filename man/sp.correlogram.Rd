@@ -33,7 +33,7 @@ if TRUE permit the weights list to be formed with zero-length weights vectors}
   \item{\dots}{further arguments passed through}
 }
 \details{
-  The print function also calculates the standard deviates of Moran's I or Geary's C and a two-sided probability value, optionally using \code{p.adjust} to correct by the nymber of lags. The plot function plots a bar from the estimated Moran's I, or Geary's C value to +/- twice the square root of its variance (in previous releases only once, not twice).
+  The print function also calculates the standard deviates of Moran's I or Geary's C and a two-sided probability value, optionally using \code{p.adjust} to correct by the nymber of lags. The plot function plots a bar from the estimated Moran's I, or Geary's C value to +/- twice the square root of its variance (in previous releases only once, not twice). The table includes the count of included observations in brackets after the lag order. Care needs to be shown when interpreting results for few remaining included observations as lag order increases.
 }
 
 \value{

@@ -148,3 +148,4 @@ aggregate.nb <- function(x, IDs, remove.self=TRUE, ...) {
     nb_short
 }
 
+
