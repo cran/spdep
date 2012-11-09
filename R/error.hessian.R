@@ -33,6 +33,8 @@ sar_error_hess_sse <- function(lambda, beta, env) {
 
 f_errlm_hess <- function(coefs, env) {
     lambda <- coefs[1]
+    int <- get("interval", envir=env)
+    if (lambda <= int[1] || lambda >= int[2]) return(-Inf)
     beta <- coefs[-1]
     SSE <- sar_error_hess_sse(lambda, beta, env)
     n <- get("n", envir=env)
@@ -43,6 +45,7 @@ f_errlm_hess <- function(coefs, env) {
     if (get("verbose", envir=env)) cat("lambda:", lambda, " function:", ret,
         " Jacobian:", det, " SSE:", SSE, "\n")
     assign("hf_calls", get("hf_calls", envir=env)+1L, envir=env)
+    if (!is.finite(ret)) return(-Inf)
     ret
 }
 

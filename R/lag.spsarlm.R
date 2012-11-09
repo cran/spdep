@@ -136,149 +136,10 @@ lagsarlm <- function(formula, data = list(), listw,
         timings[["set_up"]] <- proc.time() - .ptime_start
         .ptime_start <- proc.time()
 	if (!quiet) cat("Jacobian calculated using ")
-	switch(method, 
-		eigen = {
-                    if (!quiet) cat("neighbourhood matrix eigenvalues\n")
-                    eigen_setup(env)
-                    er <- get("eig.range", envir=env)
-                    if (is.null(interval)) 
-                        interval <- c(er[1]+.Machine$double.eps, 
-                            er[2]-.Machine$double.eps)
-                },
-	        Matrix = {
-		    if (listw$style %in% c("W", "S") && !can.sim)
-		    stop("Matrix method requires symmetric weights")
-		    if (listw$style %in% c("B", "C") && 
-			!(is.symmetric.glist(listw$neighbours, listw$weights)))
-		    stop("Matrix method requires symmetric weights")
-                    if (listw$style == "U") stop("U style not permitted, use C")
-		    if (!quiet) cat("sparse matrix Cholesky decomposition\n")
-	            Imult <- con$Imult
-                    if (is.null(interval)) {
-	                if (listw$style == "B") {
-                            Imult <- ceiling((2/3)*max(sapply(listw$weights,
-                                sum)))
-	                    interval <- c(-0.5, +0.25)
-	                } else interval <- c(-1, 0.999)
-                    }
-                    if (is.null(con$super)) con$super <- as.logical(NA)
-                    Matrix_setup(env, Imult, con$super)
-                    W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
-        	    I <- as_dsCMatrix_I(n)
-		},
-	        Matrix_J = {
-		    if (listw$style %in% c("W", "S") && !can.sim)
-		    stop("Matrix method requires symmetric weights")
-		    if (listw$style %in% c("B", "C") && 
-			!(is.symmetric.glist(listw$neighbours, listw$weights)))
-		    stop("Matrix method requires symmetric weights")
-                    if (listw$style == "U") stop("U style not permitted, use C")
-		    if (!quiet) cat("sparse matrix Cholesky decomposition\n")
-                    if (is.null(interval)) {
-	                if (listw$style == "B") {
-	                    interval <- c(-0.5, +0.25)
-	                } else interval <- c(-1, 0.999)
-                    }
-                    if (is.null(con$super)) con$super <- FALSE
-                    Matrix_J_setup(env, super=con$super)
-                    W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
-        	    I <- as_dsCMatrix_I(n)
-		},
-	        spam = {
-                    if (!require(spam)) stop("spam not available")
-		    if (listw$style %in% c("W", "S") && !can.sim)
-		    stop("spam method requires symmetric weights")
-		    if (listw$style %in% c("B", "C", "U") && 
-			!(is.symmetric.glist(listw$neighbours, listw$weights)))
-		    stop("spam method requires symmetric weights")
-		    if (!quiet) cat("sparse matrix Cholesky decomposition\n")
-                    spam_setup(env)
-                    W <- as.spam.listw(get("listw", envir=env))
-                    if (is.null(interval)) interval <- c(-1,0.999)
-		},
-	        spam_update = {
-                    if (!require(spam)) stop("spam not available")
-		    if (listw$style %in% c("W", "S") && !can.sim)
-		    stop("spam method requires symmetric weights")
-		    if (listw$style %in% c("B", "C", "U") && 
-			!(is.symmetric.glist(listw$neighbours, listw$weights)))
-		    stop("spam method requires symmetric weights")
-		    if (!quiet) cat("sparse matrix Cholesky decomposition\n")
-                    spam_update_setup(env, in_coef=con$in_coef,
-                        pivot=con$spamPivot)
-                    W <- as.spam.listw(get("listw", envir=env))
-                    if (is.null(interval)) interval <- c(-1,0.999)
-		},
-                Chebyshev = {
-		    if (listw$style %in% c("W", "S") && !can.sim)
-		        stop("Chebyshev method requires symmetric weights")
-		    if (listw$style %in% c("B", "C", "U") && 
-			!(is.symmetric.glist(listw$neighbours, listw$weights)))
-		        stop("Chebyshev method requires symmetric weights")
-		    if (!quiet) cat("sparse matrix Chebyshev approximation\n")
-                    cheb_setup(env, q=con$cheb_q)
-                    W <- get("W", envir=env)
-        	    I <- as_dsCMatrix_I(n)
-                    if (is.null(interval)) interval <- c(-1,0.999)
-                },
-                MC = {
-		    if (!listw$style %in% c("W"))
-		        stop("MC method requires row-standardised weights")
-		    if (!quiet) cat("sparse matrix Monte Carlo approximation\n")
-                    mcdet_setup(env, p=con$MC_p, m=con$MC_m)
-                    W <- get("W", envir=env)
-        	    I <- as_dsCMatrix_I(n)
-                    if (is.null(interval)) interval <- c(-1,0.999)
-                },
-                LU = {
-		    if (!quiet) cat("sparse matrix LU decomposition\n")
-                    LU_setup(env)
-                    W <- get("W", envir=env)
-                    I <- get("I", envir=env)
-                    if (is.null(interval)) interval <- c(-1,0.999)
-                },
-                moments = {
-		    if (!quiet) cat("Smirnov/Anselin (2009)", 
-                        "trace approximation\n")
-                    moments_setup(env, trs=trs, m=con$MC_m, p=con$MC_p,
-                        type=con$type, correct=con$correct, trunc=con$trunc)
-                    W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
-        	    I <- as_dsCMatrix_I(n)
-                    if (is.null(interval)) interval <- c(-1,0.999)
-                },
-                SE_classic = {
-		    if (!quiet) cat("SE toolbox classic grid\n")
-                    if (is.null(interval)) interval <- c(-1,0.999)
-		    if (con$SE_method == "MC" && !listw$style %in% c("W"))
-		        stop("MC method requires row-standardised weights")
-                    SE_classic_setup(env, SE_method=con$SE_method, p=con$MC_p,
-                        m=con$MC_m, nrho=con$nrho, interpn=con$interpn,
-                        interval=interval, SElndet=con$SElndet)
-                    W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
-        	    I <- as_dsCMatrix_I(n)
-                },
-                SE_whichMin = {
-		    if (!quiet) cat("SE toolbox which.min grid\n")
-                    if (is.null(interval)) interval <- c(-1,0.999)
-		    if (con$SE_method == "MC" && !listw$style %in% c("W"))
-		        stop("MC method requires row-standardised weights")
-                    SE_whichMin_setup(env, SE_method=con$SE_method, p=con$MC_p,
-                        m=con$MC_m, nrho=con$nrho, interpn=con$interpn,
-                        interval=interval, SElndet=con$SElndet)
-                    W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
-        	    I <- as_dsCMatrix_I(n)
-                },
-                SE_interp = {
-		    if (!quiet) cat("SE toolbox which.min grid\n")
-                    if (is.null(interval)) interval <- c(-1,0.999)
-		    if (con$SE_method == "MC" && !listw$style %in% c("W"))
-		        stop("MC method requires row-standardised weights")
-                    SE_interp_setup(env, SE_method=con$SE_method, p=con$MC_p,
-                        m=con$MC_m, nrho=con$nrho, interval=interval)
-                    W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
-        	    I <- as_dsCMatrix_I(n)
-                },
-		stop("...\nUnknown method\n"))
+
+        interval <- jacobianSetup(method, env, con, trs=trs,
+            interval=interval)
+        assign("interval", interval, envir=env)
 
         nm <- paste(method, "set_up", sep="_")
         timings[[nm]] <- proc.time() - .ptime_start
@@ -401,7 +262,7 @@ lagsarlm <- function(formula, data = list(), listw,
 		ase=ase, rho.se=rho.se, LMtest=LMtest, 
 		resvar=varb, zero.policy=zero.policy, aliased=aliased,
                 listw_style=listw$style, interval=interval, fdHess=fdHess,
-                optimHess=con$optimHess, insert=!is.null(trs),
+                optimHess=con$optimHess, insert=!is.null(trs), trs=trs,
                 LLNullLlm=LL_null_lm,
                 timings=do.call("rbind", timings)[, c(1, 3)], 
                 f_calls=get("f_calls", envir=env),

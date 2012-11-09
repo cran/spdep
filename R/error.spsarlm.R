@@ -11,7 +11,8 @@ errorsarlm <- function(formula, data = list(), listw, na.action, etype="error",
             compiled_sse=FALSE, Imult=2, cheb_q=5, MC_p=16, MC_m=30,
             super=NULL, spamPivot="MMD", in_coef=0.1, type="MC",
             correct=TRUE, trunc=TRUE, SE_method="LU", nrho=200,
-            interpn=2000, small_asy=TRUE, small=1500, SElndet=NULL)
+            interpn=2000, small_asy=TRUE, small=1500, SElndet=NULL,
+            LU_order=FALSE)
         nmsC <- names(con)
         con[(namc <- names(control))] <- control
         if (length(noNms <- namc[!namc %in% nmsC])) 
@@ -157,147 +158,10 @@ errorsarlm <- function(formula, data = list(), listw, na.action, etype="error",
         .ptime_start <- proc.time()
 
 	if (!quiet) cat(paste("\nJacobian calculated using "))
-	switch(method,
-		eigen = {
-                    if (!quiet) cat("neighbourhood matrix eigenvalues\n")
-                    eigen_setup(env)
-                    er <- get("eig.range", envir=env)
-                    if (is.null(interval)) 
-                        interval <- c(er[1]+.Machine$double.eps, 
-                            er[2]-.Machine$double.eps)
-                },
-	        Matrix = {
-		    if (listw$style %in% c("W", "S") && !can.sim)
-		        stop("Matrix method requires symmetric weights")
-		    if (listw$style %in% c("B", "C", "U") && 
-			!(is.symmetric.glist(listw$neighbours, listw$weights)))
-		        stop("Matrix method requires symmetric weights")
-		    if (!quiet) cat("sparse matrix Cholesky decomposition\n")
-	            Imult <- con$Imult
-                    if (is.null(interval)) {
-	                if (listw$style == "B") {
-                            Imult <- ceiling((2/3) * max(sapply(listw$weights,
-                                sum)))
-	                    interval <- c(-0.5, +0.25)
-	                } else interval <- c(-1, 0.999)
-                    }
-                    if (is.null(con$super)) con$super <- as.logical(NA)
-                    Matrix_setup(env, Imult, con$super)
-                    W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
-        	    I <- as_dsCMatrix_I(n)
-		},
-	        Matrix_J = {
-		    if (listw$style %in% c("W", "S") && !can.sim)
-		        stop("Matrix method requires symmetric weights")
-		    if (listw$style %in% c("B", "C", "U") && 
-			!(is.symmetric.glist(listw$neighbours, listw$weights)))
-		        stop("Matrix method requires symmetric weights")
-		    if (!quiet) cat("sparse matrix Cholesky decomposition\n")
-                    if (is.null(interval)) {
-	                if (listw$style == "B") {
-	                    interval <- c(-0.5, +0.25)
-	                } else interval <- c(-1, 0.999)
-                    }
-                    if (is.null(con$super)) con$super <- FALSE
-                    Matrix_J_setup(env, super=con$super)
-                    W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
-        	    I <- as_dsCMatrix_I(n)
-		},
-	        spam = {
-                    if (!require(spam)) stop("spam not available")
-		    if (listw$style %in% c("W", "S") && !can.sim)
-		        stop("spam method requires symmetric weights")
-		    if (listw$style %in% c("B", "C", "U") && 
-			!(is.symmetric.glist(listw$neighbours, listw$weights)))
-		        stop("spam method requires symmetric weights")
-		    if (!quiet) cat("sparse matrix Cholesky decomposition\n")
-                    spam_setup(env)
-                    W <- as.spam.listw(get("listw", envir=env))
-                    if (is.null(interval)) interval <- c(-1,0.999)
-		},
-	        spam_update = {
-                    if (!require(spam)) stop("spam not available")
-		    if (listw$style %in% c("W", "S") && !can.sim)
-		        stop("spam method requires symmetric weights")
-		    if (listw$style %in% c("B", "C", "U") && 
-			!(is.symmetric.glist(listw$neighbours, listw$weights)))
-		        stop("spam method requires symmetric weights")
-		    if (!quiet) cat("sparse matrix Cholesky decomposition\n")
-                    spam_update_setup(env, in_coef=con$in_coef,
-                        pivot=con$spamPivot)
-                    W <- as.spam.listw(get("listw", envir=env))
-                    if (is.null(interval)) interval <- c(-1,0.999)
-		},
-                Chebyshev = {
-		    if (listw$style %in% c("W", "S") && !can.sim)
-		        stop("Chebyshev method requires symmetric weights")
-		    if (listw$style %in% c("B", "C", "U") && 
-			!(is.symmetric.glist(listw$neighbours, listw$weights)))
-		        stop("Chebyshev method requires symmetric weights")
-		    if (!quiet) cat("sparse matrix Chebyshev approximation\n")
-                    cheb_setup(env, q=con$cheb_q)
-                    W <- get("W", envir=env)
-        	    I <- as_dsCMatrix_I(n)
-                    if (is.null(interval)) interval <- c(-1,0.999)
-                },
-                MC = {
-		    if (!listw$style %in% c("W"))
-		        stop("MC method requires row-standardised weights")
-		    if (!quiet) cat("sparse matrix Monte Carlo approximation\n")
-                    mcdet_setup(env, p=con$MC_p, m=con$MC_m)
-                    W <- get("W", envir=env)
-        	    I <- as_dsCMatrix_I(n)
-                    if (is.null(interval)) interval <- c(-1,0.999)
-                },
-                LU = {
-		    if (!quiet) cat("sparse matrix LU decomposition\n")
-                    LU_setup(env)
-                    W <- get("W", envir=env)
-                    I <- get("I", envir=env)
-                    if (is.null(interval)) interval <- c(-1,0.999)
-                },
-                moments = {
-		    if (!quiet) cat("Smirnov/Anselin (2009)", 
-                        "trace approximation\n")
-                    moments_setup(env, trs=trs, m=con$MC_m, p=con$MC_p,
-                        type=con$type, correct=con$correct, trunc=con$trunc)
-                    W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
-        	    I <- as_dsCMatrix_I(n)
-                    if (is.null(interval)) interval <- c(-1,0.999)
-                },
-                SE_classic = {
-		    if (!quiet) cat("SE toolbox classic grid\n")
-                    if (is.null(interval)) interval <- c(-1,0.999)
-		    if (con$SE_method == "MC" && !listw$style %in% c("W"))
-		        stop("MC method requires row-standardised weights")
-                    SE_classic_setup(env, SE_method=con$SE_method, p=con$MC_p,
-                        m=con$MC_m, nrho=con$nrho, interpn=con$interpn,
-                        interval=interval, SElndet=con$SElndet)
-                    W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
-        	    I <- as_dsCMatrix_I(n)
-                },
-                SE_whichMin = {
-		    if (!quiet) cat("SE toolbox which.min grid\n")
-                    if (is.null(interval)) interval <- c(-1,0.999)
-		    if (con$SE_method == "MC" && !listw$style %in% c("W"))
-		        stop("MC method requires row-standardised weights")
-                    SE_whichMin_setup(env, SE_method=con$SE_method, p=con$MC_p,
-                        m=con$MC_m, nrho=con$nrho, interpn=con$interpn,
-                        interval=interval, SElndet=con$SElndet)
-                    W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
-        	    I <- as_dsCMatrix_I(n)
-                },
-                SE_interp = {
-		    if (!quiet) cat("SE toolbox which.min grid\n")
-                    if (is.null(interval)) interval <- c(-1,0.999)
-		    if (con$SE_method == "MC" && !listw$style %in% c("W"))
-		        stop("MC method requires row-standardised weights")
-                    SE_interp_setup(env, SE_method=con$SE_method, p=con$MC_p,
-                        m=con$MC_m, nrho=con$nrho, interval=interval)
-                    W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
-        	    I <- as_dsCMatrix_I(n)
-                },
-		stop("...\n\nUnknown method\n"))
+
+        interval <- jacobianSetup(method, env, con, trs=trs,
+            interval=interval)
+        assign("interval", interval, envir=env)
 
         nm <- paste(method, "set_up", sep="_")
         timings[[nm]] <- proc.time() - .ptime_start
@@ -386,6 +250,8 @@ errorsarlm <- function(formula, data = list(), listw, na.action, etype="error",
                     p1 <- 1L:pp
                     R <- chol2inv(lm.model$qr$qr[p1, p1, drop = FALSE])
                     B <- tcrossprod(R, x)
+                    W <- as(as_dgRMatrix_listw(get("listw", envir=env)),
+                        "CsparseMatrix")
                     B1 <- as(powerWeights(W=W, rho=lambda, order=con$pWOrder,
                         X=B, tol=tol.solve), "matrix")
                     C <- x %*% R
@@ -443,12 +309,12 @@ errorsarlm <- function(formula, data = list(), listw, na.action, etype="error",
 		lambda.se=lambda.se, LMtest=LMtest, zero.policy=zero.policy, 
 		aliased=aliased, LLNullLlm=LL_null_lm, Hcov=Hcov, Vs=Vs,
                 interval=interval, fdHess=fdHess,
-                optimHess=con$optimHess, insert=!is.null(trs),
+                optimHess=con$optimHess, insert=!is.null(trs), trs=trs,
                 timings=do.call("rbind", timings)[, c(1, 3)], 
                 f_calls=get("f_calls", envir=env),
                 hf_calls=get("hf_calls", envir=env), intern_classic=iC),
                 class=c("sarlm"))
-        rm(env, envir=)
+        rm(env)
         GC <- gc()
 	if (zero.policy) {
 		zero.regs <- attr(listw$neighbours, 

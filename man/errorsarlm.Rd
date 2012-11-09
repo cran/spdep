@@ -167,6 +167,7 @@ COL.err.NA <- errorsarlm(CRIME ~ INC + HOVAL, data=NA.COL.OLD,
 COL.err.NA$na.action
 COL.err.NA
 resid(COL.err.NA)
+\donttest{
 system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb, style="W"), method="eigen"))
 system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
@@ -196,5 +197,6 @@ system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
 COL.merrW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb, style="W"), method="eigen", etype="emixed")
 summary(COL.merrW.eig, correlation=TRUE)
+}
 }
 \keyword{spatial}

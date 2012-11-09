@@ -1,14 +1,14 @@
 # Copyright 2010-11 by Roger Bivand
 sacsarlm <- function(formula, data = list(), listw, listw2=NULL, na.action, 
 	type="sac", method="eigen", quiet=NULL, zero.policy=NULL, 
-	tol.solve=1.0e-10, llprof=NULL, control=list()) {
+	tol.solve=1.0e-10, llprof=NULL, interval1=NULL, interval2=NULL,
+        trs1=NULL, trs2=NULL, control=list()) {
         timings <- list()
         .ptime_start <- proc.time()
         con <- list(fdHess=NULL, LAPACK=FALSE,
-           Imult=2, cheb_q=5, MC_p=16, MC_m=30,
+           Imult=2L, cheb_q=5L, MC_p=16L, MC_m=30L,
            super=FALSE, opt_method="nlminb", opt_control=list(),
-           pars=NULL, npars=4L, lower=c(-1.0, -1.0)+.Machine$double.eps^0.5,
-           upper=c(1.0, 1.0)-.Machine$double.eps^0.5)
+           pars=NULL, npars=4L)
         nmsC <- names(con)
         con[(namc <- names(control))] <- control
         if (length(noNms <- namc[!namc %in% nmsC])) 
@@ -28,15 +28,10 @@ sacsarlm <- function(formula, data = list(), listw, listw2=NULL, na.action,
         if (is.null(listw2)) listw2 <- listw
         else if (!inherits(listw2, "listw")) stop("No 2nd neighbourhood list")
         if (is.null(con$fdHess)) con$fdHess <- method != "eigen"
-        stopifnot(is.numeric(con$lower))
-        stopifnot(length(con$lower) == 2L)
         if (!is.null(con$pars)) {
             stopifnot(is.numeric(con$pars))
-            stopifnot(length(con$pars)==length(con$lower))
         }
         stopifnot(is.integer(con$npars))
-        stopifnot(is.numeric(con$upper))
-        stopifnot(length(con$upper)==length(con$lower))
         stopifnot(is.logical(con$fdHess))
         stopifnot(is.logical(con$LAPACK))
         stopifnot(is.logical(con$super))
@@ -163,105 +158,21 @@ sacsarlm <- function(formula, data = list(), listw, listw2=NULL, na.action,
 
 	if (!quiet) cat(paste("\nSpatial autoregressive error model\n", 
 		"Jacobian calculated using "))
-	switch(method,
-		eigen = {
-                    if (!quiet) cat("neighbourhood matrix eigenvalues\n")
-                    eigen_setup(env, which=1)
-                    eigen_setup(env, which=2)
-                },
-	        Matrix = {
-		    if (listw$style %in% c("W", "S") && !can.sim)
-		        stop("Matrix method requires symmetric weights")
-		    if (listw$style %in% c("B", "C", "U") && 
-			!(is.symmetric.glist(listw$neighbours, listw$weights)))
-		        stop("Matrix method requires symmetric weights")
-		    if (!quiet) cat("sparse matrix Cholesky decomposition\n")
-	            Imult <- con$Imult
-	            if (listw$style == "B") {
-                        Imult <- ceiling((2/3) * max(sapply(listw$weights,
-                            sum)))
-                    }
-                    Matrix_setup(env, Imult, con$super, which=1)
-                    W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
-        	    I <- as_dsCMatrix_I(n)
-		    if (listw2$style %in% c("W", "S") && !can.sim2)
-		        stop("Matrix method requires symmetric weights")
-		    if (listw2$style %in% c("B", "C", "U") && 
-		       !(is.symmetric.glist(listw2$neighbours, listw2$weights)))
-		        stop("Matrix method requires symmetric weights")
-	            Imult <- con$Imult
-	            if (listw2$style == "B") {
-                        Imult <- ceiling((2/3) * max(sapply(listw2$weights,
-                            sum)))
-                    }
-                    Matrix_setup(env, Imult, con$super, which=2)
-                    W2 <- as(as_dgRMatrix_listw(listw2), "CsparseMatrix")
-		},
-	        spam = {
-                    if (!require(spam)) stop("spam not available")
-		    if (listw$style %in% c("W", "S") && !can.sim)
-		        stop("spam method requires symmetric weights")
-		    if (listw$style %in% c("B", "C", "U") && 
-			!(is.symmetric.glist(listw$neighbours, listw$weights)))
-		        stop("spam method requires symmetric weights")
-		    if (!quiet) cat("sparse matrix Cholesky decomposition\n")
-                    spam_setup(env, which=1)
-                    W <- as.spam.listw(get("listw", envir=env))
-		    if (listw2$style %in% c("W", "S") && !can.sim2)
-		        stop("spam method requires symmetric weights")
-		    if (listw2$style %in% c("B", "C", "U") && 
-		       !(is.symmetric.glist(listw2$neighbours, listw2$weights)))
-		        stop("spam method requires symmetric weights")
-                    spam_setup(env, which=2)
-                    W2 <- as.spam.listw(get("listw2", envir=env))
-		},
-                Chebyshev = {
-		    if (listw$style %in% c("W", "S") && !can.sim)
-		        stop("Chebyshev method requires symmetric weights")
-		    if (listw$style %in% c("B", "C", "U") && 
-			!(is.symmetric.glist(listw$neighbours, listw$weights)))
-		        stop("Chebyshev method requires symmetric weights")
-		    if (!quiet) cat("sparse matrix Chebyshev approximation\n")
-                    cheb_setup(env, q=con$cheb_q, which=1)
-                    W <- get("W", envir=env)
-        	    I <- as_dsCMatrix_I(n)
-		    if (listw2$style %in% c("W", "S") && !can.sim2)
-		        stop("Chebyshev method requires symmetric weights")
-		    if (listw2$style %in% c("B", "C", "U") && 
-		       !(is.symmetric.glist(listw2$neighbours, listw2$weights)))
-		        stop("Chebyshev method requires symmetric weights")
-                    cheb_setup(env, q=con$cheb_q, which=2)
-                    W2 <- get("W2", envir=env)
-                },
-                MC = {
-		    if (!listw$style %in% c("W"))
-		        stop("MC method requires row-standardised weights")
-		    if (!quiet) cat("sparse matrix Monte Carlo approximation\n")
-                    mcdet_setup(env, p=con$MC_p, m=con$MC_m, which=1)
-                    W <- get("W", envir=env)
-        	    I <- as_dsCMatrix_I(n)
-		    if (!listw2$style %in% c("W"))
-		        stop("MC method requires row-standardised weights")
-                    mcdet_setup(env, p=con$MC_p, m=con$MC_m, which=2)
-                    W2 <- get("W2", envir=env)
-                },
-                LU = {
-		    if (!quiet) cat("sparse matrix LU decomposition\n")
-                    LU_setup(env, which=1)
-                    W <- get("W", envir=env)
-                    I <- get("I", envir=env)
-                    LU_setup(env, which=2)
-                    W2 <- get("W2", envir=env)
-                },
-		stop("...\n\nUnknown method\n"))
+
+        interval1 <- jacobianSetup(method, env, con, trs=trs1,
+            interval=interval1, which=1)
+        assign("interval1", interval1, envir=env)
+        interval2 <- jacobianSetup(method, env, con, trs=trs2,
+            interval=interval2, which=2)
+        assign("interval2", interval2, envir=env)
 
         nm <- paste(method, "set_up", sep="_")
         timings[[nm]] <- proc.time() - .ptime_start
         .ptime_start <- proc.time()
 
         pars <- con$pars
-        lower <- con$lower
-        upper <- con$upper
+        lower <- c(interval1[1], interval2[1])
+        upper <- c(interval1[2], interval2[2])
 
         if (!is.null(llprof)) {
             llrho <- NULL
@@ -429,14 +340,14 @@ sacsarlm <- function(formula, data = list(), listw, listw2=NULL, na.action,
             logLik_lm.model=logLik_lm.model, AIC_lm.model=AIC_lm.model,
             #lm.model=lm.model, 
 	    method=method, call=call, residuals=r, #lm.target=lm.target,
-            tarX=tarX, tary=tary, y=y, X=x,
+            tarX=tarX, tary=tary, y=y, X=x, W2X=WX, trs1=trs1, trs2=trs2,
 	    opt=optres, pars=pars, mxs=mxs, fitted.values=fit, #formula=formula,
 	    similar=get("similar", envir=env), rho.se=rho.se,
 	    lambda.se=lambda.se, zero.policy=zero.policy, 
 	    aliased=aliased, LLNullLlm=LL_null_lm,
             fdHess=fdHess, resvar=asyvar1, listw_style=listw$style,
-            optimHess=FALSE, insert=FALSE,
-            timings=do.call("rbind", timings)[, c(1, 3)]),
+            optimHess=FALSE, insert=FALSE, interval1=interval1,
+            interval2=interval2, timings=do.call("rbind", timings)[, c(1, 3)]),
             class=c("sarlm"))
         rm(env)
         GC <- gc()
@@ -498,7 +409,11 @@ sar_sac_hess_sse <- function(rho, lambda, beta, env) {
 
 f_sac_hess <- function(coefs, env) {
     rho <- coefs[1]
+    int <- get("interval1", envir=env)
+    if (rho <= int[1] || rho >= int[2]) return(-Inf)
     lambda <- coefs[2]
+    int <- get("interval2", envir=env)
+    if (lambda <= int[1] || lambda >= int[2]) return(-Inf)
     beta <- coefs[-(1:2)]
     SSE <- sar_sac_hess_sse(rho, lambda, beta, env)
     n <- get("n", envir=env)
@@ -510,6 +425,7 @@ f_sac_hess <- function(coefs, env) {
     if (get("verbose", envir=env)) cat("rho:", rho, "lambda:", lambda,
         " function:", ret, " Jacobian1:", ldet1, " Jacobian2:",
         ldet2, " SSE:", SSE, "\n")
+    if (!is.finite(ret)) return(-Inf)
    ret
 }
 
