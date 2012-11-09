@@ -1,7 +1,7 @@
-62351e25d59c4e87597ad488007f5f65 *ChangeLog
-469513c6b5ac0e563b4f2bdc8480fa6a *DESCRIPTION
+71c2f9a4f97d7e7553f15ff71cfd5b25 *ChangeLog
+248260a4364836d05599195b577adc1f *DESCRIPTION
 7d2db75aac230ee3226f6fab96523d84 *LICENCE
-e5b8ac12ddf26d2b11a2e32c402245b2 *NAMESPACE
+2eb46bbc5779c813ea41ad8c12fce36d *NAMESPACE
 908bbadc06b1aedb8ad79c16793d397a *R/AAA.R
 36554d9a3b705852495a7bf434518295 *R/EBI.R
 0fbd6d0a73bd6f6b204b4a5fadc045c9 *R/LR.spsarlm.R
@@ -46,7 +46,7 @@ c78a653a412d31b047f200eeef1aed7b *R/lm.LMtests.R
 dbdbb1050fe2a95bfb0e7a7d63ea08b1 *R/localG.R
 dd88e2bc487f73558a8b0a1b921429d8 *R/localmoran.R
 280167069a8beec3b01970367866c5f3 *R/localmoran.exact.R
-72bb75dfd99af78fe5cada874bfca207 *R/mcmcsamp.R
+74de72d3720b1322af6b4e601c016e4a *R/mcmcsamp.R
 748223b3184938865be04e66fa1459fa *R/mess.R
 a3b7313644559137fa5df88fe58f02fd *R/moran.R
 90648ccc56051f60910797a3da5ddc68 *R/moran.exact.R
@@ -108,13 +108,13 @@ c3befc2b93128839af7f5afc2f4f4692 *data/oldcol.rda
 9f4230eb9cbbf1d870a031a56c55e81f *data/used.cars.rda
 5d3af103bdc5e4214234b429d56bc0bd *data/wheat.txt.gz
 671a11d7ac128f13b3e6bbc8ee0047b9 *inst/CHANGES
-62351e25d59c4e87597ad488007f5f65 *inst/ChangeLog
+71c2f9a4f97d7e7553f15ff71cfd5b25 *inst/ChangeLog
 7d2db75aac230ee3226f6fab96523d84 *inst/LICENCE
 1b2bceb96253ffe85eec9502adc1986f *inst/doc/CO69.Rnw
-9164eede92db4191b924a56f8ab9dfda *inst/doc/CO69.pdf
+8f6711c9f876e35d1af5381b312a371d *inst/doc/CO69.pdf
 68a52b4a10480b4a2adedb18494c7deb *inst/doc/backstore/boot_res.RData
 b7e20e6bcab41e6df17154e5aa79f7d8 *inst/doc/sids.Rnw
-6a658e62860fb89c65c2780c9bd39dec *inst/doc/sids.pdf
+0b5c7046fb442cef5a3d1c4981d923bb *inst/doc/sids.pdf
 53178ac43dd150bbb835b63e018f0cd4 *inst/etc/misc/geary_eire.txt
 e3fb11232e6cb27770d15aaf4f632aa4 *inst/etc/misc/nc_xtra.dbf
 2591ac95bd9191d0aee07450f7caf9bb *inst/etc/misc/nyadjwts.dbf
@@ -155,7 +155,7 @@ f9d4759be6113c59ec44b436bfa40c32 *man/COL.OLD.Rd
 1113a8f884a2602dec89454bb17f0cda *man/EBlocal.Rd
 42d7954ed4902b199d3b4a593cacf4de *man/GMerrorsar.Rd
 47fbde0ff3bb7b19b97d0dd08d220717 *man/LR.sarlm.Rd
-31d557b7b5a75fc39651e72b526489b8 *man/MCMCsamp.Rd
+de6c73e74dbb977f4b741122678aa8df *man/MCMCsamp.Rd
 5c73496ad2fb82e09fc8b715d4e7e47c *man/ME.Rd
 053304ecbf904403a6d2340eb75d2173 *man/NY_data.Rd
 57872e13208f844b5c39bc7752a06f40 *man/SpatialFiltering.Rd
@@ -207,7 +207,7 @@ d255c690296c8ed9bf66fd7045499ba2 *man/knearneigh.Rd
 91dc5c11084a06ca9847f89b6aefd0fb *man/knn2nb.Rd
 530a137b1bad26cbbc658a52e2f48562 *man/lag.listw.Rd
 c7db419f89713d0df3e32a817cfc6820 *man/lagmess.Rd
-44ce7e874f971ad2e1ed0506771ec2d2 *man/lagsarlm.Rd
+51ca17959033fc2ecfeb5c60f2dd334c *man/lagsarlm.Rd
 81113749a325316d4872497a30e613ca *man/listw2sn.Rd
 ab1776c96e814381f2428a84cb19bec1 *man/lm.LMtests.Rd
 1bd3eda5ab5ae980885976822f3013f2 *man/lm.morantest.Rd
@@ -269,7 +269,7 @@ c2c798fb9bf18bfe444741351c9ed399 *man/tri2nb.Rd
 d0c7a38e62fecf38b067ce57997da11e *man/used.cars.Rd
 95df2d0db2a4dbcaa5dfc2f079a11138 *man/wheat.Rd
 3c5d1eac9e2b3a9837e61c3e3596b977 *man/write.nb.gal.Rd
-9a33d880f18dcc7401e3e7b1638556b6 *spdep-Ex.R
+04afac203b9c8a7092df08cea0da1aa3 *spdep-Ex.R
 3996e7c16bfb96fad295ee425815cb4d *src/Makevars
 c1ee13c76e88db49ebd177ad92c9773b *src/card.c
 d1f648c115dd2ee07e125cb267e7ca9a *src/dfs_ncomp.c
