@@ -1,3 +1,12 @@
+2012-11-09 10:11  rsbivand
+
+	* DESCRIPTION, NAMESPACE, R/mcmcsamp.R, man/MCMCsamp.Rd,
+	  man/lagsarlm.Rd: replace MCMCpack with LearnBayes
+
+2012-11-08 20:28  rsbivand
+
+	* ChangeLog, inst/ChangeLog: tidy
+
 2012-11-08 20:26  rsbivand
 
 	* NAMESPACE, R/error.hessian.R, R/error.spsarlm.R, R/lag.hessian.R,

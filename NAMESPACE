@@ -15,7 +15,8 @@ importFrom(coda, as.mcmc, HPDinterval)
 importFrom(splines, interpSpline)
 
 import(Matrix)
-import(MCMCpack)
+#import(MCMCpack)
+importFrom(LearnBayes, rwmetrop)
 
 #importClassesFrom(spam, spam)
 #importMethodsFrom(spam, Math, Math2)

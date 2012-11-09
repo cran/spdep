@@ -156,8 +156,8 @@ flush(stderr()); flush(stdout())
 
 ### ** Examples
 
+example(NY_data)
 ## Not run: 
-##D example(NY_data)
 ##D esar1f <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
 ##D  listw=listw_NY, family="SAR", method="eigen")
 ##D summary(esar1f)
@@ -178,11 +178,13 @@ flush(stderr()); flush(stdout())
 ##D summary(ecar1fw)
 ##D res <- MCMCsamp(ecar1fw, mcmc=5000, burnin=500, listw=listw_NY)
 ##D summary(res)
-##D esar0 <- errorsarlm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
-##D  listw=listw_NY)
-##D summary(esar0)
-##D res <- MCMCsamp(esar0, mcmc=5000, burnin=500, listw=listw_NY)
-##D summary(res)
+## End(Not run)
+esar0 <- errorsarlm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
+ listw=listw_NY)
+summary(esar0)
+res <- MCMCsamp(esar0, mcmc=5000, burnin=500, listw=listw_NY)
+summary(res)
+## Not run: 
 ##D esar1 <- errorsarlm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
 ##D  listw=listw_NY, etype="emixed")
 ##D summary(esar1)
@@ -1983,18 +1985,20 @@ COL.lag.NA <- lagsarlm(CRIME ~ INC + HOVAL, data=NA.COL.OLD,
 COL.lag.NA$na.action
 COL.lag.NA
 resid(COL.lag.NA)
-data(boston)
-gp2mM <- lagsarlm(log(CMEDV) ~ CRIM + ZN + INDUS + CHAS + I(NOX^2) + 
-I(RM^2) +  AGE + log(DIS) + log(RAD) + TAX + PTRATIO + B + log(LSTAT), 
-data=boston.c, nb2listw(boston.soi), type="mixed", method="Matrix")
-summary(gp2mM)
-W <- as(as_dgRMatrix_listw(nb2listw(boston.soi)), "CsparseMatrix")
-trMatb <- trW(W, type="mult")
-gp2mMi <- lagsarlm(log(CMEDV) ~ CRIM + ZN + INDUS + CHAS + I(NOX^2) + 
-I(RM^2) +  AGE + log(DIS) + log(RAD) + TAX + PTRATIO + B + log(LSTAT), 
-data=boston.c, nb2listw(boston.soi), type="mixed", method="Matrix", 
-trs=trMatb)
-summary(gp2mMi)
+## Not run: 
+##D data(boston)
+##D gp2mM <- lagsarlm(log(CMEDV) ~ CRIM + ZN + INDUS + CHAS + I(NOX^2) + 
+##D I(RM^2) +  AGE + log(DIS) + log(RAD) + TAX + PTRATIO + B + log(LSTAT), 
+##D data=boston.c, nb2listw(boston.soi), type="mixed", method="Matrix")
+##D summary(gp2mM)
+##D W <- as(as_dgRMatrix_listw(nb2listw(boston.soi)), "CsparseMatrix")
+##D trMatb <- trW(W, type="mult")
+##D gp2mMi <- lagsarlm(log(CMEDV) ~ CRIM + ZN + INDUS + CHAS + I(NOX^2) + 
+##D I(RM^2) +  AGE + log(DIS) + log(RAD) + TAX + PTRATIO + B + log(LSTAT), 
+##D data=boston.c, nb2listw(boston.soi), type="mixed", method="Matrix", 
+##D trs=trMatb)
+##D summary(gp2mMi)
+## End(Not run)
 
 
 
