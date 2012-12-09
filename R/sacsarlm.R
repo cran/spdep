@@ -1,4 +1,4 @@
-# Copyright 2010-11 by Roger Bivand
+# Copyright 2010-12 by Roger Bivand
 sacsarlm <- function(formula, data = list(), listw, listw2=NULL, na.action, 
 	type="sac", method="eigen", quiet=NULL, zero.policy=NULL, 
 	tol.solve=1.0e-10, llprof=NULL, interval1=NULL, interval2=NULL,
@@ -8,7 +8,7 @@ sacsarlm <- function(formula, data = list(), listw, listw2=NULL, na.action,
         con <- list(fdHess=NULL, LAPACK=FALSE,
            Imult=2L, cheb_q=5L, MC_p=16L, MC_m=30L,
            super=FALSE, opt_method="nlminb", opt_control=list(),
-           pars=NULL, npars=4L)
+           pars=NULL, npars=4L, pre_eig1=NULL, pre_eig2=NULL)
         nmsC <- names(con)
         con[(namc <- names(control))] <- control
         if (length(noNms <- namc[!namc %in% nmsC])) 
@@ -26,6 +26,8 @@ sacsarlm <- function(formula, data = list(), listw, listw2=NULL, na.action,
 	na.act <- attr(mf, "na.action")
 	if (!inherits(listw, "listw")) stop("No neighbourhood list")
         if (is.null(listw2)) listw2 <- listw
+        if (!is.null(con$pre_eig1) && is.null(con$pre_eig2))
+            con$pre_eig2 <- con$pre_eig1
         else if (!inherits(listw2, "listw")) stop("No 2nd neighbourhood list")
         if (is.null(con$fdHess)) con$fdHess <- method != "eigen"
         if (!is.null(con$pars)) {
@@ -159,11 +161,11 @@ sacsarlm <- function(formula, data = list(), listw, listw2=NULL, na.action,
 	if (!quiet) cat(paste("\nSpatial autoregressive error model\n", 
 		"Jacobian calculated using "))
 
-        interval1 <- jacobianSetup(method, env, con, trs=trs1,
-            interval=interval1, which=1)
+        interval1 <- jacobianSetup(method, env, con, pre_eig=con$pre_eig1,
+            trs=trs1, interval=interval1, which=1)
         assign("interval1", interval1, envir=env)
-        interval2 <- jacobianSetup(method, env, con, trs=trs2,
-            interval=interval2, which=2)
+        interval2 <- jacobianSetup(method, env, con, pre_eig=con$pre_eig2,
+            trs=trs2, interval=interval2, which=2)
         assign("interval2", interval2, envir=env)
 
         nm <- paste(method, "set_up", sep="_")

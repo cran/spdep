@@ -155,8 +155,10 @@ poly2nb <- function(pl, row.names=NULL, snap=sqrt(.Machine$double.eps),
 #	    }
 #	    clusterExport_l(CL, list("findInBox", "qintersect", "BBindex"))
             clusterEvalQ(CL, library(spdep))
-            assign("BBindex", BBindex, envir=globalenv())
-            clusterExport(CL, list(BBindex="BBindex"))
+            env <- new.env()
+#            assign("BBindex", BBindex, envir=globalenv())
+            assign("BBindex", BBindex, envir=env)
+            clusterExport(CL, list(BBindex="BBindex"), envir=env)
             if (verbose) {
                 cat("cluster findInBox setup:", 
                     (proc.time() - .ptime_start)[3], "\n")
@@ -167,7 +169,8 @@ poly2nb <- function(pl, row.names=NULL, snap=sqrt(.Machine$double.eps),
             l_fIB <- clusterApply(CL, idx, function(ii) {
                 lapply(ii, function(i) spdep:::findInBox(i, BBindex))})
             foundInBox <- do.call("c", l_fIB)
-            rm(BBindex, envir=globalenv())
+            rm(env)
+#            rm(BBindex, envir=globalenv())
             if (verbose) {
                 cat("cluster findInBox:", (proc.time() - .ptime_start)[3])
             }

@@ -1,3 +1,37 @@
+2012-12-21 09:24  rsbivand
+
+	* R/impacts.R, R/poly2nb.R: clusterExport environment
+
+2012-12-20 12:42  rsbivand
+
+	* ChangeLog, inst/ChangeLog: pre_eig documentation
+
+2012-12-20 12:40  rsbivand
+
+	* R/sacsarlm.R, man/errorsarlm.Rd, man/lagsarlm.Rd,
+	  man/sacsarlm.Rd, man/spautolm.Rd: pre_eig documentation
+
+2012-12-11 11:46  rsbivand
+
+	* DESCRIPTION, NAMESPACE, R/eigenw.R, R/error.spsarlm.R,
+	  R/jacobian.R, R/jacobian_setup.R, R/lag.spsarlm.R, R/sacsarlm.R,
+	  R/spautolm.R, man/do_ldet.Rd, man/eigenw.Rd: adding direct
+	  eigenvalues to fitting functions
+
+2012-12-08 17:53  rsbivand
+
+	* man/aple.Rd, man/aple.mc.Rd, man/aple.plot.Rd: changing to
+	  published APLE reference
+
+2012-11-18 19:51  rsbivand
+
+	* DESCRIPTION, R/error.hessian.R, R/lag.hessian.R, R/spautolm.R:
+	  Hessian optim > optimHess
+
+2012-11-09 10:12  rsbivand
+
+	* ChangeLog, inst/ChangeLog: tidy
+
 2012-11-09 10:11  rsbivand
 
 	* DESCRIPTION, NAMESPACE, R/mcmcsamp.R, man/MCMCsamp.Rd,

@@ -81,7 +81,9 @@ export(trW, impacts, lagmess, sacsarlm)
 export(do_ldet, eigen_setup, mcdet_setup, cheb_setup, spam_setup,
         Matrix_setup, LU_setup, Matrix_J_setup, spam_update_setup,
         moments_setup, SE_classic_setup, SE_whichMin_setup, SE_interp_setup,
-        LU_prepermutate_setup)
+        LU_prepermutate_setup, eigen_pre_setup)
+
+export(griffith_sone, subgraph_eigenw)
 
 export(MCMCsamp)
 

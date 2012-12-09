@@ -1,16 +1,20 @@
 # Copyright 2012 by Roger Bivand
 
-jacobianSetup <- function(method, env, con, trs=NULL, interval=NULL, which=1) {
+jacobianSetup <- function(method, env, con, pre_eig=NULL, trs=NULL, interval=NULL, which=1) {
     switch(method,
         eigen = {
             if (get("verbose", envir=env))
                 cat("neighbourhood matrix eigenvalues\n")
-            eigen_setup(env, which=which)
+            if (is.null(pre_eig)) {
+                eigen_setup(env, which=which)
+            } else {
+                eigen_pre_setup(env, pre_eig=pre_eig, which=which)
+            }
             er <- get("eig.range", envir=env)
             if (is.null(interval)) 
                 interval <- c(er[1]+.Machine$double.eps,
                               er[2]-.Machine$double.eps)
-                },
+        },
         Matrix = {
             if (get("listw", envir=env)$style %in% c("W", "S") &&
                 !get("can.sim", envir=env))

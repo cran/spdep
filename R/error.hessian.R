@@ -3,9 +3,8 @@
 getVmate <- function(coefs, env,
     s2, trs, tol.solve=1.0e-10, optim=FALSE) {
     if (optim) {
-        opt <- optim(par=coefs, fn=f_errlm_hess, env=env,
-            method="BFGS", hessian=TRUE)
-        mat <- opt$hessian
+        opt <- optimHess(par=coefs, fn=f_errlm_hess, env=env)
+        mat <- opt
     } else {
         fd <- fdHess(coefs, f_errlm_hess, env)
         mat <- fd$Hessian

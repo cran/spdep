@@ -12,7 +12,7 @@ errorsarlm <- function(formula, data = list(), listw, na.action, etype="error",
             super=NULL, spamPivot="MMD", in_coef=0.1, type="MC",
             correct=TRUE, trunc=TRUE, SE_method="LU", nrho=200,
             interpn=2000, small_asy=TRUE, small=1500, SElndet=NULL,
-            LU_order=FALSE)
+            LU_order=FALSE, pre_eig=NULL)
         nmsC <- names(con)
         con[(namc <- names(control))] <- control
         if (length(noNms <- namc[!namc %in% nmsC])) 
@@ -159,8 +159,8 @@ errorsarlm <- function(formula, data = list(), listw, na.action, etype="error",
 
 	if (!quiet) cat(paste("\nJacobian calculated using "))
 
-        interval <- jacobianSetup(method, env, con, trs=trs,
-            interval=interval)
+        interval <- jacobianSetup(method, env, con, pre_eig=con$pre_eig,
+            trs=trs, interval=interval)
         assign("interval", interval, envir=env)
 
         nm <- paste(method, "set_up", sep="_")
