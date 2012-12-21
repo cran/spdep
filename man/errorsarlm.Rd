@@ -82,6 +82,8 @@ variable in making predictions for the fitting data.
   \item{small_asy}{default TRUE; if the method is not \dQuote{eigen}, use asymmetric covariances rather than numerical Hessian ones if n <= small}
   \item{small}{default 1500; threshold number of observations for asymmetric covariances when the method is not \dQuote{eigen}}
   \item{SElndet}{default NULL, may be used to pass a pre-computed SE toolbox style matrix of coefficients and their lndet values to the "SE_classic" and "SE_whichMin" methods}
+  \item{LU_order}{default FALSE; used in \dQuote{LU_prepermutate}, note warnings given for \code{lu} method}
+  \item{pre_eig}{default NULL; may be used to pass a pre-computed vector of eigenvalues}
 }}
 
 \value{
@@ -149,16 +151,21 @@ pp. 237-289; Cressie, N. A. C. 1993 \emph{Statistics for spatial data}, Wiley, N
 
 \examples{
 data(oldcol)
+lw <- nb2listw(COL.nb, style="W")
 COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb, style="W"), method="eigen", quiet=FALSE)
+ lw, method="eigen", quiet=FALSE)
 summary(COL.errW.eig, correlation=TRUE)
+ev <- eigenw(similar.listw(lw))
+COL.errW.eig_ev <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
+ lw, method="eigen", control=list(pre_eig=ev))
+all.equal(coefficients(COL.errW.eig), coefficients(COL.errW.eig_ev))
 COL.errB.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb, style="B"), method="eigen", quiet=FALSE)
 summary(COL.errB.eig, correlation=TRUE)
 W <- as(as_dgRMatrix_listw(nb2listw(COL.nb)), "CsparseMatrix")
 trMatc <- trW(W, type="mult")
 COL.errW.M <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb, style="W"), method="Matrix", quiet=FALSE, trs=trMatc)
+ lw, method="Matrix", quiet=FALSE, trs=trMatc)
 summary(COL.errW.M, correlation=TRUE)
 NA.COL.OLD <- COL.OLD
 NA.COL.OLD$CRIME[20:25] <- NA
@@ -169,33 +176,33 @@ COL.err.NA
 resid(COL.err.NA)
 \donttest{
 system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb, style="W"), method="eigen"))
+ lw, method="eigen"))
 system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb, style="W"), method="eigen", control=list(LAPACK=TRUE)))
+ lw, method="eigen", control=list(LAPACK=TRUE)))
 system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb, style="W"), method="eigen", control=list(compiled_sse=TRUE)))
+ lw, method="eigen", control=list(compiled_sse=TRUE)))
 system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb, style="W"), method="Matrix_J", control=list(super=TRUE)))
+ lw, method="Matrix_J", control=list(super=TRUE)))
 system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb, style="W"), method="Matrix_J", control=list(super=FALSE)))
+ lw, method="Matrix_J", control=list(super=FALSE)))
 system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb, style="W"), method="Matrix_J", control=list(super=as.logical(NA))))
+ lw, method="Matrix_J", control=list(super=as.logical(NA))))
 system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb, style="W"), method="Matrix", control=list(super=TRUE)))
+ lw, method="Matrix", control=list(super=TRUE)))
 system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb, style="W"), method="Matrix", control=list(super=FALSE)))
+ lw, method="Matrix", control=list(super=FALSE)))
 system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb, style="W"), method="Matrix", control=list(super=as.logical(NA))))
+ lw, method="Matrix", control=list(super=as.logical(NA))))
 system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb, style="W"), method="spam", control=list(spamPivot="MMD")))
+ lw, method="spam", control=list(spamPivot="MMD")))
 system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb, style="W"), method="spam", control=list(spamPivot="RCM")))
+ lw, method="spam", control=list(spamPivot="RCM")))
 system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb, style="W"), method="spam_update", control=list(spamPivot="MMD")))
+ lw, method="spam_update", control=list(spamPivot="MMD")))
 system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb, style="W"), method="spam_update", control=list(spamPivot="RCM")))
+ lw, method="spam_update", control=list(spamPivot="RCM")))
 COL.merrW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb, style="W"), method="eigen", etype="emixed")
+ lw, method="eigen", etype="emixed")
 summary(COL.merrW.eig, correlation=TRUE)
 }
 }

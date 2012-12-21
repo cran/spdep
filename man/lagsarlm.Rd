@@ -76,6 +76,8 @@ variable in making predictions for the fitting data.
   \item{small_asy}{default TRUE; if the method is not \dQuote{eigen}, use asymmetric covariances rather than numerical Hessian ones if n <= small}
   \item{small}{default 1500; threshold number of observations for asymmetric covariances when the method is not \dQuote{eigen}}
   \item{SElndet}{default NULL, may be used to pass a pre-computed SE toolbox style matrix of coefficients and their lndet values to the "SE_classic" and "SE_whichMin" methods}
+  \item{LU_order}{default FALSE; used in \dQuote{LU_prepermutate}, note warnings given for \code{lu} method}
+  \item{pre_eig}{default NULL; may be used to pass a pre-computed vector of eigenvalues}
 }}
 
 \value{

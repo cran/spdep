@@ -144,6 +144,23 @@ eigen_setup <- function(env, which=1) {
     invisible(NULL)
 }
 
+eigen_pre_setup <- function(env, pre_eig, which=1) {
+    stopifnot(length(pre_eig) == get("n", envir=env))
+    if (which == 1) {
+	if (is.complex(pre_eig))
+            eig.range <- 1/range(Re(pre_eig[which(Im(pre_eig) == 0)]))
+	else eig.range <- 1/range(pre_eig)
+        assign("eig", pre_eig, envir=env)
+        assign("eig.range", eig.range, envir=env)
+    } else {
+        assign("eig2", pre_eig, envir=env)
+    }
+    if (get("verbose", envir=env)) cat("\n")
+    assign("method", "eigen", envir=env)
+    invisible(NULL)
+}
+
+
 do_ldet <- function(coef, env, which=1) {
     method <- get("method", envir=env)
     if (get("family", envir=env) == "SMA") {

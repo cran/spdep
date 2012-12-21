@@ -12,7 +12,7 @@ lagsarlm <- function(formula, data = list(), listw,
             cheb_q=5, MC_p=16, MC_m=30, super=NULL, spamPivot="MMD",
             in_coef=0.1, type="MC", correct=TRUE, trunc=TRUE,
             SE_method="LU", nrho=200, interpn=2000, small_asy=TRUE,
-            small=1500, SElndet=NULL)
+            small=1500, SElndet=NULL, LU_order=FALSE, pre_eig=NULL)
         nmsC <- names(con)
         con[(namc <- names(control))] <- control
         if (length(noNms <- namc[!namc %in% nmsC])) 
@@ -137,8 +137,8 @@ lagsarlm <- function(formula, data = list(), listw,
         .ptime_start <- proc.time()
 	if (!quiet) cat("Jacobian calculated using ")
 
-        interval <- jacobianSetup(method, env, con, trs=trs,
-            interval=interval)
+        interval <- jacobianSetup(method, env, con, pre_eig=con$pre_eig,
+            trs=trs, interval=interval)
         assign("interval", interval, envir=env)
 
         nm <- paste(method, "set_up", sep="_")

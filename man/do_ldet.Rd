@@ -1,6 +1,7 @@
 \name{do_ldet}
 \alias{do_ldet}
 \alias{eigen_setup}
+\alias{eigen_pre_setup}
 \alias{mcdet_setup}
 \alias{cheb_setup}
 \alias{spam_setup}
@@ -23,6 +24,7 @@ do_ldet(coef, env, which=1)
 cheb_setup(env, q=5, which=1)
 mcdet_setup(env, p=16, m=30, which=1)
 eigen_setup(env, which=1)
+eigen_pre_setup(env, pre_eig, which=1)
 spam_setup(env, pivot="MMD", which=1)
 spam_update_setup(env, in_coef=0.1, pivot="MMD", which=1)
 Matrix_setup(env, Imult, super=as.logical(NA), which=1)
@@ -42,6 +44,7 @@ SE_interp_setup(env, SE_method="LU", p=16, m=30, nrho=200,
   \item{coef}{spatial coefficient value}
   \item{env}{environment containing pre-computed objects, fixed after assignment in setup functions}
   \item{which}{default 1; if 2, use second listw object}
+  \item{pre_eig}{pre-computed eigenvalues of length n}
   \item{q}{Chebyshev approximation order; default in calling spdep functions is 5, here it cannot be missing and does not have a default}
   \item{p}{Monte Carlo approximation number of random normal variables; default calling spdep functions is 16, here it cannot be missing and does not have a default}
   \item{m}{Monte Carlo approximation number of series terms; default in calling spdep functions is 30, here it cannot be missing and does not have a default; \code{m} serves the same purpose in the moments method}
@@ -65,12 +68,16 @@ SE_interp_setup(env, SE_method="LU", p=16, m=30, nrho=200,
 \details{Since environments are containers in the R workspace passed by reference rather than by value, they are useful for passing objects to functions called in numerical optimisation, here for the maximum likelihood estimation of spatial regression models. This technique can save a little time on each function call, balanced against the need to access the objects in the environment inside the function. The environment should contain a \code{family} string object either \dQuote{SAR}, \dQuote{CAR} or \dQuote{SMA} (used in \code{do_ldet} to choose spatial moving average in \code{spautolm}, and these specific objects before calling the set-up functions:
 
 \describe{
-  \item{eigen}{Classical Ord eigenvalue computations:
+  \item{eigen}{Classical Ord eigenvalue computations - either:
   \describe{
     \item{listw}{A listw spatial weights object}
     \item{can.sim}{logical scalar: can the spatial weights be made symmetric by similarity}
     \item{verbose}{logical scalar: legacy report print control, for historical reasons only}
-  } and assigns to the environment:
+  } or:
+  \describe{
+    \item{pre_eig}{pre-computed eigenvalues}
+  }
+  and assigns to the environment:
   \describe{
     \item{eig}{a vector of eigenvalues}
     \item{eig.range}{the search interval for the spatial coefficient}
@@ -248,6 +255,16 @@ assign("verbose", FALSE, envir=env)
 assign("family", "SAR", envir=env)
 eigen_setup(env)
 get("similar", envir=env)
+do_ldet(0.5, env)
+rm(env)
+env <- new.env(parent=globalenv())
+assign("listw", lw, envir=env)
+assign("can.sim", can.sim, envir=env)
+assign("similar", FALSE, envir=env)
+assign("verbose", FALSE, envir=env)
+assign("family", "SAR", envir=env)
+assign("n", length(boston.soi), envir=env)
+eigen_pre_setup(env, pre_eig=eigenw(similar.listw(lw)))
 do_ldet(0.5, env)
 rm(env)
 env <- new.env(parent=globalenv())

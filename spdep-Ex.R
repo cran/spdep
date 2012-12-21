@@ -931,8 +931,8 @@ flush(stderr()); flush(stdout())
 
 ### Name: do_ldet
 ### Title: Spatial regression model Jacobian computations
-### Aliases: do_ldet eigen_setup mcdet_setup cheb_setup spam_setup
-###   spam_update_setup Matrix_setup Matrix_J_setup LU_setup
+### Aliases: do_ldet eigen_setup eigen_pre_setup mcdet_setup cheb_setup
+###   spam_setup spam_update_setup Matrix_setup Matrix_J_setup LU_setup
 ###   LU_prepermutate_setup moments_setup SE_classic_setup
 ###   SE_whichMin_setup SE_interp_setup
 ### Keywords: spatial
@@ -950,6 +950,16 @@ assign("verbose", FALSE, envir=env)
 assign("family", "SAR", envir=env)
 eigen_setup(env)
 get("similar", envir=env)
+do_ldet(0.5, env)
+rm(env)
+env <- new.env(parent=globalenv())
+assign("listw", lw, envir=env)
+assign("can.sim", can.sim, envir=env)
+assign("similar", FALSE, envir=env)
+assign("verbose", FALSE, envir=env)
+assign("family", "SAR", envir=env)
+assign("n", length(boston.soi), envir=env)
+eigen_pre_setup(env, pre_eig=eigenw(similar.listw(lw)))
 do_ldet(0.5, env)
 rm(env)
 env <- new.env(parent=globalenv())
@@ -1082,7 +1092,7 @@ flush(stderr()); flush(stdout())
 
 ### Name: eigenw
 ### Title: Spatial weights matrix eigenvalues
-### Aliases: eigenw
+### Aliases: eigenw griffith_sone subgraph_eigenw
 ### Keywords: spatial
 
 ### ** Examples
@@ -1096,28 +1106,34 @@ B.eig <- eigenw(nb2listw(COL.nb, style="B"))
 1/range(B.eig)
 # cases for intrinsically asymmetric weights
 crds <- cbind(COL.OLD$X, COL.OLD$Y)
-k6 <- knn2nb(knearneigh(crds, k=6))
-is.symmetric.nb(k6)
-k6eig <- eigenw(nb2listw(k6, style="W"))
-is.complex(k6eig)
+k3 <- knn2nb(knearneigh(crds, k=3))
+is.symmetric.nb(k3)
+k3eig <- eigenw(nb2listw(k3, style="W"))
+is.complex(k3eig)
 rho <- 0.5
-Jc <- sum(log(1 - rho * k6eig))
+Jc <- sum(log(1 - rho * k3eig))
 # complex eigenvalue Jacobian
 Jc
-W <- as(as_dgRMatrix_listw(nb2listw(k6, style="W")), "CsparseMatrix")
-I <- diag(length(k6))
+# subgraphs
+nc <- n.comp.nb(k3)
+nc$nc
+table(nc$comp.id)
+k3eigSG <- subgraph_eigenw(k3, style="W")
+all.equal(sort(k3eig), k3eigSG)
+W <- as(as_dgRMatrix_listw(nb2listw(k3, style="W")), "CsparseMatrix")
+I <- diag(length(k3))
 Jl <- sum(log(abs(diag(slot(lu(I - rho * W), "U")))))
 # LU Jacobian equals complex eigenvalue Jacobian
 Jl
 all.equal(Re(Jc), Jl)
 # wrong value if only real part used
-Jr <- sum(log(1 - rho * Re(k6eig)))
+Jr <- sum(log(1 - rho * Re(k3eig)))
 Jr
 all.equal(Jr, Jl)
 # construction of Jacobian from complex conjugate pairs (Jan Hauke)
-Rev <- Re(k6eig)[which(Im(k6eig) == 0)]
+Rev <- Re(k3eig)[which(Im(k3eig) == 0)]
 # real eigenvalues
-Cev <- k6eig[which(Im(k6eig) != 0)]
+Cev <- k3eig[which(Im(k3eig) != 0)]
 pCev <- Cev[Im(Cev) > 0]
 # separate complex conjugate pairs
 RpCev <- Re(pCev)
@@ -1130,7 +1146,12 @@ Jc2 <- sum(log(1 - rho*Rev)) + sum(log((1 - rho * RpCev)^2))
 all.equal(Jr, Jc2)
 # trace of asymmetric (WW) and crossprod of complex eigenvalues for APLE
 sum(diag(W %*% W))
-crossprod(k6eig)
+crossprod(k3eig)
+# analytical regular grid eigenvalues
+rg <- cell2nb(ncol=7, nrow=7, type="rook")
+rg_eig <- eigenw(nb2listw(rg, style="B"))
+rg_GS <- griffith_sone(P=7, Q=7, type="rook")
+all.equal(rg_eig, rg_GS)
 
 
 
@@ -1232,16 +1253,21 @@ flush(stderr()); flush(stdout())
 ### ** Examples
 
 data(oldcol)
+lw <- nb2listw(COL.nb, style="W")
 COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb, style="W"), method="eigen", quiet=FALSE)
+ lw, method="eigen", quiet=FALSE)
 summary(COL.errW.eig, correlation=TRUE)
+ev <- eigenw(similar.listw(lw))
+COL.errW.eig_ev <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
+ lw, method="eigen", control=list(pre_eig=ev))
+all.equal(coefficients(COL.errW.eig), coefficients(COL.errW.eig_ev))
 COL.errB.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb, style="B"), method="eigen", quiet=FALSE)
 summary(COL.errB.eig, correlation=TRUE)
 W <- as(as_dgRMatrix_listw(nb2listw(COL.nb)), "CsparseMatrix")
 trMatc <- trW(W, type="mult")
 COL.errW.M <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb, style="W"), method="Matrix", quiet=FALSE, trs=trMatc)
+ lw, method="Matrix", quiet=FALSE, trs=trMatc)
 summary(COL.errW.M, correlation=TRUE)
 NA.COL.OLD <- COL.OLD
 NA.COL.OLD$CRIME[20:25] <- NA

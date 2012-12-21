@@ -46,16 +46,15 @@ neighbours, if FALSE (default) assign NA - causing \code{sacsarlm()} to terminat
   \item{fdHess:}{default NULL, then set to (method != "eigen") internally; use \code{fdHess} to compute an approximate Hessian using finite differences when using sparse matrix methods with \code{fdHess} from \pkg{nlme}; used to make a coefficient covariance matrix when the number of observations is large; may be turned off to save resources if need be}
   \item{LAPACK:}{default FALSE; logical value passed to \code{qr} in the SSE log likelihood function}
   \item{Imult:}{default 2; used for preparing the Cholesky decompositions for updating in the Jacobian function}
-  \item{super:}{default FALSE using a simplicial decomposition for the sparse Cholesky decomposition, if TRUE, use a supernodal decomposition}
   \item{cheb_q:}{default 5; highest power of the approximating polynomial for the Chebyshev approximation}
   \item{MC_p:}{default 16; number of random variates}
   \item{MC_m:}{default 30; number of products of random variates matrix and spatial weights matrix}
+  \item{super:}{default FALSE using a simplicial decomposition for the sparse Cholesky decomposition, if TRUE, use a supernodal decomposition}
   \item{opt_method:}{default \dQuote{nlminb}, may be set to \dQuote{L-BFGS-B} to use box-constrained optimisation in \code{optim}}
   \item{opt_control:}{default \code{list()}, a control list to pass to \code{nlminb} or \code{optim}}
   \item{pars:}{default \code{NULL}, for which five trial starting values spanning the lower/upper range are tried and the best selected, starting values of \eqn{\rho}{rho} and \eqn{\lambda}{lambda}}
   \item{npars}{default integer \code{4L}, four trial points; if not default value, nine trial points}
-  \item{lower:}{default \code{c(-1.0, -1.0)}, lower bounds on \eqn{\rho}{rho} and \eqn{\lambda}{lambda}}
-  \item{upper:}{default \code{c(1.0, 1.0)}, upper bounds on \eqn{\rho}{rho} and \eqn{\lambda}{lambda}}
+  \item{pre_eig1, pre_eig2}{default NULL; may be used to pass pre-computed vectors of eigenvalues}
 }}
 
 

@@ -11,7 +11,7 @@ spautolm <- function(formula, data = list(), listw, weights,
         in_coef=0.1, type="MC",
         correct=TRUE, trunc=TRUE, SE_method="LU", nrho=200,
         interpn=2000, small_asy=TRUE, small=1500, SElndet=NULL,
-        LU_order=FALSE)
+        LU_order=FALSE, pre_eig=NULL)
     nmsC <- names(con)
     con[(namc <- names(control))] <- control
     if (length(noNms <- namc[!namc %in% nmsC])) 
@@ -96,7 +96,7 @@ spautolm <- function(formula, data = list(), listw, weights,
 
     if (verbose) cat(paste("\nJacobian calculated using "))
 
-    interval <- jacobianSetup(method, env, con, trs=trs,
+    interval <- jacobianSetup(method, env, con, pre_eig=con$pre_eig, trs=trs,
         interval=interval)
     assign("interval", interval, envir=env)
 
@@ -408,9 +408,8 @@ print.summary.spautolm <- function(x, digits = max(5, .Options$digits - 3),
 
 getVcovmat <- function(coefs, env, tol.solve=.Machine$double.eps, optim=FALSE) {
     if (optim) {
-        opt <- optim(par=coefs, fn=f_spautolm_hess, env=env,
-            method="BFGS", hessian=TRUE)
-        mat <- opt$hessian
+        opt <- optimHess(par=coefs, fn=f_spautolm_hess, env=env)
+        mat <- opt
     } else {
         fd <- fdHess(coefs, f_spautolm_hess, env)
         mat <- fd$Hessian

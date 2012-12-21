@@ -73,6 +73,17 @@ variable in making predictions for the fitting data.
   \item{MC_m:}{default 30; number of products of random variates matrix and spatial weights matrix}
   \item{spamPivot:}{default \dQuote{MMD}, alternative \dQuote{RCM}}
   \item{in_coef}{default 0.1, coefficient value for initial Cholesky decomposition in \dQuote{spam_update}}
+  \item{type}{default \dQuote{MC}, used with method \dQuote{moments}; alternatives \dQuote{mult} and \dQuote{moments}, for use if \code{trs} is missing, \code{\link{trW}}}
+  \item{correct}{default TRUE, used with method \dQuote{moments} to compute the Smirnov/Anselin correction term}
+  \item{trunc}{default TRUE, used with method \dQuote{moments} to truncate the Smirnov/Anselin correction term}
+  \item{SE_method}{default \dQuote{LU}, may be \dQuote{MC}}
+  \item{nrho}{default 200, as in SE toolbox; the size of the first stage lndet grid; it may be reduced to for example 40}
+  \item{interpn}{default 2000, as in SE toolbox; the size of the second stage lndet grid}
+  \item{small_asy}{default TRUE; if the method is not \dQuote{eigen}, use asymmetric covariances rather than numerical Hessian ones if n <= small}
+  \item{small}{default 1500; threshold number of observations for asymmetric covariances when the method is not \dQuote{eigen}}
+  \item{SElndet}{default NULL, may be used to pass a pre-computed SE toolbox style matrix of coefficients and their lndet values to the "SE_classic" and "SE_whichMin" methods}
+  \item{LU_order}{default FALSE; used in \dQuote{LU_prepermutate}, note warnings given for \code{lu} method}
+  \item{pre_eig}{default NULL; may be used to pass a pre-computed vector of eigenvalues}
 }}
 
 

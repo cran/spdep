@@ -295,17 +295,31 @@ intImpacts <- function(rho, beta, P, n, mu, Sigma, irho, drop2beta, bnames,
                 l_sp <- lapply(splitIndices(nrow(samples), length(CL)), 
 		    function(i) samples[i,])
                 clusterEvalQ(CL, library(spdep))
-		clusterExport_l <- function(CL, list) {
-                    gets <- function(n, v) {
-                        assign(n, v, envir = .GlobalEnv)
-                        NULL
-                    }
-                    for (name in list) {
-                        clusterCall(CL, gets, name, get(name))
-                    }
-		}
-		clusterExport_l(CL, list("irho", "drop2beta",
-                    "Q", "T", "icept", "iicept", "type", "q"))
+                env <- new.env()
+                varlist <- list("irho", "drop2beta",
+                    "Q", "T", "icept", "iicept", "type", "q")
+                assign("irho", irho, envir = env)
+                assign("drop2beta", drop2beta, envir = env)
+                assign("Q", Q, envir = env)
+                assign("T", T, envir = env)
+                assign("icept", icept, envir = env)
+                assign("iicept", iicept, envir = env)
+                assign("type", type, envir = env)
+                assign("q", q, envir = env)
+#		clusterExport_l <- function(CL, list, env) {
+#                    gets <- function(n, v, env) {
+#                    gets <- function(n, v) {
+#                        assign(n, v, envir = .GlobalEnv)
+#                        assign(n, v, envir = env)
+#                        NULL
+#                    }
+#                    for (name in list) {
+#                        clusterCall(CL, gets, name, get(name))
+#                        clusterCall(CL, gets, name, get(name, envir = env))
+#                    }
+#		}
+		clusterExport(CL, varlist, env)
+                
                 timings[["cluster_setup"]] <- proc.time() - .ptime_start
                 .ptime_start <- proc.time()
                 lsres <- parLapply(CL, l_sp, function(sp) apply(sp, 1, 
@@ -314,6 +328,7 @@ intImpacts <- function(rho, beta, P, n, mu, Sigma, irho, drop2beta, bnames,
 		clusterEvalQ(CL, rm(list=c("irho", "drop2beta",
                     "Q", "T", "icept", "iicept", "type", "q")))
                 clusterEvalQ(CL, detach(package:spdep))
+                rm(env)
                 sres <- do.call("c", lsres)
 
             } else {
@@ -389,18 +404,28 @@ intImpacts <- function(rho, beta, P, n, mu, Sigma, irho, drop2beta, bnames,
                 l_sp <- lapply(splitIndices(nrow(samples), length(CL)), 
 		    function(i) samples[i,])
                 clusterEvalQ(CL, library(spdep))
-		clusterExport_l <- function(CL, list) {
-                    gets <- function(n, v) {
-                        assign(n, v, envir = .GlobalEnv)
-                        NULL
-                    }
-                    for (name in list) {
-                        clusterCall(CL, gets, name, get(name))
-                    }
-		}
-
-		clusterExport_l(CL, list("irho", "drop2beta", "icept",
-                    "iicept", "type", "listw"))
+                env <- new.env()
+                varlist <- list("irho", "drop2beta", "icept",
+                    "iicept", "type", "listw")
+                assign("irho", irho, envir = env)
+                assign("drop2beta", drop2beta, envir = env)
+                assign("icept", icept, envir = env)
+                assign("iicept", iicept, envir = env)
+                assign("type", type, envir = env)
+                assign("listw", listw, envir = env)
+#		clusterExport_l <- function(CL, list, env) {
+#                    gets <- function(n, v, env) {
+#                    gets <- function(n, v) {
+#                        assign(n, v, envir = .GlobalEnv)
+#                        assign(n, v, envir = env)
+#                        NULL
+#                    }
+#                    for (name in list) {
+#                        clusterCall(CL, gets, name, get(name))
+#                        clusterCall(CL, gets, name, get(name, envir = env))
+#                    }
+#		}
+		clusterExport(CL, varlist, env)
 
                 timings[["cluster_setup"]] <- proc.time() - .ptime_start
                 .ptime_start <- proc.time()
@@ -411,6 +436,7 @@ intImpacts <- function(rho, beta, P, n, mu, Sigma, irho, drop2beta, bnames,
 		clusterEvalQ(CL, rm(list=c("drop2beta",
                     "SW", "icept", "iicept", "type", "listw")))
                 clusterEvalQ(CL, detach(package:spdep))
+                rm(env)
                 sres <- do.call("c", lsres)
 
             } else {
