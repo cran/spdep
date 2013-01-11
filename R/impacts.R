@@ -325,8 +325,7 @@ intImpacts <- function(rho, beta, P, n, mu, Sigma, irho, drop2beta, bnames,
                 lsres <- parLapply(CL, l_sp, function(sp) apply(sp, 1, 
                     spdep:::processSample, irho=irho, drop2beta=drop2beta,
                     type=type, iicept=iicept, icept=icept, T=T, Q=Q, q=q))
-		clusterEvalQ(CL, rm(list=c("irho", "drop2beta",
-                    "Q", "T", "icept", "iicept", "type", "q")))
+		clusterEvalQ(CL, rm(varlist))
                 clusterEvalQ(CL, detach(package:spdep))
                 rm(env)
                 sres <- do.call("c", lsres)

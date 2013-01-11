@@ -6,7 +6,7 @@ spautolm <- function(formula, data = list(), listw, weights,
     timings <- list()
     .ptime_start <- proc.time()
     con <- list(tol.opt=.Machine$double.eps^(2/3), 
-        fdHess=NULL, optimHess=FALSE,
+        fdHess=NULL, optimHess=FALSE, optimHessMethod="optimHess",
         Imult=2, cheb_q=5, MC_p=16, MC_m=30, super=NULL, spamPivot="MMD",
         in_coef=0.1, type="MC",
         correct=TRUE, trunc=TRUE, SE_method="LU", nrho=200,
@@ -160,7 +160,7 @@ spautolm <- function(formula, data = list(), listw, weights,
     if (con$fdHess) {
         coefs <- c(lambda, fit$coefficients)
         fdHess <- getVcovmat(coefs, env, tol.solve=tol.solve,
-            optim=con$optimHess)
+            optim=con$optimHess, optimM=con$optimHessMethod)
         lambda.se <- sqrt(fdHess[1, 1])
     }
 
@@ -406,10 +406,25 @@ print.summary.spautolm <- function(x, digits = max(5, .Options$digits - 3),
         invisible(x)
 }
 
-getVcovmat <- function(coefs, env, tol.solve=.Machine$double.eps, optim=FALSE) {
+getVcovmat <- function(coefs, env, tol.solve=.Machine$double.eps, optim=FALSE,
+    optimM="optimHess") {
     if (optim) {
-        opt <- optimHess(par=coefs, fn=f_spautolm_hess, env=env)
-        mat <- opt
+      if (optimM == "nlm") {
+           options(warn=-1)
+           opt <- nlm(f=f_laglm_hess_nlm, p=coefs, env=env, hessian=TRUE)
+           options(warn=0)
+           mat <- opt$hessian
+#        opt <- optimHess(par=coefs, fn=f_laglm_hess, env=env)
+#        mat <- opt
+       } else if (optimM == "optimHess") {
+           mat <- optimHess(par=coefs, fn=f_laglm_hess, env=env)
+       } else {
+           opt <- optim(par=coefs, fn=f_laglm_hess, env=env, method=optimM,
+           hessian=TRUE)
+           mat <- opt$hessian
+      }
+#        opt <- optimHess(par=coefs, fn=f_spautolm_hess, env=env)
+#        mat <- opt
     } else {
         fd <- fdHess(coefs, f_spautolm_hess, env)
         mat <- fd$Hessian

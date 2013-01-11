@@ -8,7 +8,8 @@ lagsarlm <- function(formula, data = list(), listw,
         timings <- list()
         .ptime_start <- proc.time()
         con <- list(tol.opt=.Machine$double.eps^0.5,
-            fdHess=NULL, optimHess=FALSE, compiled_sse=FALSE, Imult=2,
+            fdHess=NULL, optimHess=FALSE, optimHessMethod="optimHess",
+            compiled_sse=FALSE, Imult=2,
             cheb_q=5, MC_p=16, MC_m=30, super=NULL, spamPivot="MMD",
             in_coef=0.1, type="MC", correct=TRUE, trunc=TRUE,
             SE_method="LU", nrho=200, interpn=2000, small_asy=TRUE,
@@ -176,7 +177,8 @@ lagsarlm <- function(formula, data = list(), listw,
                assign("ptr", ptr, envir=env)
             }
             fdHess <- getVmatl(coefs, env,
-               s2, trs, tol.solve=tol.solve, optim=con$optimHess)
+               s2, trs, tol.solve=tol.solve, optim=con$optimHess,
+               optimM=con$optimHessMethod)
             if (con$compiled_sse) {
                 .Call("hess_lag_free", get("ptr", envir=env),
                      PACKAGE="spdep")
