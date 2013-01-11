@@ -1,10 +1,24 @@
-# Copyright 2009-2010 by Roger Bivand
+# Copyright 2009-2013 by Roger Bivand
 
-getVmate <- function(coefs, env,
-    s2, trs, tol.solve=1.0e-10, optim=FALSE) {
+getVmate <- function(coefs, env, s2, trs, tol.solve=1.0e-10, optim=FALSE,
+    optimM="optimHess") {
     if (optim) {
-        opt <- optimHess(par=coefs, fn=f_errlm_hess, env=env)
-        mat <- opt
+      if (optimM == "nlm") {
+           options(warn=-1)
+           opt <- nlm(f=f_laglm_hess_nlm, p=coefs, env=env, hessian=TRUE)
+           options(warn=0)
+           mat <- opt$hessian
+#        opt <- optimHess(par=coefs, fn=f_laglm_hess, env=env)
+#        mat <- opt
+       } else if (optimM == "optimHess") {
+           mat <- optimHess(par=coefs, fn=f_laglm_hess, env=env)
+       } else {
+           opt <- optim(par=coefs, fn=f_laglm_hess, env=env, method=optimM,
+           hessian=TRUE)
+           mat <- opt$hessian
+      }
+#        opt <- optimHess(par=coefs, fn=f_errlm_hess, env=env)
+#        mat <- opt
     } else {
         fd <- fdHess(coefs, f_errlm_hess, env)
         mat <- fd$Hessian

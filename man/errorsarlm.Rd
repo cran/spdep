@@ -1,4 +1,4 @@
-% Copyright 2002-12 by Roger S. Bivand
+% Copyright 2002-13 by Roger S. Bivand
 \name{errorsarlm}
 \alias{errorsarlm}
 %\alias{sar.error.f}
@@ -64,6 +64,7 @@ variable in making predictions for the fitting data.
   \item{pWOrder:}{default 250, if returnHcov=TRUE and the method is not \dQuote{eigen}, pass this order to \code{powerWeights} as the power series maximum limit}
   \item{fdHess:}{default NULL, then set to (method != "eigen") internally; use \code{fdHess} to compute an approximate Hessian using finite differences when using sparse matrix methods; used to make a coefficient covariance matrix when the number of observations is large; may be turned off to save resources if need be}
   \item{optimHess:}{default FALSE, use \code{fdHess} from \pkg{nlme}, if TRUE, use \code{optim} to calculate Hessian at optimum}
+  \item{optimHessMethod:}{default \dQuote{optimHess}, may be \dQuote{nlm} or one of the \code{optim} methods}
   \item{LAPACK:}{default FALSE; logical value passed to \code{qr} in the SSE log likelihood function}
   \item{compiled_sse:}{default FALSE; logical value used in the log likelihood function to choose compiled code for computing SSE}
   \item{Imult:}{default 2; used for preparing the Cholesky decompositions for updating in the Jacobian function}

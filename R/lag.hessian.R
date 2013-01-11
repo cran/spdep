@@ -1,10 +1,23 @@
-# Copyright 2009-2010 by Roger Bivand
+# Copyright 2009-2013 by Roger Bivand
 #
 
-getVmatl <- function(coefs, env, s2, trs, tol.solve=1.0e-10, optim=FALSE) {
+getVmatl <- function(coefs, env, s2, trs, tol.solve=1.0e-10, optim=FALSE,
+    optimM="optimHess") {
     if (optim) {
-        opt <- optimHess(par=coefs, fn=f_laglm_hess, env=env)
-        mat <- opt
+      if (optimM == "nlm") {
+           options(warn=-1)
+           opt <- nlm(f=f_laglm_hess_nlm, p=coefs, env=env, hessian=TRUE)
+           options(warn=0)
+           mat <- opt$hessian
+#        opt <- optimHess(par=coefs, fn=f_laglm_hess, env=env)
+#        mat <- opt
+       } else if (optimM == "optimHess") {
+           mat <- optimHess(par=coefs, fn=f_laglm_hess, env=env)
+       } else {
+           opt <- optim(par=coefs, fn=f_laglm_hess, env=env, method=optimM,
+           hessian=TRUE)
+           mat <- opt$hessian
+      }
     } else {
         fd <- fdHess(coefs, f_laglm_hess, env)
         mat <- fd$Hessian
@@ -44,6 +57,11 @@ f_laglm_hess <- function(coefs, env) {
     assign("hf_calls", get("hf_calls", envir=env)+1L, envir=env)
     if (!is.finite(ret)) return(-Inf)
     ret
+}
+
+f_laglm_hess_nlm <- function(coefs, env) {
+    ret <- f_laglm_hess(coefs, env)
+    -ret
 }
 
 #f_errlm_hess <- function(coefs, env) {

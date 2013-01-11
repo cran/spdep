@@ -217,7 +217,7 @@ moranExpect_rho_H1 <- function(listw, I0, select=FALSE){
 	if (!(select[1]))
 		select=1:length(listw$neighbours)
 	V <- listw2mat(listw)[select,select]
-	eigenvalues<-as.real(eigen(V)$values)
+	eigenvalues<-as.double(eigen(V)$values)
 	min=min(eigenvalues)
 	max=max(eigenvalues)
 	f <- function(x) abs(I0-moranExpect_H1(listw, x, select=select))

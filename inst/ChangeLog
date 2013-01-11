@@ -1,3 +1,14 @@
+2013-01-11 11:11  rsbivand
+
+	* DESCRIPTION, R/error.hessian.R, R/error.spsarlm.R, R/impacts.R,
+	  R/lag.hessian.R, R/lag.spsarlm.R, R/moran.exact.R, R/spautolm.R,
+	  man/errorsarlm.Rd, man/lagsarlm.Rd, man/spautolm.Rd: no real and
+	  Hessian variants
+
+2012-12-21 09:25  rsbivand
+
+	* ChangeLog, inst/ChangeLog: tidy
+
 2012-12-21 09:24  rsbivand
 
 	* R/impacts.R, R/poly2nb.R: clusterExport environment
