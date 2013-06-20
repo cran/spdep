@@ -23,6 +23,7 @@ MCMCsamp(object, mcmc = 1L, verbose = NULL, ...)
   \item{control}{list of extra control arguments - see \code{\link{spautolm}}}
 }
 \value{An object of class \dQuote{mcmc} suited to \pkg{coda}, with attributes: \dQuote{accept} acceptance rate; \dQuote{type} input ML fitted model type \dQuote{SAR}, \dQuote{CAR}, \dQuote{SMA}, \dQuote{lag}, \dQuote{mixed}, \dQuote{error}, \dQuote{sac}, \dQuote{sacmixed}; \dQuote{timings} run times}
+\note{If the acceptance rate is below 0.05, a warning will be issued; consider increasing mcmc.}
 \references{Jim Albert (2007) Bayesian Computation with R, Springer, New York, pp. 104-105.}
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 

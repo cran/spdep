@@ -338,6 +338,7 @@ sar_error_sse <- function(lambda, env) {
         xl <- get("x", envir=env) - lambda * get("WX", envir=env)
 	xl.q <- qr.Q(qr(xl, LAPACK=get("LAPACK", envir=env)))
 	xl.q.yl <- crossprod(xl.q, yl)
+#        xl.q.yl <- qr.qty(qr(xl, LAPACK=get("LAPACK", envir=env)), yl)
 	SSE <- crossprod(yl) - crossprod(xl.q.yl)
     }
     SSE

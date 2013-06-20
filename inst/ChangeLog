@@ -1,3 +1,45 @@
+2013-06-21 12:07  rsbivand
+
+	* man/impacts.sarlm.Rd, man/lagmess.Rd, man/lm.morantest.exact.Rd,
+	  man/localmoran.exact.Rd, man/spautolm.Rd, man/tolerance.nb.Rd,
+	  man/trW.Rd: changing over-long help page lines
+
+2013-06-20 17:07  rsbivand
+
+	* ChangeLog, inst/ChangeLog: tidy
+
+2013-06-20 17:02  rsbivand
+
+	* DESCRIPTION, inst/doc/SpatialFiltering.Rnw,
+	  inst/doc/SpatialFiltering.pdf, inst/doc/nb.Rnw, inst/doc/nb.pdf:
+	  SpatialFiltering vignette
+
+2013-06-20 11:41  rsbivand
+
+	* DESCRIPTION, R/mcmcsamp.R, inst/doc/nb.Rnw,
+	  inst/etc/shapes/NY8_utm18.dbf, inst/etc/shapes/NY8_utm18.prj,
+	  inst/etc/shapes/NY8_utm18.shp, inst/etc/shapes/NY8_utm18.shx,
+	  inst/etc/weights/NY_nb.gal, man/MCMCsamp.Rd: nb vignette
+	  beginning
+
+2013-03-30 13:23  rsbivand
+
+	* LICENCE, src/dnn.c, src/ml_sse.c, src/polypoly.c, src/skater.c:
+	  remove clang warnings
+
+2013-03-14 16:36  rsbivand
+
+	* inst/doc/CO69.Rnw, inst/doc/sids.Rnw: keep.source=FALSE in
+	  vignettes
+
+2013-02-11 07:39  rsbivand
+
+	* DESCRIPTION, R/error.spsarlm.R, src/ml_sse.c, src/spdep.h: tidy
+
+2013-01-11 11:13  rsbivand
+
+	* ChangeLog, inst/ChangeLog: tidy
+
 2013-01-11 11:11  rsbivand
 
 	* DESCRIPTION, R/error.hessian.R, R/error.spsarlm.R, R/impacts.R,

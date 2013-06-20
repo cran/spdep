@@ -26,6 +26,7 @@
 \def\RR{\textsf{R}\xspace}
 \def\SP{\texttt{S-PLUS}\xspace}
 \def\SS{\texttt{S}\xspace}
+\SweaveOpts{keep.source=FALSE}
 
 \title{``The Problem of Spatial Autocorrelation:'' forty years on} 
 \author{Roger Bivand} 

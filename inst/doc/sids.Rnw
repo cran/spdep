@@ -19,6 +19,7 @@
 \def\RR{\textsf{R}\/}
 \def\SP{\texttt{S-PLUS}\/}
 \def\SS{\texttt{S}\/}
+\SweaveOpts{keep.source=FALSE}
 
 \title{Introduction to the North Carolina SIDS data set (revised)} 
 \author{Roger Bivand} 

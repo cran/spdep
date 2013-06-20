@@ -86,7 +86,8 @@ void opt_error_set(SEXP env) {
     pt->qy = Calloc(np, double);
     pt->xlqyl = Calloc(p, double);
     pt->jpvt = Calloc(p, int);
-    pt->work = Calloc(p*2, double);
+    pt->work = Calloc(p*2, double); 
+/*    pt->work = Calloc(p, double); */
     pt->qraux = Calloc(p, double);
 
     for (i=0; i<n; i++) {
@@ -287,7 +288,7 @@ SEXP hess_lag_free(SEXP ptr) {
 SEXP R_ml_sse_env(SEXP env, SEXP coef) {
 
   SEXP res;
-  SEXP y, x, wy, WX;
+//  SEXP y, x, wy, WX;
   int i, k, n, p, np;
   double tol=1e-7, cyl, cxlqyl, sse;
   char *trans = "T";
@@ -315,8 +316,10 @@ SEXP R_ml_sse_env(SEXP env, SEXP coef) {
   F77_CALL(daxpy)(&np, &m_lambda, pt->wx1, &c__1, pt->xlq, &c__1);
 
   F77_CALL(dqrdc2)(pt->xlq, &n, &n, &p, &tol, &k, pt->qraux, pt->jpvt,
-    pt->work);
-  if (p != k) warning("Q looses full rank");
+    pt->work); 
+  if (p != k) warning("Q looses full rank"); 
+/*  k = 0;
+  F77_CALL(dqrdc)(pt->xlq, &n, &n, &p, pt->qraux, pt->jpvt, pt->work, &k);*/
 
   for (i=0; i<n*k; i++) pt->qy[i] = 0.0;
   for (i=0; i<k; i++) pt->qy[(i +(n*i))] = 1.0;
