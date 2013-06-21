@@ -12,7 +12,8 @@
 \title{Matrix exponential spatial lag model}
 \description{The function fits a matrix exponential spatial lag model, using \code{optim} to find the value of \code{alpha}, the spatial coefficient.}
 \usage{
-lagmess(formula, data = list(), listw, zero.policy = NULL, na.action = na.fail, q = 10, start = -2.5, control=list(), method="BFGS", verbose=NULL)
+lagmess(formula, data = list(), listw, zero.policy = NULL, na.action = na.fail,
+ q = 10, start = -2.5, control=list(), method="BFGS", verbose=NULL)
 \method{summary}{lagmess}(object, ...)
 \method{print}{lagmess}(x, ...)
 \method{print}{summary.lagmess}(x, digits = max(5, .Options$digits - 3),

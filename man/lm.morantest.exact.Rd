@@ -7,7 +7,9 @@
   The function implements Tiefelsdorf's exact global Moran's I test.
 }
 \usage{
-lm.morantest.exact(model, listw, zero.policy = NULL, alternative = "greater", spChk = NULL, resfun = weighted.residuals, zero.tol = 1e-07, Omega=NULL, save.M=NULL, save.U=NULL, useTP=FALSE, truncErr=1e-6, zeroTreat=0.1)
+lm.morantest.exact(model, listw, zero.policy = NULL, alternative = "greater",
+ spChk = NULL, resfun = weighted.residuals, zero.tol = 1e-07, Omega=NULL,
+ save.M=NULL, save.U=NULL, useTP=FALSE, truncErr=1e-6, zeroTreat=0.1)
 \method{print}{moranex}(x, \dots)
 }
 %- maybe also 'usage' for other objects documented here.

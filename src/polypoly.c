@@ -218,13 +218,13 @@ SEXP poly_loop2(SEXP n, SEXP i_findInBox, SEXP bb, SEXP pl, SEXP nrs,
     int crit = INTEGER_POINTER(criterion)[0];
 /*    int Scale = INTEGER_POINTER(scale)[0];*/
     int uBound = (int) INTEGER_POINTER(nfIBB)[0]*2;
-    int i, j, jj, k, li, pc = 0;
+    int i, j, jj, li, pc = 0;
     int ii = 0;
     int *card, *icard, *is, *jjs, *NRS, *cNRS;
     double *bb1, *bb2, *bb3, *bb4, *plx, *ply;
     double Dsnap = NUMERIC_POINTER(dsnap)[0];
 
-    struct bbcontainer *bbs;
+//    struct bbcontainer *bbs;
 
     SEXP ans;
 

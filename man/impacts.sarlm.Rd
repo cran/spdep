@@ -12,9 +12,12 @@
 \title{Impacts in spatial lag models}
 \description{The calculation of impacts for spatial lag and spatial Durbin models is needed in order to interpret the regression coefficients correctly, because of the spillovers between the terms in these data generation processes (unlike the spatial error model).}
 \usage{
-\method{impacts}{sarlm}(obj, \dots, tr, R = NULL, listw = NULL, useHESS = NULL, tol = 1e-06, empirical = FALSE, Q=NULL)
-\method{impacts}{stsls}(obj, \dots, tr, R = NULL, listw = NULL, tol = 1e-06, empirical = FALSE, Q=NULL)
-\method{impacts}{gmsar}(obj, \dots, tr, R = NULL, listw = NULL, tol = 1e-06, empirical = FALSE, Q=NULL)
+\method{impacts}{sarlm}(obj, \dots, tr, R = NULL, listw = NULL, useHESS = NULL,
+ tol = 1e-06, empirical = FALSE, Q=NULL)
+\method{impacts}{stsls}(obj, \dots, tr, R = NULL, listw = NULL,
+ tol = 1e-06, empirical = FALSE, Q=NULL)
+\method{impacts}{gmsar}(obj, \dots, tr, R = NULL, listw = NULL,
+ tol = 1e-06, empirical = FALSE, Q=NULL)
 \method{plot}{lagImpact}(x, ..., choice="direct", trace=FALSE, density=TRUE)
 \method{print}{lagImpact}(x, ..., reportQ=NULL)
 \method{summary}{lagImpact}(object, ..., zstats=FALSE, short=FALSE, reportQ=NULL)

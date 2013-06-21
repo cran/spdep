@@ -1,7 +1,7 @@
 #include "spdep.h"
 
 void prunemst(int *e1, int *e2, int *ne, int *gr) {
-  int i, j, no1[*ne], id1, id2, n1=1, li=0, ls=1;
+  int i, j, no1[*ne], n1=1, li=0, ls=1;
   no1[0] = e1[0];
   for (i=0; i<*ne; i++)
     gr[i] = 0;

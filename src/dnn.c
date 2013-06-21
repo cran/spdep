@@ -35,9 +35,9 @@ dnearneigh(SEXP din1, SEXP din2, SEXP pnte, SEXP p, SEXP test, SEXP lonlat)
     setAttrib(VECTOR_ELT(ans, 0), R_ClassSymbol, class);
     setAttrib(VECTOR_ELT(ans, 0), install("nbtype"), nbtype);
     setAttrib(VECTOR_ELT(ans, 0), install("distances"), dists);
-    dn0 = dn0;
-    dn = dn;
-    pos = (int *) R_alloc(nte, sizeof(int));
+/*    dn0 = dn0;
+    dn = dn;*/
+    pos = (int *) R_alloc((size_t) nte, sizeof(int));
     for (npat = 0; npat < nte; npat++) {
         R_CheckUserInterrupt();
 	kn = 0;

@@ -231,6 +231,8 @@ MCMCsamp.sarlm <- function(object, mcmc = 1L, verbose = NULL, ...,
     }
     timings[["rwmetrop"]] <- proc.time() - .ptime_start
     attr(res, "timings") <- do.call("rbind", timings)[, c(1, 3)]
+    if (attr(res, "accept") < 0.05)
+        warning("MCMCsamp: very low acceptance rate")
     res
 }
 

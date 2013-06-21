@@ -38,7 +38,10 @@ system.time(trMC <- trW(W, type="MC"))
 str(trMC)
 plot(trMat, trMC)
 abline(a=0, b=1)
-for(i in 3:length(trMC)) segments(trMat[i], trMC[i]-2*attr(trMC, "sd")[i], trMat[i], trMC[i]+2*attr(trMC, "sd")[i])
+for(i in 3:length(trMC)) {
+ segments(trMat[i], trMC[i]-2*attr(trMC, "sd")[i], trMat[i],
+  trMC[i]+2*attr(trMC, "sd")[i])
+}
 listwS <- similar.listw(listw)
 W <- as(as(as_dgRMatrix_listw(listwS), "CsparseMatrix"), "symmetricMatrix")
 system.time(trmom <- trW(W, m=24, type="moments"))

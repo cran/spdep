@@ -6,7 +6,8 @@
   This function creates an object of class \code{nb} (defined in the library spdep) containing a connexion diagram. The edges between sites are based on a tolerance angle and a maximum distance. The angle is directional; its direction is always from the bottow to the top of the screen.
 }
 \usage{
-tolerance.nb(coords, unit.angle = "degrees", max.dist, tolerance, rot.angle, plot.sites=FALSE)
+tolerance.nb(coords, unit.angle = "degrees", max.dist, tolerance, rot.angle,
+ plot.sites=FALSE)
 }
 
 \arguments{
@@ -35,15 +36,22 @@ To use this function for a set of coordinates with more than 1500 entries is mem
 set.seed(1)
 ex.data<-cbind(runif(50),rexp(50))
 
-### Construct object of class nb with a tolerance angle of 30 degrees and a maximum distance of 2 m.
-nb.ex<-tolerance.nb(ex.data, unit.angle = "degrees", max.dist=1, tolerance = 30)
+### Construct object of class nb with a tolerance angle of 30 degrees
+### and a maximum distance of 2 m.
+nb.ex<-tolerance.nb(ex.data, unit.angle = "degrees", max.dist=1,
+ tolerance = 30)
 
-### Construct object of class nb with a tolerance angle of 30 degrees and a maximum distance of 2 m. The coordinates are rotated at an angle of 45 degrees counterclockwise.
-nb.ex2<-tolerance.nb(ex.data, unit.angle = "degrees", max.dist=1, tolerance = 30, rot.angle = 45)
+### Construct object of class nb with a tolerance angle of 30 degrees
+### and a maximum distance of 2 m. The coordinates are rotated at an angle
+### of 45 degrees counterclockwise.
+nb.ex2<-tolerance.nb(ex.data, unit.angle = "degrees", max.dist=1,
+ tolerance = 30, rot.angle = 45)
 
-### Construct object of class nb with a tolerance angle of pi/8 radians and a maximum distance of 1.5 m. The coordinates are rotated at an angle of pi/4 radians clockwise.
-nb.ex3<-tolerance.nb(ex.data, unit.angle = "radians", max.dist=1.5, tolerance = pi/8,rot.angle = -pi*2/3)
-
+### Construct object of class nb with a tolerance angle of pi/8 radians
+### and a maximum distance of 1.5 m. The coordinates are rotated at
+### an angle of pi/4 radians clockwise.
+nb.ex3<-tolerance.nb(ex.data, unit.angle = "radians", max.dist=1.5,
+ tolerance = pi/8, rot.angle = -pi*2/3)
 
 par(mfrow=c(1,3))
 plot(nb.ex,ex.data,asp=1)
