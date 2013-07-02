@@ -1,3 +1,40 @@
+2013-07-02 19:03  rsbivand
+
+	* inst/LICENCE, inst/README: tidy
+
+2013-07-02 18:31  rsbivand
+
+	* ChangeLog, inst/ChangeLog: tidy
+
+2013-07-02 18:30  rsbivand
+
+	* DESCRIPTION, inst/doc/CO69.Rnw, inst/doc/CO69.pdf,
+	  inst/doc/SpatialFiltering.Rnw, inst/doc/SpatialFiltering.pdf,
+	  inst/doc/nb.Rnw, inst/doc/nb.pdf, inst/doc/sids.Rnw,
+	  inst/doc/sids.pdf, vignettes, vignettes/CO69.Rnw,
+	  vignettes/CO69.pdf, vignettes/SpatialFiltering.Rnw,
+	  vignettes/SpatialFiltering.pdf, vignettes/nb.Rnw,
+	  vignettes/nb.pdf, vignettes/sids.Rnw, vignettes/sids.pdf: move to
+	  vignettes
+
+2013-06-25 17:30  rsbivand
+
+	* inst/doc/SpatialFiltering.Rnw, inst/doc/SpatialFiltering.pdf,
+	  inst/doc/nb.Rnw, inst/doc/nb.pdf: adding footnote
+
+2013-06-24 11:57  rsbivand
+
+	* DESCRIPTION, R/plot.nb.R, inst/doc/SpatialFiltering.Rnw: plot.nb
+
+2013-06-21 13:44  rsbivand
+
+	* DESCRIPTION, inst/doc/SpatialFiltering.Rnw,
+	  inst/doc/backstore/nyME_res.RData: backstoring ME results
+
+2013-06-21 12:08  rsbivand
+
+	* ChangeLog, inst/ChangeLog: tidy
+
 2013-06-21 12:07  rsbivand
 
 	* man/impacts.sarlm.Rd, man/lagmess.Rd, man/lm.morantest.exact.Rd,
