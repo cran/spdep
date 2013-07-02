@@ -2,7 +2,7 @@
 ### Encoding: UTF-8
 
 ###################################################
-### code chunk number 1: SpatialFiltering.Rnw:38-43
+### code chunk number 1: SpatialFiltering.Rnw:42-47
 ###################################################
 owidth <- getOption("width")
 options("width"=90)
@@ -57,20 +57,20 @@ options("warn"=-1)
 
 
 ###################################################
-### code chunk number 8: SpatialFiltering.Rnw:108-116
+### code chunk number 8: SpatialFiltering.Rnw:112-120
 ###################################################
 library(maptools)
+library(spdep)
 owd <- getwd()
 setwd(system.file("etc/shapes", package="spdep"))
 NY8 <- readShapeSpatial("NY8_utm18")
-library(spdep)
 setwd(system.file("etc/weights", package="spdep"))
 NY_nb <- read.gal("NY_nb.gal", region.id=row.names(NY8))
 setwd(owd)
 
 
 ###################################################
-### code chunk number 9: SpatialFiltering.Rnw:122-127
+### code chunk number 9: SpatialFiltering.Rnw:126-131
 ###################################################
 nySFE <- SpatialFiltering(Z~PEXPOSURE+PCTAGE65P+PCTOWNHOME, data=NY8, nb=NY_nb, style="W", verbose=FALSE)
 nylmSFE <- lm(Z~PEXPOSURE+PCTAGE65P+PCTOWNHOME+fitted(nySFE), data=NY8)
@@ -80,18 +80,35 @@ anova(nylm, nylmSFE)
 
 
 ###################################################
-### code chunk number 10: SpatialFiltering.Rnw:151-157
+### code chunk number 10: SpatialFiltering.Rnw:155-157
 ###################################################
 NYlistwW <- nb2listw(NY_nb, style = "W")
 set.seed(111)
-nyME <- ME(Cases~PEXPOSURE+PCTAGE65P+PCTOWNHOME, data=NY8, offset=log(POP8), family="poisson", listw=NYlistwW, alpha=0.5)
+
+
+###################################################
+### code chunk number 11: SpatialFiltering.Rnw:158-159 (eval = FALSE)
+###################################################
+## nyME <- ME(Cases~PEXPOSURE+PCTAGE65P+PCTOWNHOME, data=NY8, offset=log(POP8), family="poisson", listw=NYlistwW, alpha=0.5)
+
+
+###################################################
+### code chunk number 12: SpatialFiltering.Rnw:160-162
+###################################################
+bsfn <- system.file("doc/backstore/nyME_res.RData", package="spdep")
+load(bsfn)
+
+
+###################################################
+### code chunk number 13: SpatialFiltering.Rnw:164-167
+###################################################
 nyME
 NY8$eigen_24 <- fitted(nyME)[,1]
 NY8$eigen_223 <- fitted(nyME)[,2]
 
 
 ###################################################
-### code chunk number 11: SpatialFiltering.Rnw:164-172
+### code chunk number 14: SpatialFiltering.Rnw:174-182
 ###################################################
 .iwidth <- 6
 .iheight <- 4
@@ -108,7 +125,7 @@ cat("\\includegraphics[width=0.95\\textwidth]{", file, "}\n\n", sep="")
 
 
 ###################################################
-### code chunk number 12: SpatialFiltering.Rnw:181-185
+### code chunk number 15: SpatialFiltering.Rnw:190-194
 ###################################################
 nyglmME <- glm(Cases~PEXPOSURE+PCTAGE65P+PCTOWNHOME+offset(log(POP8))+fitted(nyME), data=NY8, family="poisson")
 summary(nyglmME)
