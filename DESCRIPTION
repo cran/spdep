@@ -1,29 +1,36 @@
 Package: spdep
-Version: 0.5-60
-Date: 2013-07-02
+Version: 0.5-61
+Date: 2013-07-22
 Title: Spatial dependence: weighting schemes, statistics and models
 Encoding: latin1
-Authors@R: c( person("Roger", "Bivand", role = c("cre", "aut"), email =
-        "Roger.Bivand@nhh.no"), person("Micah", "Altman", role =
-        "ctb"), person("Luc", "Anselin", role = "ctb"),
-        person("Renato", "Assunção", role = "ctb"), person("Olaf",
-        "Berke", role = "ctb"), person("Andrew", "Bernat", role =
-        "ctb"), person("Guillaume", "Blanchet", role = "ctb"),
-        person("Eric", "Blankmeyer", role = "ctb"), person("Marilia",
-        "Carvalho", role = "ctb"), person("Bjarke", "Christensen", role
-        = "ctb"), person("Yongwan", "Chun", role = "ctb"),
-        person("Carsten", "Dormann", role = "ctb"), person("Stéphane",
-        "Dray", role = "ctb"), person("Rein", "Halbersma", role =
-        "ctb"), person("Elias", "Krainski", role = "ctb"),
-        person("Pierre", "Legendre", role = "ctb"), person("Nicholas",
-        "Lewin-Koh", role = "ctb"), person("Hongfei", "Li", role =
-        "ctb"), person("Jielai", "Ma", role = "ctb"),
-        person("Giovanni", "Millo", role = "ctb"), person("Werner",
-        "Mueller", role = "ctb"), person("Hisaji", "Ono", role =
-        "ctb"), person("Pedro", "Peres-Neto", role = "ctb"),
-        person("Gianfranco", "Piras", role = "ctb"), person("Markus",
-        "Reder", role = "ctb"), person("Michael", "Tiefelsdorf", role =
-        "ctb"), person("Danlin", "Yu", role = "ctb"))
+Authors@R: c(
+	person("Roger", "Bivand", role = c("cre", "aut"), email = "Roger.Bivand@nhh.no"),
+	person("Micah", "Altman", role = "ctb"),
+	person("Luc", "Anselin", role = "ctb"),
+	person("Renato", "Assunção", role = "ctb"),
+	person("Olaf", "Berke", role = "ctb"),
+	person("Andrew", "Bernat", role = "ctb"),
+	person("Guillaume", "Blanchet", role = "ctb"),
+	person("Eric", "Blankmeyer", role = "ctb"),
+	person("Marilia", "Carvalho", role = "ctb"),
+	person("Bjarke", "Christensen", role = "ctb"),
+	person("Yongwan", "Chun", role = "ctb"),
+	person("Carsten", "Dormann", role = "ctb"),
+	person("Stéphane", "Dray", role = "ctb"),
+	person("Rein", "Halbersma", role = "ctb"),
+	person("Elias", "Krainski", role = "ctb"),
+	person("Pierre", "Legendre", role = "ctb"),
+	person("Nicholas", "Lewin-Koh", role = "ctb"),
+	person("Hongfei", "Li", role = "ctb"),
+	person("Jielai", "Ma", role = "ctb"),
+	person("Giovanni", "Millo", role = "ctb"),
+	person("Werner", "Mueller", role = "ctb"),
+	person("Hisaji", "Ono", role = "ctb"),
+	person("Pedro", "Peres-Neto", role = "ctb"),
+	person("Gianfranco", "Piras", role = "ctb"),
+	person("Markus", "Reder", role = "ctb"),
+	person("Michael", "Tiefelsdorf", role = "ctb"),
+	person("Danlin", "Yu", role = "ctb"))
 Depends: R (>= 2.14.0), methods, sp (>= 0.9), boot, Matrix (>=
         0.999375-9), MASS, nlme, maptools (>= 0.5-4), deldir, coda,
         splines
@@ -31,34 +38,49 @@ Imports: LearnBayes
 Suggests: parallel, spam(>= 0.13-1), RANN, RColorBrewer, lattice,
         xtable
 Description: A collection of functions to create spatial weights matrix
-        objects from polygon contiguities, from point patterns by
-        distance and tessellations, for summarizing these objects, and
-        for permitting their use in spatial data analysis, including
-        regional aggregation by minimum spanning tree; a collection of
-        tests for spatial autocorrelation, including global Moran's I,
-        APLE, Geary's C, Hubert/Mantel general cross product statistic,
-        Empirical Bayes estimates and Assunção/Reis Index, Getis/Ord
-        G and multicoloured join count statistics, local Moran's I and
-        Getis/Ord G, saddlepoint approximations and exact tests for
-        global and local Moran's I; and functions for estimating
-        spatial simultaneous autoregressive (SAR) lag and error models,
-        impact measures for lag models, weighted and unweighted SAR and
-        CAR spatial regression models, semi-parametric and Moran
-        eigenvector spatial filtering, GM SAR error models, and
-        generalized spatial two stage least squares models.
+  objects from polygon contiguities, from point patterns by distance and
+  tessellations, for summarizing these objects, and for permitting their
+  use in spatial data analysis, including regional aggregation by minimum
+  spanning tree; a collection of tests for spatial autocorrelation,
+  including global Moran's I, APLE, Geary's C, Hubert/Mantel general cross
+  product statistic, Empirical Bayes estimates and Assunção/Reis Index,
+  Getis/Ord G and multicoloured join count statistics, local Moran's I
+  and Getis/Ord G, saddlepoint approximations  and exact tests for global
+  and local Moran's I; and functions for estimating spatial simultaneous
+  autoregressive (SAR) lag and error models, impact measures for lag
+  models, weighted and unweighted SAR and CAR spatial regression models,
+  semi-parametric and Moran eigenvector spatial filtering, GM SAR error
+  models, and generalized spatial two stage least squares models.
 License: GPL (>= 2)
-Packaged: 2013-07-02 19:06:17 UTC; rsb
-Author: Roger Bivand [cre, aut], Micah Altman [ctb], Luc Anselin [ctb],
-        Renato Assunção [ctb], Olaf Berke [ctb], Andrew Bernat [ctb],
-        Guillaume Blanchet [ctb], Eric Blankmeyer [ctb], Marilia
-        Carvalho [ctb], Bjarke Christensen [ctb], Yongwan Chun [ctb],
-        Carsten Dormann [ctb], Stéphane Dray [ctb], Rein Halbersma
-        [ctb], Elias Krainski [ctb], Pierre Legendre [ctb], Nicholas
-        Lewin-Koh [ctb], Hongfei Li [ctb], Jielai Ma [ctb], Giovanni
-        Millo [ctb], Werner Mueller [ctb], Hisaji Ono [ctb], Pedro
-        Peres-Neto [ctb], Gianfranco Piras [ctb], Markus Reder [ctb],
-        Michael Tiefelsdorf [ctb], Danlin Yu [ctb]
+Packaged: 2013-07-22 07:15:36 UTC; rsb
+Author: Roger Bivand [cre, aut],
+  Micah Altman [ctb],
+  Luc Anselin [ctb],
+  Renato Assunção [ctb],
+  Olaf Berke [ctb],
+  Andrew Bernat [ctb],
+  Guillaume Blanchet [ctb],
+  Eric Blankmeyer [ctb],
+  Marilia Carvalho [ctb],
+  Bjarke Christensen [ctb],
+  Yongwan Chun [ctb],
+  Carsten Dormann [ctb],
+  Stéphane Dray [ctb],
+  Rein Halbersma [ctb],
+  Elias Krainski [ctb],
+  Pierre Legendre [ctb],
+  Nicholas Lewin-Koh [ctb],
+  Hongfei Li [ctb],
+  Jielai Ma [ctb],
+  Giovanni Millo [ctb],
+  Werner Mueller [ctb],
+  Hisaji Ono [ctb],
+  Pedro Peres-Neto [ctb],
+  Gianfranco Piras [ctb],
+  Markus Reder [ctb],
+  Michael Tiefelsdorf [ctb],
+  Danlin Yu [ctb]
 Maintainer: Roger Bivand <Roger.Bivand@nhh.no>
 NeedsCompilation: yes
 Repository: CRAN
-Date/Publication: 2013-07-02 23:56:11
+Date/Publication: 2013-07-24 14:04:21

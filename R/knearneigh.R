@@ -1,6 +1,7 @@
-# Copyright 2001-2010 by Roger S. Bivand. 
+# Copyright 2001-2013 by Roger S. Bivand. 
 # Upgrade to sp classes February 2007
 # Added RANN April 2010
+# nn() retired 130722
 
 knearneigh <- function(x, k=1, longlat=NULL, RANN=TRUE)
 {
@@ -27,7 +28,9 @@ knearneigh <- function(x, k=1, longlat=NULL, RANN=TRUE)
     if (k >= np) stop("Fewer data points than k")
     if (RANN && !longlat && require(RANN, quietly=TRUE)) {
         xx <- cbind(x, out=rep(0, nrow(x)))
-        out <- as.matrix(nn(xx, p=k)$nn.idx)
+#        out <- as.matrix(nn(xx, p=k)$nn.idx)
+# nn() retired 130722
+        out <- nn2(x, x, k=k+1)$nn.idx[,-1,drop=FALSE]
         dimnames(out) <- NULL
         res <- list(nn=out, np=np, k=k, dimension=dimension, x=x)
     } else {

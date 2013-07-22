@@ -3557,7 +3557,8 @@ summary(esar1M)
 ##D  listw=listw_NY, weights=POP8, family="CAR", method="spam")
 ##D summary(ecar1ws)
 ##D example(nc.sids)
-##D ft.SID74 <- sqrt(1000)*(sqrt(nc.sids$SID74/nc.sids$BIR74) + sqrt((nc.sids$SID74+1)/nc.sids$BIR74))
+##D ft.SID74 <- sqrt(1000)*(sqrt(nc.sids$SID74/nc.sids$BIR74) +
+##D  sqrt((nc.sids$SID74+1)/nc.sids$BIR74))
 ##D lm_nc <- lm(ft.SID74 ~ 1)
 ##D sids.nhbr30 <- dnearneigh(cbind(nc.sids$east, nc.sids$north), 0, 30, row.names=row.names(nc.sids))
 ##D sids.nhbr30.dist <- nbdists(sids.nhbr30, cbind(nc.sids$east, nc.sids$north))
@@ -3569,7 +3570,8 @@ summary(esar1M)
 ##D sids.nhbr$weights <- el1*el2
 ##D sids.nhbr.listw <- sn2listw(sids.nhbr)
 ##D both <- factor(paste(nc.sids$L_id, nc.sids$M_id, sep=":"))
-##D ft.NWBIR74 <- sqrt(1000)*(sqrt(nc.sids$NWBIR74/nc.sids$BIR74) + sqrt((nc.sids$NWBIR74+1)/nc.sids$BIR74))
+##D ft.NWBIR74 <- sqrt(1000)*(sqrt(nc.sids$NWBIR74/nc.sids$BIR74) +
+##D  sqrt((nc.sids$NWBIR74+1)/nc.sids$BIR74))
 ##D mdata <- data.frame(both, ft.NWBIR74, ft.SID74, BIR74=nc.sids$BIR74)
 ##D outl <- which.max(rstandard(lm_nc))
 ##D as.character(nc.sids$names[outl])
@@ -3847,15 +3849,22 @@ flush(stderr()); flush(stdout())
 set.seed(1)
 ex.data<-cbind(runif(50),rexp(50))
 
-### Construct object of class nb with a tolerance angle of 30 degrees and a maximum distance of 2 m.
-nb.ex<-tolerance.nb(ex.data, unit.angle = "degrees", max.dist=1, tolerance = 30)
+### Construct object of class nb with a tolerance angle of 30 degrees
+### and a maximum distance of 2 m.
+nb.ex<-tolerance.nb(ex.data, unit.angle = "degrees", max.dist=1,
+ tolerance = 30)
 
-### Construct object of class nb with a tolerance angle of 30 degrees and a maximum distance of 2 m. The coordinates are rotated at an angle of 45 degrees counterclockwise.
-nb.ex2<-tolerance.nb(ex.data, unit.angle = "degrees", max.dist=1, tolerance = 30, rot.angle = 45)
+### Construct object of class nb with a tolerance angle of 30 degrees
+### and a maximum distance of 2 m. The coordinates are rotated at an angle
+### of 45 degrees counterclockwise.
+nb.ex2<-tolerance.nb(ex.data, unit.angle = "degrees", max.dist=1,
+ tolerance = 30, rot.angle = 45)
 
-### Construct object of class nb with a tolerance angle of pi/8 radians and a maximum distance of 1.5 m. The coordinates are rotated at an angle of pi/4 radians clockwise.
-nb.ex3<-tolerance.nb(ex.data, unit.angle = "radians", max.dist=1.5, tolerance = pi/8,rot.angle = -pi*2/3)
-
+### Construct object of class nb with a tolerance angle of pi/8 radians
+### and a maximum distance of 1.5 m. The coordinates are rotated at
+### an angle of pi/4 radians clockwise.
+nb.ex3<-tolerance.nb(ex.data, unit.angle = "radians", max.dist=1.5,
+ tolerance = pi/8, rot.angle = -pi*2/3)
 
 par(mfrow=c(1,3))
 plot(nb.ex,ex.data,asp=1)
@@ -3888,7 +3897,10 @@ system.time(trMC <- trW(W, type="MC"))
 str(trMC)
 plot(trMat, trMC)
 abline(a=0, b=1)
-for(i in 3:length(trMC)) segments(trMat[i], trMC[i]-2*attr(trMC, "sd")[i], trMat[i], trMC[i]+2*attr(trMC, "sd")[i])
+for(i in 3:length(trMC)) {
+ segments(trMat[i], trMC[i]-2*attr(trMC, "sd")[i], trMat[i],
+  trMC[i]+2*attr(trMC, "sd")[i])
+}
 listwS <- similar.listw(listw)
 W <- as(as(as_dgRMatrix_listw(listwS), "CsparseMatrix"), "symmetricMatrix")
 system.time(trmom <- trW(W, m=24, type="moments"))

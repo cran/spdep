@@ -1,5 +1,5 @@
-110e5f2a79d3ad86074efebf6aba61c5 *ChangeLog
-2c33d62457604f6c2a5e56384dd9378d *DESCRIPTION
+e81d7d019364b019521e0acb902132d6 *ChangeLog
+e83b9e977bc807f52217907c4f2c28e0 *DESCRIPTION
 1af34a4483e585b1ff31704142610293 *NAMESPACE
 908bbadc06b1aedb8ad79c16793d397a *R/AAA.R
 36554d9a3b705852495a7bf434518295 *R/EBI.R
@@ -33,7 +33,7 @@ b0ee70bb30409c9763253c8b545dc4d9 *R/impacts.R
 e4467cdd0dfc2450682938e9094caa58 *R/jacobian.R
 049e8a2b403feac4548c39cc5afad250 *R/jacobian_setup.R
 4eac610dd1a2b7e624f3cc47696e1d91 *R/jc.R
-16f3e0c948747b251c91947903dee850 *R/knearneigh.R
+ebc500df11a40da4e80e4289fc38e7c8 *R/knearneigh.R
 c71eef240bf2e5614276b28ab0f01af7 *R/knn2nb.R
 a2dd9a851c7a47aa3c0a1ace4815472b *R/kpgm_new.R
 54106e213cabd314f323d56f8d9353f9 *R/lag.hessian.R
@@ -107,11 +107,11 @@ c3befc2b93128839af7f5afc2f4f4692 *data/oldcol.rda
 9f4230eb9cbbf1d870a031a56c55e81f *data/used.cars.rda
 5d3af103bdc5e4214234b429d56bc0bd *data/wheat.txt.gz
 671a11d7ac128f13b3e6bbc8ee0047b9 *inst/CHANGES
-110e5f2a79d3ad86074efebf6aba61c5 *inst/ChangeLog
+e81d7d019364b019521e0acb902132d6 *inst/ChangeLog
 7d2db75aac230ee3226f6fab96523d84 *inst/README
 e6b2cf3069984c5c7ac607a14f5a689c *inst/doc/CO69.R
 b2f5d061eef3007487c6de4e0bb8afe0 *inst/doc/CO69.Rnw
-aa9cd9cd6c4a0affd0f2fa181f91bee9 *inst/doc/CO69.pdf
+0ddf975a1604d928dbf661f8ef66daac *inst/doc/CO69.pdf
 0295f2e51f066e0ed5d02451bb0a39bd *inst/doc/SpatialFiltering.R
 c565bc41dd415f9fee610ed8a3de02dc *inst/doc/SpatialFiltering.Rnw
 511f5be1df8038a1cfb598b3f6d12877 *inst/doc/SpatialFiltering.pdf
@@ -122,7 +122,7 @@ e8e75e4c37b48be301a9d2246a554543 *inst/doc/nb.Rnw
 74cce825af385f91236048d12eaacd5e *inst/doc/nb.pdf
 6de7bdf4ab854bb759858d49076329ec *inst/doc/sids.R
 ea69d95c3f310cf0b5b43b324c5e2901 *inst/doc/sids.Rnw
-281aa3403f2945183846d88d2f78dca2 *inst/doc/sids.pdf
+b95fb806618071394202aceb6244fc4e *inst/doc/sids.pdf
 53178ac43dd150bbb835b63e018f0cd4 *inst/etc/misc/geary_eire.txt
 e3fb11232e6cb27770d15aaf4f632aa4 *inst/etc/misc/nc_xtra.dbf
 2591ac95bd9191d0aee07450f7caf9bb *inst/etc/misc/nyadjwts.dbf
@@ -142,7 +142,6 @@ ad0488ec063059e2b6d5af8a4f4b9a3a *inst/etc/shapes/bhicv.shp
 a692f891aa504c8092a824e37f236475 *inst/etc/shapes/columbus.dbf
 f5952cc1485ac06b60d6554664becf65 *inst/etc/shapes/columbus.shp
 f55a38e1ffb1605a7895df9e790d24f0 *inst/etc/shapes/columbus.shx
-404dacfb3fd34230b1b32bbd2976c088 *inst/etc/shapes/columbusRegression.txt
 b77745ea4cc19509c5eb954381369d82 *inst/etc/shapes/eire.dbf
 c46faee7abb7544355d79d83217e0832 *inst/etc/shapes/eire.shp
 27d96e4a6ed58e33b58d27df96f8a77b *inst/etc/shapes/eire.shx
@@ -155,7 +154,6 @@ a708a4740d0439ee34d10d367e609694 *inst/etc/shapes/wheat.shx
 097e7ff626aa206975e3b92e75fc13d7 *inst/etc/weights/NY_nb.gal
 f6e1055cc8204d302b55e78d6f2c4fbd *inst/etc/weights/baltk4.GWT
 36afea5495806cd17068e541de910b2c *inst/etc/weights/columbus.gal
-5c84efbc2191872d0910b76e90f019dc *inst/etc/weights/e80_queen.gal
 a57d2bcb809930da7643412f770e798f *inst/etc/weights/ncCC89.gal
 90f19026e9427fc2e69f0e2e5006dbd6 *inst/etc/weights/ncCR85.gal
 22d3170e3bb4dc4a53f3ac2411e23e6a *inst/etc/weights/us48.txt
@@ -216,7 +214,7 @@ b6316848443dc2876822c074b3d92bef *man/gstsls.Rd
 3a5aa076bb3c12d7c608a5d57eae9fb7 *man/joincount.mc.Rd
 e547d08740206014f8e3e95a08eca5be *man/joincount.multi.Rd
 e68b6065a95c7fbb05ccebcc9a11f449 *man/joincount.test.Rd
-d255c690296c8ed9bf66fd7045499ba2 *man/knearneigh.Rd
+4adda4d8dfc4564cd63b25cbe7339941 *man/knearneigh.Rd
 91dc5c11084a06ca9847f89b6aefd0fb *man/knn2nb.Rd
 530a137b1bad26cbbc658a52e2f48562 *man/lag.listw.Rd
 7210ead35c4645b7fdb7346c11ebee65 *man/lagmess.Rd
@@ -282,7 +280,7 @@ c2c798fb9bf18bfe444741351c9ed399 *man/tri2nb.Rd
 d0c7a38e62fecf38b067ce57997da11e *man/used.cars.Rd
 95df2d0db2a4dbcaa5dfc2f079a11138 *man/wheat.Rd
 3c5d1eac9e2b3a9837e61c3e3596b977 *man/write.nb.gal.Rd
-9a84d3e9818e97f2969599b27c168a3d *spdep-Ex.R
+5fa8e321aa9428bbe9d1349f3e51719a *spdep-Ex.R
 3996e7c16bfb96fad295ee425815cb4d *src/Makevars
 c1ee13c76e88db49ebd177ad92c9773b *src/card.c
 d1f648c115dd2ee07e125cb267e7ca9a *src/dfs_ncomp.c

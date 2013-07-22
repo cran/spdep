@@ -1,4 +1,4 @@
-% Copyright 2001-3 by Roger S. Bivand
+% Copyright 2001-13 by Roger S. Bivand
 \name{knearneigh}
 \alias{knearneigh}
 \title{K nearest neighbours for spatial weights}
@@ -29,7 +29,7 @@ A list of class \code{knn}
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 
 \seealso{\code{\link[class]{knn}}, \code{\link{dnearneigh}},
-\code{\link{knn2nb}}}
+\code{\link{knn2nb}}, \code{\link[RANN]{nn2}}}
 
 \examples{
 example(columbus)
