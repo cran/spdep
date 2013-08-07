@@ -4,7 +4,7 @@
 
 tri2nb <- function(coords, row.names = NULL) {
 #	require("tripack")
-	require("deldir")
+#	require("deldir")
 	n <- nrow(coords)
 	if (n < 3) stop("too few coordinates")
 #	left <- function(x) {
@@ -22,7 +22,7 @@ tri2nb <- function(coords, row.names = NULL) {
     	if (is.null(row.names)) row.names <- as.character(1:n)
         stopifnot(!anyDuplicated(coords))
 #	tri <- tri.mesh(x=coords[,1], y=coords[,2])
-        tri <- deldir(x=coords[,1], y=coords[,2])
+        tri <- deldir::deldir(x=coords[,1], y=coords[,2])
         from <- c(tri$delsgs[,5], tri$delsgs[,6])
         to <- c(tri$delsgs[,6], tri$delsgs[,5])
         df <- data.frame(from=as.integer(from), to=as.integer(to), weight=1)

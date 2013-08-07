@@ -290,6 +290,7 @@ flush(stderr()); flush(stdout())
 ### ** Examples
 
 ## NY leukemia
+library(foreign)
 nydata <- read.dbf(system.file("etc/misc/nydata.dbf", package="spdep")[1])
 coordinates(nydata) <- c("X", "Y")
 nyadjmat <- as.matrix(read.dbf(system.file("etc/misc/nyadjwts.dbf",
@@ -552,6 +553,7 @@ flush(stderr()); flush(stdout())
 
 ### ** Examples
 
+require(maptools)
 auckland <- readShapePoly(system.file("etc/shapes/auckland.shp",
  package="spdep")[1])
 auckland.nb <- poly2nb(auckland)
@@ -810,6 +812,7 @@ flush(stderr()); flush(stdout())
 
 ### ** Examples
 
+require(maptools)
 columbus <- readShapePoly(system.file("etc/shapes/columbus.shp",
  package="spdep")[1])
 col.gal.nb <- read.gal(system.file("etc/weights/columbus.gal",
@@ -1168,6 +1171,7 @@ flush(stderr()); flush(stdout())
 
 ### ** Examples
 
+require(maptools)
 eire <- readShapePoly(system.file("etc/shapes/eire.shp", package="spdep")[1],
   ID="names", proj4string=CRS("+proj=utm +zone=30 +units=km"))
 eire.nb <- poly2nb(eire)
@@ -2141,6 +2145,7 @@ flush(stderr()); flush(stdout())
 
 ### ** Examples
 
+require(maptools)
 eire <- readShapePoly(system.file("etc/shapes/eire.shp", package="spdep")[1],
   ID="names", proj4string=CRS("+proj=utm +zone=30 +units=km"))
 eire.nb <- poly2nb(eire)
@@ -2167,6 +2172,7 @@ flush(stderr()); flush(stdout())
 
 ### ** Examples
 
+require(maptools)
 eire <- readShapePoly(system.file("etc/shapes/eire.shp", package="spdep")[1],
   ID="names", proj4string=CRS("+proj=utm +zone=30 +units=km"))
 eire.nb <- poly2nb(eire)
@@ -2287,6 +2293,7 @@ flush(stderr()); flush(stdout())
 
 ### ** Examples
 
+require(maptools)
 eire <- readShapePoly(system.file("etc/shapes/eire.shp", package="spdep")[1],
   ID="names", proj4string=CRS("+proj=utm +zone=30 +units=km"))
 eire.nb <- poly2nb(eire)
@@ -2320,6 +2327,7 @@ flush(stderr()); flush(stdout())
 
 ### ** Examples
 
+require(maptools)
 eire <- readShapePoly(system.file("etc/shapes/eire.shp", package="spdep")[1],
   ID="names", proj4string=CRS("+proj=utm +zone=30 +units=km"))
 eire.nb <- poly2nb(eire)
@@ -2535,6 +2543,7 @@ flush(stderr()); flush(stdout())
 ### ** Examples
 
 ### loading data
+require(maptools)
 bh <- readShapePoly(system.file("etc/shapes/bhicv.shp",
       package="spdep")[1])
 ### data padronized
@@ -2654,6 +2663,7 @@ flush(stderr()); flush(stdout())
 
 ### ** Examples
 
+require(maptools)
 example(columbus)
 coords <- coordinates(columbus)
 res <- listw2lines(nb2listw(col.gal.nb), coords)
@@ -2840,6 +2850,7 @@ flush(stderr()); flush(stdout())
 
 ### ** Examples
 
+require(maptools)
 nc.sids <- readShapePoly(system.file("etc/shapes/sids.shp", package="spdep")[1],
   ID="FIPSNO", proj4string=CRS("+proj=longlat +ellps=clrk66"))
 rn <- sapply(slot(nc.sids, "polygons"), function(x) slot(x, "ID"))
@@ -3334,6 +3345,7 @@ flush(stderr()); flush(stdout())
 ### ** Examples
 
 ### loading data
+require(maptools)
 bh <- readShapePoly(system.file("etc/shapes/bhicv.shp",
       package="spdep")[1])
 ### data standardized 
@@ -4012,6 +4024,7 @@ flush(stderr()); flush(stdout())
 ##D  function(x) slot(x, "ID"))
 ##D wheat <- SpatialPolygonsDataFrame(wheat_spl, data=df)
 ## End(Not run)
+require(maptools)
 wheat <- readShapeSpatial(system.file("etc/shapes/wheat.shp",
  package="spdep")[1])
 

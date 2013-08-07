@@ -50,6 +50,7 @@ must be one of greater (default), less or two.sided.}
 
 \seealso{\code{\link{lm.morantest.sad}}}
 \examples{
+require(maptools)
 eire <- readShapePoly(system.file("etc/shapes/eire.shp", package="spdep")[1],
   ID="names", proj4string=CRS("+proj=utm +zone=30 +units=km"))
 eire.nb <- poly2nb(eire)

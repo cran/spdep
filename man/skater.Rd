@@ -72,6 +72,7 @@ skater(edges, data, ncuts, crit, vec.crit, method = c("euclidean",
 \seealso{See Also as \code{\link{mstree}}}
 \examples{
 ### loading data
+require(maptools)
 bh <- readShapePoly(system.file("etc/shapes/bhicv.shp",
       package="spdep")[1])
 ### data standardized 

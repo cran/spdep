@@ -40,6 +40,7 @@ Tiefelsdorf's SPSS Saddlepoint bundle, originally hosted at:
 \url{http://geog-www.sbs.ohio-state.edu/faculty/tiefelsdorf/GeoStat.htm}.
 }
 \examples{
+require(maptools)
 eire <- readShapePoly(system.file("etc/shapes/eire.shp", package="spdep")[1],
   ID="names", proj4string=CRS("+proj=utm +zone=30 +units=km"))
 eire.nb <- poly2nb(eire)

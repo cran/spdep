@@ -70,6 +70,7 @@ When the alternative is being tested, a list of left and right M products in att
 
 \seealso{\code{\link{lm.morantest.exact}}, \code{\link{localmoran.sad}}}
 \examples{
+require(maptools)
 eire <- readShapePoly(system.file("etc/shapes/eire.shp", package="spdep")[1],
   ID="names", proj4string=CRS("+proj=utm +zone=30 +units=km"))
 eire.nb <- poly2nb(eire)

@@ -57,6 +57,7 @@ Luc Anselin, Spatial Analysis Laboratory, Department of Agricultural and Consume
 }
 
 \examples{
+require(maptools)
 columbus <- readShapePoly(system.file("etc/shapes/columbus.shp",
  package="spdep")[1])
 col.gal.nb <- read.gal(system.file("etc/weights/columbus.gal",

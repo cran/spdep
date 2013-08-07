@@ -39,6 +39,7 @@ df2sn(df, i="i", i_ID="i_ID", j="j", wt="wt")
 \seealso{\code{\link{sn2listw}}, \code{\link[maptools]{readShapeLines}}}
 
 \examples{
+require(maptools)
 example(columbus)
 coords <- coordinates(columbus)
 res <- listw2lines(nb2listw(col.gal.nb), coords)

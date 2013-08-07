@@ -2,9 +2,11 @@ useDynLib(spdep)
 
 importFrom(stats, model.matrix, model.response, aggregate)
 
-importFrom(stats, optimize, optim)
+importFrom(stats, optimize, optim, nlminb)
 
 importFrom(nlme, fdHess)
+
+importFrom(deldir, deldir)
 
 importFrom(boot, boot)
 
@@ -89,7 +91,7 @@ export(MCMCsamp)
 
 export(tolerance.nb, Rotation)
 
-import(maptools)
+#import(maptools)
 
 S3method(print, nb)
 S3method(summary, nb)

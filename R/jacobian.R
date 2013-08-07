@@ -615,7 +615,7 @@ moments_ldet <- function(x, env, which=1) {
 
 SE_classic_setup <- function(env, SE_method="LU", p=16, m=30, nrho=200,
   interpn=2000, interval=c(-1,0.999), SElndet=NULL, which=1) {
-  stopifnot(require(splines))
+#  stopifnot(require(splines))
 
   if (is.null(SElndet)) {
     SE_setup_intern(env, SE_method=SE_method, p=p, m=m, nrho=nrho,
@@ -705,7 +705,7 @@ SE_classic <- function(rho, detval) {
 
 SE_whichMin_setup <- function(env, SE_method="LU", p=16, m=30, nrho=200,
   interpn=2000, interval=c(-1,0.999), SElndet=NULL, which=1) {
-  stopifnot(require(splines))
+#  stopifnot(require(splines))
 
   if (is.null(SElndet)) {
     SE_setup_intern(env, SE_method=SE_method, p=p, m=m, nrho=nrho,
@@ -766,7 +766,7 @@ SE_whichMin <- function(rho, detval) {
 SE_interp_setup <- function(env, SE_method="LU", p=16, m=30, nrho=200,
   interval=c(-1,0.999), which=1) {
 
-  stopifnot(require(splines))
+#  stopifnot(require(splines))
 
   SE_setup_intern(env, SE_method=SE_method, p=p, m=m, nrho=nrho,
     interval=interval, which=which)
