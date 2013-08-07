@@ -41,6 +41,7 @@ row.names(df) <- sapply(slot(wheat_spl, "polygons"),
  function(x) slot(x, "ID"))
 wheat <- SpatialPolygonsDataFrame(wheat_spl, data=df)
 }
+require(maptools)
 wheat <- readShapeSpatial(system.file("etc/shapes/wheat.shp",
  package="spdep")[1])
 }

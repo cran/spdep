@@ -1,6 +1,6 @@
 Package: spdep
-Version: 0.5-61
-Date: 2013-07-22
+Version: 0.5-62
+Date: 2013-08-07
 Title: Spatial dependence: weighting schemes, statistics and models
 Encoding: latin1
 Authors@R: c(
@@ -31,12 +31,10 @@ Authors@R: c(
 	person("Markus", "Reder", role = "ctb"),
 	person("Michael", "Tiefelsdorf", role = "ctb"),
 	person("Danlin", "Yu", role = "ctb"))
-Depends: R (>= 2.14.0), methods, sp (>= 0.9), boot, Matrix (>=
-        0.999375-9), MASS, nlme, maptools (>= 0.5-4), deldir, coda,
-        splines
-Imports: LearnBayes
+Depends: R (>= 2.14.0), methods, sp (>= 0.9), Matrix (>= 0.999375-9)
+Imports: LearnBayes, deldir, boot, splines, coda, nlme, MASS
 Suggests: parallel, spam(>= 0.13-1), RANN, RColorBrewer, lattice,
-        xtable
+        xtable, boot, maptools (>= 0.5-4), foreign
 Description: A collection of functions to create spatial weights matrix
   objects from polygon contiguities, from point patterns by distance and
   tessellations, for summarizing these objects, and for permitting their
@@ -52,7 +50,7 @@ Description: A collection of functions to create spatial weights matrix
   semi-parametric and Moran eigenvector spatial filtering, GM SAR error
   models, and generalized spatial two stage least squares models.
 License: GPL (>= 2)
-Packaged: 2013-07-22 07:15:36 UTC; rsb
+Packaged: 2013-08-07 13:20:40 UTC; rsb
 Author: Roger Bivand [cre, aut],
   Micah Altman [ctb],
   Luc Anselin [ctb],
@@ -83,4 +81,4 @@ Author: Roger Bivand [cre, aut],
 Maintainer: Roger Bivand <Roger.Bivand@nhh.no>
 NeedsCompilation: yes
 Repository: CRAN
-Date/Publication: 2013-07-24 14:04:21
+Date/Publication: 2013-08-07 16:08:09

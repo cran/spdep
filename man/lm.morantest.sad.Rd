@@ -68,6 +68,7 @@ Geographical Analysis, 34, pp. 187--206.}
 \seealso{\code{\link{lm.morantest}}}
 
 \examples{
+require(maptools)
 eire <- readShapePoly(system.file("etc/shapes/eire.shp", package="spdep")[1],
   ID="names", proj4string=CRS("+proj=utm +zone=30 +units=km"))
 eire.nb <- poly2nb(eire)

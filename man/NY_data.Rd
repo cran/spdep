@@ -36,6 +36,7 @@
 }
 \examples{
 ## NY leukemia
+library(foreign)
 nydata <- read.dbf(system.file("etc/misc/nydata.dbf", package="spdep")[1])
 coordinates(nydata) <- c("X", "Y")
 nyadjmat <- as.matrix(read.dbf(system.file("etc/misc/nyadjwts.dbf",

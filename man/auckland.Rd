@@ -26,6 +26,7 @@ The \code{auckland} data frame has 167 rows (census area units --- CAU) and 4 co
  Marshall R M (1991) Mapping disease and mortality rates using Empirical Bayes Estimators, Applied Statistics, 40, 283--294; Bailey T, Gatrell A (1995) Interactive Spatial Data Analysis, Harlow: Longman --- INFOMAP data set used with permission.
 }
 \examples{
+require(maptools)
 auckland <- readShapePoly(system.file("etc/shapes/auckland.shp",
  package="spdep")[1])
 auckland.nb <- poly2nb(auckland)

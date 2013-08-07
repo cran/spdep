@@ -44,6 +44,7 @@ given in Cressie (1991, pp. 386-9), Cressie and Read (1985) and Cressie and Chan
 }
 
 \examples{
+require(maptools)
 nc.sids <- readShapePoly(system.file("etc/shapes/sids.shp", package="spdep")[1],
   ID="FIPSNO", proj4string=CRS("+proj=longlat +ellps=clrk66"))
 rn <- sapply(slot(nc.sids, "polygons"), function(x) slot(x, "ID"))

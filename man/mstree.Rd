@@ -45,6 +45,7 @@ mstree(nbw, ini = NULL)
 %%\seealso{ ~~objects to See Also as \code{\link{help}}, ~~~ }
 \examples{
 ### loading data
+require(maptools)
 bh <- readShapePoly(system.file("etc/shapes/bhicv.shp",
       package="spdep")[1])
 ### data padronized
