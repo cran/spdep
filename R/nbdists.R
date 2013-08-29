@@ -21,7 +21,7 @@ nbdists <- function(nb, coords, longlat=NULL) {
             stop("Data include NAs")
         if (longlat) {
             bb <- bbox(coords)
-            if (!sp:::.ll_sanity(bb))
+            if (!.ll_sanity(bb))
                 warning("Coordinates are not geographical: longlat argument wrong")
         }
 	if (!is.double(coords)) storage.mode(coords) <- "double"

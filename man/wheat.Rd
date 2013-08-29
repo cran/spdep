@@ -27,7 +27,6 @@ Formal class 'SpatialPolygonsDataFrame' [package "sp"] with 5 slots;
 \examples{
 \dontrun{
 data(wheat)
-names(wheat) <- c('lon','lat','yield')
 wheat$lat1 <- 69 - wheat$lat
 wheat$r <- factor(wheat$lat1)
 wheat$c <- factor(wheat$lon)

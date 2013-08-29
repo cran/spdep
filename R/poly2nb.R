@@ -9,20 +9,6 @@ poly2nb <- function(pl, row.names=NULL, snap=sqrt(.Machine$double.eps),
 	queen=TRUE, useC=TRUE, foundInBox=NULL) {
         verbose <- get("verbose", envir = .spdepOptions)
         .ptime_start <- proc.time()
-#	if (!inherits(pl, "polylist")) {
-#		if (extends(class(pl), "SpatialPolygons"))
-#			pl <- maptools:::.SpP2polylist(pl)
-#		else stop("Not a polygon list")
-#	}
-        if (inherits(pl, "polylist")) {
-	    if (inherits(pl, "multiparts"))
-                stop("Convert to newer polylist format")
-            pl <- maptools:::.polylist2SpP(pl)
-            if (verbose)
-                cat("convert to sp class:", (proc.time() - .ptime_start)[3],
-                    "\n")
-            .ptime_start <- proc.time()
-        }
         stopifnot(extends(class(pl), "SpatialPolygons"))
 
 	n <- length(slot(pl, "polygons"))
@@ -140,46 +126,10 @@ poly2nb <- function(pl, row.names=NULL, snap=sqrt(.Machine$double.eps),
 	}
 
         if (is.null(foundInBox)) {
-          CL <- get("cl", envir = .spdepOptions)
-          if (!is.null(CL) && length(CL) > 1L) {
-            require(parallel)
-            idx <- clusterSplit(CL, 1:(n-1))
-#            clusterExport_l <- function(CL, list) {
-#               gets <- function(n, v) {
-#                    assign(n, v, envir = .GlobalEnv)
-#                    NULL
-#                }
-#                for (name in list) {
-#                    clusterCall(CL, gets, name, get(name))
-#                }
-#	    }
-#	    clusterExport_l(CL, list("findInBox", "qintersect", "BBindex"))
-            clusterEvalQ(CL, library(spdep))
-            env <- new.env()
-#            assign("BBindex", BBindex, envir=globalenv())
-            assign("BBindex", BBindex, envir=env)
-            clusterExport(CL, list(BBindex="BBindex"), envir=env)
-            if (verbose) {
-                cat("cluster findInBox setup:", 
-                    (proc.time() - .ptime_start)[3], "\n")
-            }
-            .ptime_start <- proc.time()
-#            l_fIB <- parLapply(CL, idx, function(ii) 
-#                lapply(ii, function(i) findInBox(i, BBindex)))
-            l_fIB <- clusterApply(CL, idx, function(ii) {
-                lapply(ii, function(i) spdep:::findInBox(i, BBindex))})
-            foundInBox <- do.call("c", l_fIB)
-            rm(env)
-#            rm(BBindex, envir=globalenv())
-            if (verbose) {
-                cat("cluster findInBox:", (proc.time() - .ptime_start)[3])
-            }
-          } else {
             foundInBox <- lapply(1:(n-1), function(i) findInBox(i, BBindex))
             if (verbose) {
                 cat("findInBox:", (proc.time() - .ptime_start)[3])
             }
-          }
           nfIBB <- sum(sapply(foundInBox, length))
           if (verbose) cat(" list size", nfIBB, "\n")
 
@@ -281,88 +231,5 @@ findInBox<-function(i, sp, bigger=TRUE) {
     return(sort(result))
 }
 
-
-
-#poly2nb <- function(pl, row.names=NULL, snap=sqrt(.Machine$double.eps),
-#	queen=TRUE) {
-#	if (!inherits(pl, "polylist")) {
-#		if (extends(class(pl), "SpatialPolygons"))
-#			pl <- maptools:::.SpP2polylist(pl)
-#		else stop("Not a polygon list")
-#	}
-#	if (inherits(pl, "multiparts")) stop("Convert to newer polylist format")
-#	n <- length(pl)
-#	if (n < 1) stop("non-positive number of entities")
-#	if (is.null(row.names)) regid <- attr(pl, "region.id")
-#	else regid <- NULL
-#	if (is.null(regid)) {
-#		if(is.null(row.names)) regid <- as.character(1:n)
-#		else {
-#			if(length(row.names) != n)
-#				stop("row.names wrong length")
-#			else if (length(unique(row.names)) != length(row.names))
-#	    			stop("non-unique row.names given")
-#			else regid <- row.names
-#		}
-#	}
-#	poly2bbs <- function(pl) {
-#		n <- length(pl)
-#		if (n < 1) stop("non-positive number of entities")
-#		res <- matrix(0, nrow=n, ncol=4)
-#		for (i in 1:n) res[i,] <- attr(pl[[i]], "bbox")
-#		res
-#	}
-#	bb <- poly2bbs(pl)
-#	if (storage.mode(bb) != "double") storage.mode(bb) <- "double"
-#	dsnap <- as.double(snap)
-#	bb[,1] <- bb[,1] - dsnap
-#	bb[,2] <- bb[,2] - dsnap
-#	bb[,3] <- bb[,3] + dsnap
-#	bb[,4] <- bb[,4] + dsnap
-#	nrs <- integer(n)
-#	for (i in 1:n) {
-#		pl[[i]] <- na.omit(pl[[i]][-1,])
-#		nrs[i] <- as.integer(nrow(pl[[i]]))
-#		pl[[i]] <- as.double(pl[[i]])
-#	}
-#	
-#
-#
-#	polypoly2 <- function(poly1, nrs1, poly2, nrs2, snap) {
-#		if (any(nrs1 == 0 || nrs2 == 0)) return(as.integer(0))
-#		res <- .Call("polypoly", poly1, nrs1, poly2, 
-#			nrs2, snap, PACKAGE="spdep")
-#		res
-#	}
-#
-#	ans <- vector(mode="list", length=n)
-#	for (i in 1:n) ans[[i]] <- integer(0)
-#	criterion <- ifelse(queen, 0, 1)
-#	for (i in 1:(n-1)) {
-#		for (j in (i+1):n) {
-#			jhit <- .Call("spInsiders", bb[i,], 
-#				bb[j,], PACKAGE="spdep")
-#			if (jhit > 0) {
-#			    khit <- 0
-#			    khit <- polypoly2(pl[[i]], nrs[i], pl[[j]], 
-#				nrs[j],dsnap)
-#
-#			    if (khit > criterion) {
-#				ans[[i]] <- c(ans[[i]], j)
-#				ans[[j]] <- c(ans[[j]], i)
-#			    }
-#			}
-#		}
-#	}
-#	for (i in 1:n) ans[[i]] <- sort(ans[[i]])
-#	class(ans) <- "nb"
-#	attr(ans, "region.id") <- regid
-#	attr(ans, "call") <- match.call()
-#	if (queen) attr(ans, "type") <- "queen"
-#	else attr(ans, "type") <- "rook"
-#	ans <- sym.attr.nb(ans)
-#	ans
-#}
-#
 
   

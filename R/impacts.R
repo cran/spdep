@@ -82,7 +82,8 @@ mom_calc <- function(lw, m) {
     if (!is.null(CL) && length(CL) > 1L) {
         require(parallel)
         lis <- splitIndices(n, length(CL))
-        lOmega <- clusterApply(CL, lis, spdep:::mom_calc_int2, m, nb,
+        clusterEvalQ(CL, library(spdep))
+        lOmega <- clusterApply(CL, lis, mom_calc_int2, m, nb,
            weights, Card)
 
         Omega <- apply(do.call("cbind", lOmega), 1, sum)
@@ -199,9 +200,9 @@ processSample <- function(x, irho, drop2beta, type, iicept, icept, T, Q, q) {
         if (p %% 2 != 0) stop("non-matched coefficient pairs")
         P <- cbind(b1[1:(p/2)], b1[((p/2)+1):p])
     }
-    res <- spdep:::lagImpacts(T, g, P)
+    res <- lagImpacts(T, g, P)
     if (!is.null(Q)) {
-        Qres <- spdep:::lagDistrImpacts(T, g, P, q=as.integer(Q))
+        Qres <- lagDistrImpacts(T, g, P, q=as.integer(Q))
         attr(res, "Qres") <- Qres
     }
     res
@@ -239,7 +240,7 @@ processXSample <- function(x, drop2beta, type, iicept, icept, n, listw,
         } else {
           P <- matrix(beta, ncol=1)
         }
-        return(spdep:::lagImpactsExact(SW, P, n))
+        return(lagImpactsExact(SW, P, n))
     } else if (type == "mixed" || type == "sacmixed") {
         if (iicept) {
             b1 <- beta[-icept]
@@ -249,7 +250,7 @@ processXSample <- function(x, drop2beta, type, iicept, icept, n, listw,
         p <- length(b1)
         if (p %% 2 != 0) stop("non-matched coefficient pairs")
         P <- cbind(b1[1:(p/2)], b1[((p/2)+1):p])
-        return(spdep:::mixedImpactsExact(SW, P, n, listw))
+        return(mixedImpactsExact(SW, P, n, listw))
     }
 }
 
@@ -289,53 +290,10 @@ intImpacts <- function(rho, beta, P, n, mu, Sigma, irho, drop2beta, bnames,
             }
             timings[["impacts_samples"]] <- proc.time() - .ptime_start
             .ptime_start <- proc.time()
-            CL <- get("cl", envir = .spdepOptions)
-            if (!is.null(CL) && length(CL) > 1L) {
-                require(parallel)
-                l_sp <- lapply(splitIndices(nrow(samples), length(CL)), 
-		    function(i) samples[i,])
-                clusterEvalQ(CL, library(spdep))
-                env <- new.env()
-                varlist <- list("irho", "drop2beta",
-                    "Q", "T", "icept", "iicept", "type", "q")
-                assign("irho", irho, envir = env)
-                assign("drop2beta", drop2beta, envir = env)
-                assign("Q", Q, envir = env)
-                assign("T", T, envir = env)
-                assign("icept", icept, envir = env)
-                assign("iicept", iicept, envir = env)
-                assign("type", type, envir = env)
-                assign("q", q, envir = env)
-#		clusterExport_l <- function(CL, list, env) {
-#                    gets <- function(n, v, env) {
-#                    gets <- function(n, v) {
-#                        assign(n, v, envir = .GlobalEnv)
-#                        assign(n, v, envir = env)
-#                        NULL
-#                    }
-#                    for (name in list) {
-#                        clusterCall(CL, gets, name, get(name))
-#                        clusterCall(CL, gets, name, get(name, envir = env))
-#                    }
-#		}
-		clusterExport(CL, varlist, env)
-                
-                timings[["cluster_setup"]] <- proc.time() - .ptime_start
-                .ptime_start <- proc.time()
-                lsres <- parLapply(CL, l_sp, function(sp) apply(sp, 1, 
-                    spdep:::processSample, irho=irho, drop2beta=drop2beta,
-                    type=type, iicept=iicept, icept=icept, T=T, Q=Q, q=q))
-		clusterEvalQ(CL, rm(varlist))
-                clusterEvalQ(CL, detach(package:spdep))
-                rm(env)
-                sres <- do.call("c", lsres)
-
-            } else {
 # type, iicept, icept, T, Q
-                sres <- apply(samples, 1, processSample, irho=irho,
-                    drop2beta=drop2beta, type=type, iicept=iicept,
-                    icept=icept, T=T, Q=Q, q=q)
-            }
+            sres <- apply(samples, 1, processSample, irho=irho,
+                drop2beta=drop2beta, type=type, iicept=iicept,
+                icept=icept, T=T, Q=Q, q=q)
             timings[["process_samples"]] <- proc.time() - .ptime_start
             .ptime_start <- proc.time()
 # 100928 Eelke Folmer
@@ -397,52 +355,9 @@ intImpacts <- function(rho, beta, P, n, mu, Sigma, irho, drop2beta, bnames,
             timings[["impacts_samples"]] <- proc.time() - .ptime_start
             .ptime_start <- proc.time()
 # type, iicept, icept, SW, n, listw
-            CL <- get("cl", envir = .spdepOptions)
-            if (!is.null(CL) && length(CL) > 1L) {
-                require(parallel)
-                l_sp <- lapply(splitIndices(nrow(samples), length(CL)), 
-		    function(i) samples[i,])
-                clusterEvalQ(CL, library(spdep))
-                env <- new.env()
-                varlist <- list("irho", "drop2beta", "icept",
-                    "iicept", "type", "listw")
-                assign("irho", irho, envir = env)
-                assign("drop2beta", drop2beta, envir = env)
-                assign("icept", icept, envir = env)
-                assign("iicept", iicept, envir = env)
-                assign("type", type, envir = env)
-                assign("listw", listw, envir = env)
-#		clusterExport_l <- function(CL, list, env) {
-#                    gets <- function(n, v, env) {
-#                    gets <- function(n, v) {
-#                        assign(n, v, envir = .GlobalEnv)
-#                        assign(n, v, envir = env)
-#                        NULL
-#                    }
-#                    for (name in list) {
-#                        clusterCall(CL, gets, name, get(name))
-#                        clusterCall(CL, gets, name, get(name, envir = env))
-#                    }
-#		}
-		clusterExport(CL, varlist, env)
-
-                timings[["cluster_setup"]] <- proc.time() - .ptime_start
-                .ptime_start <- proc.time()
-                lsres <- parLapply(CL, l_sp, function(sp) apply(sp, 1, 
-                    spdep:::processXSample, drop2beta=drop2beta, type=type,
-                    iicept=iicept, icept=icept, n=n, listw=listw,
-                    irho=irho))
-		clusterEvalQ(CL, rm(list=c("drop2beta",
-                    "SW", "icept", "iicept", "type", "listw")))
-                clusterEvalQ(CL, detach(package:spdep))
-                rm(env)
-                sres <- do.call("c", lsres)
-
-            } else {
-                sres <- apply(samples, 1, processXSample,
-                    drop2beta=drop2beta, type=type, iicept=iicept,
-                    icept=icept, n=n, listw=listw, irho=irho)
-            }
+            sres <- apply(samples, 1, processXSample,
+                drop2beta=drop2beta, type=type, iicept=iicept,
+                icept=icept, n=n, listw=listw, irho=irho)
             timings[["process_samples"]] <- proc.time() - .ptime_start
             .ptime_start <- proc.time()
             if (length(bnames) == 1L) {

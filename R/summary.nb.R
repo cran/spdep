@@ -38,7 +38,7 @@ summary.nb <- function(object, coords=NULL, longlat=NULL, scale=1, ...) {
         stopifnot(ncol(coords) == 2)
         if (longlat) {
             bb <- bbox(coords)
-            if (!sp:::.ll_sanity(bb))
+            if (!.ll_sanity(bb))
                 warning("Coordinates are not geographical: longlat argument wrong")
         }
         np <- nrow(coords)

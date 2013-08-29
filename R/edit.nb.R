@@ -24,9 +24,7 @@ edit.nb <- function(name, coords, polys=NULL, ..., use_region.id=FALSE) {
   plot.new()
   plot.window(xlim = xlim, ylim = ylim, "", asp=1)
   if (!is.null(polys))
-    if (class(polys) == "polylist")
-        maptools:::plot.polylist(polys, border="grey", add=TRUE)
-    else if (inherits(polys, "SpatialPolygons"))
+    if (inherits(polys, "SpatialPolygons"))
         plot(polys, border="grey", add=TRUE)
     else stop("polys of unknown class")
 # bug report Conceicao Ribeiro 100731
@@ -134,10 +132,7 @@ edit.nb <- function(name, coords, polys=NULL, ..., use_region.id=FALSE) {
       plot.new()
       plot.window(xlim = xlim, ylim = ylim, "", asp=1)
       if (!is.null(polys))
-        if (class(polys) == "polylist")
-            maptools:::plot.polylist(polys, border="grey", add=TRUE)
-        else if (inherits(polys, "SpatialPolygons"))
-            plot(polys, border="grey", add=TRUE)
+         plot(polys, border="grey", add=TRUE)
       for (i in 1:n) {
         if(nb[[i]][1]!=0 & length(nb[[i]])>0L)
           segments(x[i],y[i],x[nb[[i]]],y[nb[[i]]])

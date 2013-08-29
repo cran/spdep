@@ -10,7 +10,7 @@
 \description{
 The \code{xyz} data frame has 256 rows and 3 columns. Vectors \code{x} 
 and \code{y} are of length 16 and give the centres of the grid rows
-and columns, 30m apart. The data start from the bootom left, Getis and
+and columns, 30m apart. The data start from the bottom left, Getis and
 Ord start from the top left - so their 136th grid cell is our 120th.
 }
 \format{
