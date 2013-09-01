@@ -47,6 +47,15 @@ ow <- getOption("warn")
 options("warn"=-1)
 .PngNo <- 0
 @
+<<label=figreset,echo=FALSE,eval=FALSE>>= 
+.iwidth <- 5
+.iheight <- 6
+.ipointsize <- 12
+@
+
+<<echo=FALSE,results=hide>>= 
+<<figreset>>
+@
 
 <<label=afig,echo=FALSE,eval=FALSE>>= 
 .PngNo <- .PngNo + 1; file <- paste("Fig-bitmap-", .PngNo, ".pdf", sep="")

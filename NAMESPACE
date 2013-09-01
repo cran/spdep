@@ -4,6 +4,8 @@ importFrom(stats, model.matrix, model.response, aggregate)
 
 importFrom(stats, optimize, optim, nlminb)
 
+importFrom(stats, influence.measures)
+
 importFrom(nlme, fdHess)
 
 importFrom(deldir, deldir)
@@ -19,6 +21,9 @@ importFrom(splines, interpSpline)
 import(Matrix)
 #import(MCMCpack)
 importFrom(LearnBayes, rwmetrop)
+
+import(sp)
+import(methods)
 
 #importClassesFrom(spam, spam)
 #importMethodsFrom(spam, Math, Math2)
@@ -79,6 +84,8 @@ export(mstree, nbcosts, nbcost, plot.mst, plot.skater, prunecost, ssw, prunemst,
 export(aple, aple.mc, aple.plot, localAple)
 
 export(trW, impacts, lagmess, sacsarlm)
+
+export(mom_calc, mom_calc_int2)
 
 export(do_ldet, eigen_setup, mcdet_setup, cheb_setup, spam_setup,
         Matrix_setup, LU_setup, Matrix_J_setup, spam_update_setup,

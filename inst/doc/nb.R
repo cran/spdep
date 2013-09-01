@@ -12,7 +12,23 @@ options("warn"=-1)
 
 
 ###################################################
-### code chunk number 2: afig (eval = FALSE)
+### code chunk number 2: figreset (eval = FALSE)
+###################################################
+## .iwidth <- 5
+## .iheight <- 6
+## .ipointsize <- 12
+
+
+###################################################
+### code chunk number 3: nb.Rnw:56-57
+###################################################
+.iwidth <- 5
+.iheight <- 6
+.ipointsize <- 12
+
+
+###################################################
+### code chunk number 4: afig (eval = FALSE)
 ###################################################
 ## .PngNo <- .PngNo + 1; file <- paste("Fig-bitmap-", .PngNo, ".pdf", sep="")
 ## pdf(file=file, width = 6.5, height = 3.5, pointsize = 12, bg = "white")
@@ -20,21 +36,21 @@ options("warn"=-1)
 
 
 ###################################################
-### code chunk number 3: afigl (eval = FALSE)
+### code chunk number 5: afigl (eval = FALSE)
 ###################################################
 ## .PngNo <- .PngNo + 1; file <- paste("Fig-bitmap-", .PngNo, ".pdf", sep="")
 ## pdf(file=file, width = 6.5, height = 3.5, pointsize = 12, bg = "white")
 
 
 ###################################################
-### code chunk number 4: bfigl (eval = FALSE)
+### code chunk number 6: bfigl (eval = FALSE)
 ###################################################
 ## .PngNo <- .PngNo + 1; file <- paste("Fig-bitmap-", .PngNo, ".pdf", sep="")
 ## pdf(file=file, width = 6.5, height = 5, pointsize = 12, bg = "white")
 
 
 ###################################################
-### code chunk number 5: bfig (eval = FALSE)
+### code chunk number 7: bfig (eval = FALSE)
 ###################################################
 ## .PngNo <- .PngNo + 1; file <- paste("Fig-bitmap-", .PngNo, ".pdf", sep="")
 ## pdf(file=file, width = 6.5, height = 5, pointsize = 12, bg = "white")
@@ -42,7 +58,7 @@ options("warn"=-1)
 
 
 ###################################################
-### code chunk number 6: zfig (eval = FALSE)
+### code chunk number 8: zfig (eval = FALSE)
 ###################################################
 ## par(opar)
 ## dev.null <- dev.off()
@@ -50,14 +66,14 @@ options("warn"=-1)
 
 
 ###################################################
-### code chunk number 7: zfigl (eval = FALSE)
+### code chunk number 9: zfigl (eval = FALSE)
 ###################################################
 ## dev.null <- dev.off()
 ## cat("\\includegraphics[width=0.95\\textwidth]{", file, "}\n\n", sep="")
 
 
 ###################################################
-### code chunk number 8: nb.Rnw:104-112
+### code chunk number 10: nb.Rnw:113-121
 ###################################################
 library(maptools)
 owd <- getwd()
@@ -70,7 +86,7 @@ setwd(owd)
 
 
 ###################################################
-### code chunk number 9: nb.Rnw:124-127
+### code chunk number 11: nb.Rnw:133-136
 ###################################################
 Syracuse <- NY8[NY8$AREANAME == "Syracuse city",]
 Sy0_nb <- subset(NY_nb, NY8$AREANAME == "Syracuse city")
@@ -78,7 +94,7 @@ summary(Sy0_nb)
 
 
 ###################################################
-### code chunk number 10: nb.Rnw:143-146
+### code chunk number 12: nb.Rnw:152-155
 ###################################################
 class(Syracuse)
 Sy1_nb <- poly2nb(Syracuse)
@@ -86,14 +102,14 @@ isTRUE(all.equal(Sy0_nb, Sy1_nb, check.attributes=FALSE))
 
 
 ###################################################
-### code chunk number 11: nb.Rnw:171-173
+### code chunk number 13: nb.Rnw:180-182
 ###################################################
 Sy2_nb <- poly2nb(Syracuse, queen=FALSE)
 isTRUE(all.equal(Sy0_nb, Sy2_nb, check.attributes=FALSE))
 
 
 ###################################################
-### code chunk number 12: nb.Rnw:180-195
+### code chunk number 14: nb.Rnw:189-205
 ###################################################
 .iwidth <- 6
 .iheight <- 4.5
@@ -114,10 +130,13 @@ par(oopar)
 par(opar)
 dev.null <- dev.off()
 cat("\\includegraphics[width=0.95\\textwidth]{", file, "}\n\n", sep="")
+.iwidth <- 5
+.iheight <- 6
+.ipointsize <- 12
 
 
 ###################################################
-### code chunk number 13: nb.Rnw:230-233 (eval = FALSE)
+### code chunk number 15: nb.Rnw:239-242 (eval = FALSE)
 ###################################################
 ## library(spgrass6)
 ## writeVECT6(Syracuse, "SY0")
@@ -125,20 +144,20 @@ cat("\\includegraphics[width=0.95\\textwidth]{", file, "}\n\n", sep="")
 
 
 ###################################################
-### code chunk number 14: nb.Rnw:235-236 (eval = FALSE)
+### code chunk number 16: nb.Rnw:244-245 (eval = FALSE)
 ###################################################
 ## load("contig.RData")
 
 
 ###################################################
-### code chunk number 15: nb.Rnw:238-240 (eval = FALSE)
+### code chunk number 17: nb.Rnw:247-249 (eval = FALSE)
 ###################################################
 ## Sy3_nb <- sn2listw(contig)$neighbours
 ## isTRUE(all.equal(Sy3_nb, Sy2_nb, check.attributes=FALSE))
 
 
 ###################################################
-### code chunk number 16: nb.Rnw:291-298
+### code chunk number 18: nb.Rnw:300-307
 ###################################################
 coords <- coordinates(Syracuse)
 IDs <- row.names(as(Syracuse, "data.frame"))
@@ -150,7 +169,7 @@ Sy7_nb <- graph2nb(relativeneigh(coords), row.names=IDs)
 
 
 ###################################################
-### code chunk number 17: nb.Rnw:304-323
+### code chunk number 19: nb.Rnw:313-333
 ###################################################
 .iwidth <- 5
 .iheight <- 3.5
@@ -175,10 +194,13 @@ par(oopar)
 par(opar)
 dev.null <- dev.off()
 cat("\\includegraphics[width=0.95\\textwidth]{", file, "}\n\n", sep="")
+.iwidth <- 5
+.iheight <- 6
+.ipointsize <- 12
 
 
 ###################################################
-### code chunk number 18: nb.Rnw:354-358
+### code chunk number 20: nb.Rnw:363-367
 ###################################################
 nb_l <- list(Triangulation=Sy4_nb, SOI=Sy5_nb, Gabriel=Sy6_nb,
   Relative=Sy7_nb)
@@ -187,7 +209,7 @@ sapply(nb_l, function(x) n.comp.nb(x)$nc)
 
 
 ###################################################
-### code chunk number 19: nb.Rnw:377-383
+### code chunk number 21: nb.Rnw:386-392
 ###################################################
 Sy8_nb <- knn2nb(knearneigh(coords, k=1), row.names=IDs)
 Sy9_nb <- knn2nb(knearneigh(coords, k=2), row.names=IDs)
@@ -198,7 +220,7 @@ sapply(nb_l, function(x) n.comp.nb(x)$nc)
 
 
 ###################################################
-### code chunk number 20: nb.Rnw:389-405
+### code chunk number 22: nb.Rnw:398-415
 ###################################################
 .iwidth <- 5
 .iheight <- 2.5
@@ -220,10 +242,13 @@ par(oopar)
 par(opar)
 dev.null <- dev.off()
 cat("\\includegraphics[width=0.95\\textwidth]{", file, "}\n\n", sep="")
+.iwidth <- 5
+.iheight <- 6
+.ipointsize <- 12
 
 
 ###################################################
-### code chunk number 21: nb.Rnw:430-440
+### code chunk number 23: nb.Rnw:439-449
 ###################################################
 dsts <- unlist(nbdists(Sy8_nb, coords))
 summary(dsts)
@@ -238,7 +263,7 @@ sapply(nb_l, function(x) n.comp.nb(x)$nc)
 
 
 ###################################################
-### code chunk number 22: nb.Rnw:446-462
+### code chunk number 24: nb.Rnw:455-472
 ###################################################
 .iwidth <- 5
 .iheight <- 2.5
@@ -260,10 +285,13 @@ par(oopar)
 par(opar)
 dev.null <- dev.off()
 cat("\\includegraphics[width=0.95\\textwidth]{", file, "}\n\n", sep="")
+.iwidth <- 5
+.iheight <- 6
+.ipointsize <- 12
 
 
 ###################################################
-### code chunk number 23: nb.Rnw:472-488
+### code chunk number 25: nb.Rnw:481-498
 ###################################################
 .iwidth <- 5
 .iheight <- 2.5
@@ -285,23 +313,26 @@ par(oopar)
 par(opar)
 dev.null <- dev.off()
 cat("\\includegraphics[width=0.95\\textwidth]{", file, "}\n\n", sep="")
+.iwidth <- 5
+.iheight <- 6
+.ipointsize <- 12
 
 
 ###################################################
-### code chunk number 24: nb.Rnw:514-516
+### code chunk number 26: nb.Rnw:523-525
 ###################################################
 dsts0 <- unlist(nbdists(NY_nb, coordinates(NY8)))
 summary(dsts0)
 
 
 ###################################################
-### code chunk number 25: nb.Rnw:548-549
+### code chunk number 27: nb.Rnw:557-558
 ###################################################
 Sy0_nb_lags <- nblag(Sy0_nb, maxlag=9)
 
 
 ###################################################
-### code chunk number 26: nb.Rnw:562-572
+### code chunk number 28: nb.Rnw:571-581
 ###################################################
 library(xtable)
 names(Sy0_nb_lags) <- c("first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth")
@@ -316,14 +347,14 @@ print(xtable(t(res1), align=c("r", "|", rep("r", nn)), digits=0), floating=FALSE
 
 
 ###################################################
-### code chunk number 27: nb.Rnw:599-601
+### code chunk number 29: nb.Rnw:608-610
 ###################################################
 cell2nb(7, 7, type="rook", torus=TRUE)
 cell2nb(7, 7, type="rook", torus=FALSE)
 
 
 ###################################################
-### code chunk number 28: nb.Rnw:618-625
+### code chunk number 30: nb.Rnw:627-634
 ###################################################
 data(meuse.grid)
 coordinates(meuse.grid) <- c("x", "y")

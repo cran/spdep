@@ -4,7 +4,7 @@
 \alias{moran.mc}
 \title{Permutation test for Moran's I statistic}
 \description{
- A permutation test for Moran's I statistic calculated by using nsim random permutations of x for the given spatial weighting scheme, to establish the rank of the observed statistic in relation to the nsim simulated values. The examples show how \code{boot(sim="permutation")} can replicate this function (thanks to Virgilio Gómez Rubio and the DCluster package).
+ A permutation test for Moran's I statistic calculated by using nsim random permutations of x for the given spatial weighting scheme, to establish the rank of the observed statistic in relation to the nsim simulated values. 
 }
 \usage{
 moran.mc(x, listw, nsim, zero.policy=NULL, alternative="greater",
@@ -46,19 +46,6 @@ sim1
 mean(sim1$res[1:nsim])
 var(sim1$res[1:nsim])
 summary(sim1$res[1:nsim])
-MoranI.boot <- function(var, i, ...) {
-var <- var[i]
-return(moran(x=var, ...)$I)
-}
-set.seed(1234)
-library(boot)
-boot1 <- boot(COL.OLD$CRIME, statistic=MoranI.boot, R=nsim,
- sim="permutation", listw=colw, n=nrow(COL.OLD), S0=Szero(colw))
-boot1
-plot(boot1)
-mean(boot1$t)
-var(boot1$t)
-summary(boot1$t)
 colold.lags <- nblag(COL.nb, 3)
 set.seed(1234)
 sim2 <- moran.mc(COL.OLD$CRIME, nb2listw(colold.lags[[2]],

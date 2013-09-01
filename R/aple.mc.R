@@ -25,7 +25,7 @@ boot_wrapper_in <- function(cl, nsim) {
         if (storage.mode(rlseed) != "integer") rlseed <- as.integer(rlseed)
         if (length(rlseed) != 6L) rlseed <- rep(12345L, 6)
         clusterSetRNGStream(cl, iseed=rlseed)
-        clusterEvalQ(cl, library(boot))
+        clusterEvalQ(cl, library(spdep))
         nnsim <- ceiling(nsim/length(cl))
         nnsim
 }

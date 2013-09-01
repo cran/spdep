@@ -18,7 +18,7 @@ knearneigh <- function(x, k=1, longlat=NULL, RANN=TRUE)
     if (any(is.na(x))) stop("Data include NAs")
     if (longlat) {
         bb <- bbox(x)
-        if (!sp:::.ll_sanity(bb))
+        if (!.ll_sanity(bb))
             warning("Coordinates are not geographical: longlat argument wrong")
     }
     if (!is.double(x)) storage.mode(x) <- "double"

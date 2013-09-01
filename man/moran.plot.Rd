@@ -34,7 +34,7 @@ Local indicators of spatial association,
 Geographical Analysis, 27, 93--115}
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 
-\seealso{\code{\link{localmoran}}, \code{\link{summary.infl}}}
+\seealso{\code{\link{localmoran}}, \code{\link[stats]{influence.measures}}}
 
 \examples{
 data(afcon)

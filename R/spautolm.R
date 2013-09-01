@@ -211,7 +211,7 @@ spautolm <- function(formula, data = list(), listw, weights,
         get("Sweights", envir=env))
     X <- get("X", envir=env)
     Y <- get("Y", envir=env)
-    imat <- base:::solve(crossprod(X, as.matrix(IlW %*% X)), tol=tol.solve)
+    imat <- base::solve(crossprod(X, as.matrix(IlW %*% X)), tol=tol.solve)
     coef <- crossprod(imat, crossprod(X, as.matrix(IlW %*% Y)))
     fitted <- X %*% coef
     residuals <- Y - fitted

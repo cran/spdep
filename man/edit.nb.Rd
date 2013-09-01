@@ -16,7 +16,7 @@ will be lost - as in \code{edit}.
 \arguments{
   \item{name}{an object of class \code{nb}}
   \item{coords}{matrix of region point coordinates; if missing and polys= inherits from \code{SpatialPolygons}, the label points of that object are used}
-  \item{polys}{if polygon boundaries supplied, will be used as background; should inherit from \code{SpatialPolygons} or for backward compatibility be of class polylist}
+  \item{polys}{if polygon boundaries supplied, will be used as background; must inherit from \code{SpatialPolygons}}
   \item{...}{further arguments passed to or from other methods}
   \item{use_region.id}{default \code{FALSE}, in \code{identify} use 1-based observation numbers, otherwise use the \code{nb} \code{region.id} attribute values}
 }

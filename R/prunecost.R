@@ -2,14 +2,16 @@ prunecost <- function(edges, data,
                       method=c("euclidean", "maximum", "manhattan",
                         "canberra", "binary", "minkowski",
                         "mahalanobis"), p=2, cov, inverted=FALSE) {
+  require(parallel)
   sswt <- ssw(data, unique(as.integer(edges)),
               method, p, cov, inverted)
-  sswp <- sapply(1:nrow(edges), function(i) {
+  sswp <- simplify2array(mclapply(1:nrow(edges), function(i) {
     pruned.ids <- prunemst(rbind(edges[i, ], edges[-i, ]),
                            only.nodes=TRUE)
     sum(sapply(pruned.ids, function(j) 
                ssw(data, j, method, p, cov, inverted)))
-  })
+  }, mc.cores=ifelse(is.null(getOption('mc.cores')),
+         detectCores(), options('mc.cores'))))
   return(sswt - sswp)
 }
 
@@ -31,3 +33,4 @@ ssw <- function(data, id, method=c("euclidean", "maximum", "manhattan",
                       method, p=p)[1:length(id)]))
   }
 }
+

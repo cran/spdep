@@ -33,7 +33,7 @@ autocov_dist <- function(z, xy, nbs=1, type="inverse", zero.policy=NULL,
    stopifnot(ncol(xy) == 2)
    if (longlat) {
         bb <- bbox(xy)
-        if (!sp:::.ll_sanity(bb))
+        if (!.ll_sanity(bb))
             warning("Coordinates are not geographical: longlat argument wrong")
    }
    nb <- dnearneigh(xy, 0, nbs, longlat=longlat)
@@ -48,4 +48,23 @@ autocov_dist <- function(z, xy, nbs=1, type="inverse", zero.policy=NULL,
    lag(lw, z, zero.policy=zero.policy)
 }
 
+.ll_sanity <- function(bb) {
+        TOL <- get_ll_TOL()
+	tol <- .Machine$double.eps ^ TOL
+	W <- bb[1,1] < -180 && 
+	    !isTRUE(all.equal((bb[1, 1] - -180), 0, tolerance = tol))
+        if (W) attr(W, "out") <- bb[1,1]
+	E <- bb[1,2] > 360 && 
+	    !isTRUE(all.equal((bb[1, 2] - 360), 0, tolerance = tol))
+        if (E) attr(E, "out") <- bb[1,2]
+	S<- bb[2,1] < -90 && 
+	    !isTRUE(all.equal((bb[2, 1] - -90), 0, tolerance = tol))
+        if (S) attr(S, "out") <- bb[2,1]
+	N <- bb[2,2] > 90 && 
+	    !isTRUE(all.equal((bb[2, 2] - 90), 0, tolerance = tol))
+        if (N) attr(N, "out") <- bb[2,2]
+        res <- !(any(W || E || S || N))
+        attr(res, "details") <- list(W, E, S, N)
+	res
+}
 
