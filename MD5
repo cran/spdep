@@ -1,7 +1,7 @@
-e71d777ff151275c43551c4055309312 *ChangeLog
-feebbede617c0a7746c53e0e50c19057 *DESCRIPTION
+f4ab42b8bbf94423b287c49672165e38 *ChangeLog
+ee95d159d3000f0bf994efaa57a97569 *DESCRIPTION
 fa7e4dc6f7efba7c9cb60a5886f8281d *NAMESPACE
-908bbadc06b1aedb8ad79c16793d397a *R/AAA.R
+74ee3ed2bbbc73c91b6b7e15c2e89ca3 *R/AAA.R
 36554d9a3b705852495a7bf434518295 *R/EBI.R
 0fbd6d0a73bd6f6b204b4a5fadc045c9 *R/LR.spsarlm.R
 7ed91c2b1e96bd5d0529668605412be2 *R/ME.R
@@ -58,7 +58,7 @@ acc3f60a11d6251a64157e3b4802b3f6 *R/moran.exact.alt.R
 037fe0c2f3dd3f1c24d33d5fff72e1b7 *R/nb2lines.R
 fc7e45b2f8b9021a4209ecce27fe52c0 *R/nb2listw.R
 bb40d6a47e02bb2c0661c7fd96f82362 *R/nb2mat.R
-f188abde3e0b55dbff98f02ed097d27b *R/nbcosts.R
+48712c82ad4bb3a9b3522b41ab0e8112 *R/nbcosts.R
 a4638da2957b62fab9722ce15e4fe2d8 *R/nbdists.R
 a63a07dadf5f8fa200f7e3c71747a403 *R/nblag.R
 0f1de2bb62f40b44c0f8fee9440f8731 *R/nboperations.R
@@ -67,7 +67,7 @@ a73ab332d82c29834dce2b5b650822b1 *R/plot.mst.R
 4f384268e186624460b33c667e4a3150 *R/plot.nb.R
 1062440bac3bb1409c7716a8af176a79 *R/plot.skater.R
 433d252f977f5175fe7cd3fbb1b2adbb *R/poly2nb.R
-f36010c66fa4619178541f70e43ba819 *R/prunecost.R
+928dab45f73fc575108c7006140b9c29 *R/prunecost.R
 58fc4f67d40bb82e24a32af9ee5ee0c2 *R/prunemst.R
 7c91cef75e1de2fe04dbd738d60985ef *R/read.gal.R
 ef6f3184db69b4f7cfe934baf99b57c6 *R/read.gwt2nb.R
@@ -107,11 +107,11 @@ c3befc2b93128839af7f5afc2f4f4692 *data/oldcol.rda
 9f4230eb9cbbf1d870a031a56c55e81f *data/used.cars.rda
 3bc0105d6c3ded9b13903dd2f0a0dda2 *data/wheat.txt.gz
 671a11d7ac128f13b3e6bbc8ee0047b9 *inst/CHANGES
-e71d777ff151275c43551c4055309312 *inst/ChangeLog
+f4ab42b8bbf94423b287c49672165e38 *inst/ChangeLog
 7d2db75aac230ee3226f6fab96523d84 *inst/README
 23aee33d22a558e763236d2eda564ce4 *inst/doc/CO69.R
 c445f9fc898f163fcda7bc8aacc49f07 *inst/doc/CO69.Rnw
-881c0d6097c330a02c2761c67e81dcba *inst/doc/CO69.pdf
+347fc72aac4dcacef7b299219e267ef5 *inst/doc/CO69.pdf
 0295f2e51f066e0ed5d02451bb0a39bd *inst/doc/SpatialFiltering.R
 c565bc41dd415f9fee610ed8a3de02dc *inst/doc/SpatialFiltering.Rnw
 511f5be1df8038a1cfb598b3f6d12877 *inst/doc/SpatialFiltering.pdf
@@ -122,7 +122,7 @@ abcf23c0005318c855339fa94b8daf38 *inst/doc/nb.R
 74cce825af385f91236048d12eaacd5e *inst/doc/nb.pdf
 6de7bdf4ab854bb759858d49076329ec *inst/doc/sids.R
 ea69d95c3f310cf0b5b43b324c5e2901 *inst/doc/sids.Rnw
-223fb2b514669e051f19cf4135a25544 *inst/doc/sids.pdf
+7b87ca651bc4dec5f6d621308d7cc21e *inst/doc/sids.pdf
 53178ac43dd150bbb835b63e018f0cd4 *inst/etc/misc/geary_eire.txt
 e3fb11232e6cb27770d15aaf4f632aa4 *inst/etc/misc/nc_xtra.dbf
 2591ac95bd9191d0aee07450f7caf9bb *inst/etc/misc/nyadjwts.dbf

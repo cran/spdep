@@ -1,4 +1,4 @@
-# Copyright 2001-10 by Roger Bivand 
+# Copyright 2001-13 by Roger Bivand 
 #
 
 .spdepOptions <- new.env(FALSE, globalenv())

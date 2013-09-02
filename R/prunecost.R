@@ -2,16 +2,26 @@ prunecost <- function(edges, data,
                       method=c("euclidean", "maximum", "manhattan",
                         "canberra", "binary", "minkowski",
                         "mahalanobis"), p=2, cov, inverted=FALSE) {
-  require(parallel)
+# fix RSB 130902 nbcosts.R, prunecost.R
   sswt <- ssw(data, unique(as.integer(edges)),
               method, p, cov, inverted)
-  sswp <- simplify2array(mclapply(1:nrow(edges), function(i) {
-    pruned.ids <- prunemst(rbind(edges[i, ], edges[-i, ]),
+  if (.Platform$OS.type == "windows") {
+    sswp <- sapply(1:nrow(edges), function(i) {
+      pruned.ids <- prunemst(rbind(edges[i, ], edges[-i, ]),
                            only.nodes=TRUE)
-    sum(sapply(pruned.ids, function(j) 
+      sum(sapply(pruned.ids, function(j) 
                ssw(data, j, method, p, cov, inverted)))
-  }, mc.cores=ifelse(is.null(getOption('mc.cores')),
+    })
+  } else {
+    require(parallel)
+    sswp <- simplify2array(mclapply(1:nrow(edges), function(i) {
+      pruned.ids <- prunemst(rbind(edges[i, ], edges[-i, ]),
+                           only.nodes=TRUE)
+      sum(sapply(pruned.ids, function(j) 
+               ssw(data, j, method, p, cov, inverted)))
+    }, mc.cores=ifelse(is.null(getOption('mc.cores')),
          detectCores(), options('mc.cores'))))
+  }
   return(sswt - sswp)
 }
 
