@@ -27,10 +27,18 @@ knearneigh <- function(x, k=1, longlat=NULL, RANN=TRUE)
     if (dimension != 2) stop("Only 2D data accepted")
     if (k >= np) stop("Fewer data points than k")
     if (RANN && !longlat && require(RANN, quietly=TRUE)) {
-        xx <- cbind(x, out=rep(0, nrow(x)))
+#        xx <- cbind(x, out=rep(0, nrow(x)))
 #        out <- as.matrix(nn(xx, p=k)$nn.idx)
 # nn() retired 130722
-        out <- nn2(x, x, k=k+1)$nn.idx[,-1,drop=FALSE]
+# modified 130913 to handle zerodist points
+        zd <- zerodist(SpatialPoints(x))
+        if (nrow(zd) == 0) {
+            out <- nn2(x, x, k=k+1)$nn.idx[,-1,drop=FALSE]
+        } else {
+            out0 <- nn2(x, x, k=k+1)
+            out <- t(sapply(1:np, function(i) out0$nn.idx[i,
+                -which(out0$nn.idx[i,] == i), drop=FALSE]))
+        }
         dimnames(out) <- NULL
         res <- list(nn=out, np=np, k=k, dimension=dimension, x=x)
     } else {
