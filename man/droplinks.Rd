@@ -23,6 +23,7 @@ droplinks(nb, drop, sym=TRUE)
 \seealso{\code{\link{is.symmetric.nb}}}
 
 \examples{
+\donttest{
 rho <- c(0.2, 0.5, 0.95, 0.999, 1.0)
 ns <- c(5, 7, 9, 11, 13, 15, 17, 19)
 mns <- matrix(0, nrow=length(ns), ncol=length(rho))
@@ -46,6 +47,7 @@ for (i in 1:length(ns)) {
 print(mns)
 print(mxs)
 
+}
 
 }
 \keyword{spatial}

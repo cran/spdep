@@ -1,6 +1,6 @@
-f4ab42b8bbf94423b287c49672165e38 *ChangeLog
-ee95d159d3000f0bf994efaa57a97569 *DESCRIPTION
-fa7e4dc6f7efba7c9cb60a5886f8281d *NAMESPACE
+6103bda360da04eee9814715f1eb6ef0 *ChangeLog
+5dd8def53f8f78373c6099641188d21b *DESCRIPTION
+84dbf56c9d7f63500e41404097ad1aac *NAMESPACE
 74ee3ed2bbbc73c91b6b7e15c2e89ca3 *R/AAA.R
 36554d9a3b705852495a7bf434518295 *R/EBI.R
 0fbd6d0a73bd6f6b204b4a5fadc045c9 *R/LR.spsarlm.R
@@ -24,7 +24,7 @@ d6b8860ef2337d9746ff5d1119f36590 *R/droplinks.R
 68cfc081a3a198d45f0d7c2f5a1a13bb *R/edit.nb.R
 847e8bc48b284e1ee0a6cde46038555c *R/eigenw.R
 94b6a6e8e45f8e4347789e660457fc8e *R/error.hessian.R
-0d329a9cdb1f3d9c883a32988c9ddc70 *R/error.spsarlm.R
+0ea2fc76c24865a0e80f35ab38acda76 *R/error.spsarlm.R
 cbe45866b710921490b6eea92e0fa7a2 *R/gabrielneigh.R
 8c8fc0977130eee622416ac985cc3cfc *R/geary.R
 80ff9e62ccf73ef7110125fcd773dc54 *R/globalG.R
@@ -33,7 +33,7 @@ abb244fe27921e11bb1e9e6c2474f260 *R/impacts.R
 3d3b17bf1b70d7528f7b18e6bd704787 *R/jacobian.R
 049e8a2b403feac4548c39cc5afad250 *R/jacobian_setup.R
 4eac610dd1a2b7e624f3cc47696e1d91 *R/jc.R
-d62409f93c5e3cd487f52c270ebd626b *R/knearneigh.R
+ca201ce0c8e8430fcb722acd94d9c254 *R/knearneigh.R
 c71eef240bf2e5614276b28ab0f01af7 *R/knn2nb.R
 a2dd9a851c7a47aa3c0a1ace4815472b *R/kpgm_new.R
 54106e213cabd314f323d56f8d9353f9 *R/lag.hessian.R
@@ -107,11 +107,11 @@ c3befc2b93128839af7f5afc2f4f4692 *data/oldcol.rda
 9f4230eb9cbbf1d870a031a56c55e81f *data/used.cars.rda
 3bc0105d6c3ded9b13903dd2f0a0dda2 *data/wheat.txt.gz
 671a11d7ac128f13b3e6bbc8ee0047b9 *inst/CHANGES
-f4ab42b8bbf94423b287c49672165e38 *inst/ChangeLog
+6103bda360da04eee9814715f1eb6ef0 *inst/ChangeLog
 7d2db75aac230ee3226f6fab96523d84 *inst/README
 23aee33d22a558e763236d2eda564ce4 *inst/doc/CO69.R
 c445f9fc898f163fcda7bc8aacc49f07 *inst/doc/CO69.Rnw
-347fc72aac4dcacef7b299219e267ef5 *inst/doc/CO69.pdf
+ced62a9faa96a5adf7c7f686198bbb38 *inst/doc/CO69.pdf
 0295f2e51f066e0ed5d02451bb0a39bd *inst/doc/SpatialFiltering.R
 c565bc41dd415f9fee610ed8a3de02dc *inst/doc/SpatialFiltering.Rnw
 511f5be1df8038a1cfb598b3f6d12877 *inst/doc/SpatialFiltering.pdf
@@ -122,7 +122,7 @@ abcf23c0005318c855339fa94b8daf38 *inst/doc/nb.R
 74cce825af385f91236048d12eaacd5e *inst/doc/nb.pdf
 6de7bdf4ab854bb759858d49076329ec *inst/doc/sids.R
 ea69d95c3f310cf0b5b43b324c5e2901 *inst/doc/sids.Rnw
-7b87ca651bc4dec5f6d621308d7cc21e *inst/doc/sids.pdf
+a586d19c86eef740c71c5d73867fb2f3 *inst/doc/sids.pdf
 53178ac43dd150bbb835b63e018f0cd4 *inst/etc/misc/geary_eire.txt
 e3fb11232e6cb27770d15aaf4f632aa4 *inst/etc/misc/nc_xtra.dbf
 2591ac95bd9191d0aee07450f7caf9bb *inst/etc/misc/nyadjwts.dbf
@@ -192,12 +192,12 @@ eb4009ecb0817c62669d2167a67f30d8 *man/columbus.Rd
 0c9b880e845c7c5897563d1e4b811321 *man/diffnb.Rd
 33e608f07186e46da643ba217dd9137b *man/dnearneigh.Rd
 287ebeb512c1c61f0e60e5def1cabdca *man/do_ldet.Rd
-2b0d75634da00f79b94e2def24a51ada *man/droplinks.Rd
+ab9d1a7b4f443b31a4c1fa58a57da7aa *man/droplinks.Rd
 14c25515a79369d560f8319305578342 *man/edit.nb.Rd
 62d744b5a2b86ce6feb4c491dde09c29 *man/eigenw.Rd
 3c7c1b32a6acd945c2242665b6c2d2e3 *man/eire.Rd
 cd80c2faca0e0592cf483e77d776daa8 *man/elect80.Rd
-c6fc3f85695f456ce7aaf6ac1f7f1a1d *man/errorsarlm.Rd
+98c5ff82857a460f9e5593927aea9158 *man/errorsarlm.Rd
 25e1a53cd6d9cbbb7bea0c1fea3e1ef0 *man/geary.Rd
 e5e5f9840a79014d86c7758de589b0f9 *man/geary.mc.Rd
 4b7a70a022183d85dcf725915d9b41a1 *man/geary.test.Rd

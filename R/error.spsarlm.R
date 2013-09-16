@@ -1,4 +1,4 @@
-# Copyright 1998-2012 by Roger Bivand (non-W styles Rein Halbersma)
+# Copyright 1998-2013 by Roger Bivand (non-W styles Rein Halbersma)
 #
 
 errorsarlm <- function(formula, data = list(), listw, na.action, etype="error",
@@ -356,4 +356,55 @@ sar.error.f <- function(lambda, env) {
     ret
 }
 
+lmSLX <- function(formula, data = list(), listw, na.action, zero.policy=NULL) {
+        if (is.null(zero.policy))
+            zero.policy <- get("zeroPolicy", envir = .spdepOptions)
+        stopifnot(is.logical(zero.policy))
+	mt <- terms(formula, data = data)
+	mf <- lm(formula, data, na.action=na.action, method="model.frame")
+	na.act <- attr(mf, "na.action")
+	if (!inherits(listw, "listw")) stop("No neighbourhood list")
+	if (!is.null(na.act)) {
+	    subset <- !(1:length(listw$neighbours) %in% na.act)
+	    listw <- subset(listw, subset, zero.policy=zero.policy)
+	}
+	y <- model.response(mf, "numeric")
+	if (any(is.na(y))) stop("NAs in dependent variable")
+	x <- model.matrix(mt, mf)
+	if (any(is.na(x))) stop("NAs in independent variable")
+	if (NROW(x) != length(listw$neighbours))
+	    stop("Input data and neighbourhood list have different dimensions")
+	n <- NROW(x)
+	m <- NCOL(x)
+	# check if there are enough regressors
+	xcolnames <- colnames(x)
+	K <- ifelse(xcolnames[1] == "(Intercept)", 2, 1)
+        Wvars <- ""
+	if (K == 2) {
+        # unnormalized weight matrices
+               	if (!(listw$style == "W")) {
+ 			intercept <- as.double(rep(1, n))
+       	       		wx <- lag.listw(listw, intercept, 
+				zero.policy = zero.policy)
+                        Wvark <- ("lag.Intercept")
+			data[[Wvark]] <- wx
+                        Wvars <- paste(Wvars, "+", Wvark)
+               	} 
+        }   
+	if (m > 1 || (m == 1 && K == 1)) {
+		for (k in K:m) {
+			wx <- lag.listw(listw, data[[xcolnames[k]]], 
+			    zero.policy=zero.policy)
+			if (any(is.na(wx))) 
+			    stop("NAs in lagged independent variable")
+                        Wvark <- paste("lag.", xcolnames[k], sep="")
+			data[[Wvark]] <- wx
+                        Wvars <- paste(Wvars, "+", Wvark)
+		}
+	}
+        dfo <- as.character(formula)
+        nfo <- formula(paste(dfo[2], dfo[1], paste(dfo[3], Wvars)))
+        lm.model <- lm(nfo, data=data, na.action=na.action)
+        lm.model
+}
 
