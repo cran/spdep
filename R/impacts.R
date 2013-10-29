@@ -77,15 +77,33 @@ mom_calc <- function(lw, m) {
     n <- length(nb)
     weights <- lw$weights
     Card <- card(nb)
-     
-    CL <- get.ClusterOption()
-    if (!is.null(CL) && length(CL) > 1L) {
-        require(parallel)
-        lis <- splitIndices(n, length(CL))
-        clusterEvalQ(CL, library(spdep))
-        lOmega <- clusterApply(CL, lis, mom_calc_int2, m, nb,
-           weights, Card)
 
+    cores <- get.coresOption()
+    if (is.null(cores)) {
+        parallel <- "no"
+    } else {
+        parallel <- ifelse (get.mcOption(), "multicore", "snow")
+    }
+    ncpus <- ifelse(is.null(cores), 1L, cores)
+    cl <- NULL
+    if (parallel == "snow") {
+        cl <- get.ClusterOption()
+        if (is.null(cl)) {
+            parallel <- "no"
+            warning("no cluster in ClusterOption, parallel set to no")
+        }
+    }
+
+    if (parallel == "snow") {
+        require(parallel)
+        lis <- splitIndices(n, length(cl))
+        lOmega <- parLapply(cl, lis, mom_calc_int2, m, nb, weights, Card)
+        Omega <- apply(do.call("cbind", lOmega), 1, sum)
+    } else if (parallel == "multicore") {
+        require(parallel)
+        lis <- splitIndices(n, ncpus)
+        lOmega <- mclapply(lis, mom_calc_int2, m, nb, weights, Card,
+            mc.set.seed=FALSE, mc.cores=ncpus)
         Omega <- apply(do.call("cbind", lOmega), 1, sum)
     } else {
         Omega <- mom_calc_int2(is=1:n, m=m, nb=nb, weights=weights, Card=Card)

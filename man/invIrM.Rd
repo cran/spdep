@@ -31,7 +31,7 @@ powerWeights(W, rho, order=250, X, tol=.Machine$double.eps^(3/5))
 \details{
 The \code{invIrW} function generates the full weights matrix V, checks that rho lies in its feasible range between 1/min(eigen(V)) and 1/max(eigen(V)), and returns the nxn inverted matrix \deqn{(I - \rho V)^{-1}}. With method=\dQuote{chol}, Cholesky decomposition is used, thanks to contributed code by Markus Reder and Werner Mueller.
 
-The \code{powerWeights} function uses power series summation to cumulate the product \deqn{(I - \rho V)^{-1} \%*\% X} from \deqn{(I + \rho V + (\rho V)^2 + \dots) \%*\% X}, which can be done by storing only sparse V and several matrices of the same dimensions as X. This makes it possible to handle larger spatial weights matrices.
+The \code{powerWeights} function uses power series summation to cumulate the product \deqn{(I - \rho V)^{-1} \%*\% X} from \deqn{(I + \rho V + (\rho V)^2 + \dots) \%*\% X}, which can be done by storing only sparse V and several matrices of the same dimensions as X. This makes it possible to handle larger spatial weights matrices, but is sensitive to the power weights order and the tolerance arguments when the spatial coefficient is close to its bounds, leading to incorrect estimates of the implied inverse matrix.
 }
 \value{
   An nxn matrix with a "call" attribute; the \code{powerWeights} function returns a matrix of the same dimensions as X which has been multipled by the power series equivalent of the dense matrix \deqn{(I - \rho V)^{-1}}.
@@ -79,6 +79,12 @@ system.time(e <- invIrM(nb7rt, rho=0.9, method="solve", feasible=TRUE) \%*\% x)
 system.time(e <- invIrM(nb7rt, rho=0.9, method="solve", feasible=NULL) \%*\% x)
 W <- as(as_dgRMatrix_listw(nb2listw(nb7rt)), "CsparseMatrix")
 system.time(ee <- powerWeights(W, rho=0.9, X=x))
+all.equal(e, as(ee, "matrix"), check.attributes=FALSE)
+system.time(e <- invIrM(nb7rt, rho=0.98, method="solve", feasible=NULL) \%*\% x)
+system.time(ee <- powerWeights(W, rho=0.98, X=x))
+str(attr(ee, "internal"))
+all.equal(e, as(ee, "matrix"), check.attributes=FALSE)
+system.time(ee <- powerWeights(W, rho=0.98, order=1000, X=x))
 all.equal(e, as(ee, "matrix"), check.attributes=FALSE)
 nb60rt <- cell2nb(60, 60, torus=TRUE)
 W <- as(as_dgRMatrix_listw(nb2listw(nb60rt)), "CsparseMatrix")

@@ -46,6 +46,7 @@ nbcosts(nb, data,  method = c("euclidean", "maximum",
   A object of \code{nbdist} class. See \code{\link{nbdists}} for
   details.
 }
+\note{The neighbours must be a connected graph.}
 %%\references{ ~put references to the literature/web site here ~ }
 \author{Elias T. Krainski and Renato M. Assuncao}
 %%\note{}

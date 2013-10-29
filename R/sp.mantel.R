@@ -53,18 +53,24 @@ sp.mantel.mc <- function(var, listw, nsim, type="moran", zero.policy=NULL,
                 var <- var[i]
                 return(f(x=var, ...))
             }
-            cl <- get("cl", envir = .spdepOptions)
-            if (!is.null(cl) && length(cl) > 1L) {
-                nnsim <- boot_wrapper_in(cl, nsim)
-                lres <- clusterCall(cl, boot, xs, statistic=mantel_boot,
-                    R=nnsim, sim="permutation", listwU=listw.U,
-                    zero.policy=zero.policy)
-                res <- boot_wrapper_out(lres, match.call())
+            cores <- get.coresOption()
+            if (is.null(cores)) {
+            parallel <- "no"
             } else {
-                res <- boot(xs, statistic=mantel_boot, R=nsim,
-                    sim="permutation", listwU=listw.U, 
-                    zero.policy=zero.policy)
+                parallel <- ifelse (get.mcOption(), "multicore", "snow")
             }
+            ncpus <- ifelse(is.null(cores), 1L, cores)
+            cl <- NULL
+            if (parallel == "snow") {
+                cl <- get.ClusterOption()
+                if (is.null(cl)) {
+                    parallel <- "no"
+                    warning("no cluster in ClusterOption, parallel set to no")
+                }
+            }
+            res <- boot(xs, statistic=mantel_boot, R=nsim,
+                sim="permutation", listwU=listw.U, 
+                zero.policy=zero.policy, parallel=parallel, ncpus=ncpus, cl=cl)
             return(res)
         }
 

@@ -5,12 +5,8 @@
 \alias{spNamedVec}
 \alias{set.VerboseOption}
 \alias{get.VerboseOption}
-\alias{set.ClusterOption}
-\alias{get.ClusterOption}
 \alias{set.ZeroPolicyOption}
 \alias{get.ZeroPolicyOption}
-\alias{set.rlecuyerSeedOption}
-\alias{get.rlecuyerSeedOption}
 %- Also NEED an `\alias' for EACH other topic documented here.
 \title{Control checking of spatial object IDs}
 \description{
@@ -25,16 +21,10 @@ set.VerboseOption(check)
 get.VerboseOption()
 set.ZeroPolicyOption(check)
 get.ZeroPolicyOption()
-set.ClusterOption(cl)
-get.ClusterOption()
-set.rlecuyerSeedOption(seed)
-get.rlecuyerSeedOption()
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
   \item{check}{a logical value, TRUE or FALSE}
-  \item{cl}{a cluster object created by \code{makeCluster} in \pkg{parallel}}
-  \item{seed}{an integer vector of length 6 to seed the Lecuyer streams for cluster RNG}
   \item{x}{a vector the same length, or a two-dimensional array, or data frame with the same number of rows as the neighbours list in listw}
   \item{listw}{a \code{listw} object or \code{nb} object inheriting from "nb"}
   \item{var}{a character string or integer value for the column to be selected}

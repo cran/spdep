@@ -1,6 +1,6 @@
 Package: spdep
-Version: 0.5-65
-Date: 2013-09-04
+Version: 0.5-68
+Date: 2013-10-29
 Title: Spatial dependence: weighting schemes, statistics and models
 Encoding: latin1
 Authors@R: c(
@@ -31,10 +31,9 @@ Authors@R: c(
 	person("Markus", "Reder", role = "ctb"),
 	person("Michael", "Tiefelsdorf", role = "ctb"),
 	person("Danlin", "Yu", role = "ctb"))
-Author: Roger Bivand <Roger.Bivand@nhh.no>
 Maintainer: Roger Bivand <Roger.Bivand@nhh.no>
 Depends: R (>= 2.14.0), methods, sp (>= 0.9), Matrix (>= 0.999375-9)
-Imports: LearnBayes, deldir, boot, splines, coda, nlme, MASS
+Imports: LearnBayes, deldir, boot (>= 1.3-1), splines, coda, nlme, MASS
 Suggests: parallel, spam(>= 0.13-1), RANN, RColorBrewer, lattice,
         xtable, maptools (>= 0.5-4), foreign
 Description: A collection of functions to create spatial weights matrix
@@ -52,7 +51,34 @@ Description: A collection of functions to create spatial weights matrix
   semi-parametric and Moran eigenvector spatial filtering, GM SAR error
   models, and generalized spatial two stage least squares models.
 License: GPL (>= 2)
-Packaged: 2013-09-16 08:42:32 UTC; rsb
+Packaged: 2013-11-04 11:17:14 UTC; rsb
+Author: Roger Bivand [cre, aut],
+  Micah Altman [ctb],
+  Luc Anselin [ctb],
+  Renato Assunção [ctb],
+  Olaf Berke [ctb],
+  Andrew Bernat [ctb],
+  Guillaume Blanchet [ctb],
+  Eric Blankmeyer [ctb],
+  Marilia Carvalho [ctb],
+  Bjarke Christensen [ctb],
+  Yongwan Chun [ctb],
+  Carsten Dormann [ctb],
+  Stéphane Dray [ctb],
+  Rein Halbersma [ctb],
+  Elias Krainski [ctb],
+  Pierre Legendre [ctb],
+  Nicholas Lewin-Koh [ctb],
+  Hongfei Li [ctb],
+  Jielai Ma [ctb],
+  Giovanni Millo [ctb],
+  Werner Mueller [ctb],
+  Hisaji Ono [ctb],
+  Pedro Peres-Neto [ctb],
+  Gianfranco Piras [ctb],
+  Markus Reder [ctb],
+  Michael Tiefelsdorf [ctb],
+  Danlin Yu [ctb]
 NeedsCompilation: yes
 Repository: CRAN
-Date/Publication: 2013-09-16 13:35:06
+Date/Publication: 2013-11-04 14:49:05

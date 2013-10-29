@@ -177,6 +177,8 @@ COL.SDEMW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
 summary(COL.SDEMW.eig, correlation=TRUE)
 COL.SLX <- lmSLX(CRIME ~ INC + HOVAL, data=COL.OLD, listw=lw)
 summary(COL.SLX)
+COL.SLX <- lmSLX(CRIME ~ INC + HOVAL + I(HOVAL^2), data=COL.OLD, listw=lw)
+summary(COL.SLX)
 \donttest{
 crds <- cbind(COL.OLD$X, COL.OLD$Y)
 mdist <- sqrt(sum(diff(apply(crds, 2, range))^2))
