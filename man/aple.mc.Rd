@@ -25,21 +25,35 @@ aple.mc(x, listw, nsim, override_similarity_check=FALSE, useTrace=TRUE)
 
 \seealso{\code{\link{aple}}, \code{\link[boot]{boot}}}
 \examples{
-\dontrun{
+\donttest{
 example(aple)
-boot_out <- aple.mc(as.vector(scale(wheat$yield_detrend, scale=FALSE)),
+oldRNG <- RNGkind()
+RNGkind("L'Ecuyer-CMRG")
+set.seed(1L)
+boot_out_ser <- aple.mc(as.vector(scale(wheat$yield_detrend, scale=FALSE)),
  nb2listw(nbr12, style="W"), nsim=500)
-plot(boot_out)
-boot_out
+plot(boot_out_ser)
+boot_out_ser
 library(parallel)
-cl <- makeCluster(detectCores())
-set.ClusterOption(cl)
-set.rlecuyerSeedOption(1:6)
-boot_out <- aple.mc(as.vector(scale(wheat$yield_detrend, scale=FALSE)),
- nb2listw(nbr12, style="W"), nsim=500)
-boot_out
-set.ClusterOption(NULL)
-stopCluster(cl)
+oldCores <- set.coresOption(NULL)
+nc <- detectCores(logical=FALSE)
+invisible(set.coresOption(nc))
+set.seed(1L)
+if (!get.mcOption()) {
+  cl <- makeCluster(nc)
+  set.ClusterOption(cl)
+} else{
+  mc.reset.stream()
+}
+boot_out_par <- aple.mc(as.vector(scale(wheat$yield_detrend, scale=FALSE)),
+    nb2listw(nbr12, style="W"), nsim=500)
+if (!get.mcOption()) {
+  set.ClusterOption(NULL)
+  stopCluster(cl)
+}
+boot_out_par
+invisible(set.coresOption(oldCores))
+RNGkind(oldRNG[1], oldRNG[2])
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

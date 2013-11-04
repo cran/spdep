@@ -5,7 +5,10 @@
 assign("spChkID", FALSE, envir = .spdepOptions)
 assign("zeroPolicy", FALSE, envir = .spdepOptions)
 assign("verbose", FALSE, envir = .spdepOptions)
-assign("cl", NULL, envir = .spdepOptions)
+assign("mc", ifelse(.Platform$OS.type == "windows", FALSE, TRUE),
+ envir = .spdepOptions)
+assign("cores", NULL, envir = .spdepOptions)
+assign("cluster", NULL, envir = .spdepOptions)
 assign("rlecuyerSeed", rep(12345, 6), envir = .spdepOptions)
 
 #.conflicts.OK <- TRUE

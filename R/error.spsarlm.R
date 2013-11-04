@@ -205,6 +205,7 @@ errorsarlm <- function(formula, data = list(), listw, na.action, etype="error",
 	LMtest <- NULL
 	asyvar1 <- FALSE
         Hcov <- NULL
+        pWinternal <- NULL
         timings[["coefs"]] <- proc.time() - .ptime_start
         .ptime_start <- proc.time()
         assign("first_time", TRUE, envir=env)
@@ -253,11 +254,19 @@ errorsarlm <- function(formula, data = list(), listw, na.action, etype="error",
                     B <- tcrossprod(R, x)
                     W <- as(as_dgRMatrix_listw(get("listw", envir=env)),
                         "CsparseMatrix")
-                    B1 <- as(powerWeights(W=W, rho=lambda, order=con$pWOrder,
-                        X=B, tol=tol.solve), "matrix")
+                    B0 <- powerWeights(W=W, rho=lambda, order=con$pWOrder,
+                        X=B, tol=tol.solve)
+                    if (!is.null(attr(B0, "internal")) &&
+                        !attr(B0, "internal")$conv)
+                        pWinternal <- c(pWinternal, attr(B0, "internal"))
+                    B1 <- as(B0, "matrix")
                     C <- x %*% R
-                    C1 <- as(powerWeights(W=t(W), rho=lambda, order=con$pWOrder,
-                        X=C, tol=tol.solve), "matrix")
+                    C0 <- powerWeights(W=t(W), rho=lambda, order=con$pWOrder,
+                        X=C, tol=tol.solve)
+                    if (!is.null(attr(C0, "internal")) &&
+                        !attr(C0, "internal")$conv)
+                        pWinternal <- c(pWinternal, attr(C0, "internal"))
+                    C1 <- as(C0, "matrix")
                     Hcov <- B1 %*% C1
                     attr(Hcov, "method") <- method
                     timings[["sparse_hcov"]] <- proc.time() - .ptime_start
@@ -313,7 +322,8 @@ errorsarlm <- function(formula, data = list(), listw, na.action, etype="error",
                 optimHess=con$optimHess, insert=!is.null(trs), trs=trs,
                 timings=do.call("rbind", timings)[, c(1, 3)], 
                 f_calls=get("f_calls", envir=env),
-                hf_calls=get("hf_calls", envir=env), intern_classic=iC),
+                hf_calls=get("hf_calls", envir=env), intern_classic=iC,
+                pWinternal=pWinternal),
                 class=c("sarlm"))
         rm(env)
         GC <- gc()
@@ -379,31 +389,34 @@ lmSLX <- function(formula, data = list(), listw, na.action, zero.policy=NULL) {
 	# check if there are enough regressors
 	xcolnames <- colnames(x)
 	K <- ifelse(xcolnames[1] == "(Intercept)", 2, 1)
-        Wvars <- ""
+        Wvars <- NULL
+        wxI <- NULL
+        WX <- NULL
 	if (K == 2) {
         # unnormalized weight matrices
                	if (!(listw$style == "W")) {
  			intercept <- as.double(rep(1, n))
-       	       		wx <- lag.listw(listw, intercept, 
+       	       		wxI <- lag.listw(listw, intercept, 
 				zero.policy = zero.policy)
-                        Wvark <- ("lag.Intercept")
-			data[[Wvark]] <- wx
-                        Wvars <- paste(Wvars, "+", Wvark)
+                        Wvars <- (".(Intercept)")
                	} 
         }   
 	if (m > 1 || (m == 1 && K == 1)) {
+                WX <- matrix(as.numeric(NA), nrow=n,
+                    ncol=ifelse(m==1, 1, (m-(K-1))))
 		for (k in K:m) {
-			wx <- lag.listw(listw, data[[xcolnames[k]]], 
+                        j <- ifelse(k==1, 1, k-1)
+			WX[,j] <- lag.listw(listw, x[,xcolnames[k]], 
 			    zero.policy=zero.policy)
-			if (any(is.na(wx))) 
+			if (any(is.na(WX[,j]))) 
 			    stop("NAs in lagged independent variable")
-                        Wvark <- paste("lag.", xcolnames[k], sep="")
-			data[[Wvark]] <- wx
-                        Wvars <- paste(Wvars, "+", Wvark)
+                        Wvars <- c(Wvars, paste(".", xcolnames[k], sep=""))
 		}
 	}
-        dfo <- as.character(formula)
-        nfo <- formula(paste(dfo[2], dfo[1], paste(dfo[3], Wvars)))
+        if (!is.null(wxI)) WX <- cbind(wxI, WX)
+        colnames(WX) <- Wvars
+        data$WX <- WX
+        nfo <- update(formula, . ~ . + WX)
         lm.model <- lm(nfo, data=data, na.action=na.action)
         lm.model
 }

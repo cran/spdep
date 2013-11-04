@@ -157,6 +157,44 @@ table(res5c$groups)
 ### It don't have another divison with this criteria
 res5d <- skater(res5c, dpad, 1, c(20, 40), rep(1,nrow(bh@data)))
 table(res5d$groups)
+
+\donttest{
+data(boston)
+bh.nb <- boston.soi
+dpad <- data.frame(scale(boston.c[,c(7:10)]))
+### calculating costs
+system.time(lcosts <- nbcosts(bh.nb, dpad))
+### making listw
+nb.w <- nb2listw(bh.nb, lcosts, style="B")
+### find a minimum spanning tree
+mst.bh <- mstree(nb.w,5)
+### three groups with no restriction
+system.time(res1 <- skater(mst.bh[,1:2], dpad, 2))
+library(parallel)
+nc <- detectCores(logical=FALSE)
+coresOpt <- get.coresOption()
+invisible(set.coresOption(nc))
+if(!get.mcOption()) {
+# no-op, "snow" parallel calculation not available
+  cl <- makeCluster(get.coresOption())
+  set.ClusterOption(cl)
+}
+### calculating costs
+system.time(plcosts <- nbcosts(bh.nb, dpad))
+all.equal(lcosts, plcosts, check.attributes=FALSE)
+### making listw
+pnb.w <- nb2listw(bh.nb, plcosts, style="B")
+### find a minimum spanning tree
+pmst.bh <- mstree(pnb.w,5)
+### three groups with no restriction
+system.time(pres1 <- skater(pmst.bh[,1:2], dpad, 2))
+if(!get.mcOption()) {
+  set.ClusterOption(NULL)
+  stopCluster(cl)
+}
+all.equal(res1, pres1, check.attributes=FALSE)
+invisible(set.coresOption(coresOpt))
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

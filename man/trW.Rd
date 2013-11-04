@@ -62,6 +62,28 @@ all.equal(trMat, trmom, check.attributes=FALSE)
 set.seed(1)
 system.time(trMC <- trW(W, m=24, type="MC"))
 str(trMC)
+\donttest{
+data(boston)
+listw <- nb2listw(boston.soi)
+listwS <- similar.listw(listw)
+system.time(trmom <- trW(listw=listwS, m=24, type="moments"))
+str(trmom)
+library(parallel)
+nc <- detectCores(logical=FALSE)
+coresOpt <- get.coresOption()
+invisible(set.coresOption(nc))
+if(!get.mcOption()) {
+  cl <- makeCluster(get.coresOption())
+  set.ClusterOption(cl)
+}
+system.time(trmomp <- trW(listw=listwS, m=24, type="moments"))
+if(!get.mcOption()) {
+  set.ClusterOption(NULL)
+  stopCluster(cl)
+}
+all.equal(trmom, trmomp, check.attributes=FALSE)
+invisible(set.coresOption(coresOpt))
+}
 }
 \keyword{spatial}
 

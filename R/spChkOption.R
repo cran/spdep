@@ -35,30 +35,49 @@ get.ZeroPolicyOption <- function() {
 
 set.ClusterOption <- function(cl) {
 	if (!is.null(cl)) {
-            if (!inherits(cl, "cluster")) 
-                stop ("cluster required")
-            clusterEvalQ(cl, library(spdep))
+            if (!inherits(cl, "cluster")) stop ("cluster required")
         }
-        if (is.null(cl)) clusterEvalQ(get.ClusterOption(),
-            detach(package:spdep))
-	assign("cl", cl, envir = .spdepOptions)
+	assign("cluster", cl, envir = .spdepOptions)
         invisible(NULL)
 }
 
 get.ClusterOption  <- function() {
-	get("cl", envir = .spdepOptions)
+	get("cluster", envir = .spdepOptions)
 }
 
-get.rlecuyerSeedOption  <- function() {
-	get("rlecuyerSeed", envir = .spdepOptions)
+set.mcOption <- function(value) {
+        stopifnot(is.logical(value))
+        stopifnot(length(value) == 1)
+	res <- get("mc", envir = .spdepOptions)
+        if (.Platform$OS.type == "windows") {
+            if (value) warning("multicore not available on Windows")
+        } else {
+	    assign("mc", value, envir = .spdepOptions)
+        }
+	res
 }
 
-set.rlecuyerSeedOption  <- function(seed) {
-    if (length(seed) != 6L) stop("Six integer values required")
-    if (storage.mode(seed) != "integer") seed <- as.integer(seed)
-    assign("rlecuyerSeed", seed, envir = .spdepOptions)
-    invisible(NULL)
+get.mcOption  <- function() {
+	get("mc", envir = .spdepOptions)
 }
+
+set.coresOption <- function(value) {
+	res <- get("cores", envir = .spdepOptions)
+        if (is.null(value)) {
+            assign("cores", value, envir = .spdepOptions)
+        } else {
+            stopifnot(is.integer(value))
+            stopifnot(length(value) == 1)
+            stopifnot(!is.na(value))
+	    assign("cores", value, envir = .spdepOptions)
+        }
+	res
+}
+
+get.coresOption  <- function() {
+	get("cores", envir = .spdepOptions)
+}
+
 
 chkIDs <- function (x, listw) 
 {

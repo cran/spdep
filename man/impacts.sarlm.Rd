@@ -9,6 +9,7 @@
 \alias{summary.lagImpact}
 \alias{print.summary.lagImpact}
 \alias{HPDinterval.lagImpact}
+\alias{intImpacts}
 \title{Impacts in spatial lag models}
 \description{The calculation of impacts for spatial lag and spatial Durbin models is needed in order to interpret the regression coefficients correctly, because of the spillovers between the terms in these data generation processes (unlike the spatial error model).}
 \usage{
@@ -22,6 +23,8 @@
 \method{print}{lagImpact}(x, ..., reportQ=NULL)
 \method{summary}{lagImpact}(object, ..., zstats=FALSE, short=FALSE, reportQ=NULL)
 \method{HPDinterval}{lagImpact}(obj, prob = 0.95, ..., choice="direct")
+intImpacts(rho, beta, P, n, mu, Sigma, irho, drop2beta, bnames, interval,
+ type, tr, R, listw, tol, empirical, Q, icept, iicept, p, mess=FALSE)
 }
 \arguments{
   \item{obj}{A sarlm spatial regression object created by \code{lagsarlm}; in \code{HPDinterval.lagImpact}, a lagImpact object}
@@ -41,6 +44,8 @@
   \item{trace}{Argument passed to \code{plot.mcmc}: plot trace plots}
   \item{density}{Argument passed to \code{plot.mcmc}: plot density plots}
   \item{prob}{Argument passed to \code{HPDinterval.mcmc}: a numeric scalar in the interval (0,1) giving the target probability content of the intervals}
+  \item{rho, beta, P, n, mu, Sigma, irho, drop2beta, bnames,
+    interval, type, icept, iicept, p, mess}{internal arguments shared inside impacts methods}
 }
 
 \details{If called without \code{R} being set, the method returns the direct, indirect and total impacts for the variables in the model, for the variables themselves in tha spatial lag model case, for the variables and their spatial lags in the spatial Durbin (mixed) model case. The spatial lag impact measures are computed using eq. 2.46 (LeSage and Pace, 2009, p. 38), either using the exact dense matrix (when \code{listw} is given), or traces of powers of the weights matrix (when \code{tr} is given). When the traces are created by powering sparse matrices, the exact and the trace methods should give very similar results, unless the number of powers used is very small.

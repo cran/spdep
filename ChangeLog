@@ -1,3 +1,88 @@
+2013-10-29 18:09  rsbivand
+
+	* DESCRIPTION,
+	  R/nbcosts.R, R/prunecost.R: socket cluster for skater
+
+2013-10-27 10:21  rsbivand
+
+	* ChangeLog,
+	  inst/ChangeLog: tidy
+
+2013-10-27 10:19  rsbivand
+
+	* NAMESPACE,
+	  man/impacts.sarlm.Rd: adding intImpacts to namespace
+
+2013-10-22 06:13  rsbivand
+
+	* DESCRIPTION,
+	  R/error.spsarlm.R, man/errorsarlm.Rd: fix lmSLX bug
+
+2013-10-20 07:41  rsbivand
+
+	* R/nbcosts.R,
+	  R/prunecost.R, man/nbcosts.Rd, man/skater.Rd: mc options
+
+2013-10-18 16:30  rsbivand
+
+	* R/impacts.R,
+	  man/trW.Rd: mc options
+
+2013-10-18 06:43  rsbivand
+
+	* R/spChkOption.R,
+	  man/set.mcOption.Rd: mc options
+
+2013-10-17 21:22  rsbivand
+
+	* NAMESPACE,
+	  R/EBI.R, R/ME.R, R/aple.mc.R, R/geary.R, R/moran.R,
+	  R/sp.mantel.R, R/spChkOption.R, man/set.mcOption.Rd: mc options
+
+2013-10-17 20:21  rsbivand
+
+	* DESCRIPTION,
+	  R/aple.mc.R, R/spChkOption.R, man/aple.Rd, man/aple.mc.Rd,
+	  man/set.mcOption.Rd: mc options
+
+2013-10-17 12:10  rsbivand
+
+	* R/AAA.R,
+	  R/spChkOption.R, man/set.mcOption.Rd: mc options
+
+2013-10-01 18:32  rsbivand
+
+	* R/error.spsarlm.R:
+	  series approximation issue
+
+2013-10-01 11:01  rsbivand
+
+	* DESCRIPTION,
+	  R/error.spsarlm.R, R/nb2mat.R, man/invIrM.Rd: series
+	  approximation issue
+
+2013-09-20 16:40  rsbivand
+
+	* man/set.mcOption.Rd:
+	  progress on parallel integration
+
+2013-09-20 10:43  rsbivand
+
+	* DESCRIPTION,
+	  NAMESPACE, R/AAA.R, R/aple.mc.R, R/spChkOption.R,
+	  man/aple.mc.Rd, man/set.spChkOption.Rd: progress on parallel
+	  integration
+
+2013-09-17 08:13  rsbivand
+
+	* R/nbcosts.R,
+	  R/prunecost.R: crossplatform skater functions
+
+2013-09-16 08:40  rsbivand
+
+	* ChangeLog,
+	  inst/ChangeLog: tidy
+
 2013-09-16 08:39  rsbivand
 
 	* man/droplinks.Rd,

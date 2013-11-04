@@ -9,9 +9,12 @@ ME <- function(formula, data, family = gaussian, weights, offset, listw,
 		return(c(as(I, "matrix")))
 	}
 
-	MIR_a <- function(resids, sW, n, cpvar, S0, nsim, stdev=TRUE) {
+	MIR_a <- function(resids, sW, n, cpvar, S0, nsim, stdev=TRUE,
+            par_boot_args=list()) {
 		boot1 <- boot(resids, statistic=MoraneI.boot, R=nsim, 
-			sim="permutation", sW=sW, n=n, S0=S0, cpvar=cpvar)
+			sim="permutation", sW=sW, n=n, S0=S0, cpvar=cpvar,
+                        parallel=par_boot_args$parallel,
+                        ncpus=par_boot_args$ncpus, cl=par_boot_args$cl)
 		mi <- boot1$t0
 		if (stdev) {
 			zi <- (boot1$t0 - mean(boot1$t))/sqrt(var(boot1$t))
@@ -69,8 +72,24 @@ ME <- function(formula, data, family = gaussian, weights, offset, listw,
 	    family=family)
 	glm_res <- glm_fit$y - glm_fit$fitted.values
 	cpvar <- crossprod(glm_res)
+        cores <- get.coresOption()
+        if (is.null(cores)) {
+        parallel <- "no"
+        } else {
+            parallel <- ifelse (get.mcOption(), "multicore", "snow")
+        }
+        ncpus <- ifelse(is.null(cores), 1L, cores)
+        cl <- NULL
+        if (parallel == "snow") {
+            cl <- get.ClusterOption()
+            if (is.null(cl)) {
+                parallel <- "no"
+                warning("no cluster in ClusterOption, parallel set to no")
+            }
+        }
+        par_boot_args <- list(parallel=parallel, ncpus=ncpus, cl=cl)
 	mRES <- MIR_a(glm_res, sW=sW, n=n, cpvar=cpvar, S0=S0, nsim=nsim,
-		stdev=stdev)
+		stdev=stdev, par_boot_args=par_boot_args)
 	pIZ <- mRES$p.value
 	tres <- c(NA, mRES$statistic, pIZ)
 	if (pIZ > alpha) stop("base correlation larger than alpha")
@@ -101,7 +120,7 @@ ME <- function(formula, data, family = gaussian, weights, offset, listw,
 	glm_res <- glm_fit$y - glm_fit$fitted.values
 	cpvar <- crossprod(glm_res)
 	mRES <- MIR_a(glm_res, sW=sW, n=n, cpvar=cpvar, S0=S0, nsim=nsim,
-		stdev=stdev)
+		stdev=stdev, par_boot_args=par_boot_args)
 	pIZ <- mRES$p.value
 	used <- rep(FALSE, n)
 	used[min_iZ] <- TRUE
@@ -130,7 +149,7 @@ ME <- function(formula, data, family = gaussian, weights, offset, listw,
 		glm_res <- glm_fit$y - glm_fit$fitted.values
 		cpvar <- crossprod(glm_res)
 		mRES <- MIR_a(glm_res, sW=sW, n=n, cpvar=cpvar, S0=S0, 
-			nsim=nsim, stdev=stdev)
+			nsim=nsim, stdev=stdev, par_boot_args=par_boot_args)
 		pIZ <- mRES$p.value
 		used[min_iZ] <- TRUE
 		min_v <- c(min_v, min_iZ)

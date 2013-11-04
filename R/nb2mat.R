@@ -82,6 +82,7 @@ powerWeights <- function(W, rho, order=250, X, tol=.Machine$double.eps^(3/5)) {
     acc <- X + last
     conv <- FALSE
     iter <- 1
+    series <- numeric(order)
     while (iter < order) {
         if (side == "R") {
             last <- aW %*% last
@@ -90,14 +91,17 @@ powerWeights <- function(W, rho, order=250, X, tol=.Machine$double.eps^(3/5)) {
             last <- last %*% aW
             acc <- acc + last
         }
-        iter <- iter+1
-        if (mean(as(last, "matrix")) < tol) {
+        series[iter] <- mean(as(last, "matrix"))
+        if (series[iter] < tol) {
             conv <- TRUE
             break
         }
+        iter <- iter+1
     }
     if (!conv) warning("not converged within order iterations")
     timings[["make_power_sum"]] <- proc.time() - .ptime_start
+    attr(acc, "internal") <- list(series=series, order=order,
+        tol=tol, iter=iter, conv=conv)
     attr(acc, "timings") <- do.call("rbind", timings)[, c(1, 3)]
     acc
 }
