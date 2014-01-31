@@ -1,5 +1,5 @@
 % Copyright 2002 by Roger S. Bivand
-\encoding{latin1}
+\encoding{UTF-8}
 \name{eire}
 \alias{eire}
 \alias{eire.df}
@@ -28,8 +28,8 @@ centroids are in eire.coords.utm. The original Cliff and Ord binary contiguities
     \item{OWNCONS}{percentage in value terms of gross agricultural output of 
 each county consumed by itself}
     \item{POPCHG}{1961 population as percentage of 1926}
-    \item{RETSALE}{value of retail sales £000}
-    \item{INCOME}{total personal income £000}
+    \item{RETSALE}{value of retail sales Â£000}
+    \item{INCOME}{total personal income Â£000}
     \item{names}{County names}
   }
 }
