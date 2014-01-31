@@ -411,15 +411,15 @@ getVcovmat <- function(coefs, env, tol.solve=.Machine$double.eps, optim=FALSE,
     if (optim) {
       if (optimM == "nlm") {
            options(warn=-1)
-           opt <- nlm(f=f_laglm_hess_nlm, p=coefs, env=env, hessian=TRUE)
+           opt <- nlm(f=f_spautolm_hess_nlm, p=coefs, env=env, hessian=TRUE)
            options(warn=0)
            mat <- opt$hessian
 #        opt <- optimHess(par=coefs, fn=f_laglm_hess, env=env)
 #        mat <- opt
        } else if (optimM == "optimHess") {
-           mat <- optimHess(par=coefs, fn=f_laglm_hess, env=env)
+           mat <- optimHess(par=coefs, fn=f_spautolm_hess, env=env)
        } else {
-           opt <- optim(par=coefs, fn=f_laglm_hess, env=env, method=optimM,
+           opt <- optim(par=coefs, fn=f_spautolm_hess, env=env, method=optimM,
            hessian=TRUE)
            mat <- opt$hessian
       }
@@ -431,6 +431,11 @@ getVcovmat <- function(coefs, env, tol.solve=.Machine$double.eps, optim=FALSE,
     }
     res <- solve(-(mat), tol.solve=tol.solve)
     res
+}
+
+f_spautolm_hess_nlm <- function(coefs, env) {
+    ret <- f_spautolm_hess(coefs, env)
+    -ret
 }
 
 f_spautolm_hess <- function(coefs, env) {

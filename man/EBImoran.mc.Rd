@@ -1,5 +1,5 @@
 % Copyright 2003 by Roger S. Bivand
-\encoding{latin1}
+\encoding{UTF-8}
 \name{EBImoran.mc}
 \alias{EBImoran.mc}
 \alias{EBImoran}
@@ -51,7 +51,7 @@ following components:
   \item{z}{a numerical vector of Empirical Bayes indices as z above}
 
 }
-\references{Assunção RM, Reis EA 1999 A new proposal to adjust Moran's I for population density. Statistics in Medicine 18, pp. 2147--2162}
+\references{AssunÃ§Ã£o RM, Reis EA 1999 A new proposal to adjust Moran's I for population density. Statistics in Medicine 18, pp. 2147--2162}
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 
 \seealso{\code{\link{moran}}, \code{\link{moran.mc}}, \code{\link{EBest}}}

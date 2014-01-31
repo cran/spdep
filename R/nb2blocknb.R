@@ -1,7 +1,14 @@
-# Copyright 2004 by Roger Bivand 
+# Copyright 2004-2013 by Roger Bivand 
 #
 
-nb2blocknb <- function(nb, ID, row.names = NULL) {
+nb2blocknb <- function(nb=NULL, ID, row.names = NULL) {
+        # Jacquelyn Pless suggestion 131204
+        if (is.null(nb)) {
+            blks <- unique(as.character(ID))
+            nb <- lapply(blks, function(x) 0L)
+            class(nb) <- "nb"
+            attr(nb, "region.id") <- blks
+        }
 	if (!inherits(nb, "nb")) stop("not an nb object")
 	nbNames <- as.character(attr(nb, "region.id"))
 	entNames <- as.character(ID)

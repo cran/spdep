@@ -10,11 +10,11 @@ belong to the spatial locations, using the identification tags of the
 locations as the key. 
 }
 \usage{
-nb2blocknb(nb, ID, row.names = NULL)
+nb2blocknb(nb=NULL, ID, row.names = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{nb}{an object of class \code{nb} with a list of integer vectors containing neighbour region number ids}
+  \item{nb}{an object of class \code{nb} with a list of integer vectors containing neighbour region number ids; if null, an nb object with no neighbours is created the length of \code{unique(as.character(ID))}}
   \item{ID}{identification tags of the locations for the location-less observations;
 
  \code{sort(unique(as.character(ID)))} must be identical to 
@@ -63,8 +63,15 @@ block.nb
 print(is.symmetric.nb(block.nb))
 plot(block.nb, boston.utm)
 points(boston.utm, pch=18, col="lightgreen")
+n.comp.nb(block.nb)$nc
 moran.test(boston.c$CMEDV, nb2listw(boston.soi))
 moran.test(boston.c$CMEDV, nb2listw(block.nb))
+block.nb <- nb2blocknb(NULL, as.character(boston.c$TOWN))
+block.nb
+print(is.symmetric.nb(block.nb))
+plot(block.nb, boston.utm)
+n.comp.nb(block.nb)$nc
+moran.test(boston.c$CMEDV, nb2listw(block.nb, zero.policy=TRUE), zero.policy=TRUE)
 }
 }
 \keyword{spatial}
