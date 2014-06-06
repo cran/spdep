@@ -13,7 +13,7 @@ dnearneigh(x, d1, d2, row.names = NULL, longlat = NULL)
   \item{d1}{lower distance bound}
   \item{d2}{upper distance bound}
   \item{row.names}{character vector of region ids to be added to the neighbours list as attribute \code{region.id}, default \code{seq(1, nrow(x))}}
-  \item{longlat}{TRUE if point coordinates are longitude-latitude decimal degrees, in which case distances are measured in kilometers; if x is a SpatialPoints object, the value is taken from the object itself}
+  \item{longlat}{TRUE if point coordinates are longitude-latitude decimal degrees, in which case distances are measured in kilometers; if x is a SpatialPoints object, the value is taken from the object itself, and overrides this argument if not NULL}
 }
 \value{
 The function returns a list of integer vectors giving the region id numbers

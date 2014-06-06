@@ -143,7 +143,7 @@ pp. 237-289; Cressie, N. A. C. 1993 \emph{Statistics for spatial data}, Wiley, N
 Bernat for contributions to the asymptotic standard error code.}
 
 \seealso{\code{\link{lm}}, \code{\link{errorsarlm}}, 
-\code{\link{eigenw}}, %\code{\link{asMatrixCsrListw}}, 
+\code{\link{summary.sarlm}}, \code{\link{eigenw}},  
 \code{\link{predict.sarlm}}, \code{\link{impacts.sarlm}},
 \code{\link{residuals.sarlm}}, \code{\link{do_ldet}}
 }

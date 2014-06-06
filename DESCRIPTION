@@ -1,6 +1,6 @@
 Package: spdep
-Version: 0.5-71
-Date: 2014-01-31
+Version: 0.5-74
+Date: 2014-06-05
 Title: Spatial dependence: weighting schemes, statistics and models
 Encoding: UTF-8
 Authors@R: c(
@@ -17,6 +17,7 @@ Authors@R: c(
 	person("Yongwan", "Chun", role = "ctb"),
 	person("Carsten", "Dormann", role = "ctb"),
 	person("Stéphane", "Dray", role = "ctb"),
+	person("Virgilio", "Gómez-Rubio", role = "ctb"),
 	person("Rein", "Halbersma", role = "ctb"),
 	person("Elias", "Krainski", role = "ctb"),
 	person("Pierre", "Legendre", role = "ctb"),
@@ -51,7 +52,7 @@ Description: A collection of functions to create spatial weights matrix
   semi-parametric and Moran eigenvector spatial filtering, GM SAR error
   models, and generalized spatial two stage least squares models.
 License: GPL (>= 2)
-Packaged: 2014-01-31 14:09:18 UTC; rsb
+Packaged: 2014-06-05 19:09:09 UTC; rsb
 Author: Roger Bivand [cre, aut],
   Micah Altman [ctb],
   Luc Anselin [ctb],
@@ -65,6 +66,7 @@ Author: Roger Bivand [cre, aut],
   Yongwan Chun [ctb],
   Carsten Dormann [ctb],
   Stéphane Dray [ctb],
+  Virgilio Gómez-Rubio [ctb],
   Rein Halbersma [ctb],
   Elias Krainski [ctb],
   Pierre Legendre [ctb],
@@ -81,4 +83,4 @@ Author: Roger Bivand [cre, aut],
   Danlin Yu [ctb]
 NeedsCompilation: yes
 Repository: CRAN
-Date/Publication: 2014-01-31 17:32:50
+Date/Publication: 2014-06-06 14:08:56

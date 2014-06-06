@@ -2,6 +2,7 @@
 \name{errorsarlm}
 \alias{errorsarlm}
 \alias{lmSLX}
+\alias{create_WX}
 %\alias{sar.error.f}
 %\alias{sar.error.f.s}
 \title{Spatial simultaneous autoregressive error model estimation}
@@ -11,13 +12,14 @@ error models of the form:
 
 \deqn{y = X \beta + u, u = \lambda W u + \varepsilon}{y = X beta + u, u = lambda W u + e}
 
-where \eqn{\lambda}{lambda} is found by \code{optimize()} first, and \eqn{\beta}{beta} and other parameters by generalized least squares subsequently. With one of the sparse matrix methods, larger numbers of observations can be handled, but the \code{interval=} argument may need be set when the weights are not row-standardised. When \code{etype} is \dQuote{emixed}, a so-called spatial Durbin error model is fitted, while \code{lmSLX} fits an \code{lm} model augmented with the spatially lagged RHS variables, including the lagged intercept when the spatial weights are not row-standardised.
+where \eqn{\lambda}{lambda} is found by \code{optimize()} first, and \eqn{\beta}{beta} and other parameters by generalized least squares subsequently. With one of the sparse matrix methods, larger numbers of observations can be handled, but the \code{interval=} argument may need be set when the weights are not row-standardised. When \code{etype} is \dQuote{emixed}, a so-called spatial Durbin error model is fitted, while \code{lmSLX} fits an \code{lm} model augmented with the spatially lagged RHS variables, including the lagged intercept when the spatial weights are not row-standardised. \code{create_WX} creates spatially lagged RHS variables, and is exposed for use in model fitting functions.
 }
 \usage{
 errorsarlm(formula, data=list(), listw, na.action, etype="error",
  method="eigen", quiet=NULL, zero.policy=NULL,
  interval = NULL, tol.solve=1.0e-10, trs=NULL, control=list())
 lmSLX(formula, data = list(), listw, na.action, zero.policy=NULL)
+create_WX(x, listw, zero.policy=NULL, prefix="")
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
@@ -39,6 +41,8 @@ neighbours, if FALSE assign NA - causing \code{errorsarlm()} to terminate with a
   \item{tol.solve}{the tolerance for detecting linear dependencies in the columns of matrices to be inverted - passed to \code{solve()} (default=1.0e-10). This may be used if necessary to extract coefficient standard errors (for instance lowering to 1e-12), but errors in \code{solve()} may constitute indications of poorly scaled variables: if the variables have scales differing much from the autoregressive coefficient, the values in this matrix may be very different in scale, and inverting such a matrix is analytically possible by definition, but numerically unstable; rescaling the RHS variables alleviates this better than setting tol.solve to a very small value}
   \item{trs}{default NULL, if given, a vector of powered spatial weights matrix traces output by \code{trW}; when given, insert the asymptotic analytical values into the numerical Hessian instead of the approximated values; may be used to get around some problems raised when the numerical Hessian is poorly conditioned, generating NaNs in subsequent operations. When using the numerical Hessian to get the standard error of lambda, it is very strongly advised that trs be given, as the parts of fdHess corresponding to the regression coefficients are badly approximated, affecting the standard error of lambda; the coefficient correlation matrix is unusable}
  \item{control}{list of extra control arguments - see section below}
+ \item{x}{model matrix to be lagged}
+ \item{prefix}{default empty string, may be \dQuote{lag} in some cases}
 }
 \details{
 The asymptotic standard error of \eqn{\lambda}{lambda} is only computed when
@@ -150,7 +154,7 @@ with an introduction to spatial econometrics. In: Ullah A, Giles DEA
 pp. 237-289; Cressie, N. A. C. 1993 \emph{Statistics for spatial data}, Wiley, New York; LeSage J and RK Pace (2009) Introduction to Spatial Econometrics. CRC Press, Boca Raton.}
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 
-\seealso{\code{\link{lm}}, \code{\link{lagsarlm}}, \code{\link{similar.listw}}, \code{\link{predict.sarlm}},
+\seealso{\code{\link{lm}}, \code{\link{lagsarlm}}, \code{\link{similar.listw}}, \code{\link{summary.sarlm}}, \code{\link{predict.sarlm}},
 \code{\link{residuals.sarlm}}, \code{\link{do_ldet}}
 }
 

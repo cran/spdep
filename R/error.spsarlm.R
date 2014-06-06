@@ -63,43 +63,12 @@ errorsarlm <- function(formula, data = list(), listw, na.action, etype="error",
             fdHess <- NULL
         }
         stopifnot(is.logical(con$fdHess))
-	xcolnames <- colnames(x)
-	K <- ifelse(xcolnames[1] == "(Intercept)", 2, 1)
 	if (etype == "emixed") {
-		# check if there are enough regressors
-	        if (m > 1) {
-			WX <- matrix(nrow=n,ncol=(m-(K-1)))
-			for (k in K:m) {
-				wx <- lag.listw(listw, x[,k], 
-				    zero.policy=zero.policy)
-				if (any(is.na(wx))) 
-				    stop("NAs in lagged independent variable")
-				WX[,(k-(K-1))] <- wx
-			}
-		}
-		if (K == 2) {
-         	    # unnormalized weight matrices
-                	if (!(listw$style == "W")) {
- 	      			intercept <- as.double(rep(1, n))
-       	        		wx <- lag.listw(listw, intercept, 
-					zero.policy = zero.policy)
-                    		if (m > 1) {
-                        		WX <- cbind(wx, WX)
-                    		} else {
-			      		WX <- matrix(wx, nrow = n, ncol = 1)
-                    		}
-                	} 
-            	}   
-		m1 <- m + 1
-		mm <- NCOL(x) + NCOL(WX)
-            	xxcolnames <- character(mm)
-		for (k in 1:m) xxcolnames[k] <- xcolnames[k]
-		for (k in m1:mm) 
-		    xxcolnames[k] <- paste("lag.", xcolnames[k-mm+m], sep="")
+                WX <- create_WX(x, listw, zero.policy=zero.policy,
+                    prefix="lag")
 		x <- cbind(x, WX)
-		colnames(x) <- xxcolnames
 		m <- NCOL(x)
-		rm(wx, WX)
+		rm(WX)
 	}
 # added aliased after trying boston with TOWN dummy
 	lm.base <- lm(y ~ x - 1)
@@ -382,6 +351,18 @@ lmSLX <- function(formula, data = list(), listw, na.action, zero.policy=NULL) {
 	if (any(is.na(y))) stop("NAs in dependent variable")
 	x <- model.matrix(mt, mf)
 	if (any(is.na(x))) stop("NAs in independent variable")
+        WX <- create_WX(x, listw, zero.policy=zero.policy, prefix="")
+        data$WX <- WX
+        nfo <- update(formula, . ~ . + WX)
+        lm.model <- lm(nfo, data=data, na.action=na.action)
+        lm.model
+}
+
+create_WX <- function(x, listw, zero.policy=NULL, prefix="") {
+        if (is.null(zero.policy))
+            zero.policy <- get("zeroPolicy", envir = .spdepOptions)
+        stopifnot(is.logical(zero.policy))
+	if (!inherits(listw, "listw")) stop("No neighbourhood list")
 	if (NROW(x) != length(listw$neighbours))
 	    stop("Input data and neighbourhood list have different dimensions")
 	n <- NROW(x)
@@ -398,7 +379,7 @@ lmSLX <- function(formula, data = list(), listw, na.action, zero.policy=NULL) {
  			intercept <- as.double(rep(1, n))
        	       		wxI <- lag.listw(listw, intercept, 
 				zero.policy = zero.policy)
-                        Wvars <- (".(Intercept)")
+                        Wvars <- paste(prefix, ".(Intercept)", sep="")
                	} 
         }   
 	if (m > 1 || (m == 1 && K == 1)) {
@@ -410,14 +391,12 @@ lmSLX <- function(formula, data = list(), listw, na.action, zero.policy=NULL) {
 			    zero.policy=zero.policy)
 			if (any(is.na(WX[,j]))) 
 			    stop("NAs in lagged independent variable")
-                        Wvars <- c(Wvars, paste(".", xcolnames[k], sep=""))
+                        Wvars <- c(Wvars, paste(prefix, ".",
+                            xcolnames[k], sep=""))
 		}
 	}
         if (!is.null(wxI)) WX <- cbind(wxI, WX)
         colnames(WX) <- Wvars
-        data$WX <- WX
-        nfo <- update(formula, . ~ . + WX)
-        lm.model <- lm(nfo, data=data, na.action=na.action)
-        lm.model
+        WX
 }
 

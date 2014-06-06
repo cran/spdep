@@ -103,7 +103,8 @@ neighbours, if FALSE (default) assign NA - causing \code{sacsarlm()} to terminat
 (Dordrecht: Kluwer); LeSage J and RK Pace (2009) \emph{Introduction to Spatial Econometrics}. CRC Press, Boca Raton}
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 
-\seealso{\code{\link{help}}, }
+\seealso{\code{\link{lm}}, \code{\link{lagsarlm}}, \code{\link{errorsarlm}}, 
+\code{\link{summary.sarlm}}, \code{\link{eigenw}}, \code{\link{impacts.sarlm}}}
 \examples{
 data(oldcol)
 COL.sacW.eig <- sacsarlm(CRIME ~ INC + HOVAL, data=COL.OLD, 

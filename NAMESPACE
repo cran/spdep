@@ -32,7 +32,7 @@ import(methods)
 export(EBImoran.mc, probmap, choynowski, EBest, EBlocal, LR.sarlm, 
 	LR1.sarlm, Wald1.sarlm, airdist, card, rookcell, 
 	queencell, mrc2vi, vi2mrc, cell2nb, n.comp.nb, diffnb,
-	dnearneigh, droplinks, eigenw, errorsarlm, lmSLX,
+	dnearneigh, droplinks, eigenw, errorsarlm, lmSLX, create_WX,
         gabrielneigh, geary.test,
 	geary, geary.mc, globalG.test, graph2nb, joincount.test, joincount.mc,
 	joincount.multi, print.jcmulti,
@@ -101,6 +101,8 @@ export(griffith_sone, subgraph_eigenw)
 export(MCMCsamp)
 
 export(tolerance.nb, Rotation)
+
+export(lee.mc, lee, lee.test)
 
 #import(maptools)
 

@@ -58,45 +58,14 @@ sacsarlm <- function(formula, data = list(), listw, listw2=NULL, na.action,
 	if (NROW(x) != length(listw$neighbours))
 	    stop("Input data and neighbourhood list have different dimensions")
 	wy <- lag.listw(listw, y, zero.policy=zero.policy)
-	xcolnames <- colnames(x)
-	K <- ifelse(xcolnames[1] == "(Intercept)", 2, 1)
 	n <- NROW(x)
 	m <- NCOL(x)
 	if (type != "sac") {
-		# check if there are enough regressors
-	        if (m > 1) {
-			WX <- matrix(nrow=n,ncol=(m-(K-1)))
-			for (k in K:m) {
-				wx <- lag.listw(listw, x[,k], 
-				    zero.policy=zero.policy)
-				if (any(is.na(wx))) 
-				    stop("NAs in lagged independent variable")
-				WX[,(k-(K-1))] <- wx
-			}
-		}
-		if (K == 2) {
-         	    # unnormalized weight matrices
-                	if (!(listw$style == "W")) {
- 	      			intercept <- as.double(rep(1, n))
-       	        		wx <- lag.listw(listw, intercept, 
-					zero.policy = zero.policy)
-                    		if (m > 1) {
-                        		WX <- cbind(wx, WX)
-                    		} else {
-			      		WX <- matrix(wx, nrow = n, ncol = 1)
-                    		}
-                	} 
-            	}   
-		m1 <- m + 1
-		mm <- NCOL(x) + NCOL(WX)
-            	xxcolnames <- character(mm)
-		for (k in 1:m) xxcolnames[k] <- xcolnames[k]
-		for (k in m1:mm) 
-		    xxcolnames[k] <- paste("lag.", xcolnames[k-mm+m], sep="")
+                WX <- create_WX(x, listw, zero.policy=zero.policy,
+                    prefix="lag")
 		x <- cbind(x, WX)
-		colnames(x) <- xxcolnames
 		m <- NCOL(x)
-		rm(wx, WX)
+		rm(WX)
 	}
 	if (NROW(x) != length(listw2$neighbours))
 	    stop("Input data and neighbourhood list2 have different dimensions")

@@ -4,9 +4,11 @@
 
 dnearneigh <- function(x, d1, d2, row.names=NULL, longlat=NULL) {
    if (inherits(x, "SpatialPoints")) {
-      if ((is.null(longlat) || !is.logical(longlat)) 
-	 && !is.na(is.projected(x)) && !is.projected(x)) {
-         longlat <- TRUE
+# correct logic
+      if (!is.null(longlat))
+          warning("dnearneigh: longlat overriden for Spatial object")
+      if (!is.na(is.projected(x)) && !is.projected(x)) {
+          longlat <- TRUE
       } else longlat <- FALSE
       x <- coordinates(x)[, 1:2]
    } else if (is.null(longlat) || !is.logical(longlat)) longlat <- FALSE

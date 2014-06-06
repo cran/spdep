@@ -47,7 +47,8 @@ invIrW <- function(listw, rho, method="solve", feasible=NULL) {
 		if (is.complex(e)) feasible <- 1/(range(Re(e)))
 		else feasible <- 1/(range(e))
 		if (rho <= feasible[1] || rho >= feasible[2])
-			stop(paste("Rho outside feasible range:", feasible))
+			stop(paste("Rho", rho, "outside feasible range:",
+                        paste(feasible, collapse=":")))
 	}
 	if (method == "chol"){
 		if (listw$style %in% c("W", "S") && !(can.be.simmed(listw)))
