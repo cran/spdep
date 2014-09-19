@@ -1,5 +1,6 @@
 \name{do_ldet}
 \alias{do_ldet}
+\alias{jacobianSetup}
 \alias{eigen_setup}
 \alias{eigen_pre_setup}
 \alias{mcdet_setup}
@@ -21,6 +22,7 @@
 
 \usage{
 do_ldet(coef, env, which=1)
+jacobianSetup(method, env, con, pre_eig=NULL, trs=NULL, interval=NULL, which=1)
 cheb_setup(env, q=5, which=1)
 mcdet_setup(env, p=16, m=30, which=1)
 eigen_setup(env, which=1)
@@ -44,6 +46,8 @@ SE_interp_setup(env, SE_method="LU", p=16, m=30, nrho=200,
   \item{coef}{spatial coefficient value}
   \item{env}{environment containing pre-computed objects, fixed after assignment in setup functions}
   \item{which}{default 1; if 2, use second listw object}
+  \item{method}{string value, used by \code{jacobianSetup} to choose method}
+  \item{con}{control list passed from model fitting function and parsed in \code{jacobianSetup} to set environment variables for method-specific setup}
   \item{pre_eig}{pre-computed eigenvalues of length n}
   \item{q}{Chebyshev approximation order; default in calling spdep functions is 5, here it cannot be missing and does not have a default}
   \item{p}{Monte Carlo approximation number of random normal variables; default calling spdep functions is 16, here it cannot be missing and does not have a default}

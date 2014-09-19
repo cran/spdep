@@ -1,3 +1,35 @@
+2014-08-31 21:34  rsbivand
+
+	* R/tri2nb.R:
+	  allow other bounds in dnn
+
+2014-08-31 14:57  rsbivand
+
+	* DESCRIPTION,
+	  R/dnearneigh.R, man/dnearneigh.Rd, man/summary.nb.Rd, src/dnn.c:
+	  allow other bounds in dnn
+
+2014-07-30 15:14  rsbivand
+
+	* R/bptest.sarlm.R,
+	  src/soigraph.c: Debian copyright issue
+
+2014-07-18 12:23  rsbivand
+
+	* DESCRIPTION,
+	  NAMESPACE, man/do_ldet.Rd, man/nb2listw.Rd: exporting
+	  can.be.simmed and jacobianSetup
+
+2014-06-05 19:08  rsbivand
+
+	* ChangeLog,
+	  inst/ChangeLog: tidy
+
+2014-06-05 18:59  rsbivand
+
+	* DESCRIPTION,
+	  man/nb2listw.Rd: tidy
+
 2014-05-15 10:39  rsbivand
 
 	* R/impacts.R,

@@ -2,8 +2,9 @@
 * NOTE
 * The subroutines TwoCirclesxx and SubVec are adapted for R and Double
 * precision coordinates by Nicholas Lewin-Koh, from Computational
-* Geometry in C, Joseph O.Rourke, Cambridge University Press
-* (1998). Copyright for those subroutines remains his.
+* Geometry in C, Joseph O'Rourke, Cambridge University Press
+* (1998), specifically from arm/arm.c. Copyright for those subroutines
+*  remains his.
 ****/
 
 #include "spdep.h"

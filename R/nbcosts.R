@@ -31,7 +31,7 @@ nbcosts <- function(nb, data, method=c("euclidean", "maximum", "manhattan",
     if (length(nb)<300) parallel <- "no"
     
     if (parallel == "snow") {
-        require(parallel)
+#        require(parallel)
         sI <- splitIndices(length(nb), length(cl))
          env <- new.env()
          assign("nb", nb, envir=env)
@@ -47,7 +47,7 @@ nbcosts <- function(nb, data, method=c("euclidean", "maximum", "manhattan",
         clist <- do.call("c", out)
         rm(env)
     } else if (parallel == "multicore") {
-        require(parallel)
+#        require(parallel)
         sI <- splitIndices(length(nb), ncpus)
         out <- mclapply(sI, FUN=lapply, function(i) {nbcost(data, i, nb[[i]],
             method, p, cov, inverted)}, mc.cores=ncpus)

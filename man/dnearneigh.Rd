@@ -1,4 +1,4 @@
-% Copyright 2001-3 by Roger S. Bivand
+% Copyright 2001-2014 by Roger S. Bivand
 \name{dnearneigh}
 \alias{dnearneigh}
 \title{Neighbourhood contiguity by distance}
@@ -6,7 +6,7 @@
 The function identifies neighbours of region points by Euclidean distance between lower (greater than) and upper (less than or equal to) bounds, or with longlat = TRUE, by Great Circle distance in kilometers.
 }
 \usage{
-dnearneigh(x, d1, d2, row.names = NULL, longlat = NULL)
+dnearneigh(x, d1, d2, row.names = NULL, longlat = NULL, bounds=c("GT", "LE"))
 }
 \arguments{
   \item{x}{matrix of point coordinates or a SpatialPoints object}
@@ -14,6 +14,7 @@ dnearneigh(x, d1, d2, row.names = NULL, longlat = NULL)
   \item{d2}{upper distance bound}
   \item{row.names}{character vector of region ids to be added to the neighbours list as attribute \code{region.id}, default \code{seq(1, nrow(x))}}
   \item{longlat}{TRUE if point coordinates are longitude-latitude decimal degrees, in which case distances are measured in kilometers; if x is a SpatialPoints object, the value is taken from the object itself, and overrides this argument if not NULL}
+  \item{bounds}{character vector of length 2, default \code{c("GT", "LE")}, the first element may also be \code{"GE"}, the second \code{"LT"}}
 }
 \value{
 The function returns a list of integer vectors giving the region id numbers

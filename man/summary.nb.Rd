@@ -8,7 +8,7 @@
 \description{
 The function prints summary measures for links in a neighbours list. If a
 matrix of coordinates is given as well, summary descriptive measures for
-the link lengths are also printed. Print and summary functions are also available for \code{"listw"} weights list objects.
+the link lengths are also printed. Print and summary functions are also available for \code{"listw"} weights list objects, also reporting constants (S0, S1, S2) used in inference for global spatial autocorrelation statistics such as Moran's I, Geary's C, join-count tests and Getis-Ord G.
 }
 \usage{
 \method{summary}{nb}(object, coords=NULL, longlat = NULL, scale = 1, ...)

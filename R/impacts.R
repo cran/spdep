@@ -95,12 +95,12 @@ mom_calc <- function(lw, m) {
     }
 
     if (parallel == "snow") {
-        require(parallel)
+#        require(parallel)
         lis <- splitIndices(n, length(cl))
         lOmega <- parLapply(cl, lis, mom_calc_int2, m, nb, weights, Card)
         Omega <- apply(do.call("cbind", lOmega), 1, sum)
     } else if (parallel == "multicore") {
-        require(parallel)
+#        require(parallel)
         lis <- splitIndices(n, ncpus)
         lOmega <- mclapply(lis, mom_calc_int2, m, nb, weights, Card,
             mc.set.seed=FALSE, mc.cores=ncpus)

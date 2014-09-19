@@ -30,14 +30,15 @@ knearneigh <- function(x, k=1, longlat=NULL, RANN=TRUE)
 # (previous fix only worked for pairs and k>1)
     zd <- zerodist(SpatialPoints(x))
     if (!(nrow(zd) == 0)) warning("knearneigh: identical points found")
-    if (RANN && !longlat && (nrow(zd) == 0) && require(RANN, quietly=TRUE)) {
+    if (RANN && !longlat && (nrow(zd) == 0) && 
+        (requireNamespace("spam", quietly = TRUE)) ) {
 #        xx <- cbind(x, out=rep(0, nrow(x)))
 #        out <- as.matrix(nn(xx, p=k)$nn.idx)
 # nn() retired 130722
 # modified 130913 to handle zerodist points
 #        zd <- zerodist(SpatialPoints(x))
 #        if (nrow(zd) == 0) {
-        out <- nn2(x, x, k=k+1)$nn.idx[,-1,drop=FALSE]
+        out <- RANN::nn2(x, x, k=k+1)$nn.idx[,-1,drop=FALSE]
 #        } else {
 #            out0 <- nn2(x, x, k=k+1)
 #            out <- t(sapply(1:np, function(i) out0$nn.idx[i,

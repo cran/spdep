@@ -1,8 +1,8 @@
-# Copyright 2000-2010 by Roger S. Bivand. 
+# Copyright 2000-2014 by Roger S. Bivand. 
 # Upgrade to sp classes February 2007
 #
 
-dnearneigh <- function(x, d1, d2, row.names=NULL, longlat=NULL) {
+dnearneigh <- function(x, d1, d2, row.names=NULL, longlat=NULL, bounds=c("GT", "LE")) {
    if (inherits(x, "SpatialPoints")) {
 # correct logic
       if (!is.null(longlat))
@@ -40,15 +40,22 @@ dnearneigh <- function(x, d1, d2, row.names=NULL, longlat=NULL) {
 	md <- md + (.Machine$double.eps)^(1/4)
     	if (d2 > sqrt(md)) d2 <- sqrt(md)
     }
+    stopifnot(is.character(bounds))
+    stopifnot(length(bounds) == 2)
+    stopifnot(isTRUE(bounds[1] %in% c("GE", "GT")))
+    stopifnot(isTRUE(bounds[2] %in% c("LE", "LT")))
     storage.mode(x) <- "double"
     storage.mode(d1) <- "double"
     storage.mode(d2) <- "double"
+    attr(d1, "equal") <- bounds[1] == "GE"
+    attr(d2, "equal") <- bounds[2] == "LE"
     z <- .Call("dnearneigh", d1, d2, as.integer(np),
         as.integer(dimension), x, as.integer(longlat), 
 	PACKAGE="spdep")
     attr(z[[1]], "region.id") <- row.names
     attr(z[[1]], "call") <- match.call()
     attr(z[[1]], "dnn") <- c(d1, d2)
+    attr(z[[1]], "bounds") <- bounds
     z[[1]] <- sym.attr.nb(z[[1]])
     z[[1]]
 }

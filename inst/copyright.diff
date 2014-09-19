@@ -1,0 +1,49 @@
+Index: copyright
+===================================================================
+--- copyright	(Revision 46778)
++++ copyright	(Arbeitskopie)
+@@ -94,6 +94,44 @@
+ Copyright: 2005 Yongwan Chun, Michael Tiefelsdorf and Roger Bivand
+ License: GPL-2+
+ 
++Files: R/bptest.sarlm.R
++Copyright: 1998 Joseph O'Rourke <orourke@cs.smith.edu>
++License: freelyredistributable
++ This code may be freely redistributed in its entirety provided that this
++ copyright notice is not removed.
++Remark: The code at:
++ http://cs.smith.edu/~orourke/books/ftp.html
++ http://cs.smith.edu/~orourke/CGCode/SecondEdition/Ccode2.tar.gz
++ .
++ includes arm/arm.c with the affected functions. This file has:
++ .
++ /*
++ This code is described in "Computational Geometry in C" (Second Edition),
++ Chapter 8.  It is not written to be comprehensible without the
++ explanation in that book.
++ .
++ Prints out one arm configuration to reach given target.
++ Assumes number of links >= 3.
++ Input:
++    nlinks           Number of links
++    L1 L2 ... Ln     Link lengths
++    x0 y0            target0
++    x1 x2            target1
++    ...
++ .
++ Written by Joseph O'Rourke.
++ Last modified: December 1997
++ Questions to orourke@cs.smith.edu.
++ */
++
++Files: src/soigraph.c
++Copyright: 2001 Nicholas Lewin-Koh
++License: soigraph
++ The subroutines TwoCirclesxx and SubVec are adapted for R and Double
++ precision coordinates by Nicholas Lewin-Koh, from Computational
++ Geometry in C, Joseph O'Rourke, Cambridge University Press
++ (1998). Copyright for those subroutines remains his.
++
+ Files: debian/*
+ Copyright: 2014 Andreas Tille <tille@debian.org>
+ License: GPL-2+

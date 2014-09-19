@@ -1,7 +1,7 @@
 /*
  *  based on code taken from:
  *  class/class.c by W. N. Venables and B. D. Ripley  Copyright (C) 1994-9
- *  and written by Roger Bivand (C) 2001-3
+ *  and written by Roger Bivand (C) 2001-2014
  */
 
 #include "spdep.h"
@@ -12,6 +12,7 @@ dnearneigh(SEXP din1, SEXP din2, SEXP pnte, SEXP p, SEXP test, SEXP lonlat)
     int   j, k, kn, npat, nte, pdim, pc=0, ll;
     int   *pos;
     double dist, /*tmp,*/ dn, dn0;
+    int dn0_equal, dn_equal;
     double lon1[1], lon2[1], lat1[1], lat2[1], gc[1];
     SEXP ans;
     SEXP class;
@@ -20,6 +21,8 @@ dnearneigh(SEXP din1, SEXP din2, SEXP pnte, SEXP p, SEXP test, SEXP lonlat)
     
     dn0 = NUMERIC_POINTER(din1)[0];
     dn = NUMERIC_POINTER(din2)[0];
+    dn0_equal = LOGICAL_POINTER(getAttrib(din1, install("equal")))[0];
+    dn_equal = LOGICAL_POINTER(getAttrib(din2, install("equal")))[0];
     nte = INTEGER_POINTER(pnte)[0];
     pdim = INTEGER_POINTER(p)[0];
     ll = INTEGER_POINTER(lonlat)[0];
@@ -58,7 +61,8 @@ dnearneigh(SEXP din1, SEXP din2, SEXP pnte, SEXP p, SEXP test, SEXP lonlat)
 		    gcdist(lon1, lon2, lat1, lat2, gc);
 		    dist = gc[0];
 	    }
-	    if (dist > dn0 && dist <= dn) {
+	    if ((dn0_equal ? dist >= dn0 : dist > dn0)
+                && (dn_equal ? dist <= dn: dist < dn)) {
 		pos[kn] = j;
 		if (++kn == nte - 1 && j == nte) {
 			Rprintf("%d %d %d\n", kn, nte, j);

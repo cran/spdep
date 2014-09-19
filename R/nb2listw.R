@@ -156,7 +156,8 @@ similar.listw_Matrix <- function(listw) {
 
 
 similar.listw_spam <- function(listw) {
-        if (!require(spam)) stop("spam not available")
+    if (requireNamespace("spam", quietly = TRUE)) {
+#        if (!require(spam)) stop("spam not available")
 	nbsym <- attr(listw$neighbours, "sym")
 	if(is.null(nbsym)) nbsym <- is.symmetric.nb(listw$neighbours, FALSE)
 	if (!nbsym) 
@@ -174,8 +175,8 @@ similar.listw_spam <- function(listw) {
                     sd1[!is.finite(sd1)] <- 0
                     warning("non-finite inverse diagonal values set to zero")
                 }
-		sdd <- diag.spam(sd, n, n)
-		sdd1 <- diag.spam(sd1, n, n)
+		sdd <- spam::diag.spam(sd, n, n)
+		sdd1 <- spam::diag.spam(sd1, n, n)
 		sww1 <- sdd %*% sww
 		res <- sdd1 %*% sww1 %*% sdd1
 	} else if (listw$style == "S") {
@@ -187,14 +188,17 @@ similar.listw_spam <- function(listw) {
                     sd1[!is.finite(q1)] <- 0
                     warning("non-finite inverse diagonal values set to zero")
                 }
-		qq <- diag.spam(q, n, n)
-		qq1 <- diag.spam(q1, n, n)
+		qq <- spam::diag.spam(q, n, n)
+		qq1 <- spam::diag.spam(q1, n, n)
 		ww0 <- (Q/eff.n) * sww
 		ww1 <- qq %*% ww0
 		sim0 <- qq1 %*% ww1 %*% qq1
 		res <- (eff.n/Q) * sim0
 	} else stop("Conversion not suitable for this weights style")
-	res
+	return(res)
+    } else {
+        stop("spam not available")
+    }
 }
 
 

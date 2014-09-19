@@ -25,7 +25,7 @@ prunecost <- function(edges, data,
 #        warning("no parallel calculations available")
 #    }
     if (parallel == "snow") {
-        require(parallel)
+#        require(parallel)
         sI <- splitIndices(nrow(edges), length(cl))
 #    if (.Platform$OS.type == "windows") {
 #      cl <- makeCluster(getOption("cl.cores", 2))
@@ -37,7 +37,7 @@ prunecost <- function(edges, data,
                  ssw(data, j, method, p, cov, inverted)))
         }))
     } else if (parallel == "multicore") {
-        require(parallel)
+#        require(parallel)
         sI <- splitIndices(nrow(edges), ncpus)
         out <- mclapply(sI, sapply, function(i) { 
             pruned.ids <- prunemst(rbind(edges[i, ], edges[-i, ]),

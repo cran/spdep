@@ -29,7 +29,7 @@ aple.mc <- function(x, listw, nsim, override_similarity_check=FALSE,
 }
 
 boot_wrapper_in <- function(cl, nsim) {
-        require(parallel)
+#        require(parallel)
 #        require(rlecuyer)
         rlseed <- get("rlecuyerSeed", envir = .spdepOptions)
         if (storage.mode(rlseed) != "integer") rlseed <- as.integer(rlseed)

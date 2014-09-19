@@ -5,6 +5,12 @@
 tri2nb <- function(coords, row.names = NULL) {
 #	require("tripack")
 #	require("deldir")
+        if (inherits(coords, "SpatialPoints")) {
+            if (!is.na(is.projected(coords)) && !is.projected(coords)) {
+                warning("tri2nb: coordinates should be planar")
+            }
+            coords <- coordinates(coords)
+        }
 	n <- nrow(coords)
 	if (n < 3) stop("too few coordinates")
 #	left <- function(x) {

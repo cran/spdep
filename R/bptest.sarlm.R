@@ -1,6 +1,6 @@
 # Copyright 2004-2011 by Roger Bivand (original taken from bptest() in the lmtest
 # package, Copyright (C) 2001 Torsten Hothorn and Achim Zeileis and released
-# under GNU General Public License, Version 2.
+# under GNU General Public License, Version 2 or 3.
 #
 
 bptest.sarlm <- function (object, varformula=NULL, studentize = TRUE, data=list()) 
