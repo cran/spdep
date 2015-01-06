@@ -179,7 +179,7 @@ listw2star <- function(listw, ireg, style, n, D, a, zero.policy=NULL) {
 }
 
 spdep <- function(build=FALSE) {
-	require("utils")
+#	require("utils")
 	.DESC <- packageDescription("spdep")
 	.spdep.Version <- paste(.DESC[["Package"]], ", version ", 
 		.DESC[["Version"]], ", ", .DESC[["Date"]], sep="")

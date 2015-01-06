@@ -60,7 +60,7 @@ lee.test <- function(x, y, listw, #randomisation=TRUE,
 #	EI <- (-1) / wc$n1
 
 	#Compute asymptotic mean EI and variance VI
-	W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
+	W <- as(listw, "CsparseMatrix")
 
 	#See Lee (2004)
 	dEG<-EGamma(x, y, W)

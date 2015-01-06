@@ -4,7 +4,7 @@
 
 SEXP nbdists(SEXP nb, SEXP x, SEXP np, SEXP dim, SEXP lonlat)
 {
-	int i, j, j1, k, /* m,*/ n, d, pc=0, ll;
+	int i, j, j1, k, /* m,*/ n, d, pc=0, ll, first_value;
 	SEXP ans;
         SEXP class;
 	double lon1[1], lon2[1], lat1[1], lat2[1], gc[1];
@@ -30,7 +30,13 @@ SEXP nbdists(SEXP nb, SEXP x, SEXP np, SEXP dim, SEXP lonlat)
 			NUMERIC_POINTER(VECTOR_ELT(VECTOR_ELT(ans, 0), i))[0]
 				= NA_REAL;
 		} else { */
-		if (INTEGER_POINTER(VECTOR_ELT(nb, i))[0] > 0) {
+
+                if (k > 0) 
+                    first_value = INTEGER_POINTER(VECTOR_ELT(nb, i))[0];
+                else
+                    error("zero length neighbour vector");
+
+		if (first_value > 0) {
 			SET_VECTOR_ELT(VECTOR_ELT(ans, 0), i,
 				NEW_NUMERIC(k));
 			for (j=0; j < k; j++) {

@@ -259,26 +259,27 @@ cat("\\includegraphics[width=0.95\\textwidth]{", file, "}\n\n", sep="")
 
 
 ###################################################
-### code chunk number 31: sids.Rnw:438-439
+### code chunk number 31: sids.Rnw:438-440
 ###################################################
+set.seed(1)
 EBImoran.mc(nc$SID74, nc$BIR74, nb2listw(ncCC89, style="B", zero.policy=TRUE), nsim=999, zero.policy=TRUE)
 
 
 ###################################################
-### code chunk number 32: sids.Rnw:453-455
+### code chunk number 32: sids.Rnw:454-456
 ###################################################
 nc$both <- factor(paste(nc$L_id, nc$M_id, sep=":"))
 nboth <- length(table(unclass(nc$both)))
 
 
 ###################################################
-### code chunk number 33: sids.Rnw:457-458 (eval = FALSE)
+### code chunk number 33: sids.Rnw:458-459 (eval = FALSE)
 ###################################################
 ## spplot(nc, "both", col.regions=sample(rainbow(nboth)))
 
 
 ###################################################
-### code chunk number 34: sids.Rnw:464-467
+### code chunk number 34: sids.Rnw:465-468
 ###################################################
 .PngNo <- .PngNo + 1; file <- paste("Fig-bitmap-", .PngNo, ".pdf", sep="")
 pdf(file=file, width = 6.5, height = 3.5, pointsize = 12, bg = "white")
@@ -288,21 +289,21 @@ cat("\\includegraphics[width=0.95\\textwidth]{", file, "}\n\n", sep="")
 
 
 ###################################################
-### code chunk number 35: sids.Rnw:477-479
+### code chunk number 35: sids.Rnw:478-480
 ###################################################
 nc$ft.SID74 <- sqrt(1000)*(sqrt(nc$SID74/nc$BIR74) + sqrt((nc$SID74+1)/nc$BIR74))
 stem(round(nc$ft.SID74, 1), scale=2)
 
 
 ###################################################
-### code chunk number 36: sids.Rnw:496-498
+### code chunk number 36: sids.Rnw:497-499
 ###################################################
 mBIR74 <- tapply(nc$BIR74, nc$both, sum)
 mSID74 <- tapply(nc$SID74, nc$both, sum)
 
 
 ###################################################
-### code chunk number 37: sids.Rnw:510-514
+### code chunk number 37: sids.Rnw:511-515
 ###################################################
 mFT <- sqrt(1000)*(sqrt(mSID74/mBIR74) + sqrt((mSID74+1)/mBIR74))
 mFT1 <- t(matrix(mFT, 4, 4, byrow=TRUE))
@@ -311,7 +312,7 @@ med
 
 
 ###################################################
-### code chunk number 38: sids.Rnw:526-530
+### code chunk number 38: sids.Rnw:527-531
 ###################################################
 mL_id <- model.matrix(~ as.factor(nc$L_id) -1)
 mM_id <- model.matrix(~ as.factor(nc$M_id) -1)
@@ -336,7 +337,7 @@ nc$mp_resid <- nc$ft.SID74 - nc$pred
 
 
 ###################################################
-### code chunk number 40: sids.Rnw:549-552
+### code chunk number 40: sids.Rnw:550-553
 ###################################################
 .PngNo <- .PngNo + 1; file <- paste("Fig-bitmap-", .PngNo, ".pdf", sep="")
 pdf(file=file, width = 6.5, height = 5, pointsize = 12, bg = "white")
@@ -356,7 +357,7 @@ cat("\\includegraphics[width=0.95\\textwidth]{", file, "}\n\n", sep="")
 
 
 ###################################################
-### code chunk number 41: sids.Rnw:578-586
+### code chunk number 41: sids.Rnw:579-587
 ###################################################
 sids.nhbr30.dist <- nbdists(ncCC89, cbind(nc$east, nc$north))
 sids.nhbr <- listw2sn(nb2listw(ncCC89, glist=sids.nhbr30.dist, style="B", zero.policy=TRUE))
@@ -369,13 +370,13 @@ sids.nhbr.listw <- sn2listw(sids.nhbr)
 
 
 ###################################################
-### code chunk number 42: sids.Rnw:593-594
+### code chunk number 42: sids.Rnw:594-595
 ###################################################
 nc$ft.NWBIR74 <- sqrt(1000)*(sqrt(nc$NWBIR74/nc$BIR74) + sqrt((nc$NWBIR74+1)/nc$BIR74))
 
 
 ###################################################
-### code chunk number 43: sids.Rnw:601-608
+### code chunk number 43: sids.Rnw:602-609
 ###################################################
 lm_nc <- lm(ft.SID74 ~ 1, data=nc)
 outl <- which.max(rstandard(lm_nc))
@@ -387,40 +388,40 @@ nc2 <- nc[!(1:length(nc$CNTY_ID) %in% outl),]
 
 
 ###################################################
-### code chunk number 44: sids.Rnw:615-617
+### code chunk number 44: sids.Rnw:616-618
 ###################################################
 ecarIaw <- spautolm(ft.SID74 ~ 1, data=nc2, listw=sids.nhbr.listw.4, weights=BIR74, family="CAR")
 summary(ecarIaw)
 
 
 ###################################################
-### code chunk number 45: sids.Rnw:624-626
+### code chunk number 45: sids.Rnw:625-627
 ###################################################
 ecarIIaw <- spautolm(ft.SID74 ~ both - 1, data=nc2, listw=sids.nhbr.listw.4, weights=BIR74, family="CAR")
 summary(ecarIIaw)
 
 
 ###################################################
-### code chunk number 46: sids.Rnw:633-635
+### code chunk number 46: sids.Rnw:634-636
 ###################################################
 ecarIVaw <- spautolm(ft.SID74 ~ ft.NWBIR74, data=nc2, listw=sids.nhbr.listw.4, weights=BIR74, family="CAR")
 summary(ecarIVaw)
 
 
 ###################################################
-### code chunk number 47: sids.Rnw:640-641
+### code chunk number 47: sids.Rnw:641-642
 ###################################################
 nc2$fitIV <- fitted.values(ecarIVaw)
 
 
 ###################################################
-### code chunk number 48: sids.Rnw:643-644 (eval = FALSE)
+### code chunk number 48: sids.Rnw:644-645 (eval = FALSE)
 ###################################################
 ## spplot(nc2, "fitIV", cuts=12, col.regions=grey.colors(13, 0.9, 0.3))
 
 
 ###################################################
-### code chunk number 49: sids.Rnw:650-653
+### code chunk number 49: sids.Rnw:651-654
 ###################################################
 .PngNo <- .PngNo + 1; file <- paste("Fig-bitmap-", .PngNo, ".pdf", sep="")
 pdf(file=file, width = 6.5, height = 3.5, pointsize = 12, bg = "white")
@@ -430,7 +431,7 @@ cat("\\includegraphics[width=0.95\\textwidth]{", file, "}\n\n", sep="")
 
 
 ###################################################
-### code chunk number 50: sids.Rnw:661-662
+### code chunk number 50: sids.Rnw:662-663
 ###################################################
 ecarIawll <- spautolm(ft.SID74 ~ 1, data=nc2, listw=sids.nhbr.listw.4, weights=BIR74, family="CAR", llprof=seq(-0.1, 0.9020532358, length.out=100))
 
@@ -442,7 +443,7 @@ ecarIawll <- spautolm(ft.SID74 ~ 1, data=nc2, listw=sids.nhbr.listw.4, weights=B
 
 
 ###################################################
-### code chunk number 52: sids.Rnw:671-674
+### code chunk number 52: sids.Rnw:672-675
 ###################################################
 .PngNo <- .PngNo + 1; file <- paste("Fig-bitmap-", .PngNo, ".pdf", sep="")
 pdf(file=file, width = 6.5, height = 3.5, pointsize = 12, bg = "white")
@@ -454,7 +455,7 @@ cat("\\includegraphics[width=0.95\\textwidth]{", file, "}\n\n", sep="")
 
 
 ###################################################
-### code chunk number 53: sids.Rnw:682-684
+### code chunk number 53: sids.Rnw:683-685
 ###################################################
 options("width"=owidth)
 options("warn"=ow)

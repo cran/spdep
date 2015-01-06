@@ -8,7 +8,8 @@ eigenw <- function(listw, quiet=NULL)
         stopifnot(is.logical(quiet))
 
 	w <- listw2mat(listw)
-	e <- eigen(w, only.values=TRUE)$values
+        sym <- all(w == t(w))
+	e <- eigen(w, symmetric=sym, only.values=TRUE)$values
 	if (!quiet) {
 		cat("Largest eigenvalue:", 
 # modified 110414 RSB

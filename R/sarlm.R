@@ -187,7 +187,7 @@ predict.sarlm <- function(object, newdata=NULL, listw=NULL,
                             X <- X[,-which(object$aliased)]
 			trend <- X %*% B
                         if (power) {
-                            W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
+                            W <- as(listw, "CsparseMatrix")
                             res <- c(as(powerWeights(W, rho=object$rho,
                                 X=trend, order=order, tol=tol), "matrix"))
                         } else {
@@ -245,7 +245,7 @@ predict.sarlm <- function(object, newdata=NULL, listw=NULL,
                             X <- X[,-which(object$aliased)]
 			trend <- X %*% B
                         if (power) {
-                            W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
+                            W <- as(listw, "CsparseMatrix")
                             res <- c(as(powerWeights(W, rho=object$rho,
                                 X=trend, order=order, tol=tol), "matrix"))
                         } else {

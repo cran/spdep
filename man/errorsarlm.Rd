@@ -171,7 +171,7 @@ all.equal(coefficients(COL.errW.eig), coefficients(COL.errW.eig_ev))
 COL.errB.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb, style="B"), method="eigen", quiet=FALSE)
 summary(COL.errB.eig, correlation=TRUE)
-W <- as(as_dgRMatrix_listw(nb2listw(COL.nb)), "CsparseMatrix")
+W <- as(nb2listw(COL.nb), "CsparseMatrix")
 trMatc <- trW(W, type="mult")
 COL.errW.M <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  lw, method="Matrix", quiet=FALSE, trs=trMatc)
@@ -210,6 +210,7 @@ COL.err.NA$na.action
 COL.err.NA
 resid(COL.err.NA)
 \donttest{
+lw <- nb2listw(COL.nb, style="W")
 system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  lw, method="eigen"))
 system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,

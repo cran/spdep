@@ -95,16 +95,24 @@ mom_calc <- function(lw, m) {
     }
 
     if (parallel == "snow") {
+      if (requireNamespace("parallel", quietly = TRUE)) {
 #        require(parallel)
-        lis <- splitIndices(n, length(cl))
-        lOmega <- parLapply(cl, lis, mom_calc_int2, m, nb, weights, Card)
+        lis <- parallel::splitIndices(n, length(cl))
+        lOmega <- parallel::parLapply(cl, lis, mom_calc_int2, m, nb, weights, Card)
         Omega <- apply(do.call("cbind", lOmega), 1, sum)
+      } else {
+        stop("parallel not available")
+      }
     } else if (parallel == "multicore") {
+      if (requireNamespace("parallel", quietly = TRUE)) {
 #        require(parallel)
-        lis <- splitIndices(n, ncpus)
-        lOmega <- mclapply(lis, mom_calc_int2, m, nb, weights, Card,
+        lis <- parallel::splitIndices(n, ncpus)
+        lOmega <- parallel::mclapply(lis, mom_calc_int2, m, nb, weights, Card,
             mc.set.seed=FALSE, mc.cores=ncpus)
         Omega <- apply(do.call("cbind", lOmega), 1, sum)
+      } else {
+        stop("parallel not available")
+      }
     } else {
         Omega <- mom_calc_int2(is=1:n, m=m, nb=nb, weights=weights, Card=Card)
     }

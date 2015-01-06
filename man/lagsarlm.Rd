@@ -155,7 +155,7 @@ COL.lag.eig <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
 summary(COL.lag.eig, correlation=TRUE)
 COL.lag.eig$fdHess
 COL.lag.eig$resvar
-W <- as(as_dgRMatrix_listw(nb2listw(COL.nb)), "CsparseMatrix")
+W <- as(nb2listw(COL.nb), "CsparseMatrix")
 trMatc <- trW(W, type="mult")
 COL.lag.eig1 <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb, style="W"), control=list(fdHess=TRUE), trs=trMatc)
@@ -192,7 +192,7 @@ gp2mM <- lagsarlm(log(CMEDV) ~ CRIM + ZN + INDUS + CHAS + I(NOX^2) +
 I(RM^2) +  AGE + log(DIS) + log(RAD) + TAX + PTRATIO + B + log(LSTAT), 
 data=boston.c, nb2listw(boston.soi), type="mixed", method="Matrix")
 summary(gp2mM)
-W <- as(as_dgRMatrix_listw(nb2listw(boston.soi)), "CsparseMatrix")
+W <- as(nb2listw(boston.soi), "CsparseMatrix")
 trMatb <- trW(W, type="mult")
 gp2mMi <- lagsarlm(log(CMEDV) ~ CRIM + ZN + INDUS + CHAS + I(NOX^2) + 
 I(RM^2) +  AGE + log(DIS) + log(RAD) + TAX + PTRATIO + B + log(LSTAT), 

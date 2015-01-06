@@ -4,7 +4,7 @@
 #
 #
 globalG.test <- function(x, listw, zero.policy=NULL,
-	alternative="greater", spChk=NULL, adjust.n=TRUE) {
+	alternative="greater", spChk=NULL, adjust.n=TRUE, B1correct=TRUE) {
         if (is.null(zero.policy))
             zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
@@ -41,7 +41,8 @@ globalG.test <- function(x, listw, zero.policy=NULL,
 	E.G <- S0 / (n * n1)
 
 	B0 <- ((nn - 3*n + 3)*S1) - (n*S2) + (3*S02)
-	B1 <- -(((nn - n)*S1) - (2*n*S2) + (6*S02))
+# added 141222 to permit comparison with CrimeStat IV
+	B1 <- -(((nn - n)*S1) - (2*n*S2) + (ifelse(B1correct, 6, 3)*S02))
 	B2 <- -((2*n*S1) - ((n+3)*S2) + (6*S02))
 	B3 <- (4*n1*S1) - (2*(n+1)*S2) + (8*S02)
 	B4 <- S1 - S2 + S02
@@ -56,7 +57,8 @@ globalG.test <- function(x, listw, zero.policy=NULL,
 	statistic <- (G - E.G) / sqrt(var.G)
 	names(statistic) <- "standard deviate"
 	method <- "Getis-Ord global G statistic"
-	if (alternative == "two.sided") PrG <- 2 * pnorm(-abs(statistic), 
+	if (alternative == "two.sided") PrG <- 2 * pnorm(abs(statistic), 
+# swirched -abs() to abs() 141121 RSB comment Tomasz Kossowski
 		lower.tail=FALSE)
         else if (alternative == "greater")
             PrG <- pnorm(statistic, lower.tail=FALSE)

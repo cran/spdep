@@ -23,6 +23,7 @@ errorsarlm <- function(formula, data = list(), listw, na.action, etype="error",
         if (is.null(zero.policy))
             zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
+        if (class(formula) != "formula") formula <- as.formula(formula)
 	mt <- terms(formula, data = data)
 	mf <- lm(formula, data, na.action=na.action, method="model.frame")
 	na.act <- attr(mf, "na.action")
@@ -221,8 +222,7 @@ errorsarlm <- function(formula, data = list(), listw, na.action, etype="error",
                     p1 <- 1L:pp
                     R <- chol2inv(lm.model$qr$qr[p1, p1, drop = FALSE])
                     B <- tcrossprod(R, x)
-                    W <- as(as_dgRMatrix_listw(get("listw", envir=env)),
-                        "CsparseMatrix")
+                    W <- as(get("listw", envir=env), "CsparseMatrix")
                     B0 <- powerWeights(W=W, rho=lambda, order=con$pWOrder,
                         X=B, tol=tol.solve)
                     if (!is.null(attr(B0, "internal")) &&
@@ -339,6 +339,7 @@ lmSLX <- function(formula, data = list(), listw, na.action, zero.policy=NULL) {
         if (is.null(zero.policy))
             zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
+        if (class(formula) != "formula") formula <- as.formula(formula)
 	mt <- terms(formula, data = data)
 	mf <- lm(formula, data, na.action=na.action, method="model.frame")
 	na.act <- attr(mf, "na.action")

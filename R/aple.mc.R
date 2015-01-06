@@ -29,15 +29,18 @@ aple.mc <- function(x, listw, nsim, override_similarity_check=FALSE,
 }
 
 boot_wrapper_in <- function(cl, nsim) {
-#        require(parallel)
+      if (requireNamespace("parallel", quietly = TRUE)) {
 #        require(rlecuyer)
         rlseed <- get("rlecuyerSeed", envir = .spdepOptions)
         if (storage.mode(rlseed) != "integer") rlseed <- as.integer(rlseed)
         if (length(rlseed) != 6L) rlseed <- rep(12345L, 6)
-        clusterSetRNGStream(cl, iseed=rlseed)
-        clusterEvalQ(cl, library(spdep))
+        parallel::clusterSetRNGStream(cl, iseed=rlseed)
+        parallel::clusterEvalQ(cl, library(spdep))
         nnsim <- ceiling(nsim/length(cl))
         nnsim
+      } else {
+        stop("parallel not available")
+      }
 }
 
 boot_wrapper_out <- function(lres, mcall) {

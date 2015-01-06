@@ -140,7 +140,7 @@ mat2listw <- function(x, row.names=NULL, style="M") {
             o <- order(df0$from, df0$to)
             df <- df0[o,]
             class(df) <- c(class(df), "spatial.neighbour")
-            attr(df, "region.id") <- as.character(1:dim(xC)[1])
+            attr(df, "region.id") <- row.names
             attr(df, "n") <- dim(xC)[1]
             res <- sn2listw(df)
             neighbours <- res$neighbours

@@ -110,7 +110,7 @@ data(oldcol)
 COL.sacW.eig <- sacsarlm(CRIME ~ INC + HOVAL, data=COL.OLD, 
  nb2listw(COL.nb, style="W"))
 summary(COL.sacW.eig, correlation=TRUE)
-W <- as(as_dgRMatrix_listw(nb2listw(COL.nb, style="W")), "CsparseMatrix")
+W <- as(nb2listw(COL.nb, style="W"), "CsparseMatrix")
 trMatc <- trW(W, type="mult")
 summary(impacts(COL.sacW.eig, tr=trMatc, R=2000), zstats=TRUE, short=TRUE)
 COL.msacW.eig <- sacsarlm(CRIME ~ INC + HOVAL, data=COL.OLD, 

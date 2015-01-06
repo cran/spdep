@@ -1,3 +1,177 @@
+2015-01-05 21:21  rsbivand
+
+	* ChangeLog,
+	  DESCRIPTION: tidy
+
+2015-01-05 21:19  rsbivand
+
+	* man/errorsarlm.Rd:
+	  tidy
+
+2015-01-05 13:20  rsbivand
+
+	* man/errorsarlm.Rd,
+	  vignettes/nb_igraph.Rmd: try in Matrix_J donttest
+
+2015-01-05 09:41  rsbivand
+
+	* vignettes/nb_igraph.Rmd:
+	  tidy
+
+2014-12-28 18:59  rsbivand
+
+	* vignettes/nb_igraph.Rmd:
+	  igraph usage
+
+2014-12-28 18:28  rsbivand
+
+	* vignettes/nb_igraph.Rmd:
+	  igraph usage
+
+2014-12-28 13:25  rsbivand
+
+	* vignettes/nb_igraph.Rmd:
+	  igraph usage
+
+2014-12-26 20:04  rsbivand
+
+	* vignettes/nb_igraph.Rmd:
+	  igraph usage
+
+2014-12-23 22:22  rsbivand
+
+	* vignettes/nb_igraph.Rmd:
+	  igraph usage
+
+2014-12-22 23:14  rsbivand
+
+	* vignettes/nb_igraph.Rmd:
+	  igraph usage
+
+2014-12-22 22:54  rsbivand
+
+	* man/aple.mc.Rd,
+	  man/set.mcOption.Rd, man/skater.Rd, man/trW.Rd: fixed
+	  detectCores in examples
+
+2014-12-22 17:32  rsbivand
+
+	* R/globalG.R,
+	  man/globalG.test.Rd, vignettes/nb_igraph.Rmd: igraph vignette
+	  start
+
+2014-12-19 21:17  rsbivand
+
+	* R/eigenw.R,
+	  vignettes/nb_igraph.Rmd: igraph vignette start
+
+2014-12-19 15:09  rsbivand
+
+	* vignettes/nb_igraph.Rmd:
+	  tidy
+
+2014-12-18 21:55  rsbivand
+
+	* R/listw2sn.R,
+	  R/nb2mat.R, vignettes/nb_igraph.Rmd: igraph vignette start
+
+2014-12-18 13:51  rsbivand
+
+	* vignettes/nb_igraph.Rmd:
+	  igraph vignette start
+
+2014-12-18 13:48  rsbivand
+
+	* DESCRIPTION,
+	  R/jacobian.R, R/listw2Matrix.R, R/nb2mat.R,
+	  man/as_dgRMatrix_listw.Rd, vignettes/nb_igraph.Rmd: igraph
+	  vignette start
+
+2014-12-16 20:37  rsbivand
+
+	* vignettes/nb_igraph.Rmd:
+	  igraph vignette start
+
+2014-12-16 20:35  rsbivand
+
+	* DESCRIPTION,
+	  vignettes/nb_igraph.Rmd: igraph vignette start
+
+2014-12-15 09:32  rsbivand
+
+	* man/nblag.Rd:
+	  start introducing igraph
+
+2014-12-12 23:18  rsbivand
+
+	* DESCRIPTION,
+	  R/listw2Matrix.R, man/compon.Rd, man/eigenw.Rd: start
+	  introducing igraph
+
+2014-12-09 16:45  rsbivand
+
+	* R/listw2Matrix.R,
+	  man/as_dgRMatrix_listw.Rd, man/trW.Rd: coerce to CsparseMatrix
+
+2014-12-08 13:13  rsbivand
+
+	* DESCRIPTION,
+	  NAMESPACE, R/ME.R, R/aple.R, R/error.spsarlm.R,
+	  R/jacobian.R, R/kpgm_new.R, R/lee.test.R, R/listw2Matrix.R,
+	  R/mcmcsamp.R, R/mess.R, R/nb2listw.R, R/sarlm.R, R/spautolm.R,
+	  man/as_dgRMatrix_listw.Rd, man/eigenw.Rd, man/errorsarlm.Rd,
+	  man/gstsls.Rd, man/house.Rd, man/impacts.sarlm.Rd,
+	  man/invIrM.Rd, man/lagsarlm.Rd, man/mat2listw.Rd,
+	  man/sacsarlm.Rd, man/trW.Rd: coerce to CsparseMatrix
+
+2014-12-02 23:01  rsbivand
+
+	* R/edit.nb.R,
+	  R/nb2blocknb.R, R/spautolm.R, man/boston.Rd, man/edit.nb.Rd,
+	  man/house.Rd, man/impacts.sarlm.Rd, man/spautolm.Rd: dontrun
+	  tidy
+
+2014-12-02 12:34  rsbivand
+
+	* ChangeLog,
+	  inst/ChangeLog: tidt
+
+2014-12-02 12:32  rsbivand
+
+	* DESCRIPTION,
+	  R/globalG.R, R/read.gal.R, src/card.c, src/nbdists.c,
+	  vignettes/sids.Rnw: read.gal() not assigning 0 to nb object
+
+2014-11-27 10:38  rsbivand
+
+	* man/spautolm.Rd:
+	  spautolm docs
+
+2014-11-21 08:43  rsbivand
+
+	* DESCRIPTION,
+	  R/globalG.R, man/globalG.test.Rd: globalG two.sided
+
+2014-11-06 13:43  rsbivand
+
+	* DESCRIPTION,
+	  R/jacobian.R, R/knearneigh.R, R/listw2sn.R, R/nb2listw.R:
+	  formula and requireNamespace
+
+2014-11-06 12:28  rsbivand
+
+	* DESCRIPTION,
+	  R/SpatialFiltering.R, R/aple.mc.R, R/error.spsarlm.R,
+	  R/impacts.R, R/jacobian.R, R/knearneigh.R, R/kpgm_new.R,
+	  R/lag.spsarlm.R, R/listw2sn.R, R/mess.R, R/nb2listw.R,
+	  R/nbcosts.R, R/prunecost.R, R/s2sls.R, R/sacsarlm.R: formula
+	  and requireNamespace
+
+2014-09-17 19:31  rsbivand
+
+	* ChangeLog,
+	  inst/ChangeLog: tidy
+
 2014-08-31 21:34  rsbivand
 
 	* R/tri2nb.R:

@@ -3,9 +3,9 @@
 # Chebyshev approximation setup and run functions
 cheb_setup <- function(env, q=5, which=1) {
     if (which == 1) {
-        W <- as(as_dgRMatrix_listw(get("listw", envir=env)), "CsparseMatrix")
+        W <- as(get("listw", envir=env), "CsparseMatrix")
     } else {
-        W <- as(as_dgRMatrix_listw(get("listw2", envir=env)), "CsparseMatrix")
+        W <- as(get("listw2", envir=env), "CsparseMatrix")
     }
 # W a CSparseMatrix object
 # q order
@@ -66,9 +66,9 @@ cheb_ldet <- function(alpha, env, which=1) {
 # MC approximation setup and run functions
 mcdet_setup <- function(env, p=16, m=30, which=1) {
         if (which == 1) {
-          W <- as(as_dgRMatrix_listw(get("listw", envir=env)), "CsparseMatrix")
+          W <- as(get("listw", envir=env), "CsparseMatrix")
         } else {
-          W <- as(as_dgRMatrix_listw(get("listw2", envir=env)), "CsparseMatrix")
+          W <- as(get("listw2", envir=env), "CsparseMatrix")
         }
 # W a CSparseMatrix object
 # p, m given in papers
@@ -352,8 +352,7 @@ Matrix_setup <- function(env, Imult, super=as.logical(NA), which=1) {
         assign("pChol2", pChol, envir=env)
         assign("nChol2", nChol, envir=env)
     }
-    .f <- if (package_version(packageDescription("Matrix")$Version) >
-           "0.999375-30") 2 else 1
+    .f <- 2
     assign(".f", .f, envir=env)
     assign("method", "Matrix", envir=env)
     invisible(NULL)
@@ -386,10 +385,10 @@ Matrix_ldet <- function(coef, env, which=1) {
 
 LU_setup <- function(env, which=1) {
     if (which == 1) {
-        W <- as(as_dgRMatrix_listw(get("listw", envir=env)), "CsparseMatrix")
+        W <- as(get("listw", envir=env), "CsparseMatrix")
         assign("W", W, envir=env)
     } else {
-        W <- as(as_dgRMatrix_listw(get("listw2", envir=env)), "CsparseMatrix")
+        W <- as(get("listw2", envir=env), "CsparseMatrix")
         assign("W2", W, envir=env)
     }
     I <- as_dsCMatrix_I(get("n", envir=env))
@@ -416,14 +415,14 @@ LU_prepermutate_setup <- function(env, coef=0.1, order=FALSE, which=1) {
     assign("I", I, envir=env)
     if (which == 1) {
         assign("lu_order", order, envir=env)
-        W <- as(as_dgRMatrix_listw(get("listw", envir=env)), "CsparseMatrix")
+        W <- as(get("listw", envir=env), "CsparseMatrix")
         assign("W", W, envir=env)
         LU <- lu(I - coef * W)
         pq <- cbind(LU@p+1L, LU@q+1L)
         assign("pq", pq, envir=env)
     } else {
         assign("lu_order2", order, envir=env)
-        W <- as(as_dgRMatrix_listw(get("listw2", envir=env)), "CsparseMatrix")
+        W <- as(get("listw2", envir=env), "CsparseMatrix")
         assign("W2", W, envir=env)
         LU <- lu(I - coef * W)
         pq <- cbind(LU@p+1L, LU@q+1L)
@@ -473,8 +472,7 @@ Matrix_J_setup <- function(env, super=FALSE, which=1) {
     }
     I <- as_dsCMatrix_I(get("n", envir=env))
     assign("I", I, envir=env)
-    .f <- if (package_version(packageDescription("Matrix")$Version) >
-           "0.999375-30") 2 else 1
+    .f <- 2
     assign(".f", .f, envir=env)
     assign("super", super, envir=env)
     assign("method", "Matrix_J", envir=env)

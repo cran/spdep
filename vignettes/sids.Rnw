@@ -436,6 +436,7 @@ In addition to Empirical Bayes smoothing globally, used both for disease mapping
 
 \begin{scriptsize}
 <<echo=TRUE>>= 
+set.seed(1)
 EBImoran.mc(nc$SID74, nc$BIR74, nb2listw(ncCC89, style="B", zero.policy=TRUE), nsim=999, zero.policy=TRUE)
 @
 \end{scriptsize}

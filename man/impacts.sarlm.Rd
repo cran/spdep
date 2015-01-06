@@ -89,7 +89,7 @@ lobj <- lagsarlm(CRIME ~ INC + HOVAL, columbus, listw)
 summary(lobj)
 mobj <- lagsarlm(CRIME ~ INC + HOVAL, columbus, listw, type="mixed")
 summary(mobj)
-W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
+W <- as(listw, "CsparseMatrix")
 trMatc <- trW(W, type="mult")
 trMC <- trW(W, type="MC")
 impacts(lobj, listw=listw)
@@ -110,25 +110,23 @@ impacts(mobj, tr=trMC)
 summary(impacts(mobj, tr=trMatc, R=200), zstats=TRUE)
 \dontrun{
 mobj1 <- lagsarlm(CRIME ~ INC + HOVAL, columbus, listw, type="mixed", 
-method="Matrix", fdHess=TRUE)
+method="Matrix", control=list(fdHess=TRUE))
 summary(mobj1)
 summary(impacts(mobj1, tr=trMatc, R=1000), zstats=TRUE, short=TRUE)
 summary(impacts(mobj, tr=trMatc, R=1000), zstats=TRUE, short=TRUE)
 mobj2 <- lagsarlm(CRIME ~ INC + HOVAL, columbus, listw, type="mixed", 
-method="Matrix", fdHess=TRUE, optimHess=TRUE)
+method="Matrix", control=list(fdHess=TRUE, optimHess=TRUE))
 summary(impacts(mobj2, tr=trMatc, R=1000), zstats=TRUE, short=TRUE)
-\dontrun{
 mobj3 <- lagsarlm(CRIME ~ INC + HOVAL, columbus, listw, type="mixed", 
-method="spam", fdHess=TRUE)
+method="spam", control=list(fdHess=TRUE))
 summary(impacts(mobj3, tr=trMatc, R=1000), zstats=TRUE, short=TRUE)
-}
 data(boston)
-Wb <- as(as_dgRMatrix_listw(nb2listw(boston.soi)), "CsparseMatrix")
+Wb <- as(nb2listw(boston.soi), "CsparseMatrix")
 trMatb <- trW(Wb, type="mult")
 gp2mMi <- lagsarlm(log(CMEDV) ~ CRIM + ZN + INDUS + CHAS + I(NOX^2) + 
 I(RM^2) +  AGE + log(DIS) + log(RAD) + TAX + PTRATIO + B + log(LSTAT), 
 data=boston.c, nb2listw(boston.soi), type="mixed", method="Matrix", 
-fdHess=TRUE, trs=trMatb)
+control=list(fdHess=TRUE), trs=trMatb)
 summary(gp2mMi)
 summary(impacts(gp2mMi, tr=trMatb, R=1000), zstats=TRUE, short=TRUE)
 data(house)
@@ -136,7 +134,7 @@ lw <- nb2listw(LO_nb)
 form <- formula(log(price) ~ age + I(age^2) + I(age^3) + log(lotsize) +
    rooms + log(TLA) + beds + syear)
 lobj <- lagsarlm(form, house, lw, method="Matrix",
- fdHess=TRUE, trs=trMat)
+ control=list(fdHess=TRUE), trs=trMat)
 summary(lobj)
 loobj <- impacts(lobj, tr=trMat, R=1000)
 summary(loobj, zstats=TRUE, short=TRUE)
@@ -144,7 +142,7 @@ lobj1 <- stsls(form, house, lw)
 loobj1 <- impacts(lobj1, tr=trMat, R=1000)
 summary(loobj1, zstats=TRUE, short=TRUE)
 mobj <- lagsarlm(form, house, lw, type="mixed",
- method="Matrix", fdHess=TRUE, trs=trMat)
+ method="Matrix", control=list(fdHess=TRUE), trs=trMat)
 summary(mobj)
 moobj <- impacts(mobj, tr=trMat, R=1000)
 summary(moobj, zstats=TRUE, short=TRUE)

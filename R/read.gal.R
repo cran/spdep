@@ -45,6 +45,7 @@ read.gal <- function(file, region.id=NULL, override.id=FALSE)
 	mrn <- match(rn, region.id)
 	res1 <- vector(mode="list", length=n)
 	for (i in 1:n) {
+            if (length(res[[i]]) > 0) {    
 		x <- match(res[[i]], region.id)
 		if (any(is.na(x)) | (length(x) != length(res[[i]]))) {
 			stop(paste("GAL file corrupted at region", i))
@@ -53,6 +54,9 @@ read.gal <- function(file, region.id=NULL, override.id=FALSE)
 			stop("GAL file corrupted")
 
 		res1[[mrn[i]]] <- sort(x)
+            } else {
+                res1[[mrn[i]]] <- 0L
+            }
 	}
 	class(res1) <- "nb"
     	attr(res1, "region.id") <- region.id

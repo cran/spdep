@@ -31,8 +31,9 @@ nbcosts <- function(nb, data, method=c("euclidean", "maximum", "manhattan",
     if (length(nb)<300) parallel <- "no"
     
     if (parallel == "snow") {
+      if (requireNamespace("parallel", quietly = TRUE)) {
 #        require(parallel)
-        sI <- splitIndices(length(nb), length(cl))
+        sI <- parallel::splitIndices(length(nb), length(cl))
          env <- new.env()
          assign("nb", nb, envir=env)
          assign("data", data, envir=env)
@@ -40,18 +41,25 @@ nbcosts <- function(nb, data, method=c("euclidean", "maximum", "manhattan",
          assign("p", p, envir=env)
          assign("cov", cov, envir=env)
          assign("inverted", inverted, envir=env)
-         clusterExport(cl, varlist=c("nb", "data", "method", "p", "cov",
+         parallel::clusterExport(cl, varlist=c("nb", "data", "method", "p", "cov",
              "inverted"), envir=env)
-         out <- clusterApply(cl, x = sI, fun=lapply, function(i) {
+         out <- parallel::clusterApply(cl, x = sI, fun=lapply, function(i) {
  	     nbcost(data, i, nb[[i]], method, p, cov, inverted)})
         clist <- do.call("c", out)
         rm(env)
+      } else {
+        stop("parallel not available")
+      }
     } else if (parallel == "multicore") {
+      if (requireNamespace("parallel", quietly = TRUE)) {
 #        require(parallel)
-        sI <- splitIndices(length(nb), ncpus)
-        out <- mclapply(sI, FUN=lapply, function(i) {nbcost(data, i, nb[[i]],
+        sI <- parallel::splitIndices(length(nb), ncpus)
+        out <- parallel::mclapply(sI, FUN=lapply, function(i) {nbcost(data, i, nb[[i]],
             method, p, cov, inverted)}, mc.cores=ncpus)
         clist <- do.call("c", out)
+      } else {
+        stop("parallel not available")
+      }
     } else {
       clist <- lapply(1:length(nb),
                    function(i) nbcost(data, i, nb[[i]], method,

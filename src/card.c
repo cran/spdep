@@ -4,15 +4,22 @@
 
 SEXP card(SEXP nb)
 {
-	int i, n=length(nb), pc=0;
+	int i, n=length(nb), pc=0, first_value, li;
 	SEXP ans;
 	PROTECT(ans = NEW_INTEGER(n)); pc++;
 
 	for (i=0; i < n; i++) {
-	    if (INTEGER_POINTER(VECTOR_ELT(nb, i))[0] == 0) 
+
+            li = length(VECTOR_ELT(nb, i));
+            if (li > 0) 
+                first_value = INTEGER_POINTER(VECTOR_ELT(nb, i))[0];
+            else
+                error("zero length neighbour vector");
+            
+	    if (first_value == 0) 
 		INTEGER_POINTER(ans)[i] = 0;
 	    else
-		INTEGER_POINTER(ans)[i] = length(VECTOR_ELT(nb, i));
+		INTEGER_POINTER(ans)[i] = li;
 	}
 
 	UNPROTECT(pc); /* ans */

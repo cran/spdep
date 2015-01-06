@@ -32,7 +32,8 @@ nb2blocknb <- function(nb=NULL, ID, row.names = NULL) {
 		ii <- match(entNames[i], nbNames)
 		blocks <- c(ii, nb[[ii]])
 		vec <- sort(unlist(inter[blocks]))
-		res[[i]] <- vec[vec != i]
+                svec <- vec[vec != i]
+		res[[i]] <- ifelse(length(svec) == 0, 0L, svec)
 	}
 
 	attr(res, "region.id") <- row.names

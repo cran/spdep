@@ -55,7 +55,8 @@ jacobianSetup <- function(method, env, con, pre_eig=NULL, trs=NULL, interval=NUL
             Matrix_J_setup(env, super=con$super, which=which)
         },
         spam = {
-            if (!require(spam)) stop("spam not available")
+#            if (!require(spam)) stop("spam not available")
+          if (requireNamespace("spam", quietly = TRUE)) {
             if (get("listw", envir=env)$style %in% c("W", "S") &&
                 !get("can.sim", envir=env))
                 stop("spam method requires symmetric weights")
@@ -67,9 +68,13 @@ jacobianSetup <- function(method, env, con, pre_eig=NULL, trs=NULL, interval=NUL
                 cat("sparse matrix Cholesky decomposition\n")
             spam_setup(env, pivot=con$spamPivot, which=which)
             if (is.null(interval)) interval <- c(-1,0.999)
+          } else {
+            stop("spam not available")
+          }
         },
         spam_update = {
-            if (!require(spam)) stop("spam not available")
+#            if (!require(spam)) stop("spam not available")
+          if (requireNamespace("spam", quietly = TRUE)) {
             if (get("listw", envir=env)$style %in% c("W", "S") &&
                 !get("can.sim", envir=env))
                 stop("spam method requires symmetric weights")
@@ -82,6 +87,9 @@ jacobianSetup <- function(method, env, con, pre_eig=NULL, trs=NULL, interval=NUL
             spam_update_setup(env, in_coef=con$in_coef,
                  pivot=con$spamPivot, which=which)
             if (is.null(interval)) interval <- c(-1,0.999)
+          } else {
+            stop("spam not available")
+          }
         },
         Chebyshev = {
             if (get("listw", envir=env)$style %in% c("W", "S") &&

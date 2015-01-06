@@ -39,6 +39,7 @@ edit.nb <- function(name, coords, polys=NULL, ..., use_region.id=FALSE) {
   }
   points(x, y)
   finished <- "n"
+  if (!interactive()) finished <- "q"
   deletions <- NULL
   additions <- NULL
 ###

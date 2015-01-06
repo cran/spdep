@@ -75,7 +75,7 @@ contour(aa, levels=signif(levs, 4), add=TRUE)
 COL.errW.GM <- gstsls(CRIME ~ INC + HOVAL, data=COL.OLD, nb2listw(COL.nb, style="W"), scaleU=TRUE)
 summary(COL.errW.GM)
 listw <- nb2listw(COL.nb)
-W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
+W <- as(listw, "CsparseMatrix")
 trMat <- trW(W, type="mult")
 impacts(COL.errW.GM, tr=trMat)
 }

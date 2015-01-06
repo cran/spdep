@@ -7,7 +7,7 @@ int between(double x, double low, double up);
 SEXP spInsiders(SEXP bbbi, SEXP bbbj) {
 
 	int pc=0;
-	int k, k1;
+	int k1;
 	double bbi[4], bbj[4];
 	int jhit[8], hsum;
 	SEXP ans;
@@ -17,7 +17,7 @@ SEXP spInsiders(SEXP bbbi, SEXP bbbj) {
 	bbi[1] = NUMERIC_POINTER(bbbi)[1];
 	bbi[2] = NUMERIC_POINTER(bbbi)[2];
 	bbi[3] = NUMERIC_POINTER(bbbi)[3];
-	k = 0;
+
 	hsum = 0;
 	bbj[0] = NUMERIC_POINTER(bbbj)[0];
 	bbj[1] = NUMERIC_POINTER(bbbj)[1];

@@ -53,6 +53,7 @@ SpatialFiltering <- function (formula, lagformula, data=list(), nb,
 
 # Generate Eigenvectors if eigen vectors are not given
 # (M1 for no SAR, MX for SAR)
+    if (class(formula) != "formula") formula <- as.formula(formula)
     mt <- terms(formula, data = data)
     mf <- lm(formula, data, method="model.frame")
     y <- model.extract(mf, "response")

@@ -30,6 +30,7 @@ GMerrorsar <- function(#W, y, X,
         if (is.null(zero.policy))
             zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
+        if (class(formula) != "formula") formula <- as.formula(formula)
 	mt <- terms(formula, data = data)
 	mf <- lm(formula, data, na.action=na.action, method="model.frame")
 	na.act <- attr(mf, "na.action")
@@ -151,7 +152,7 @@ GMerrorsar <- function(#W, y, X,
             rest.se <- sqrt(diag(invxpx))
         }
 
-        W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
+        W <- as(listw, "CsparseMatrix")
         lambda.se <- NULL
         if (!arnoldWied && se.lambda) {
 # produce an std for "rho" following Kelejian-Prucha (2004)
@@ -394,7 +395,7 @@ print.summary.gmsar<-function (x, digits = max(5, .Options$digits - 3), signif.s
         if (arnoldWied) {
             stopifnot(!is.null(X))
             invXtX <- chol2inv(qr.R(qr(X)))
-            W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
+            W <- as(listw, "CsparseMatrix")
             WX <- W %*% X
         }
 	n <- length(u)
@@ -468,6 +469,7 @@ gstsls<-function (formula, data = list(), listw, listw2=NULL,
     else if (!inherits(listw2, "listw")) 
         stop("No 2nd neighbourhood list")
 
+    if (class(formula) != "formula") formula <- as.formula(formula)
     mt <- terms(formula, data = data)
     mf <- lm(formula, data, na.action = na.fail, method = "model.frame")
     na.act <- attr(mf, "na.action")

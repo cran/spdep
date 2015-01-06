@@ -39,7 +39,9 @@ ls(envir=spdep:::.spdepOptions)
 library(parallel)
 nc <- detectCores(logical=FALSE)
 nc
-nc <- ifelse(nc > 2L, 2L, nc)
+# set nc to 1L here
+if (nc > 1L) nc <- 1L
+#nc <- ifelse(nc > 2L, 2L, nc)
 coresOpt <- get.coresOption()
 coresOpt
 if (!is.na(nc)) {

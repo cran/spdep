@@ -9,7 +9,7 @@
 SEXP
 dnearneigh(SEXP din1, SEXP din2, SEXP pnte, SEXP p, SEXP test, SEXP lonlat)
 {
-    int   j, k, kn, npat, nte, pdim, pc=0, ll;
+    int   j, k, kn, npat, nte, pc=0, ll;
     int   *pos;
     double dist, /*tmp,*/ dn, dn0;
     int dn0_equal, dn_equal;
@@ -24,7 +24,7 @@ dnearneigh(SEXP din1, SEXP din2, SEXP pnte, SEXP p, SEXP test, SEXP lonlat)
     dn0_equal = LOGICAL_POINTER(getAttrib(din1, install("equal")))[0];
     dn_equal = LOGICAL_POINTER(getAttrib(din2, install("equal")))[0];
     nte = INTEGER_POINTER(pnte)[0];
-    pdim = INTEGER_POINTER(p)[0];
+/*    pdim = INTEGER_POINTER(p)[0];*/
     ll = INTEGER_POINTER(lonlat)[0];
     PROTECT(ans = NEW_LIST(1)); pc++;
     PROTECT(dists = NEW_NUMERIC(2)); pc++;

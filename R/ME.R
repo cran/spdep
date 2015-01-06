@@ -30,10 +30,7 @@ ME <- function(formula, data, family = gaussian, weights, offset, listw,
         stopifnot(is.logical(verbose))
 
 	listw <- listw2U(listw) # make weights symmetric
-#	sW <- asMatrixCsrListw(listw)
-	sW <- as_dgRMatrix_listw(listw)
-	sW <- as(sW, "CsparseMatrix")
-#	sW <- as.spam.listw(listw)
+	sW <- as(listw, "CsparseMatrix")
 	
 	Wmat <- listw2mat(listw) # convert to full matrix form
 	n <- ncol(Wmat)

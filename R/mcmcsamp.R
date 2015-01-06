@@ -42,7 +42,7 @@ MCMCsamp.spautolm <- function(object, mcmc = 1L, verbose = NULL, ...,
     assign("verbose", verbose, envir=env)
     assign("listw", listw, envir=env)
     assign("sum_lw", sum_lw, envir=env)
-    W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
+    W <- as(listw, "CsparseMatrix")
     if (family == "CAR") if (!isTRUE(all.equal(W, t(W))))
         warning("Non-symmetric spatial weights in CAR model")
     assign("W", W, envir=env)
@@ -119,7 +119,7 @@ MCMCsamp.sarlm <- function(object, mcmc = 1L, verbose = NULL, ...,
     assign("method", method, envir=env)
     assign("verbose", verbose, envir=env)
     assign("family", "SAR", envir=env)
-    W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
+    W <- as(listw, "CsparseMatrix")
     wy <- c(as.matrix(W %*% object$y))
     assign("wy", wy, envir=env)
 
@@ -211,7 +211,7 @@ MCMCsamp.sarlm <- function(object, mcmc = 1L, verbose = NULL, ...,
 
     } else if (Type == "SAC") {
         assign("WX", object$W2X, envir=env)
-        W2 <- as(as_dgRMatrix_listw(listw2), "CsparseMatrix")
+        W2 <- as(listw2, "CsparseMatrix")
         w2y <- c(as.matrix(W2 %*% object$y))
         assign("w2y", w2y, envir=env)
         w2wy <- c(as.matrix(W2 %*% wy))

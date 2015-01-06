@@ -25,11 +25,11 @@ importFrom(LearnBayes, rwmetrop)
 import(sp)
 import(methods)
 
-import(parallel)
-
 #importClassesFrom(spam, spam)
 #importMethodsFrom(spam, Math, Math2)
 #importFrom(spam, validspamobject)
+
+exportMethods(coerce)
 
 export(EBImoran.mc, probmap, choynowski, EBest, EBlocal, LR.sarlm, 
 	LR1.sarlm, Wald1.sarlm, airdist, card, rookcell, 

@@ -51,9 +51,12 @@ sn2listw <- function(sn) {
 	attr(nlist, "region.id") <- region.id
 	vlist <- vector(mode="list", length=n)
 	rle.sn <- rle(sn[,1])
-	if (n != length(rle.sn$lengths))
-	    warning(paste(paste(region.id[which(!(1:n %in% rle.sn$values))], 
-		collapse=", "), "are not origins"))
+	if (n != length(rle.sn$lengths)) {
+            nnhits <- region.id[which(!(1:n %in% rle.sn$values))]
+	    warning(paste(paste(nnhits, collapse=", "),
+                ifelse(length(nnhits) < 2, "is not an origin",
+                "are not origins")))
+        }
 	cs1.sn <- cumsum(rle.sn$lengths)
 	cs0.sn <- c(1, cs1.sn[1:(n-1)]+1)
 	ii <- 1

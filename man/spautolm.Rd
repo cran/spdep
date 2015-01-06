@@ -35,7 +35,7 @@ is called.}
   \item{weights}{an optional vector of weights to be used in the fitting process}
   \item{na.action}{a function (default \code{options("na.action")}), can also be \code{na.omit} or \code{na.exclude} with consequences for residuals and fitted values - in these cases the weights list will be subsetted to remove NAs in the data. Note that only weights lists created without using the glist argument to \code{nb2listw} may be subsetted.}
   \item{family}{character string: either \code{"SAR"} or \code{"CAR"} for simultaneous or conditional autoregressions; \code{"SMA"} for spatial moving average added thanks to Jielai Ma - \code{"SMA"} is only implemented for method=\code{"eigen"} because it necessarily involves dense matrices}
-  \item{method}{character string: default \code{"eigen"} for use of dense matrices, \code{"Matrix_J"} or \code{"spam"} for sparse matrices (restricted to spatial weights symmetric or similar to symmetric) using methods in either the Matrix or spam packages; \dQuote{Matrix} and \dQuote{spam_update} provide updating Cholesky decomposition methods. Note that users should change from spam to Matrix. Values of method may also include "LU", which provides an alternative sparse matrix decomposition approach, and the "Chebyshev" and Monte Carlo "MC" approximate log-determinant methods.}
+  \item{method}{character string: default \code{"eigen"} for use of dense matrices, \code{"Matrix_J"} for sparse matrices (restricted to spatial weights symmetric or similar to symmetric) using methods in the Matrix package; \dQuote{Matrix} provides updating Cholesky decomposition methods. Values of method may also include "LU", which provides an alternative sparse matrix decomposition approach, and the "Chebyshev" and Monte Carlo "MC" approximate log-determinant methods.}
   \item{verbose}{default NULL, use global option value; if TRUE, reports function values during optimization.}
   \item{trs,}{default NULL, if given, a vector of powered spatial weights matrix traces output by \code{trW}; when given, used in some Jacobian methods}
   \item{interval}{search interval for autoregressive parameter when not using method="eigen"; default is c(-1,0.999), \code{optimize} will reset NA/NaN to a bound and gives a warning when the interval is poorly set; method="Matrix" will attempt to search for an appropriate interval, if find\_interval=TRUE (fails on some platforms)}
@@ -74,8 +74,6 @@ variable in making predictions for the fitting data.
   \item{cheb_q:}{default 5; highest power of the approximating polynomial for the Chebyshev approximation}
   \item{MC_p:}{default 16; number of random variates}
   \item{MC_m:}{default 30; number of products of random variates matrix and spatial weights matrix}
-  \item{spamPivot:}{default \dQuote{MMD}, alternative \dQuote{RCM}}
-  \item{in_coef}{default 0.1, coefficient value for initial Cholesky decomposition in \dQuote{spam_update}}
   \item{type}{default \dQuote{MC}, used with method \dQuote{moments}; alternatives \dQuote{mult} and \dQuote{moments}, for use if \code{trs} is missing, \code{\link{trW}}}
   \item{correct}{default TRUE, used with method \dQuote{moments} to compute the Smirnov/Anselin correction term}
   \item{trunc}{default TRUE, used with method \dQuote{moments} to truncate the Smirnov/Anselin correction term}
@@ -97,7 +95,7 @@ variable in making predictions for the fitting data.
     \item{coefficients}{ML coefficient estimates}
     \item{SSE}{ML sum of squared errors}
     \item{s2}{ML residual variance}
-    \item{imat}{ML coefficient covariance matrix}
+    \item{imat}{ML coefficient covariance matrix (before multiplying by s2)}
     \item{signal\_trend}{non-spatial component of fitted.values}
     \item{signal\_stochastic}{spatial component of fitted.values}
     \item{fitted.values}{sum of non-spatial and spatial components of fitted.values}
@@ -141,7 +139,11 @@ esar0 <- errorsarlm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
 summary(esar0)
 system.time(esar1f <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
  data=nydata, listw=listw_NY, family="SAR", method="eigen", verbose=TRUE))
-summary(esar1f)
+res <- summary(esar1f)
+print(res)
+sqrt(diag(res$resvar))
+sqrt(diag(esar1f$fit$imat)*esar1f$fit$s2)
+sqrt(diag(esar1f$fdHess))
 system.time(esar1M <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
  data=nydata, listw=listw_NY, family="SAR", method="Matrix", verbose=TRUE))
 summary(esar1M)
@@ -150,18 +152,12 @@ system.time(esar1M <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
  data=nydata, listw=listw_NY, family="SAR", method="Matrix", verbose=TRUE,
  control=list(super=TRUE)))
 summary(esar1M)
-system.time(esar1s <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
- data=nydata, listw=listw_NY, family="SAR", method="spam", verbose=TRUE))
-summary(esar1s)
 esar1wf <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
  listw=listw_NY, weights=POP8, family="SAR", method="eigen")
 summary(esar1wf)
 system.time(esar1wM <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
  data=nydata, listw=listw_NY, weights=POP8, family="SAR", method="Matrix"))
 summary(esar1wM)
-esar1ws <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
- listw=listw_NY, weights=POP8, family="SAR", method="spam")
-summary(esar1ws)
 esar1wlu <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
  listw=listw_NY, weights=POP8, family="SAR", method="LU")
 summary(esar1wlu)
@@ -174,18 +170,12 @@ summary(ecar1f)
 system.time(ecar1M <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
  data=nydata, listw=listw_NY, family="CAR", method="Matrix"))
 summary(ecar1M)
-ecar1s <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
- listw=listw_NY, family="CAR", method="spam")
-summary(ecar1s)
 ecar1wf <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
  listw=listw_NY, weights=nydata$POP8, family="CAR", method="eigen")
 summary(ecar1wf)
 system.time(ecar1wM <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
  data=nydata, listw=listw_NY, weights=POP8, family="CAR", method="Matrix"))
 summary(ecar1wM)
-ecar1ws <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
- listw=listw_NY, weights=POP8, family="CAR", method="spam")
-summary(ecar1ws)
 example(nc.sids)
 ft.SID74 <- sqrt(1000)*(sqrt(nc.sids$SID74/nc.sids$BIR74) +
  sqrt((nc.sids$SID74+1)/nc.sids$BIR74))

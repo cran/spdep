@@ -129,7 +129,7 @@ similar.listw_Matrix <- function(listw) {
 			stop("General weights must be symmetric")
 	n <- length(listw$neighbours)
 	if (n < 1) stop("non-positive number of entities")
-	ww <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
+	ww <- as(listw, "CsparseMatrix")
 	if (listw$style == "W") {
 		d <- attr(listw$weights, "comp")$d
 		d1 <- 1/(sqrt(d))
@@ -302,7 +302,7 @@ listw2WB <- function(listw)
 }
 
 minmax.listw <- function(listw) {
-    W <- as(as_dgRMatrix_listw(listw), "CsparseMatrix")
+    W <- as(listw, "CsparseMatrix")
     rm <- max(rowSums(W))
     cm <- max(colSums(W))
     res <- min(c(rm, cm))

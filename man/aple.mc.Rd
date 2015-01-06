@@ -37,6 +37,8 @@ boot_out_ser
 library(parallel)
 oldCores <- set.coresOption(NULL)
 nc <- detectCores(logical=FALSE)
+# set nc to 1L here
+if (nc > 1L) nc <- 1L
 invisible(set.coresOption(nc))
 set.seed(1L)
 if (!get.mcOption()) {
