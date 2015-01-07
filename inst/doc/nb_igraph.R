@@ -95,14 +95,14 @@ c(determinant(I - rho * Ws, logarithm=TRUE)$modulus)
 ## ------------------------------------------------------------------------
 1/range(eigenw(nb_B))
 library(igraph)
-f2 <- function(x, extra=NULL) {as.vector(B %*% x)}
-1/arpack(f2, sym=TRUE, options=list(n=n, nev=2, ncv=8, which="BE", maxiter=200))$values
+#f2 <- function(x, extra=NULL) {as.vector(B %*% x)}
+#1/arpack(f2, sym=TRUE, options=list(n=n, nev=2, ncv=8, which="BE", maxiter=200))$values
 
 ## ------------------------------------------------------------------------
 1/range(eigenw(nb_W))
-f2 <- function(x, extra=NULL) {as.vector(W %*% x)}
-1/arpack(f2, sym=FALSE, options=list(n=n, nev=1, ncv=8, which="LR", maxiter=200))$values
-1/arpack(f2, sym=FALSE, options=list(n=n, nev=1, ncv=8, which="SR", maxiter=200))$values
+#f2 <- function(x, extra=NULL) {as.vector(W %*% x)}
+#1/arpack(f2, sym=FALSE, options=list(n=n, nev=1, ncv=8, which="LR", maxiter=200))$values
+#1/arpack(f2, sym=FALSE, options=list(n=n, nev=1, ncv=8, which="SR", maxiter=200))$values
 
 ## ------------------------------------------------------------------------
 class(B)

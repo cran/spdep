@@ -245,7 +245,7 @@ spam_ldet <- function(coef, env, which=1) {
     }
     I <- get("I", envir=env)
     pivot <- get("pivot", envir=env)
-    J1 <- try(determinant(chol((I - coef * csrw), pivot=pivot),
+    J1 <- try(spam::determinant.spam.chol.NgPeyton(spam::chol.spam((I - coef * csrw), pivot=pivot),
         logarithm=TRUE)$modulus, silent=TRUE)
     if (class(J1) == "try-error") {
         Jacobian <- NA
@@ -279,7 +279,7 @@ spam_update_setup <- function(env, in_coef=0.1, pivot="MMD", which=1) {
     n <- get("n", envir=env)
     I <- spam::diag.spam(1, n, n)
     assign("I", I, envir=env)
-    csrwchol <- chol((I - in_coef * csrw), pivot=pivot)
+    csrwchol <- spam::chol.spam((I - in_coef * csrw), pivot=pivot)
     if (which == 1) {
         assign("csrwchol", csrwchol, envir=env)
     } else {
@@ -306,7 +306,7 @@ spam_update_ldet <- function(coef, env, which=1) {
     if (abs(coef) < .Machine$double.eps^(0.5)) {
         Jacobian <- 0.0
     } else {
-        J1 <- try(determinant(update(cchol, (I - coef * csrw)),
+        J1 <- try(spam::determinant.spam.chol.NgPeyton(spam::update.spam.chol.NgPeyton(cchol, (I - coef * csrw)),
             logarithm=TRUE)$modulus, silent=TRUE)
         if (class(J1) == "try-error") {
             Jacobian <- NA

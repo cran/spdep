@@ -96,7 +96,7 @@ moran.test <- function(x, listw, randomisation=TRUE, zero.policy=NULL,
 
 moran.mc <- function(x, listw, nsim, zero.policy=NULL,
 	alternative="greater", na.action=na.fail, spChk=NULL,
-        return_boot=FALSE) {
+        return_boot=FALSE, adjust.n=TRUE) {
 	alternative <- match.arg(alternative, c("greater", "less"))
 	if(!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
@@ -128,6 +128,7 @@ moran.mc <- function(x, listw, nsim, zero.policy=NULL,
         gamres <- suppressWarnings(nsim > gamma(n + 1))
         if (gamres) stop("nsim too large for this number of observations")
 	if (nsim < 1) stop("nsim too small")
+        if (adjust.n) n <- n - sum(cards == 0L)
 	
 	S0 <- Szero(listw)
         if (return_boot) {

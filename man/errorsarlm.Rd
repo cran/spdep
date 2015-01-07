@@ -213,30 +213,43 @@ resid(COL.err.NA)
 lw <- nb2listw(COL.nb, style="W")
 system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  lw, method="eigen"))
+ocoef <- coefficients(COL.errW.eig)
 system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- lw, method="eigen", control=list(LAPACK=TRUE)))
+ lw, method="eigen", control=list(LAPACK=FALSE)))
+all.equal(ocoef, coefficients(COL.errW.eig))
 system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  lw, method="eigen", control=list(compiled_sse=TRUE)))
+all.equal(ocoef, coefficients(COL.errW.eig))
 system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  lw, method="Matrix_J", control=list(super=TRUE)))
+all.equal(ocoef, coefficients(COL.errW.eig))
 system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  lw, method="Matrix_J", control=list(super=FALSE)))
+all.equal(ocoef, coefficients(COL.errW.eig))
 system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  lw, method="Matrix_J", control=list(super=as.logical(NA))))
+all.equal(ocoef, coefficients(COL.errW.eig))
 system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  lw, method="Matrix", control=list(super=TRUE)))
+all.equal(ocoef, coefficients(COL.errW.eig))
 system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  lw, method="Matrix", control=list(super=FALSE)))
+all.equal(ocoef, coefficients(COL.errW.eig))
 system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  lw, method="Matrix", control=list(super=as.logical(NA))))
+all.equal(ocoef, coefficients(COL.errW.eig))
 system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  lw, method="spam", control=list(spamPivot="MMD")))
+all.equal(ocoef, coefficients(COL.errW.eig))
 system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  lw, method="spam", control=list(spamPivot="RCM")))
+all.equal(ocoef, coefficients(COL.errW.eig))
 system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  lw, method="spam_update", control=list(spamPivot="MMD")))
+all.equal(ocoef, coefficients(COL.errW.eig))
 system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  lw, method="spam_update", control=list(spamPivot="RCM")))
+all.equal(ocoef, coefficients(COL.errW.eig))
 }
 }
 \keyword{spatial}

@@ -179,22 +179,22 @@ As can be seen, the division by the square root of zero for entity 21 is not a p
 
 ### Using `arpack` in **igraph** for finding some eigenvalues
 
-In spatial regression, the domain of the spatial coefficient is given by the inverse of the maximum and minimum eigenvalues. When `n` is moderate, we have the eigenvalues anyway, so the interval for line search is available without extra effort. When `n` is somewhat larger, use may be made of the `arpack` function in **igraph**.
+In spatial regression, the domain of the spatial coefficient is given by the inverse of the maximum and minimum eigenvalues. When `n` is moderate, we have the eigenvalues anyway, so the interval for line search is available without extra effort. When `n` is somewhat larger, use may be made of the `arpack` function in **igraph**. The function is not stable and requires manual tuning, so its use is commented out here:
 
 ```{r}
 1/range(eigenw(nb_B))
 library(igraph)
-f2 <- function(x, extra=NULL) {as.vector(B %*% x)}
-1/arpack(f2, sym=TRUE, options=list(n=n, nev=2, ncv=8, which="BE", maxiter=200))$values
+#f2 <- function(x, extra=NULL) {as.vector(B %*% x)}
+#1/arpack(f2, sym=TRUE, options=list(n=n, nev=2, ncv=8, which="BE", maxiter=200))$values
 ```
 
 In this case, the results are trivial with small `n` and a symmetric sparse matrix. It can be challenging to find the `maxiter=` cutoff for larger `n`; the `which="BE"` argument takes both ends here.
 
 ```{r}
 1/range(eigenw(nb_W))
-f2 <- function(x, extra=NULL) {as.vector(W %*% x)}
-1/arpack(f2, sym=FALSE, options=list(n=n, nev=1, ncv=8, which="LR", maxiter=200))$values
-1/arpack(f2, sym=FALSE, options=list(n=n, nev=1, ncv=8, which="SR", maxiter=200))$values
+#f2 <- function(x, extra=NULL) {as.vector(W %*% x)}
+#1/arpack(f2, sym=FALSE, options=list(n=n, nev=1, ncv=8, which="LR", maxiter=200))$values
+#1/arpack(f2, sym=FALSE, options=list(n=n, nev=1, ncv=8, which="SR", maxiter=200))$values
 ```
 For asymmetric matrices, we need to go to each end separately, so finding the domain bounds can be hard. Using row-standardisation has the nice feature of setting the upper bound to unity, and there are graph methods for finding out whether the lower bound is `-1`.
 

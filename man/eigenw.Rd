@@ -103,6 +103,7 @@ rg <- cell2nb(ncol=7, nrow=7, type="rook")
 rg_eig <- eigenw(nb2listw(rg, style="B"))
 rg_GS <- griffith_sone(P=7, Q=7, type="rook")
 all.equal(rg_eig, rg_GS)
+\donttest{
 if (require(igraph)) {
 B <- as(nb2listw(rg, style="B"), "CsparseMatrix")
 f <- function(x, extra=NULL) {as.vector(B \%*\% x)}
@@ -119,6 +120,6 @@ print(arpack(f, sym=FALSE, options=list(n=nrow(W), nev=1, ncv=8, which="LR",
  maxiter=200))$value)
 print(arpack(f, sym=FALSE, options=list(n=nrow(W), nev=1, ncv=8, which="SR",
  maxiter=200))$value)
-}
+}}
 }
 \keyword{spatial}

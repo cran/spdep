@@ -567,7 +567,7 @@ rowSums(Ws)[21]
 
 <h3>Using <code>arpack</code> in <strong>igraph</strong> for finding some eigenvalues</h3>
 
-<p>In spatial regression, the domain of the spatial coefficient is given by the inverse of the maximum and minimum eigenvalues. When <code>n</code> is moderate, we have the eigenvalues anyway, so the interval for line search is available without extra effort. When <code>n</code> is somewhat larger, use may be made of the <code>arpack</code> function in <strong>igraph</strong>.</p>
+<p>In spatial regression, the domain of the spatial coefficient is given by the inverse of the maximum and minimum eigenvalues. When <code>n</code> is moderate, we have the eigenvalues anyway, so the interval for line search is available without extra effort. When <code>n</code> is somewhat larger, use may be made of the <code>arpack</code> function in <strong>igraph</strong>. The function is not stable and requires manual tuning, so its use is commented out here:</p>
 
 <pre><code class="r">1/range(eigenw(nb_B))
 </code></pre>
@@ -576,11 +576,8 @@ rowSums(Ws)[21]
 </code></pre>
 
 <pre><code class="r">library(igraph)
-f2 &lt;- function(x, extra=NULL) {as.vector(B %*% x)}
-1/arpack(f2, sym=TRUE, options=list(n=n, nev=2, ncv=8, which=&quot;BE&quot;, maxiter=200))$values
-</code></pre>
-
-<pre><code>## [1] -0.3212551  0.1638329
+#f2 &lt;- function(x, extra=NULL) {as.vector(B %*% x)}
+#1/arpack(f2, sym=TRUE, options=list(n=n, nev=2, ncv=8, which=&quot;BE&quot;, maxiter=200))$values
 </code></pre>
 
 <p>In this case, the results are trivial with small <code>n</code> and a symmetric sparse matrix. It can be challenging to find the <code>maxiter=</code> cutoff for larger <code>n</code>; the <code>which=&quot;BE&quot;</code> argument takes both ends here.</p>
@@ -591,17 +588,9 @@ f2 &lt;- function(x, extra=NULL) {as.vector(B %*% x)}
 <pre><code>## [1] -1.544645  1.000000
 </code></pre>
 
-<pre><code class="r">f2 &lt;- function(x, extra=NULL) {as.vector(W %*% x)}
-1/arpack(f2, sym=FALSE, options=list(n=n, nev=1, ncv=8, which=&quot;LR&quot;, maxiter=200))$values
-</code></pre>
-
-<pre><code>## [1] 1+0i
-</code></pre>
-
-<pre><code class="r">1/arpack(f2, sym=FALSE, options=list(n=n, nev=1, ncv=8, which=&quot;SR&quot;, maxiter=200))$values
-</code></pre>
-
-<pre><code>## [1] -1.544645+0i
+<pre><code class="r">#f2 &lt;- function(x, extra=NULL) {as.vector(W %*% x)}
+#1/arpack(f2, sym=FALSE, options=list(n=n, nev=1, ncv=8, which=&quot;LR&quot;, maxiter=200))$values
+#1/arpack(f2, sym=FALSE, options=list(n=n, nev=1, ncv=8, which=&quot;SR&quot;, maxiter=200))$values
 </code></pre>
 
 <p>For asymmetric matrices, we need to go to each end separately, so finding the domain bounds can be hard. Using row-standardisation has the nice feature of setting the upper bound to unity, and there are graph methods for finding out whether the lower bound is <code>-1</code>.</p>
