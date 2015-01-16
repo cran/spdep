@@ -75,7 +75,10 @@ If simulation is carried out, the object returned is a list with:
 \item{sres}{a list with three \code{mcmc} matrices, for the direct, indirect and total impacts with a matching \code{Qmcmc} list attribute if \code{Q} was given}
 }
 
-\references{LeSage J and RK Pace (2009) Introduction to Spatial Econometrics. CRC Press, Boca Raton, pp. 33--42, 114--115; LeSage J and MM Fischer (2008) Spatial growth regressions: model specification, estimation and interpretation. Spatial Economic Analysis 3 (3), pp. 275--304.}
+\references{LeSage J and RK Pace (2009) \emph{Introduction to Spatial Econometrics}. CRC Press, Boca Raton, pp. 33--42, 114--115; LeSage J and MM Fischer (2008) Spatial growth regressions: model specification, estimation and interpretation. \emph{Spatial Economic Analysis} 3 (3), pp. 275--304.
+
+Roger Bivand, Gianfranco Piras (2015). Comparing Implementations of Estimation Methods for Spatial Econometrics. \emph{Journal of Statistical Software}, 63(18), 1-36. \url{http://www.jstatsoft.org/v63/i18/}.
+}
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 
 

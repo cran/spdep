@@ -1,7 +1,20 @@
-# Copyright 2001-8 by Roger Bivand 
+# Copyright 2001-15 by Roger Bivand 
 #
 
 spweights.constants <- function(listw, zero.policy=NULL, adjust.n=TRUE) {
+    if (get.listw_is_CsparseMatrix_Option()) {
+        stopifnot(is(listw, "CsparseMatrix"))
+        cards <- rowSums(listw > 0)
+	if (adjust.n) {
+            n <- as.double(length(which(cards > 0)))
+	} else {
+            n <- as.double(length(cards))
+        }
+        c1 <- rowSums(listw)
+        S0 <- sum(c1)
+        S1 <- sum((listw*listw)+(listw*t(listw)))
+        S2 <- sum((rowSums(listw)+colSums(listw))^2)
+    } else {
 	if(!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
 	cards <- card(listw$neighbours)
@@ -12,10 +25,6 @@ spweights.constants <- function(listw, zero.policy=NULL, adjust.n=TRUE) {
 		stop("regions with no neighbours found")
 	if (adjust.n) n <- as.double(length(which(cards > 0)))
 	else n <- as.double(length(cards))
-	n1 <- n - 1
-	n2 <- n - 2
-	n3 <- n - 3
-	nn <- n*n
 	S0 <- Szero(listw)
 	S1 <- 0
 	rS <- numeric(length(listw$neighbours))
@@ -44,7 +53,12 @@ spweights.constants <- function(listw, zero.policy=NULL, adjust.n=TRUE) {
 		}
 	}
 	S2 <- sum((rS + cS)^2)
-	list(n=n, n1=n1, n2=n2, n3=n3, nn=nn, S0=S0, S1=S1, S2=S2)
+    }
+    n1 <- n - 1
+    n2 <- n - 2
+    n3 <- n - 3
+    nn <- n*n
+    list(n=n, n1=n1, n2=n2, n3=n3, nn=nn, S0=S0, S1=S1, S2=S2)
 }
 
 Szero <- function(listw) {

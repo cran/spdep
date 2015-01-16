@@ -49,7 +49,10 @@ by using spatially lagged X variables as instruments for the spatially lagged de
 \references{Kelejian, H.H. and I.R. Prucha (1998). A generalized spatial two
 stage least squares procedure for estimating a spatial autoregressive
 model with autoregressive disturbances. \emph{Journal of Real Estate
-Finance and Economics} 17, 99-121.}
+Finance and Economics} 17, 99-121.
+
+Roger Bivand, Gianfranco Piras (2015). Comparing Implementations of Estimation Methods for Spatial Econometrics. \emph{Journal of Statistical Software}, 63(18), 1-36. \url{http://www.jstatsoft.org/v63/i18/}.
+}
 \author{Luc Anselin, Gianfranco Piras and Roger Bivand}
 
 \seealso{\code{\link{lagsarlm}}}

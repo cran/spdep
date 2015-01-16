@@ -1,4 +1,15 @@
-# Copyright 2003-2010 by Roger Bivand 
+# Copyright 2003-2015 by Roger Bivand 
+
+set.listw_is_CsparseMatrix_Option <- function(check) {
+	if (!is.logical(check)) stop ("logical argument required")
+	res <- get("listw_is_CsparseMatrix", envir = .spdepOptions)
+	assign("listw_is_CsparseMatrix", check, envir = .spdepOptions)
+	res
+}
+
+get.listw_is_CsparseMatrix_Option <- function() {
+	get("listw_is_CsparseMatrix", envir = .spdepOptions)
+}
 
 set.spChkOption <- function(check) {
 	if (!is.logical(check)) stop ("logical argument required")

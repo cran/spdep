@@ -7,6 +7,8 @@
 \alias{get.VerboseOption}
 \alias{set.ZeroPolicyOption}
 \alias{get.ZeroPolicyOption}
+\alias{set.listw_is_CsparseMatrix_Option}
+\alias{get.listw_is_CsparseMatrix_Option}
 %- Also NEED an `\alias' for EACH other topic documented here.
 \title{Control checking of spatial object IDs}
 \description{
@@ -21,6 +23,8 @@ set.VerboseOption(check)
 get.VerboseOption()
 set.ZeroPolicyOption(check)
 get.ZeroPolicyOption()
+set.listw_is_CsparseMatrix_Option(check)
+get.listw_is_CsparseMatrix_Option()
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{

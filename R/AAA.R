@@ -1,4 +1,4 @@
-# Copyright 2001-13 by Roger Bivand 
+# Copyright 2001-15 by Roger Bivand 
 #
 
 .spdepOptions <- new.env(FALSE, globalenv())
@@ -10,6 +10,7 @@ assign("mc", ifelse(.Platform$OS.type == "windows", FALSE, TRUE),
 assign("cores", NULL, envir = .spdepOptions)
 assign("cluster", NULL, envir = .spdepOptions)
 assign("rlecuyerSeed", rep(12345, 6), envir = .spdepOptions)
+assign("listw_is_CsparseMatrix", FALSE, envir = .spdepOptions)
 
 #.conflicts.OK <- TRUE
 

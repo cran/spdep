@@ -1,3 +1,17 @@
+2015-01-15 21:05  rsbivand
+
+	* DESCRIPTION,
+	  R/AAA.R, R/spChkOption.R, R/utils.R, inst/CITATION,
+	  man/GMerrorsar.Rd, man/do_ldet.Rd, man/errorsarlm.Rd,
+	  man/gstsls.Rd, man/impacts.sarlm.Rd, man/lagsarlm.Rd,
+	  man/sacsarlm.Rd, man/set.spChkOption.Rd, man/stsls.Rd: add
+	  JSS 2015 reference
+
+2015-01-07 11:41  rsbivand
+
+	* ChangeLog,
+	  inst/ChangeLog: tidy
+
 2015-01-07 11:39  rsbivand
 
 	* DESCRIPTION,

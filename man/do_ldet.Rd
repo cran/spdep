@@ -241,7 +241,10 @@ Three set-up functions emulate the behaviour of the Spatial Econometrics toolbox
 
 \value{\code{do_ldet} returns the value of the Jacobian for the calculation method recorded in the environment argument, and for the Monte Carlo approximation, returns a measure of the spread of the approximation as an \dQuote{sd} attribute; the remaining functions modify the environment in place as a side effect and return nothing.}
 
-\references{LeSage J and RK Pace (2009) Introduction to Spatial Econometrics. CRC Press, Boca Raton, pp. 77--110}
+\references{LeSage J and RK Pace (2009) Introduction to Spatial Econometrics. CRC Press, Boca Raton, pp. 77--110.
+
+Bivand, R. S., Hauke, J., and Kossowski, T. (2013). Computing the Jacobian in Gaussian spatial autoregressive models: An illustrated comparison of available methods. \emph{Geographical Analysis}, 45(2), 150-179.
+}
 
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 
