@@ -174,6 +174,7 @@ errorsarlm <- function(formula, data = list(), listw, na.action, etype="error",
 	lambda.se <- NULL
 	LMtest <- NULL
 	asyvar1 <- FALSE
+        force_assign_eigen <- FALSE
         Hcov <- NULL
         pWinternal <- NULL
         timings[["coefs"]] <- proc.time() - .ptime_start
@@ -183,6 +184,19 @@ errorsarlm <- function(formula, data = list(), listw, na.action, etype="error",
 		tr <- function(A) sum(diag(A))
 		W <- listw2mat(listw)
 		A <- solve(diag(n) - lambda*W)
+                if (con$returnHcov) {
+                    pp <- lm.model$rank
+                    p1 <- 1L:pp
+                    R <- chol2inv(lm.model$qr$qr[p1, p1, drop = FALSE])
+                    B <- tcrossprod(R, x) %*% A
+#                    A <- solve(diag(n) - lambda*t(W))
+                    C <- A %*% x %*% R
+                    Hcov <- B %*% C
+                    attr(Hcov, "method") <- method
+                    timings[["eigen_hcov"]] <- proc.time() - .ptime_start
+                    .ptime_start <- proc.time()
+                }
+
 		WA <- W %*% A
 		asyvar <- matrix(0, nrow=2+p, ncol=2+p)
 		asyvar[1,1] <- n / (2*(s2^2))
@@ -195,27 +209,26 @@ errorsarlm <- function(formula, data = list(), listw, na.action, etype="error",
                 xl <- (x - lambda*WX)
 #		asyvar[3:(p+2),3:(p+2)] <- crossprod(xl)
 		asyvar[3:(p+2),3:(p+2)] <- crossprod(xl)/s2
-		asyvar1 <- solve(asyvar, tol=tol.solve)
-		rownames(asyvar1) <- colnames(asyvar1) <- 
+		asyvar1 <- try(solve(asyvar, tol=tol.solve), silent=TRUE)
+                if (class(asyvar1) == "try-error") {
+                    timings[["eigen_se"]] <- proc.time() - .ptime_start
+                    .ptime_start <- proc.time()
+                    con$fdHess <- TRUE
+                    force_assign_eigen <- TRUE
+                    warning(paste("inversion of asymptotic covariance",
+                        "matrix failed for tol.solve =", tol.solve,
+                        "\n", strsplit(attr(asyvar1, "condition")$message,
+                            ":")[[1]][2], "- using numerical Hessian."))
+                } else {
+		    rownames(asyvar1) <- colnames(asyvar1) <- 
 			c("sigma", "lambda", xcolnames)
 		
-		lambda.se <- sqrt(asyvar1[2,2])
+		    lambda.se <- sqrt(asyvar1[2,2])
 #		lambda.se <- sqrt(s2*asyvar1[2,2])
-                timings[["eigen_se"]] <- proc.time() - .ptime_start
-                .ptime_start <- proc.time()
-                if (con$returnHcov) {
-                    pp <- lm.model$rank
-                    p1 <- 1L:pp
-                    R <- chol2inv(lm.model$qr$qr[p1, p1, drop = FALSE])
-                    B <- tcrossprod(R, x) %*% A
-                    A <- solve(diag(n) - lambda*t(W))
-                    C <- A %*% x %*% R
-                    Hcov <- B %*% C
-                    attr(Hcov, "method") <- method
-                    timings[["eigen_hcov"]] <- proc.time() - .ptime_start
+                    timings[["eigen_se"]] <- proc.time() - .ptime_start
                     .ptime_start <- proc.time()
+		    ase <- TRUE
                 }
-		ase <- TRUE
 	} else {
                 if (con$returnHcov) {
                     pp <- lm.model$rank
@@ -257,13 +270,13 @@ errorsarlm <- function(formula, data = list(), listw, na.action, etype="error",
             if (is.null(trs)) {
                 rownames(fdHess) <- colnames(fdHess) <- 
                     c("lambda", colnames(x))
-                if (method != "eigen") {
+                if (method != "eigen" || force_assign_eigen) {
                     lambda.se <- sqrt(fdHess[1, 1])
                 }
             } else {
                 rownames(fdHess) <- colnames(fdHess) <- 
                     c("sigma2", "lambda", colnames(x))
-                if (method != "eigen") {
+                if (method != "eigen" || force_assign_eigen) {
                     lambda.se <- sqrt(fdHess[2, 2])
                 }
             }

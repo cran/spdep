@@ -19,7 +19,7 @@ as used in Anselin (1988).
 \format{
   This data frame contains the following columns:
   \describe{
-    \item{AREA}{computed by ArcView}
+    \item{AREA_PL}{computed by ArcView (agrees with areas of polygons in the \dQuote{columbus} data set}
     \item{PERIMETER}{computed by ArcView}
     \item{COLUMBUS.}{internal polygon ID (ignore)}
     \item{COLUMBUS.I}{another internal polygon ID (ignore)}
@@ -35,7 +35,7 @@ as used in Anselin (1988).
     \item{DISCBD}{distance to CBD}
     \item{X}{x coordinate (in arbitrary digitizing units, not polygon coordinates)}
     \item{Y}{y coordinate (in arbitrary digitizing units, not polygon coordinates)}
-    \item{AREA}{neighborhood area (computed by SpaceStat)}
+    \item{AREA_SS}{neighborhood area (computed by SpaceStat)}
     \item{NSA}{north-south dummy (North=1)}
     \item{NSB}{north-south dummy (North=1)}
     \item{EW}{east-west dummy (East=1)}
@@ -55,6 +55,6 @@ models.  Dordrecht: Kluwer Academic, Table 12.1 p. 189.
 }
 \note{
 All source data files prepared by
-Luc Anselin, Spatial Analysis Laboratory, Department of Agricultural and Consumer Economics, University of Illinois, Urbana-Champaign, \url{http://sal.agecon.uiuc.edu/datasets/columbus.zip}.
+Luc Anselin, Spatial Analysis Laboratory, Department of Agricultural and Consumer Economics, University of Illinois, Urbana-Champaign, \url{http://geodacenter.org/downloads/data-files/columbus.zip}.
 }
 \keyword{datasets}

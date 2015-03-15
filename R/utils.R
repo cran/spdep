@@ -66,6 +66,12 @@ Szero <- function(listw) {
 }
 
 lag.listw <- function(x, var, zero.policy=NULL, NAOK=FALSE, ...) {
+    if (!is.logical(NAOK)) stop("NAOK must be logical")
+    if (get.listw_is_CsparseMatrix_Option()) {
+	if (!NAOK && any(is.na(var))) stop("NA in variable")
+        stopifnot(is(x, "CsparseMatrix"))
+        res <- drop(as.matrix(unname((x %*% var))))
+    } else {
 	listw <- x
         if (is.null(zero.policy))
             zero.policy <- get("zeroPolicy", envir = .spdepOptions)
@@ -77,8 +83,6 @@ lag.listw <- function(x, var, zero.policy=NULL, NAOK=FALSE, ...) {
 		"not a vector or matrix"))
 	if (!is.numeric(x)) stop(paste(deparse(substitute(var)),
 		"not numeric"))
-	if (!is.logical(NAOK)) stop("NAOK must be logical")
-#	if (any(is.na(x))) stop("NA in X")
         storage.mode(x) <- "double"
 	n <- length(listw$neighbours)
 	cardnb <- card(listw$neighbours)
@@ -98,11 +102,16 @@ lag.listw <- function(x, var, zero.policy=NULL, NAOK=FALSE, ...) {
 
 		}
 	} 
-	if (any(is.na(res))) warning("NAs in lagged values")
-	res
+    }
+    if (any(is.na(res))) warning("NAs in lagged values")
+    res
 }
 
 listw2U <- function(listw) {
+    if (get.listw_is_CsparseMatrix_Option()) {
+        stopifnot(is(listw, "CsparseMatrix"))
+        res <- (listw+t(listw))/2
+    } else {
 	if (!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
 	nb <- listw$neighbours
@@ -157,7 +166,8 @@ listw2U <- function(listw) {
 	attr(res, "region.id") <- attr(nb, "region.id")
 	attr(res, "call") <- match.call()
 	attr(res, "U") <- TRUE
-	res
+    }
+    res
 }
 
 

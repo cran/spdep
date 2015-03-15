@@ -11,7 +11,7 @@
 \title{Graph based spatial weights}
 \description{
 Functions return a graph object containing a list with the vertex
-coordinates and the to and from indices defining the edges. The helper
+coordinates and the to and from indices defining the edges. Some/all of these functions assume that the coordinates are not exactly regularly spaced. The helper
 function \code{graph2nb} converts a graph
 object into a neighbour list. The plot functions plot the graph objects.
 }
@@ -128,5 +128,14 @@ m <- cbind(c(dx, dx, 3+dx, 3+dx), c(dy, 3+dy, dy, 3+dy))
 try(res <- gabrielneigh(m))
 res <- gabrielneigh(m, nnmult=4)
 summary(graph2nb(res))
+grd <- as.matrix(expand.grid(x=1:5, y=1:5)) #gridded data
+r2 <- gabrielneigh(grd)
+set.seed(1)
+grd1 <- as.matrix(expand.grid(x=1:5, y=1:5)) + matrix(runif(50, .0001, .0006), nrow=25)
+r3 <- gabrielneigh(grd1)
+opar <- par(mfrow=c(1,2))
+plot(r2, show=TRUE, linecol=2)
+plot(r3, show=TRUE, linecol=2)
+par(opar)
 }
 \keyword{spatial}

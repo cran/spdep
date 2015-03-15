@@ -129,7 +129,7 @@ exactMoran <- function(I, gamma, alternative="greater", type="Global", np2=NULL,
         sd.ex <- qnorm(0.5-II/pi)
         oType <- "E"
     }
-    if (alternative == "two.sided") p.v <- 2 * pnorm(sd.ex, 
+    if (alternative == "two.sided") p.v <- 2 * pnorm(abs(sd.ex), 
 	lower.tail=FALSE)
     else if (alternative == "greater")
         p.v <- pnorm(sd.ex, lower.tail=FALSE)

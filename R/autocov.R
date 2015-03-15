@@ -13,9 +13,10 @@
 # Re-implementation allowing list representation
 # Roger Bivand 28.11.2005
 # Upgrade to sp classes February 2007, longlat sanity June 2010
+# style changed from "W" to "B" 2015-01-27; see Bardos et al. (2015) for details
 
 autocov_dist <- function(z, xy, nbs=1, type="inverse", zero.policy=NULL,
-   style="W", longlat=NULL) {
+   style="B", longlat=NULL) {
         if (is.null(zero.policy))
             zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))

@@ -32,7 +32,7 @@ write.sn2dat(sn, file)
   \code{read.gwt2nb} returns a neighbour "nb" object with the generalised weights stored as a list element called "dlist" of the "GeoDa" attribute.
 }
 
-\references{Luc Anselin (2003) \emph{GeoDa 0.9 User's Guide}, pp. 80--81, Spatial Analysis Laboratory, Department of Agricultural and Consumer Economics, University of Illinois, Urbana-Champaign, \url{http://agec221.agecon.uiuc.edu/csiss/pdf/geoda093.pdf}; also \url{http://spatial-econometrics.com/data/contents.html}}
+\references{Luc Anselin (2003) \emph{GeoDa 0.9 User's Guide}, pp. 80--81, Spatial Analysis Laboratory, Department of Agricultural and Consumer Economics, University of Illinois, Urbana-Champaign, \url{http://geodacenter.org/downloads/pdfs/geoda093.pdf}; also \url{http://spatial-econometrics.com/data/contents.html}}
 
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
  

@@ -1,3 +1,121 @@
+2015-03-13 10:12  rsbivand
+
+	* R/lag.spsarlm.R,
+	  R/sacsarlm.R: alleviate tol.solve issue in *sarlm
+
+2015-03-13 10:11  rsbivand
+
+	* R/localmoran.exact.R,
+	  R/moran.exact.R: fix localmoran.exact two.sided
+
+2015-03-12 15:29  rsbivand
+
+	* R/lag.spsarlm.R,
+	  R/sacsarlm.R: adding divert to fdHess for lag and sac
+
+2015-03-12 11:59  rsbivand
+
+	* R/error.spsarlm.R,
+	  R/jacobian_setup.R, vignettes/CO69.Rnw: alleviate tol.solve
+	  issue in errorsarlm
+
+2015-03-08 18:53  rsbivand
+
+	* NAMESPACE,
+	  R/lextrB.R, R/lextrW.R, man/lextrB.Rd, src/eminmaxC.c,
+	  src/init.c, src/spdep.h: S style extreme eigenvalues
+
+2015-03-06 12:32  rsbivand
+
+	* R/lextrB.R,
+	  R/lextrW.R, data/oldcol.rda, man/COL.OLD.Rd, man/lextrB.Rd,
+	  man/lm.morantest.Rd, src/eminmaxC.c: disambiguate AREA in oldcol
+
+2015-03-02 18:35  rsbivand
+
+	* man/lextrB.Rd:
+	  adding extreme eigs for W
+
+2015-03-01 19:51  rsbivand
+
+	* DESCRIPTION,
+	  NAMESPACE, R/lextrB.R, R/lextrW.R, src/eminmaxC.c, src/init.c,
+	  src/spdep.h: adding extreme eigs for W
+
+2015-02-17 21:06  rsbivand
+
+	* NAMESPACE,
+	  R/lextrB.R, man/lextrB.Rd: checks on input weights
+
+2015-02-17 10:22  rsbivand
+
+	* R/lextrB.R:
+	  max mustBeB
+
+2015-02-16 21:33  rsbivand
+
+	* DESCRIPTION,
+	  NAMESPACE, R/lextrB.R, man/lextrB.Rd, src/eminmaxC.c,
+	  src/init.c, src/spdep.h: adding extreme eigenvalue code
+
+2015-02-04 09:12  rsbivand
+
+	* DESCRIPTION,
+	  NAMESPACE, man/COL.OLD.Rd, man/NY_data.Rd, man/baltimore.Rd,
+	  man/boston.Rd, man/columbus.Rd, man/eire.Rd, man/nc.sids.Rd,
+	  man/read.gal.Rd, man/read.gwt2nb.Rd, man/wheat.Rd: fix dead URLs
+
+2015-01-27 13:11  rsbivand
+
+	* vignettes/nb_igraph.Rmd:
+	  tidy
+
+2015-01-27 09:00  rsbivand
+
+	* R/autocov.R,
+	  man/autocov_dist.Rd: update autocov_dist to Bardos et al.
+	  (2015)
+
+2015-01-25 19:31  rsbivand
+
+	* R/utils.R:
+	  tidy
+
+2015-01-25 18:14  rsbivand
+
+	* vignettes/nb_igraph.Rmd:
+	  tidy
+
+2015-01-20 10:39  rsbivand
+
+	* man/graphneigh.Rd:
+	  gabrielneigh issue
+
+2015-01-18 17:42  rsbivand
+
+	* DESCRIPTION,
+	  vignettes/nb_igraph.Rmd: tidy
+
+2015-01-18 14:21  rsbivand
+
+	* DESCRIPTION,
+	  vignettes/nb_igraph.Rmd: Matrix all.equal problem
+
+2015-01-16 14:20  rsbivand
+
+	* inst/ChangeLog:
+	  tidy
+
+2015-01-16 14:19  rsbivand
+
+	* ChangeLog:
+	  tidy
+
+2015-01-16 14:04  rsbivand
+
+	* ChangeLog,
+	  inst/ChangeLog: tidy
+
 2015-01-15 21:05  rsbivand
 
 	* DESCRIPTION,

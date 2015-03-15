@@ -241,6 +241,7 @@ sacsarlm <- function(formula, data = list(), listw, listw2=NULL, na.action,
         AIC_lm.model <- AIC(lm.model)
         ase <- FALSE
 	asyvar1 <- FALSE
+        force_assign_eigen <- FALSE
         if (method == "eigen") {
 # taken from spatial/sac_models/sac.m
 	    tr <- function(A) sum(diag(A))
@@ -279,16 +280,28 @@ sacsarlm <- function(formula, data = list(), listw, listw2=NULL, na.action,
             term2 = tr(W2 %*% WA %*% BI)
             asyvar[3, 2] <- term1 + term2
             asyvar[2, 3] <- asyvar[3, 2]
-            asyvar1 <- solve(asyvar, tol.solve=tol.solve)
-            rownames(asyvar1) <- colnames(asyvar1) <- 
+            asyvar1 <- try(solve(asyvar, tol.solve=tol.solve), silent=TRUE)
+            if (class(asyvar1) == "try-error") {
+                timings[["eigen_se"]] <- proc.time() - .ptime_start
+                .ptime_start <- proc.time()
+                con$fdHess <- TRUE
+                force_assign_eigen <- TRUE
+                warning(paste("inversion of asymptotic covariance",
+                    "matrix failed for tol.solve =", tol.solve,
+                    "\n", strsplit(attr(asyvar1, "condition")$message,
+                        ":")[[1]][2], "- using numerical Hessian."))
+                ase=FALSE
+            } else {
+                rownames(asyvar1) <- colnames(asyvar1) <- 
 			c("sigma", "rho", "lambda", xcolnames)
-            ase=TRUE
-            rho.se <- sqrt(asyvar1[2, 2])
-            lambda.se <- sqrt(asyvar1[3, 3])
-            rest.se <- sqrt(diag(asyvar1)[-c(1:3)])
-            nm <- "asymptotic vcov"
-            timings[[nm]] <- proc.time() - .ptime_start
-            .ptime_start <- proc.time()
+                ase=TRUE
+                rho.se <- sqrt(asyvar1[2, 2])
+                lambda.se <- sqrt(asyvar1[3, 3])
+                rest.se <- sqrt(diag(asyvar1)[-c(1:3)])
+                nm <- "asymptotic vcov"
+                timings[[nm]] <- proc.time() - .ptime_start
+                .ptime_start <- proc.time()
+            }
         }
         if (con$fdHess) {
             coefs <- c(rho, lambda, coef.sac)

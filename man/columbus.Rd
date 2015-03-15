@@ -53,7 +53,7 @@ models.  Dordrecht: Kluwer Academic, Table 12.1 p. 189.
 }
 \note{
 All source data files prepared by
-Luc Anselin, Spatial Analysis Laboratory, Department of Agricultural and Consumer Economics, University of Illinois, Urbana-Champaign, \url{http://sal.agecon.uiuc.edu/datasets/columbus.zip}.
+Luc Anselin, Spatial Analysis Laboratory, Department of Agricultural and Consumer Economics, University of Illinois, Urbana-Champaign, \url{http://geodacenter.org/downloads/data-files/columbus.zip}.
 }
 
 \examples{

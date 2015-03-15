@@ -62,7 +62,7 @@ options("warn"=-1)
 library(spdep)
 require(maptools)
 fn <- system.file("etc/shapes/eire.shp", package="spdep")[1]
-prj <- CRS("+proj=utm +zone=30 +units=km")
+prj <- CRS("+proj=utm +zone=30 +units=km +ellps=mod_airy")
 eire <- readShapeSpatial(fn, ID="names", proj4string=prj)
 
 

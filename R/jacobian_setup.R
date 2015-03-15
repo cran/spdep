@@ -28,11 +28,14 @@ jacobianSetup <- function(method, env, con, pre_eig=NULL, trs=NULL, interval=NUL
             Imult <- con$Imult
             if (is.null(interval)) {
                 if (get("listw", envir=env)$style == "B") {
-                    Imult <- ceiling((2/3) * max(sapply(get("listw",
-                        envir=env)$weights, sum)))
                     interval <- c(-0.5, +0.25)
                 } else interval <- c(-1, 0.999)
             }
+            if (get("listw", envir=env)$style == "B") {
+                Imult <- ceiling((2/3) * max(sapply(get("listw",
+                    envir=env)$weights, sum)))
+            }
+
             if (is.null(con$super)) con$super <- as.logical(NA)
             Matrix_setup(env, Imult, con$super, which=which)
         },

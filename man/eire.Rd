@@ -37,7 +37,7 @@ each county consumed by itself}
 group data, Cliff and Ord (1973), p. 107 for remaining variables (also after 
 O'Sullivan, 1968). Polygon borders and Irish data sourced from Michael
 Tiefelsdorf's SPSS Saddlepoint bundle, originally hosted at:
-\url{http://geog-www.sbs.ohio-state.edu/faculty/tiefelsdorf/GeoStat.htm}.
+http://geog-www.sbs.ohio-state.edu/faculty/tiefelsdorf/GeoStat.htm but no longer available.
 }
 \examples{
 require(maptools)

@@ -19,7 +19,7 @@ read.geoda(file, row.names=NULL, skip=0)
   \item{skip}{skip number of lines, as in \code{read.csv()}}
 }
 \details{
-Luc Anselin (2003): Spatial Analysis Laboratory, Department of Agricultural and Consumer Economics, University of Illinois, Urbana-Champaign, \url{http://sal.agecon.uiuc.edu/weights/howto.html}; Luc Anselin (2003) \emph{GeoDa 0.9 User's Guide}, pp. 80--81, Spatial Analysis Laboratory, Department of Agricultural and Consumer Economics, University of Illinois, Urbana-Champaign, \url{http://agec221.agecon.uiuc.edu/csiss/pdf/geoda093.pdf}; GAL - Geographical Algorithms Library, University of Newcastle}
+Luc Anselin (2003): Spatial Analysis Laboratory, Department of Agricultural and Consumer Economics, University of Illinois, Urbana-Champaign, \url{https://geodacenter.asu.edu/system/files/rex1.pdf}; Luc Anselin (2003) \emph{GeoDa 0.9 User's Guide}, pp. 80--81, Spatial Analysis Laboratory, Department of Agricultural and Consumer Economics, University of Illinois, Urbana-Champaign, \url{http://geodacenter.org/downloads/pdfs/geoda093.pdf}; GAL - Geographical Algorithms Library, University of Newcastle}
 
 \value{
 The function \code{read.gal()} returns an object of class \code{nb} with a list of integer vectors containing neighbour region number ids. The function \code{read.geoda} returns a data frame, and issues a warning if the returned object has only one column.
@@ -28,7 +28,7 @@ The function \code{read.gal()} returns an object of class \code{nb} with a list 
 
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 
-\note{Example data downloaded from: \url{http://sal.agecon.uiuc.edu/weights/zips/us48.zip}}
+\note{Example data originally downloaded from now dead link: http://sal.agecon.uiuc.edu/weights/zips/us48.zip}
 
 \seealso{\code{\link{summary.nb}}}
 

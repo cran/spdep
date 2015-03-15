@@ -142,47 +142,13 @@ lagsarlm <- function(formula, data = list(), listw,
         timings[["coefs"]] <- proc.time() - .ptime_start
         .ptime_start <- proc.time()
         assign("first_time", TRUE, envir=env)
-        if (con$fdHess) {
-            coefs <- c(rho, coef.rho)
-            if (con$compiled_sse) {
-               ptr <- .Call("hess_lag_init", PACKAGE="spdep")
-               assign("ptr", ptr, envir=env)
-            }
-            fdHess <- getVmatl(coefs, env,
-               s2, trs, tol.solve=tol.solve, optim=con$optimHess,
-               optimM=con$optimHessMethod)
-            if (con$compiled_sse) {
-                .Call("hess_lag_free", get("ptr", envir=env),
-                     PACKAGE="spdep")
-            }
-            if (is.null(trs)) {
-                rownames(fdHess) <- colnames(fdHess) <- 
-                    c("rho", colnames(x))
-            } else {
-                rownames(fdHess) <- colnames(fdHess) <- 
-                    c("sigma2", "rho", colnames(x))
-            }
-            nm <- paste(method, "fdHess", sep="_")
-            timings[[nm]] <- proc.time() - .ptime_start
-            .ptime_start <- proc.time()
-        } else fdHess <- FALSE
         LMtest <- NULL
 	varb <- FALSE
 	ase <- FALSE
-	if (method != "eigen" && con$fdHess && !do_asy) {
-            if (is.null(trs)) {
- 	        rest.se <- sqrt(diag(fdHess)[-1])
-		rho.se <- sqrt(fdHess[1,1])
-            } else {
- 	        rest.se <- sqrt(diag(fdHess)[-c(1,2)])
-	        rho.se <- sqrt(fdHess[2,2])
-            }
-        } else {
+        force_assign_eigen <- FALSE
+	if (method == "eigen" || do_asy) {
 		rest.se <- NULL
 		rho.se <- NULL
-		LMtest <- NULL
-		ase <- FALSE
-		varb <- FALSE
 		tr <- function(A) sum(diag(A))
 # beware of complex eigenvalues!
                 if (do_asy && method != "eigen") eigen_setup(env)
@@ -206,19 +172,69 @@ lagsarlm <- function(formula, data = list(), listw,
 		xtx <- s2*crossprod(x)
 		inf3 <- rbind(zero, t(xtawxb), xtx)
 		inf <- cbind(inf1, inf2, inf3)
-		varb <- (s2^2) * solve(inf, tol=tol.solve)
-		rownames(varb) <- colnames(varb) <- 
+		varb <- try(solve(inf, tol=tol.solve), silent=TRUE)
+                if (class(varb) == "try-error") {
+                    timings[["eigen_se"]] <- proc.time() - .ptime_start
+                    .ptime_start <- proc.time()
+                    con$fdHess <- TRUE
+                    force_assign_eigen <- TRUE
+                    warning(paste("inversion of asymptotic covariance",
+                        "matrix failed for tol.solve =", tol.solve,
+                        "\n", strsplit(attr(varb, "condition")$message,
+                            ":")[[1]][2], "- using numerical Hessian."))
+                } else {
+                    varb <- (s2^2) * varb
+		    rownames(varb) <- colnames(varb) <- 
 			c("sigma", "rho", colnames(x))
-		rest.se <- sqrt(diag(varb))[-c(1:2)]
-		rho.se <- sqrt(varb[2,2])
-		TW <- (W %*% W) + crossprod(W)
-		T22 <- sum(diag(TW))
-		T21A <- sum(diag(TW %*% A))
-		LMtest <- ((t(r) %*% W %*% r)/s2)^2
-		LMtest <- LMtest/(T22 - ((T21A^2)*(rho.se^2)))
-		ase <- TRUE
-                timings[["eigen_se"]] <- proc.time() - .ptime_start
+		    rest.se <- sqrt(diag(varb))[-c(1:2)]
+		    rho.se <- sqrt(varb[2,2])
+		    TW <- (W %*% W) + crossprod(W)
+		    T22 <- sum(diag(TW))
+		    T21A <- sum(diag(TW %*% A))
+		    LMtest <- ((t(r) %*% W %*% r)/s2)^2
+		    LMtest <- LMtest/(T22 - ((T21A^2)*(rho.se^2)))
+		    ase <- TRUE
+                    timings[["eigen_se"]] <- proc.time() - .ptime_start
+                    .ptime_start <- proc.time()
+                }
 	}
+
+        if (con$fdHess) {
+            coefs <- c(rho, coef.rho)
+            if (con$compiled_sse) {
+               ptr <- .Call("hess_lag_init", PACKAGE="spdep")
+               assign("ptr", ptr, envir=env)
+            }
+            fdHess <- getVmatl(coefs, env,
+               s2, trs, tol.solve=tol.solve, optim=con$optimHess,
+               optimM=con$optimHessMethod)
+            if (con$compiled_sse) {
+                .Call("hess_lag_free", get("ptr", envir=env),
+                     PACKAGE="spdep")
+            }
+            if (is.null(trs)) {
+                rownames(fdHess) <- colnames(fdHess) <- 
+                    c("rho", colnames(x))
+            } else {
+                rownames(fdHess) <- colnames(fdHess) <- 
+                    c("sigma2", "rho", colnames(x))
+            }
+            if (is.null(trs)) {
+ 	        if (method != "eigen" || force_assign_eigen) {
+                    rest.se <- sqrt(diag(fdHess)[-1])
+		    rho.se <- sqrt(fdHess[1,1])
+                }
+            } else {
+ 	        if (method != "eigen" || force_assign_eigen) {
+ 	            rest.se <- sqrt(diag(fdHess)[-c(1,2)])
+	            rho.se <- sqrt(fdHess[2,2])
+                }
+            }
+
+            nm <- paste(method, "fdHess", sep="_")
+            timings[[nm]] <- proc.time() - .ptime_start
+            .ptime_start <- proc.time()
+        } else fdHess <- FALSE
 	call <- match.call()
         if (method=="SE_classic") {
             iC <- get("intern_classic", envir=env)

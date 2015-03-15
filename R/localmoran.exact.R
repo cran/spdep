@@ -125,7 +125,7 @@ as.data.frame.localmoranex <- function(x, row.names=NULL, optional=FALSE, ...) {
         V.I <- (2*sum(tau^2)) / (df*(df+2))
         Z.I <- (x[[i]]$estimate - E.I) / sqrt(V.I)
 	if (x[[i]]$alternative == "two.sided") 
-	    P.I <- 2 * (1 - pnorm(Z.I))
+	    P.I <- 2 * pnorm(abs(Z.I), lower.tail=FALSE)
         else if (x[[i]]$alternative == "greater")
             P.I <- pnorm(Z.I, lower.tail=FALSE)
         else P.I <- pnorm(Z.I)
