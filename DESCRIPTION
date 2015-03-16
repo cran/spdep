@@ -1,6 +1,6 @@
 Package: spdep
-Version: 0.5-86
-Date: 2015-03-01
+Version: 0.5-87
+Date: 2015-03-16
 Title: Spatial Dependence: Weighting Schemes, Statistics and Models
 Encoding: UTF-8
 Authors@R: c(
@@ -52,7 +52,7 @@ Description: A collection of functions to create spatial weights matrix
   models, and generalized spatial two stage least squares models.
 License: GPL (>= 2)
 VignetteBuilder: knitr
-Packaged: 2015-03-15 13:35:01 UTC; rsb
+Packaged: 2015-03-16 07:44:48 UTC; rsb
 Author: Roger Bivand [cre, aut],
   Micah Altman [ctb],
   Luc Anselin [ctb],
@@ -84,4 +84,4 @@ Author: Roger Bivand [cre, aut],
 Maintainer: Roger Bivand <Roger.Bivand@nhh.no>
 NeedsCompilation: yes
 Repository: CRAN
-Date/Publication: 2015-03-15 16:43:34
+Date/Publication: 2015-03-16 10:25:10

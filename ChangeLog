@@ -1,3 +1,13 @@
+2015-03-16 07:42  rsbivand
+
+	* DESCRIPTION,
+	  R/lextrB.R, R/lextrW.R: condition on R version for .lm.fit()
+
+2015-03-15 13:34  rsbivand
+
+	* ChangeLog,
+	  inst/ChangeLog: tidy
+
 2015-03-13 10:12  rsbivand
 
 	* R/lag.spsarlm.R,

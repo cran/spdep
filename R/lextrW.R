@@ -78,9 +78,16 @@ lminW_3 <- function(lw, ev1, n.nei, zero.policy=TRUE,
    
   n.regress <- 0L
   keepgoing6 <- TRUE
+  RV.lm.fit <- paste(R.version$major, R.version$minor, sep=".") > "3.0.3"
+  if (!RV.lm.fit) .lm.fit <- function() {}
   while (keepgoing6) {
     n.regress <- n.regress + 1L
-    lm.y <- .lm.fit(x=cbind(1,ev1.lag), y=ev1)
+    if (RV.lm.fit) {
+      lm.y <- .lm.fit(x=cbind(1,ev1.lag), y=ev1)#lm(y ~ cy)
+    } else {
+      lm.y <- lm.fit(x=cbind(1,ev1.lag), y=ev1)
+    }
+#    lm.y <- .lm.fit(x=cbind(1,ev1.lag), y=ev1)
     sse.new <- crossprod(lm.y$residuals)
     beta <- lm.y$coefficients
    
@@ -217,9 +224,16 @@ lminS_3 <- function(lw, ev1, comp, crd, zero.policy=TRUE,
    
   n.regress <- 0L
   keepgoing6 <- TRUE
+  RV.lm.fit <- paste(R.version$major, R.version$minor, sep=".") > "3.0.3"
+  if (!RV.lm.fit) .lm.fit <- function() {}
   while (keepgoing6) {
     n.regress <- n.regress + 1L
-    lm.y <- .lm.fit(x=cbind(1,ev1.lag), y=ev1)
+    if (RV.lm.fit) {
+      lm.y <- .lm.fit(x=cbind(1,ev1.lag), y=ev1)#lm(y ~ cy)
+    } else {
+      lm.y <- lm.fit(x=cbind(1,ev1.lag), y=ev1)
+    }
+#    lm.y <- .lm.fit(x=cbind(1,ev1.lag), y=ev1)
     sse.new <- crossprod(lm.y$residuals)
     beta <- lm.y$coefficients
    

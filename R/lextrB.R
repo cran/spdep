@@ -135,9 +135,15 @@ lminC_2.3 <- function(lw, y, sse.new, crd, zero.policy=TRUE,
   cy <-  lag.listw(lw, y, zero.policy=zero.policy)
   keepgoing4 <- TRUE
   iter <- 0L
+  RV.lm.fit <- paste(R.version$major, R.version$minor, sep=".") > "3.0.3"
+  if (!RV.lm.fit) .lm.fit <- function() {}
   while(keepgoing4) {
     iter <- iter + 1L
-    lm.y <- .lm.fit(x=cbind(1,cy), y=y)#lm(y ~ cy)
+    if (RV.lm.fit) {
+      lm.y <- .lm.fit(x=cbind(1,cy), y=y)#lm(y ~ cy)
+    } else {
+      lm.y <- lm.fit(x=cbind(1,cy), y=y)
+    }
     sse.new <- crossprod(lm.y$residuals)#summary(lm.y)$sigma
     beta <- lm.y$coefficients
  
@@ -269,6 +275,8 @@ lminC_2.1 <- function(lw, y, crd, zero.policy=TRUE,
   keepgoing2 <- TRUE
   sse.old <- n
   iter <- 0L
+  RV.lm.fit <- paste(R.version$major, R.version$minor, sep=".") > "3.0.3"
+  if (!RV.lm.fit) .lm.fit <- function() {}
   while (keepgoing2) {
     iter <- iter + 1L
 ### lw$neighbours y cy
@@ -302,7 +310,12 @@ lminC_2.1 <- function(lw, y, crd, zero.policy=TRUE,
     y <- y/sqrt(sum(y^2))
     cy <- lag.listw(lw, y, zero.policy=zero.policy)
 
-    lm.y <- .lm.fit(x=cbind(1,cy), y=y)#lm(y ~ cy)
+    if (RV.lm.fit) {
+      lm.y <- .lm.fit(x=cbind(1,cy), y=y)#lm(y ~ cy)
+    } else {
+      lm.y <- lm.fit(x=cbind(1,cy), y=y)
+    }
+#    lm.y <- .lm.fit(x=cbind(1,cy), y=y)#lm(y ~ cy)
     sse.new <- crossprod(lm.y$residuals)#summary(lm.y)$sigma
 
     if (iter > maxiter) {
