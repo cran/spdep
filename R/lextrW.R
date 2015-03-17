@@ -32,7 +32,7 @@ lextrW <- function(lw, zero.policy=TRUE, control=list()) {
   control$useC <- useC
   resl1 <- l_max(lw=lw, zero.policy=zero.policy, control=control)
   if (attr(resl1, "msg") != "converged") warning("lextrW: l_max not converged")
-  lwB <- nb2listw(lw$neighbours, style="B")
+  lwB <- nb2listw(lw$neighbours, style="B", zero.policy=zero.policy)
   resln_2.1 <- lminC_2.1(lw=lwB, y=attr(resl1, "e1")/c(resl1), crd=lwcard,
     zero.policy=zero.policy, control=control)
   if (attr(resln_2.1, "msg") != "converged") warning("lextrW: 2.1 not converged")
@@ -172,7 +172,7 @@ lextrS <- function(lw, zero.policy=TRUE, control=list()) {
   control$useC <- useC
   resl1 <- l_max(lw=lw, zero.policy=zero.policy, control=control)
   if (attr(resl1, "msg") != "converged") warning("lextrS: l_max not converged")
-  lwB <- nb2listw(lw$neighbours, style="B")
+  lwB <- nb2listw(lw$neighbours, style="B", zero.policy=zero.policy)
   resln_2.1 <- lminC_2.1(lw=lwB, y=attr(resl1, "e1")/c(resl1), crd=lwcard,
     zero.policy=zero.policy, control=control)
   if (attr(resln_2.1, "msg") != "converged") warning("lextrS: 2.1 not converged")

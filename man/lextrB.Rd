@@ -45,9 +45,18 @@ if (require(igraph)) {
   B <- as(ab.listb, "symmetricMatrix")
   n <- length(boston.soi)
   f2 <- function(x, extra=NULL) {as.vector(B \%*\% x)}
-  ar1 <- arpack(f2, sym=TRUE, options=list(n=n, nev=2, ncv=8,
-    which="BE", maxiter=200))
+  ar1 <- arpack(f2, sym=TRUE, options=list(n=n, nev=1, ncv=8,
+    which="LA", maxiter=200))
   print(ar1$values)
+  arn <- arpack(f2, sym=TRUE, options=list(n=n, nev=1, ncv=8,
+    which="SA", maxiter=200))
+  print(arn$values)
+#  ar1 <- arpack(f2, sym=TRUE, options=list(n=n, nev=2, ncv=8,
+#    which="BE", maxiter=300))
+# "BE" gives: At line 558 of file dsaup2.f: Fortran runtime error: 
+# Index '9' of dimension 1 of array 'bounds' above upper bound of 8
+# "BE" 
+#  print(ar1$values)
 }
 k5 <- knn2nb(knearneigh(boston.utm, k=5))
 c(l_max(nb2listw(k5, style="B")))
@@ -61,9 +70,17 @@ res_1 <- lextrW(ab.listw)
 c(res_1)
 if (require(igraph)) {
   B <- as(similar.listw(ab.listw), "symmetricMatrix")
-  ar1 <- arpack(f2, sym=TRUE, options=list(n=n, nev=2, ncv=8,
-    which="BE", maxiter=300))
+  ar1 <- arpack(f2, sym=TRUE, options=list(n=n, nev=1, ncv=8,
+    which="LA", maxiter=400))
   print(ar1$values)
+  arn <- arpack(f2, sym=TRUE, options=list(n=n, nev=1, ncv=8,
+    which="SA", maxiter=400))
+  print(arn$values)
+#  ar1 <- arpack(f2, sym=TRUE, options=list(n=n, nev=2, ncv=8,
+#    which="BE", maxiter=300))
+# "BE" gives: At line 558 of file dsaup2.f: Fortran runtime error: 
+# Index '9' of dimension 1 of array 'bounds' above upper bound of 8
+#  print(ar1$values)
 }
 ab.listw <- nb2listw(boston.soi, style="S")
 er <- range(eigenw(similar.listw(ab.listw)))
@@ -72,9 +89,17 @@ res_1 <- lextrS(ab.listw)
 c(res_1)
 if (require(igraph)) {
   B <- as(similar.listw(ab.listw), "symmetricMatrix")
-  ar1 <- arpack(f2, sym=TRUE, options=list(n=n, nev=2, ncv=8,
-    which="BE", maxiter=300))
+  ar1 <- arpack(f2, sym=TRUE, options=list(n=n, nev=1, ncv=8,
+    which="LA", maxiter=300))
   print(ar1$values)
+  arn <- arpack(f2, sym=TRUE, options=list(n=n, nev=1, ncv=8,
+    which="SA", maxiter=300))
+  print(arn$values)
+#  ar1 <- arpack(f2, sym=TRUE, options=list(n=n, nev=2, ncv=8,
+#    which="BE", maxiter=300))
+# "BE" gives: At line 558 of file dsaup2.f: Fortran runtime error: 
+# Index '9' of dimension 1 of array 'bounds' above upper bound of 8
+#  print(ar1$values)
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

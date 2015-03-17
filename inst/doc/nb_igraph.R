@@ -95,14 +95,18 @@ c(determinant(I - rho * Ws, logarithm=TRUE)$modulus)
 ## ------------------------------------------------------------------------
 1/range(eigenw(nb_B))
 library(igraph)
-#f2 <- function(x, extra=NULL) {as.vector(B %*% x)}
+f2 <- function(x, extra=NULL) {as.vector(B %*% x)}
+1/arpack(f2, sym=TRUE, options=list(n=n, nev=1, ncv=8, which="LA", maxiter=200))$values
+1/arpack(f2, sym=TRUE, options=list(n=n, nev=1, ncv=8, which="SA", maxiter=200))$values
 #1/arpack(f2, sym=TRUE, options=list(n=n, nev=2, ncv=8, which="BE", maxiter=200))$values
+# "BE" gives: At line 558 of file dsaup2.f: Fortran runtime error: 
+# Index '9' of dimension 1 of array 'bounds' above upper bound of 8
 
 ## ------------------------------------------------------------------------
 1/range(eigenw(nb_W))
-#f2 <- function(x, extra=NULL) {as.vector(W %*% x)}
-#1/arpack(f2, sym=FALSE, options=list(n=n, nev=1, ncv=8, which="LR", maxiter=200))$values
-#1/arpack(f2, sym=FALSE, options=list(n=n, nev=1, ncv=8, which="SR", maxiter=200))$values
+f2 <- function(x, extra=NULL) {as.vector(W %*% x)}
+1/arpack(f2, sym=FALSE, options=list(n=n, nev=1, ncv=8, which="LR", maxiter=200))$values
+1/arpack(f2, sym=FALSE, options=list(n=n, nev=1, ncv=8, which="SR", maxiter=200))$values
 
 ## ------------------------------------------------------------------------
 class(B)

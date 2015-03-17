@@ -107,10 +107,16 @@ all.equal(rg_eig, rg_GS)
 if (require(igraph)) {
 B <- as(nb2listw(rg, style="B"), "CsparseMatrix")
 f <- function(x, extra=NULL) {as.vector(B \%*\% x)}
-res <- arpack(f, sym=TRUE, options=list(n=nrow(B), nev=2, ncv=8, which="BE",
+res1 <- arpack(f, sym=TRUE, options=list(n=nrow(B), nev=1, ncv=8, which="LA",
  maxiter=200))
-print(res$value)
-print(all.equal(range(Re(rg_eig)), res$value))
+resn <- arpack(f, sym=TRUE, options=list(n=nrow(B), nev=1, ncv=8, which="SA", maxiter=200))
+print(c(resn$value, res1$value))
+#res <- arpack(f, sym=TRUE, options=list(n=nrow(B), nev=2, ncv=8, which="BE",
+# maxiter=200))
+#print(res$value)
+# At line 558 of file dsaup2.f: Fortran runtime error:
+# Index '9' of dimension 1 of array 'bounds' above upper bound of 8
+print(all.equal(range(Re(rg_eig)), c(resn$value, res1$value)))
 lw <- nb2listw(rg, style="W")
 rg_eig <- eigenw(similar.listw(lw))
 print(range(Re(rg_eig)))

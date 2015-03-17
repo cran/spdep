@@ -574,8 +574,22 @@ rowSums(Ws)[21]
 </code></pre>
 
 <pre><code class="r">library(igraph)
-#f2 &lt;- function(x, extra=NULL) {as.vector(B %*% x)}
-#1/arpack(f2, sym=TRUE, options=list(n=n, nev=2, ncv=8, which=&quot;BE&quot;, maxiter=200))$values
+f2 &lt;- function(x, extra=NULL) {as.vector(B %*% x)}
+1/arpack(f2, sym=TRUE, options=list(n=n, nev=1, ncv=8, which=&quot;LA&quot;, maxiter=200))$values
+</code></pre>
+
+<pre><code>## [1] 0.1638329
+</code></pre>
+
+<pre><code class="r">1/arpack(f2, sym=TRUE, options=list(n=n, nev=1, ncv=8, which=&quot;SA&quot;, maxiter=200))$values
+</code></pre>
+
+<pre><code>## [1] -0.3212551
+</code></pre>
+
+<pre><code class="r">#1/arpack(f2, sym=TRUE, options=list(n=n, nev=2, ncv=8, which=&quot;BE&quot;, maxiter=200))$values
+# &quot;BE&quot; gives: At line 558 of file dsaup2.f: Fortran runtime error: 
+# Index &#39;9&#39; of dimension 1 of array &#39;bounds&#39; above upper bound of 8
 </code></pre>
 
 <p>In this case, the results are trivial with small <code>n</code> and a symmetric sparse matrix. It can be challenging to find the <code>maxiter=</code> cutoff for larger <code>n</code>; the <code>which=&quot;BE&quot;</code> argument takes both ends here.</p>
@@ -586,9 +600,17 @@ rowSums(Ws)[21]
 <pre><code>## [1] -1.544645  1.000000
 </code></pre>
 
-<pre><code class="r">#f2 &lt;- function(x, extra=NULL) {as.vector(W %*% x)}
-#1/arpack(f2, sym=FALSE, options=list(n=n, nev=1, ncv=8, which=&quot;LR&quot;, maxiter=200))$values
-#1/arpack(f2, sym=FALSE, options=list(n=n, nev=1, ncv=8, which=&quot;SR&quot;, maxiter=200))$values
+<pre><code class="r">f2 &lt;- function(x, extra=NULL) {as.vector(W %*% x)}
+1/arpack(f2, sym=FALSE, options=list(n=n, nev=1, ncv=8, which=&quot;LR&quot;, maxiter=200))$values
+</code></pre>
+
+<pre><code>## [1] 1+0i
+</code></pre>
+
+<pre><code class="r">1/arpack(f2, sym=FALSE, options=list(n=n, nev=1, ncv=8, which=&quot;SR&quot;, maxiter=200))$values
+</code></pre>
+
+<pre><code>## [1] -1.544645+0i
 </code></pre>
 
 <p>For asymmetric matrices, we need to go to each end separately, so finding the domain bounds can be hard. Using row-standardisation has the nice feature of setting the upper bound to unity, and there are graph methods for finding out whether the lower bound is <code>-1</code>.</p>
