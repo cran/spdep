@@ -10,7 +10,7 @@ lagsarlm <- function(formula, data = list(), listw,
         con <- list(tol.opt=.Machine$double.eps^0.5,
             fdHess=NULL, optimHess=FALSE, optimHessMethod="optimHess",
             compiled_sse=FALSE, Imult=2,
-            cheb_q=5, MC_p=16, MC_m=30, super=NULL, spamPivot="MMD",
+            cheb_q=5, MC_p=16L, MC_m=30L, super=NULL, spamPivot="MMD",
             in_coef=0.1, type="MC", correct=TRUE, trunc=TRUE,
             SE_method="LU", nrho=200, interpn=2000, small_asy=TRUE,
             small=1500, SElndet=NULL, LU_order=FALSE, pre_eig=NULL)

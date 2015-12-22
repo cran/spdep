@@ -64,7 +64,7 @@ Its projection is \code{CRS(+init=epsg:2834)}, the Ohio North State Plane.
 #  "basement", "attached", "detached", "carport"))
 # library(sp)
 # coordinates(house) <- c("long", "lat")
-# proj4string(house) <- CRS("+proj=longlat")
+# proj4string(house) <- CRS("+proj=longlat +ellps=GRS80")
 # library(rgdal)
 # house <- spTransform(house, CRS("+init=epsg:2834"))
 # library(spdep)

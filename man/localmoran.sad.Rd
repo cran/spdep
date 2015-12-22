@@ -107,14 +107,18 @@ Geographical Analysis, 34, pp. 187--206.}
 \examples{
 require(maptools)
 eire <- readShapePoly(system.file("etc/shapes/eire.shp", package="spdep")[1],
-  ID="names", proj4string=CRS("+proj=utm +zone=30 +units=km"))
+  ID="names", proj4string=CRS("+proj=utm +zone=30 +ellps=airy +units=km"))
 eire.nb <- poly2nb(eire)
+lw <- nb2listw(eire.nb)
 #data(eire)
 e.lm <- lm(OWNCONS ~ ROADACC, data=eire)
 e.locmor <- summary(localmoran.sad(e.lm, nb=eire.nb))
 e.locmor
 mean(e.locmor[,1])
-lm.morantest(e.lm, nb2listw(eire.nb))
+sum(e.locmor[,1])/Szero(lw)
+lm.morantest(e.lm, lw)
+# note equality for mean() only when the sum of weights equals
+# the number of observations (thanks to Juergen Symanzik)
 hist(e.locmor[,"Pr. (Sad)"])
 e.wlm <- lm(OWNCONS ~ ROADACC, data=eire, weights=RETSALE)
 e.locmorw1 <- summary(localmoran.sad(e.wlm, nb=eire.nb, resfun=weighted.residuals))
@@ -122,10 +126,11 @@ e.locmorw1
 e.locmorw2 <- summary(localmoran.sad(e.wlm, nb=eire.nb, resfun=rstudent))
 e.locmorw2
 e.errorsar <- errorsarlm(OWNCONS ~ ROADACC, data=eire,
-  listw=nb2listw(eire.nb))
+  listw=lw)
 e.errorsar
 lm.target <- lm(e.errorsar$tary ~ e.errorsar$tarX - 1)
-e.clocmor <- summary(localmoran.sad(lm.target, nb=eire.nb))
+Omega <- tcrossprod(invIrW(lw, rho=e.errorsar$lambda))
+e.clocmor <- summary(localmoran.sad(lm.target, nb=eire.nb, Omega=Omega))
 e.clocmor
 hist(e.clocmor[,"Pr. (Sad)"])
 }

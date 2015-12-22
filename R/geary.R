@@ -81,7 +81,7 @@ geary.test <- function(x, listw, randomisation=TRUE, zero.policy=NULL,
 	}
 	vec <- c(C, EC, VC)
 	names(vec) <- c("Geary C statistic", "Expectation", "Variance")
-	method <- paste("Geary's C test under", ifelse(randomisation,
+	method <- paste("Geary C test under", ifelse(randomisation,
 	    "randomisation", "normality"))
 	data.name <- paste(deparse(substitute(x)), "\nweights:",
 	    deparse(substitute(listw)), "\n")
@@ -159,7 +159,7 @@ geary.mc <- function(x, listw, nsim, zero.policy=NULL,
 	names(statistic) <- "statistic"
 	parameter <- xrank
 	names(parameter) <- "observed rank"
-	method <- "Monte-Carlo simulation of Geary's C"
+	method <- "Monte-Carlo simulation of Geary C"
 	data.name <- paste(deparse(substitute(x)), "\nweights:",
 	    deparse(substitute(listw)), "\nnumber of simulations + 1:",
 	    nsim+1, "\n")

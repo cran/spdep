@@ -59,7 +59,7 @@ of influence neighbours list as \code{boston.soi}.
 \note{Details of the creation of the tract shapefile given in final don't run block; tract boundaries for 1990: \url{http://www.census.gov/geo/maps-data/data/cbf/cbf_tracts.html} then choose 1990 Census and Massachusetts to download: tr25_d90_shp.zip, counties in the BOSTON SMSA \url{http://www.census.gov/population/metro/files/lists/historical/63mfips.txt}; tract conversion table 1980/1970: \url{https://www.icpsr.umich.edu/icpsrweb/ICPSR/studies/7913?q=07913&permit[0]=AVAILABLE}, \url{http://www.icpsr.umich.edu/cgi-bin/bob/zipcart2?path=ICPSR&study=7913&bundle=all&ds=1&dups=yes}}
 
 \source{
- \url{http://lib.stat.cmu.edu/datasets/boston_corrected.txt}
+ Formerly at \dQuote{http://lib.stat.cmu.edu/datasets/boston\_corrected.txt} which is now offline, also as \code{data(BostonHousing2, package="mlbench")}
 }
 \references{
 Harrison, David, and Daniel L. Rubinfeld, Hedonic Housing Prices and
@@ -139,6 +139,13 @@ summary(gp2)}
 # library(rgdal)
 # MAtr90 <- readOGR(".", "tr25_d90")
 ## counties in the BOSTON SMSA
+## https://www.census.gov/population/metro/files/lists/historical/90nfips.txt
+## 1123		Boston-Lawrence-Salem-Lowell-Brockton, MA NECMA
+## 1123 25 009	  Essex County
+## 1123 25 017	  Middlesex County
+## 1123 25 021	  Norfolk County
+## 1123 25 023	  Plymouth County
+## 1123 25 025	  Suffolk County
 # BOSTON_SMSA <- MAtr90[MAtr90$CO %in% c("009", "017", "021", "023", "025"),]
 # proj4string(BOSTON_SMSA) <- CRS(paste("+proj=longlat +datum=NAD27 +no_defs",
 #   "+ellps=clrk66 +nadgrids=@conus,@alaska,@ntv2_0.gsb,@ntv1_can.dat"))
@@ -149,10 +156,8 @@ summary(gp2)}
 # BOSTON_SMSA1 <- BOSTON_SMSA[!is.na(TB_CTC4u),]
 ## union Polygons objects with same 1970 tract code
 #library(rgeos)
-# BOSTON_SMSA2 <- unionSpatialPolygons(BOSTON_SMSA1,
+# BOSTON_SMSA2 <- gUnaryUnion(BOSTON_SMSA1,
 #  id=as.character(BOSTON_SMSA1$TRACTBASE))
-#BOSTON_SMSA2 <- gUnaryUnion(BOSTON_SMSA1,
-# id=as.character(BOSTON_SMSA1$TRACTBASE))
 ## reorder data set
 # mm <- match(as.integer(as.character(row.names(BOSTON_SMSA2))), boston.c$TRACT)
 # df <- boston.c[mm,]

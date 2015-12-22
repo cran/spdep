@@ -4,7 +4,7 @@
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Block up neighbour list for location-less observations}
 \description{
-  The function blocks up a neighbour list for know spatial locations to
+  The function blocks up a neighbour list for known spatial locations to
 create a new neighbour list for multiple location-less observations know to
 belong to the spatial locations, using the identification tags of the
 locations as the key. 

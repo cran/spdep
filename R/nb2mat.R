@@ -1,4 +1,4 @@
-# Copyright 2001-10 by Roger Bivand, Markus Reder and Werner Mueller
+# Copyright 2001-10 by Roger Bivand, Markus Reder and Werner Mueller, 2015 Martin Gubri
 #
 
 
@@ -37,12 +37,17 @@ invIrM <- function(neighbours, rho, glist=NULL, style="W", method="solve",
 		method=method, feasible=feasible)
 }
 
-invIrW <- function(listw, rho, method="solve", feasible=NULL) {
-	if(!inherits(listw, "listw")) stop("Not a weights list")
-	n <- length(listw$neighbours)
-	V <- listw2mat(listw)
+invIrW <- function(x, rho, method="solve", feasible=NULL) {
+	if(inherits(x, "listw")) {
+	  n <- length(x$neighbours)
+	  V <- listw2mat(x)
+	} else if (inherits(x, "Matrix") || inherits(x, "matrix")) {
+	  if (method == "chol" && all(t(x) == x))
+            stop("No Cholesky method for matrix or sparse matrix object")
+          n <- dim(x)[1]
+          V <- x
+	} else stop("Not a weights list or a Sparse Matrix")
 	if (is.null(feasible) || (is.logical(feasible) && !feasible)) {
-		V <- listw2mat(listw)
 		e <- eigen(V, only.values = TRUE)$values
 		if (is.complex(e)) feasible <- 1/(range(Re(e)))
 		else feasible <- 1/(range(e))
@@ -51,13 +56,13 @@ invIrW <- function(listw, rho, method="solve", feasible=NULL) {
                         paste(feasible, collapse=":")))
 	}
 	if (method == "chol"){
-		if (listw$style %in% c("W", "S") && !(can.be.simmed(listw)))
+		if (x$style %in% c("W", "S") && !(can.be.simmed(x)))
 			stop("Cholesky method requires symmetric weights")
-		if (listw$style %in% c("B", "C", "U") && 
-			!(is.symmetric.glist(listw$neighbours, listw$weights)))
+		if (x$style %in% c("B", "C", "U") && 
+			!(is.symmetric.glist(x$neighbours, x$weights)))
 			stop("Cholesky method requires symmetric weights")
-		if (listw$style %in% c("W", "S")) {
-			V <- listw2mat(listw2U(similar.listw(listw)))
+		if (x$style %in% c("W", "S")) {
+			V <- listw2mat(listw2U(similar.listw(x)))
 		}
 		mat <- diag(n) - rho * V
 		res <- chol2inv(chol(mat))

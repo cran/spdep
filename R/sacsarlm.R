@@ -5,9 +5,9 @@ sacsarlm <- function(formula, data = list(), listw, listw2=NULL, na.action,
         trs1=NULL, trs2=NULL, control=list()) {
         timings <- list()
         .ptime_start <- proc.time()
-        con <- list(fdHess=NULL, LAPACK=FALSE,
-           Imult=2L, cheb_q=5L, MC_p=16L, MC_m=30L,
-           super=FALSE, opt_method="nlminb", opt_control=list(),
+        con <- list(fdHess=NULL, #LAPACK=FALSE,
+           Imult=2L, cheb_q=5L, MC_p=16L, MC_m=30L, spamPivot="MMD",
+           in_coef=0.1, super=NULL, opt_method="nlminb", opt_control=list(),
            pars=NULL, npars=4L, pre_eig1=NULL, pre_eig2=NULL)
         nmsC <- names(con)
         con[(namc <- names(control))] <- control
@@ -34,10 +34,10 @@ sacsarlm <- function(formula, data = list(), listw, listw2=NULL, na.action,
         if (!is.null(con$pars)) {
             stopifnot(is.numeric(con$pars))
         }
-        stopifnot(is.integer(con$npars))
-        stopifnot(is.logical(con$fdHess))
-        stopifnot(is.logical(con$LAPACK))
-        stopifnot(is.logical(con$super))
+#        stopifnot(is.integer(con$npars))
+#        stopifnot(is.logical(con$fdHess))
+#        stopifnot(is.logical(con$LAPACK))
+#        stopifnot(is.logical(con$super))
 	can.sim <- FALSE
 	if (listw$style %in% c("W", "S")) 
 		can.sim <- can.be.simmed(listw)
@@ -118,7 +118,7 @@ sacsarlm <- function(formula, data = list(), listw, listw2=NULL, na.action,
         assign("verbose", !quiet, envir=env)
         assign("family", "SAR", envir=env)
         assign("first_time", TRUE, envir=env)
-        assign("LAPACK", con$LAPACK, envir=env)
+#        assign("LAPACK", con$LAPACK, envir=env)
         assign("can.sim", can.sim, envir=env)
         assign("can.sim2", can.sim2, envir=env)
         assign("listw", listw, envir=env)
@@ -354,7 +354,8 @@ sacsar_sse <- function(coefs, env) {
     yl <- get("y", envir=env) - rho * get("wy", envir=env) - 
         lambda * get("w2y", envir=env) + rho * lambda * get("w2wy", envir=env)
     xl <- get("x", envir=env) - lambda * get("WX", envir=env)
-    xl.q <- qr.Q(qr(xl, LAPACK=get("LAPACK", envir=env)))
+    xl.q <- qr.Q(qr(xl, #LAPACK=get("LAPACK", envir=env)
+))
     xl.q.yl <- crossprod(xl.q, yl)
     SSE <- crossprod(yl) - crossprod(xl.q.yl)
     SSE

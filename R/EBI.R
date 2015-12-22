@@ -2,7 +2,7 @@
 # Addition of Martuzzi and Elliott Copyright 2006 Olaf Berke and Roger Bivand
 #
 
-EBImoran <- function (z, listw, nn, S0, zero.policy = NULL) 
+EBImoran <- function (z, listw, nn, S0, zero.policy = NULL, subtract_mean_in_numerator=FALSE) 
 {
         if (is.null(zero.policy))
             zero.policy <- get("zeroPolicy", envir = .spdepOptions)
@@ -10,14 +10,15 @@ EBImoran <- function (z, listw, nn, S0, zero.policy = NULL)
     stopifnot(is.vector(z))
     zm <- mean(z)
     zz <- sum((z - zm)^2)
+    if (subtract_mean_in_numerator) z <- z - zm
     lz <- lag.listw(listw, z, zero.policy = zero.policy)
-    EBI <- (nn/S0) * ((t(z) %*% lz)/zz)
+    EBI <- (nn/S0) * (sum(z * lz)/zz)
     res <- EBI
     res
 }
 
 EBImoran.mc <- function (n, x, listw, nsim, zero.policy = NULL,
- alternative = "greater", spChk = NULL, return_boot=FALSE) 
+ alternative = "greater", spChk = NULL, return_boot=FALSE, subtract_mean_in_numerator=FALSE) 
 {
         if (is.null(zero.policy))
             zero.policy <- get("zeroPolicy", envir = .spdepOptions)
@@ -71,13 +72,16 @@ EBImoran.mc <- function (n, x, listw, nsim, zero.policy = NULL,
         }
         res <- boot(z, statistic=EBI_boot, R=nsim,
             sim="permutation", listw=listw, nn=m, S0=S0,
-            zero.policy=zero.policy, parallel=parallel, ncpus=ncpus, cl=cl)
+            zero.policy=zero.policy,
+            subtract_mean_in_numerator=subtract_mean_in_numerator,
+            parallel=parallel, ncpus=ncpus, cl=cl)
         return(res)
     }
     res <- numeric(length = nsim + 1)
     for (i in 1:nsim) res[i] <- EBImoran(sample(z), listw, m, 
-        S0, zero.policy)
-    res[nsim + 1] <- EBImoran(z, listw, m, S0, zero.policy)
+        S0, zero.policy, subtract_mean_in_numerator=subtract_mean_in_numerator)
+    res[nsim + 1] <- EBImoran(z, listw, m, S0, zero.policy,
+            subtract_mean_in_numerator=subtract_mean_in_numerator)
     rankres <- rank(res)
     zrank <- rankres[length(res)]
     diff <- nsim - zrank
@@ -93,9 +97,11 @@ EBImoran.mc <- function (n, x, listw, nsim, zero.policy = NULL,
     parameter <- zrank
     names(parameter) <- "observed rank"
     method <- "Monte-Carlo simulation of Empirical Bayes Index"
-    data.name <- paste("cases: ", deparse(substitute(n)), ", risk population: ", 
-        deparse(substitute(x)), "\nweights: ", deparse(substitute(listw)), 
-        "\nnumber of simulations + 1: ", nsim + 1, "\n", sep = "")
+    if (subtract_mean_in_numerator) method <- paste(method, "(mean subtracted)")
+    data.name <- paste("cases: ", deparse(substitute(n)),
+        ", risk population: ", deparse(substitute(x)), "\nweights: ",
+        deparse(substitute(listw)), "\nnumber of simulations + 1: ",
+        nsim + 1, "\n", sep = "")
     lres <- list(statistic = statistic, parameter = parameter, 
         p.value = pval, alternative = alternative, method = method, 
         data.name = data.name, res = res, z = z)

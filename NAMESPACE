@@ -1,35 +1,21 @@
 useDynLib(spdep)
 
-importFrom(stats, model.matrix, model.response, aggregate)
-
-importFrom(stats, optimize, optim, nlminb)
-
-importFrom(stats, influence.measures)
-
-importFrom(stats, lag)
-
+importFrom(stats, model.matrix, model.response, aggregate, optimize, optim, nlminb, influence.measures, lag, punif, na.fail, as.formula, terms, lm, model.extract, coefficients, residuals, var, deviance, integrate, summary.lm, coef, pchisq, logLik, gaussian, pnorm, model.weights, model.offset, glm.fit, sd, predict, formula, lm.fit, anova, ppois, model.frame, AIC, qnorm, napredict, nlm, optimHess, resid, fitted, weighted.residuals, weights, naresid, rnorm, optimise, uniroot, mahalanobis, dist, p.adjust, density, fitted.values, delete.response, printCoefmat, quantile, na.omit, cor)
 importFrom(nlme, fdHess)
-
 importFrom(deldir, deldir)
-
 importFrom(boot, boot)
-
 importFrom(MASS, mvrnorm)
-
 importFrom(coda, as.mcmc, HPDinterval)
-
 importFrom(splines, interpSpline)
+importFrom(graphics, par, locator, lines, text, plot.new, plot.window, segments, points, identify, symbols, abline, hist, arrows, axis, stem)
+importFrom(utils, write.table, object.size, read.table, read.csv, packageDescription)
+importFrom(grDevices, rainbow)
 
 import(Matrix)
-#import(MCMCpack)
 importFrom(LearnBayes, rwmetrop)
 
 import(sp)
 import(methods)
-
-#importClassesFrom(spam, spam)
-#importMethodsFrom(spam, Math, Math2)
-#importFrom(spam, validspamobject)
 
 exportMethods(coerce)
 

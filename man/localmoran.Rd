@@ -24,6 +24,11 @@ localmoran(x, listw, zero.policy=NULL, na.action=na.fail,
   \item{mlvar}{default TRUE: values of local Moran's I are reported using the variance of the variable of interest (sum of squared deviances over n), but can be reported as the sample variance, dividing by (n-1) instead; both are used in other implementations.}
   \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
 }
+
+\details{
+The values of local Moran's I are divided by the variance (or sample variance) of the variable of interest to accord with Table 1, p. 103, and formula (12), p. 99, in Anselin (1995), rathar than his formula (7), p. 98.
+}
+
 \value{
 
   \item{Ii}{local moran statistic}
@@ -49,6 +54,11 @@ resI <- localmoran(afcon$totcon, nb2listw(paper.nb))
 printCoefmat(data.frame(resI[oid,], row.names=afcon$name[oid]),
  check.names=FALSE)
 hist(resI[,5])
+mean(resI[,1])
+sum(resI[,1])/Szero(nb2listw(paper.nb))
+moran.test(afcon$totcon, nb2listw(paper.nb))
+# note equality for mean() only when the sum of weights equals
+# the number of observations (thanks to Juergen Symanzik)
 resI <- localmoran(afcon$totcon, nb2listw(paper.nb),
  p.adjust.method="bonferroni")
 printCoefmat(data.frame(resI[oid,], row.names=afcon$name[oid]),

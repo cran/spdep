@@ -70,7 +70,7 @@ Geographical Analysis, 34, pp. 187--206.}
 \examples{
 require(maptools)
 eire <- readShapePoly(system.file("etc/shapes/eire.shp", package="spdep")[1],
-  ID="names", proj4string=CRS("+proj=utm +zone=30 +units=km"))
+  ID="names", proj4string=CRS("+proj=utm +zone=30 +ellps=airy +units=km"))
 eire.nb <- poly2nb(eire)
 #data(eire)
 e.lm <- lm(OWNCONS ~ ROADACC, data=eire)

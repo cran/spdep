@@ -58,7 +58,7 @@ plot(diffnb(ll.nb, gc.nb), xy, add=TRUE, col="red", lty=2)
 title(main="Differences between Euclidean and Great Circle neighbours")
 
 xy1 <- SpatialPoints((as.data.frame(state.center))[m50.48,],
-  proj4string=CRS("+proj=longlat"))
+  proj4string=CRS("+proj=longlat +ellps=GRS80"))
 gck1a <- knn2nb(knearneigh(xy1, k=1))
 all.linked <- max(unlist(nbdists(gck1a, xy1)))
 gc.nb <- dnearneigh(xy1, 0, all.linked)

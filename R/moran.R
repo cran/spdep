@@ -81,7 +81,7 @@ moran.test <- function(x, listw, randomisation=TRUE, zero.policy=NULL,
 		warning("Out-of-range p-value: reconsider test arguments")
 	vec <- c(I, EI, VI)
 	names(vec) <- c("Moran I statistic", "Expectation", "Variance")
-	method <- paste("Moran's I test under", ifelse(randomisation,
+	method <- paste("Moran I test under", ifelse(randomisation,
 	    "randomisation", "normality"))
 	data.name <- paste(xname, ifelse(rank,
 		"using rank correction",""), "\nweights:",
@@ -174,7 +174,7 @@ moran.mc <- function(x, listw, nsim, zero.policy=NULL,
 	names(statistic) <- "statistic"
 	parameter <- xrank
 	names(parameter) <- "observed rank"
-	method <- "Monte-Carlo simulation of Moran's I"
+	method <- "Monte-Carlo simulation of Moran I"
 	data.name <- paste(xname, "\nweights:",
 	    wname, ifelse(is.null(na.act), "", paste("\nomitted:", 
 	    paste(na.act, collapse=", "))), "\nnumber of simulations + 1:",

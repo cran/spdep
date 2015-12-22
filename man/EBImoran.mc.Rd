@@ -10,7 +10,8 @@
 }
 \usage{
 EBImoran.mc(n, x, listw, nsim, zero.policy = NULL, 
- alternative = "greater", spChk=NULL, return_boot=FALSE)
+ alternative = "greater", spChk=NULL, return_boot=FALSE,
+ subtract_mean_in_numerator=FALSE)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
@@ -22,12 +23,13 @@ EBImoran.mc(n, x, listw, nsim, zero.policy = NULL,
   \item{alternative}{a character string specifying the alternative hypothesis, must be one of "greater" (default), or "less"}
   \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
   \item{return_boot}{return an object of class \code{boot} from the equivalent permutation bootstrap rather than an object of class \code{htest}}
+  \item{subtract_mean_in_numerator}{default FALSE, if TRUE subtract mean of z in numerator of EBI equation on p. 2157 in reference.}
 }
 \details{
 The statistic used is (m is the number of observations):
 \deqn{EBI = \frac{m}{\sum_{i=1}^{m}\sum_{j=1}^{m}w_{ij}}
 \frac{\sum_{i=1}^{m}\sum_{j=1}^{m}w_{ij}z_i z_j}{\sum_{i=1}^{m}(z_i - \bar{z})^2}
-}{EBI = (n sum_i sum_j w_ij z_i z_ji) / (S0 sum_i (z_i - zbar)^2)}
+}{EBI = (n sum_i sum_j w_ij z_i z_j) / (S0 sum_i (z_i - zbar)^2)}
 where:
 \deqn{z_i = \frac{p_i - b}{\sqrt{v_i}}}{z_i = (p_i - b) / sqrt(v_i)}
 and:

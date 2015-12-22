@@ -107,10 +107,10 @@ localmoran.sad <- function (model, select, nb, glist = NULL, style = "W",
         attr(statistic, "names") <- "Saddlepoint approximation"
         p.value <- p.sad
         estimate <- c(Ii)
-        attr(estimate, "names") <- "Observed Moran's Ii"
+        attr(estimate, "names") <- "Observed Moran Ii"
         internal1 <- c(omega, sad.r, sad.u)
         attr(internal1, "names") <- c("omega", "sad.r", "sad.u")
-        method <- paste("Saddlepoint approximation for local Moran's I",
+        method <- paste("Saddlepoint approximation for local Moran I",
             "(Barndorff-Nielsen formula)")
         data.name <- paste("region:", select[i],
 	    attr(nb, "region.id")[select[i]],

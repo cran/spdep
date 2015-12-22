@@ -140,8 +140,8 @@ exactMoran <- function(I, gamma, alternative="greater", type="Global", np2=NULL,
     attr(statistic, "names") <- "Exact standard deviate"
     p.value <- p.v
     estimate <- c(I)
-    attr(estimate, "names") <- "Observed Moran's I"
-    method <- paste(type, "Moran's I statistic with exact p-value")
+    attr(estimate, "names") <- "Observed Moran I"
+    method <- paste(type, "Moran I statistic with exact p-value")
 
     res <- list(statistic = statistic, p.value = p.value,
         estimate = estimate, method = method,

@@ -67,7 +67,7 @@ lm.morantest.sad <- function (model, listw, zero.policy = NULL,
     attr(statistic, "names") <- "Saddlepoint approximation"
     p.value <- mres$p.sad
     estimate <- c(I_save)
-    attr(estimate, "names") <- "Observed Moran's I"
+    attr(estimate, "names") <- "Observed Moran I"
     internal1 <- c(mres$omega, mres$sad.r, mres$sad.u)
     attr(internal1, "names") <- c("omega", "sad.r", "sad.u")
     internal2 <- unlist(mres$root)[2:4]

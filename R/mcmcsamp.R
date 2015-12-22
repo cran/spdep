@@ -120,7 +120,7 @@ MCMCsamp.sarlm <- function(object, mcmc = 1L, verbose = NULL, ...,
     assign("verbose", verbose, envir=env)
     assign("family", "SAR", envir=env)
     W <- as(listw, "CsparseMatrix")
-    wy <- c(as.matrix(W %*% object$y))
+    wy <- c(as.matrix(W %*% c(object$y)))
     assign("wy", wy, envir=env)
 
     if (is.numeric(object$resvar)) V <- object$resvar[-1,-1]

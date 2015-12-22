@@ -376,7 +376,7 @@ intImpacts <- function(rho, beta, P, n, mu, Sigma, irho, drop2beta, bnames,
         if (is.complex(e)) interval <- 1/(range(Re(e)))
 	else interval <- 1/(range(e))
         SW <- invIrW(listw, rho)
-        if (type == "lag") res <- lagImpactsExact(SW, P, n)
+        if (type == "lag" || type == "sac") res <- lagImpactsExact(SW, P, n)
         else if (type == "mixed" || type == "sacmixed")
             res <- mixedImpactsExact(SW, P, n, listw)
         timings[["weights_impacts"]] <- proc.time() - .ptime_start

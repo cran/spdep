@@ -72,9 +72,9 @@ lm.morantest <- function(model, listw, zero.policy=NULL,
     	attr(statistic, "names") <- "Moran I statistic standard deviate"
     	p.value <- pv
     	estimate <- c(I, EI, VI)
-    	attr(estimate, "names") <- c("Observed Moran's I", "Expectation",
+    	attr(estimate, "names") <- c("Observed Moran I", "Expectation",
 	    "Variance")
-    	method <- "Global Moran's I for regression residuals"
+    	method <- "Global Moran I for regression residuals"
     	data.name <- paste("\n", paste(strwrap(paste("model: ",
 	    gsub("[[:space:]]+", " ", 
 	    paste(deparse(model$call), sep="", collapse="")))), collapse="\n"),

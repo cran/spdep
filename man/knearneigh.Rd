@@ -56,7 +56,7 @@ summary(llk4.nb, xy, longlat=TRUE)
 summary(gck4.nb, xy, longlat=TRUE)
 
 xy1 <- SpatialPoints((as.data.frame(state.center))[m50.48,],
-  proj4string=CRS("+proj=longlat"))
+  proj4string=CRS("+proj=longlat +ellps=GRS80"))
 gck4a.nb <- knn2nb(knearneigh(xy1, k=4))
 summary(gck4a.nb, xy1)
 }

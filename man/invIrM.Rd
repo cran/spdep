@@ -11,7 +11,7 @@
 \usage{
 invIrM(neighbours, rho, glist=NULL, style="W", method="solve",
  feasible=NULL)
-invIrW(listw, rho, method="solve", feasible=NULL)
+invIrW(x, rho, method="solve", feasible=NULL)
 powerWeights(W, rho, order=250, X, tol=.Machine$double.eps^(3/5))
 }
 
@@ -22,7 +22,7 @@ powerWeights(W, rho, order=250, X, tol=.Machine$double.eps^(3/5))
   \item{style}{\code{style} can take values W, B, C, and S}
   \item{method}{default \code{solve}, can also take value \code{chol}}
   \item{feasible}{if NULL, the given value of rho is checked to see if it lies within its feasible range, if TRUE, the test is not conducted}
-  \item{listw}{a \code{listw} object from for example \code{nb2listw}}
+  \item{x}{either a \code{listw} object from for example \code{nb2listw}, or a }
   \item{W}{A spatial weights matrix (either a dense matrix or a CsparseMatrix)}
   \item{order}{Power series maximum limit}
   \item{X}{A numerical matrix}

@@ -48,11 +48,13 @@ must be one of greater (default), less or two.sided.}
 }
 \author{Markus Reder and Roger Bivand}
 
+\references{Roger Bivand, Werner G. Müller and Markus Reder (2009) "Power calculations for global and local Moran's I." \emph{Computational Statistics \& Data Analysis} 53, 2859-2872.}
+
 \seealso{\code{\link{lm.morantest.sad}}}
 \examples{
 require(maptools)
 eire <- readShapePoly(system.file("etc/shapes/eire.shp", package="spdep")[1],
-  ID="names", proj4string=CRS("+proj=utm +zone=30 +units=km"))
+  ID="names", proj4string=CRS("+proj=utm +zone=30 +ellps=airy +units=km"))
 eire.nb <- poly2nb(eire)
 #data(eire)
 e.lm <- lm(OWNCONS ~ ROADACC, data=eire)

@@ -383,6 +383,7 @@ create_WX <- function(x, listw, zero.policy=NULL, prefix="") {
 	m <- NCOL(x)
 	# check if there are enough regressors
 	xcolnames <- colnames(x)
+        stopifnot(!is.null(xcolnames))
 	K <- ifelse(xcolnames[1] == "(Intercept)", 2, 1)
         Wvars <- NULL
         wxI <- NULL
@@ -400,7 +401,7 @@ create_WX <- function(x, listw, zero.policy=NULL, prefix="") {
                 WX <- matrix(as.numeric(NA), nrow=n,
                     ncol=ifelse(m==1, 1, (m-(K-1))))
 		for (k in K:m) {
-                        j <- ifelse(k==1, 1, k-1)
+                        j <- ifelse(k==1, 1, k-(K-1))
 			WX[,j] <- lag.listw(listw, x[,xcolnames[k]], 
 			    zero.policy=zero.policy)
 			if (any(is.na(WX[,j]))) 
