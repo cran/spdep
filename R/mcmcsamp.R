@@ -110,11 +110,19 @@ MCMCsamp.sarlm <- function(object, mcmc = 1L, verbose = NULL, ...,
     can.sim <- FALSE
     if (listw$style %in% c("W", "S")) 
 	can.sim <- can.be.simmed(listw)
+    weights <- object$weights
+    if (is.null(weights)) weights <- rep(1, N)
+    stopifnot(length(weights) == N)
+    sum_lw <- sum(log(weights))
+    sw <- sqrt(weights)
+
     env <- new.env()
     assign("y", object$y, envir=env)
     assign("x", X, envir=env)
     assign("n", N, envir=env)
     assign("listw", listw, envir=env)
+    assign("sum_lw", sum_lw, envir=env)
+    assign("sw", sw, envir=env)
     assign("can.sim", can.sim, envir=env)
     assign("method", method, envir=env)
     assign("verbose", verbose, envir=env)

@@ -7,6 +7,31 @@
 *  remains his.
 ****/
 
+/*
+This code is described in "Computational Geometry in C" (Second Edition),
+Chapter 8.  It is not written to be comprehensible without the
+explanation in that book.
+
+Prints out one arm configuration to reach given target.
+Assumes number of links >= 3.
+Input:
+   nlinks           Number of links
+   L1 L2 ... Ln     Link lengths
+   x0 y0            target0
+   x1 x2            target1
+   ...
+
+Written by Joseph O'Rourke.
+Last modified: December 1997
+Questions to orourke@cs.smith.edu.
+--------------------------------------------------------------------
+This code is Copyright 1998 by Joseph O'Rourke.  It may be freely
+redistributed in its entirety provided that this copyright notice is
+not removed.
+--------------------------------------------------------------------
+*/
+
+
 #include "spdep.h"
 
 

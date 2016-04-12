@@ -172,7 +172,7 @@ spautolm <- function(formula, data = list(), listw, weights,
         parameters=(ncol(X)+2), aliased=aliased, method=method, family=family,
         zero.policy=zero.policy, weights=weights, interval=interval, trs=trs,
         timings=do.call("rbind", timings)[, c(1, 3)], LLNullLlm=LLNullLlm,
-        fdHess=fdHess, lambda.se=lambda.se, X=X, Y=Y, weights=weights)
+        fdHess=fdHess, lambda.se=lambda.se, X=X, Y=Y)
     if (!is.null(na.act))
 	res$na.action <- na.act
     if (is.null(llprof)) res$llprof <- llprof

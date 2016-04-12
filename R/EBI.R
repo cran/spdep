@@ -2,8 +2,9 @@
 # Addition of Martuzzi and Elliott Copyright 2006 Olaf Berke and Roger Bivand
 #
 
-EBImoran <- function (z, listw, nn, S0, zero.policy = NULL, subtract_mean_in_numerator=FALSE) 
+EBImoran <- function (z, listw, nn, S0, zero.policy = NULL, subtract_mean_in_numerator=TRUE) 
 {
+#default subtract_mean_in_numerator=TRUE 160219 RA
         if (is.null(zero.policy))
             zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
@@ -18,8 +19,10 @@ EBImoran <- function (z, listw, nn, S0, zero.policy = NULL, subtract_mean_in_num
 }
 
 EBImoran.mc <- function (n, x, listw, nsim, zero.policy = NULL,
- alternative = "greater", spChk = NULL, return_boot=FALSE, subtract_mean_in_numerator=FALSE) 
+ alternative = "greater", spChk = NULL, return_boot=FALSE, subtract_mean_in_numerator=TRUE) 
 {
+#default subtract_mean_in_numerator=TRUE 160219 RA
+    message("The default for subtract_mean_in_numerator set TRUE from February 2016")
         if (is.null(zero.policy))
             zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))

@@ -62,8 +62,10 @@ sn2listw <- function(sn) {
 	ii <- 1
 	for (i in 1:n) {
 		if (!is.na(rle.sn$value[ii]) && rle.sn$value[ii] == i) {
-			nlist[[i]] <- as.integer(sn[cs0.sn[ii]:cs1.sn[ii],2])
-			vlist[[i]] <- as.double(sn[cs0.sn[ii]:cs1.sn[ii],3])
+                        ni <- as.integer(sn[cs0.sn[ii]:cs1.sn[ii],2])
+                        o <- order(ni)
+			nlist[[i]] <- ni[o]
+			vlist[[i]] <- as.double(sn[cs0.sn[ii]:cs1.sn[ii],3])[o]
 			ii <- ii+1
 		} else {
 			nlist[[i]] <- 0L

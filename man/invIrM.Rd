@@ -6,7 +6,7 @@
 
 \title{Compute SAR generating operator}
 \description{
-  Computes the matrix used for generating simultaneous autoregressive random variables, for a given value of rho, a neighbours list object, a chosen coding scheme style, and optionally a list of general weights corresponding to neighbours.
+  Computes the matrix used for generating simultaneous autoregressive random variables, for a given value of rho, a neighbours list object or a matrix, a chosen coding scheme style, and optionally a list of general weights corresponding to neighbours.
 }
 \usage{
 invIrM(neighbours, rho, glist=NULL, style="W", method="solve",
@@ -22,14 +22,14 @@ powerWeights(W, rho, order=250, X, tol=.Machine$double.eps^(3/5))
   \item{style}{\code{style} can take values W, B, C, and S}
   \item{method}{default \code{solve}, can also take value \code{chol}}
   \item{feasible}{if NULL, the given value of rho is checked to see if it lies within its feasible range, if TRUE, the test is not conducted}
-  \item{x}{either a \code{listw} object from for example \code{nb2listw}, or a }
+  \item{x}{either a \code{listw} object from for example \code{nb2listw}, or a square spatial weights matrix, optionally a sparse matrix}
   \item{W}{A spatial weights matrix (either a dense matrix or a CsparseMatrix)}
   \item{order}{Power series maximum limit}
   \item{X}{A numerical matrix}
   \item{tol}{Tolerance for convergence of power series}
 }
 \details{
-The \code{invIrW} function generates the full weights matrix V, checks that rho lies in its feasible range between 1/min(eigen(V)) and 1/max(eigen(V)), and returns the nxn inverted matrix \deqn{(I - \rho V)^{-1}}. With method=\dQuote{chol}, Cholesky decomposition is used, thanks to contributed code by Markus Reder and Werner Mueller.
+The \code{invIrW} function generates the full weights matrix V, checks that rho lies in its feasible range between 1/min(eigen(V)) and 1/max(eigen(V)), and returns the nxn inverted matrix \deqn{(I - \rho V)^{-1}}. With method=\dQuote{chol} (only for a listw object), Cholesky decomposition is used, thanks to contributed code by Markus Reder and Werner Mueller.
 
 The \code{powerWeights} function uses power series summation to cumulate the product \deqn{(I - \rho V)^{-1} \%*\% X} from \deqn{(I + \rho V + (\rho V)^2 + \dots) \%*\% X}, which can be done by storing only sparse V and several matrices of the same dimensions as X. This makes it possible to handle larger spatial weights matrices, but is sensitive to the power weights order and the tolerance arguments when the spatial coefficient is close to its bounds, leading to incorrect estimates of the implied inverse matrix.
 }

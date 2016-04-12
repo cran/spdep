@@ -11,7 +11,7 @@
 \usage{
 EBImoran.mc(n, x, listw, nsim, zero.policy = NULL, 
  alternative = "greater", spChk=NULL, return_boot=FALSE,
- subtract_mean_in_numerator=FALSE)
+ subtract_mean_in_numerator=TRUE)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
@@ -23,7 +23,7 @@ EBImoran.mc(n, x, listw, nsim, zero.policy = NULL,
   \item{alternative}{a character string specifying the alternative hypothesis, must be one of "greater" (default), or "less"}
   \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
   \item{return_boot}{return an object of class \code{boot} from the equivalent permutation bootstrap rather than an object of class \code{htest}}
-  \item{subtract_mean_in_numerator}{default FALSE, if TRUE subtract mean of z in numerator of EBI equation on p. 2157 in reference.}
+  \item{subtract_mean_in_numerator}{default TRUE, if TRUE subtract mean of z in numerator of EBI equation on p. 2157 in reference (consulted with Renato Assunção 2016-02-19); until February 2016 the default was FALSE agreeing with the printed paper.}
 }
 \details{
 The statistic used is (m is the number of observations):

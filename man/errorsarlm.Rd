@@ -1,4 +1,4 @@
-% Copyright 2002-13 by Roger S. Bivand
+% Copyright 2002-16 by Roger S. Bivand
 \name{errorsarlm}
 \alias{errorsarlm}
 \alias{lmSLX}
@@ -15,10 +15,10 @@ error models of the form:
 where \eqn{\lambda}{lambda} is found by \code{optimize()} first, and \eqn{\beta}{beta} and other parameters by generalized least squares subsequently. With one of the sparse matrix methods, larger numbers of observations can be handled, but the \code{interval=} argument may need be set when the weights are not row-standardised. When \code{etype} is \dQuote{emixed}, a so-called spatial Durbin error model is fitted, while \code{lmSLX} fits an \code{lm} model augmented with the spatially lagged RHS variables, including the lagged intercept when the spatial weights are not row-standardised. \code{create_WX} creates spatially lagged RHS variables, and is exposed for use in model fitting functions.
 }
 \usage{
-errorsarlm(formula, data=list(), listw, na.action, etype="error",
- method="eigen", quiet=NULL, zero.policy=NULL,
+errorsarlm(formula, data=list(), listw, na.action, weights=NULL,
+ etype="error", method="eigen", quiet=NULL, zero.policy=NULL,
  interval = NULL, tol.solve=1.0e-10, trs=NULL, control=list())
-lmSLX(formula, data = list(), listw, na.action, zero.policy=NULL)
+lmSLX(formula, data = list(), listw, na.action, weights=NULL, zero.policy=NULL)
 create_WX(x, listw, zero.policy=NULL, prefix="")
 }
 %- maybe also `usage' for other objects documented here.
@@ -30,6 +30,7 @@ By default the variables are taken from the environment which the function
 is called.}
   \item{listw}{a \code{listw} object created for example by \code{nb2listw}}
   \item{na.action}{a function (default \code{options("na.action")}), can also be \code{na.omit} or \code{na.exclude} with consequences for residuals and fitted values - in these cases the weights list will be subsetted to remove NAs in the data. It may be necessary to set zero.policy to TRUE because this subsetting may create no-neighbour observations. Note that only weights lists created without using the glist argument to \code{nb2listw} may be subsetted.}
+  \item{weights}{an optional vector of weights to be used in the fitting process. Non-NULL weights can be used to indicate that different observations have different variances (with the values in weights being inversely proportional to the variances); or equivalently, when the elements of weights are positive integers w_i, that each response y_i is the mean of w_i unit-weight observations (including the case that there are w_i observations equal to y_i and the data have been summarized) - \code{\link{lm}}}
   \item{etype}{default "error", may be set to "emixed" to include the spatially lagged independent variables added to X; when "emixed", the lagged intercept is dropped for spatial weights style "W", that is row-standardised weights, but otherwise included}
   \item{method}{"eigen" (default) - the Jacobian is computed as the product 
 of (1 - rho*eigenvalue) using \code{eigenw}, and "spam" or "Matrix_J" for strictly symmetric weights lists of styles "B" and "C", or made symmetric by similarity (Ord, 1975, Appendix C) if possible for styles "W" and "S", using code from the spam package or Matrix package to calculate the determinant; \dQuote{Matrix} and \dQuote{spam_update} provide updating Cholesky decomposition methods; "LU" provides an alternative sparse matrix decomposition approach. In addition, there are "Chebyshev" and Monte Carlo "MC" approximate log-determinant methods; the Smirnov/Anselin (2009) trace approximation is available as "moments". Three methods: "SE_classic", "SE_whichMin", and "SE_interp" are provided experimentally, the first to attempt to emulate the behaviour of Spatial Econometrics toolbox ML fitting functions. All use grids of log determinant values, and the latter two attempt to ameliorate some features of "SE_classic".
@@ -136,10 +137,12 @@ standard errors)}
   \item{intern_classic}{a data frame of detval matrix row choices used by the SE toolbox classic method}
   \item{zero.policy}{zero.policy for this model}
   \item{na.action}{(possibly) named vector of excluded or omitted observations if non-default na.action argument used}
+  \item{weights}{weights used in model fitting}
+  \item{emixedImps}{for \dQuote{emixed} models, a  list of three impact matrixes (impacts and standard errors) for direct, indirect and total impacts; total impacts calculated using gmodels::estimable}
 
 The internal sar.error.* functions return the value of the log likelihood function at \eqn{\lambda}{lambda}.
 
-The \code{lmSLX} function returns an \dQuote{lm} object.
+The \code{lmSLX} function returns an \dQuote{lm} object with a \dQuote{mixedImps} list of three impact matrixes (impacts and standard errors) for direct, indirect and total impacts; total impacts calculated using gmodels::estimable.
 }
 \references{Cliff, A. D., Ord, J. K. 1981 \emph{Spatial processes}, Pion;
 Ord, J. K. 1975 Estimation methods for models of spatial interaction,
@@ -160,7 +163,7 @@ Bivand, R. S., Hauke, J., and Kossowski, T. (2013). Computing the Jacobian in Ga
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 
 \seealso{\code{\link{lm}}, \code{\link{lagsarlm}}, \code{\link{similar.listw}}, \code{\link{summary.sarlm}}, \code{\link{predict.sarlm}},
-\code{\link{residuals.sarlm}}, \code{\link{do_ldet}}
+\code{\link{residuals.sarlm}}, \code{\link{do_ldet}}, \code{\link[gmodels]{estimable}}
 }
 
 \examples{
@@ -184,8 +187,10 @@ summary(COL.errW.M, correlation=TRUE)
 COL.SDEMW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  lw, method="eigen", etype="emixed")
 summary(COL.SDEMW.eig, correlation=TRUE)
+do.call("cbind", COL.SDEMW.eig$emixedImps)
 COL.SLX <- lmSLX(CRIME ~ INC + HOVAL, data=COL.OLD, listw=lw)
 summary(COL.SLX)
+do.call("cbind", attr(COL.SLX, "mixedImps"))
 COL.SLX <- lmSLX(CRIME ~ INC + HOVAL + I(HOVAL^2), data=COL.OLD, listw=lw)
 summary(COL.SLX)
 \donttest{
@@ -206,6 +211,7 @@ glst <- lapply(dists, function(d) 1/(d^opt$maximum))
 lw <- nb2listw(dnb, glist=glst, style="B")
 SLX <- lmSLX(CRIME ~ INC + HOVAL, data=COL.OLD, listw=lw)
 summary(SLX)
+do.call("cbind", attr(SLX, "mixedImps"))
 }
 NA.COL.OLD <- COL.OLD
 NA.COL.OLD$CRIME[20:25] <- NA

@@ -36,6 +36,11 @@ esar1f <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
 summary(esar1f)
 res <- MCMCsamp(esar1f, mcmc=5000, burnin=500, listw=listw_NY)
 summary(res)
+esar1fw <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
+ listw=listw_NY, weights=POP8, family="SAR", method="eigen")
+summary(esar1fw)
+res <- MCMCsamp(esar1fw, mcmc=5000, burnin=500, listw=listw_NY)
+summary(res)
 ecar1f <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
  listw=listw_NY, family="CAR", method="eigen")
 summary(ecar1f)
@@ -58,6 +63,11 @@ summary(esar0)
 res <- MCMCsamp(esar0, mcmc=5000, burnin=500, listw=listw_NY)
 summary(res)
 \dontrun{
+esar0w <- errorsarlm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
+ listw=listw_NY, weights=POP8)
+summary(esar0)
+res <- MCMCsamp(esar0w, mcmc=5000, burnin=500, listw=listw_NY)
+summary(res)
 esar1 <- errorsarlm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
  listw=listw_NY, etype="emixed")
 summary(esar1)

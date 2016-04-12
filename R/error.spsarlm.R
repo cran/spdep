@@ -1,9 +1,9 @@
-# Copyright 1998-2013 by Roger Bivand (non-W styles Rein Halbersma)
+# Copyright 1998-2016 by Roger Bivand (non-W styles Rein Halbersma)
 #
 
-errorsarlm <- function(formula, data = list(), listw, na.action, etype="error",
-	method="eigen", quiet=NULL, zero.policy=NULL, interval=NULL, 
-	tol.solve=1.0e-10, trs=NULL, control=list()) {
+errorsarlm <- function(formula, data = list(), listw, na.action, weights=NULL,
+        etype="error", method="eigen", quiet=NULL, zero.policy=NULL,
+        interval=NULL, tol.solve=1.0e-10, trs=NULL, control=list()) {
         timings <- list()
         .ptime_start <- proc.time()
         con <- list(tol.opt=.Machine$double.eps^0.5, returnHcov=TRUE,
@@ -23,37 +23,54 @@ errorsarlm <- function(formula, data = list(), listw, na.action, etype="error",
         if (is.null(zero.policy))
             zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
-        if (class(formula) != "formula") formula <- as.formula(formula)
-	mt <- terms(formula, data = data)
-	mf <- lm(formula, data, na.action=na.action, method="model.frame")
-	na.act <- attr(mf, "na.action")
 	if (!inherits(listw, "listw")) stop("No neighbourhood list")
         stopifnot(is.logical(con$optimHess))
         stopifnot(is.logical(con$LAPACK))
 #        stopifnot(is.logical(con$super))
         stopifnot(is.logical(con$compiled_sse))
         stopifnot(is.character(con$spamPivot))
+        if (class(formula) != "formula") formula <- as.formula(formula)
+#	mt <- terms(formula, data = data)
+#	mf <- lm(formula, data, na.action=na.action, method="model.frame")
+#
+        mf <- match.call(expand.dots = FALSE)
+        m <- match(c("formula", "data", "weights", "na.action"), names(mf), 0)
+        mf <- mf[c(1, m)]
+        mf$drop.unused.levels <- TRUE
+        mf[[1]] <- as.name("model.frame")
+        mf <- eval(mf, parent.frame())
+        mt <- attr(mf, "terms")
+#
+	na.act <- attr(mf, "na.action")
+	if (!is.null(na.act)) {
+	    subset <- !(1:length(listw$neighbours) %in% na.act)
+	    listw <- subset(listw, subset, zero.policy=zero.policy)
+	}
+
 	switch(etype, error = if (!quiet)
                 cat("\nSpatial autoregressive error model\n"),
 	    emixed = if (!quiet)
                 cat("\nSpatial mixed autoregressive error model\n"),
 	    stop("\nUnknown model type\n"))
-	can.sim <- FALSE
-	if (listw$style %in% c("W", "S")) 
-		can.sim <- can.be.simmed(listw)
-	if (!is.null(na.act)) {
-	    subset <- !(1:length(listw$neighbours) %in% na.act)
-	    listw <- subset(listw, subset, zero.policy=zero.policy)
-	}
+
 	y <- model.response(mf, "numeric")
 	if (any(is.na(y))) stop("NAs in dependent variable")
 	x <- model.matrix(mt, mf)
 	if (any(is.na(x))) stop("NAs in independent variable")
-	if (NROW(x) != length(listw$neighbours))
+        n <- nrow(x)
+	if (n != length(listw$neighbours))
 	    stop("Input data and neighbourhood list have different dimensions")
-	wy <- lag.listw(listw, y, zero.policy=zero.policy)
-	n <- NROW(x)
+#
+        weights <- as.vector(model.extract(mf, "weights"))
+        if (!is.null(weights) && !is.numeric(weights)) 
+            stop("'weights' must be a numeric vector")
+        if (is.null(weights)) weights <- rep(as.numeric(1), n)
+        if (any(is.na(weights))) stop("NAs in weights")
+        if (any(weights < 0)) stop("negative weights")
+#
 	m <- NCOL(x)
+	xxcolnames <- colnames(x)
+
         stopifnot(is.logical(con$small_asy))
         if (method != "eigen") {
             if (con$small >= n && con$small_asy) do_asy <- TRUE
@@ -72,7 +89,7 @@ errorsarlm <- function(formula, data = list(), listw, na.action, etype="error",
 		rm(WX)
 	}
 # added aliased after trying boston with TOWN dummy
-	lm.base <- lm(y ~ x - 1)
+	lm.base <- lm(y ~ x - 1, weights=weights)
 	aliased <- is.na(coefficients(lm.base))
 	cn <- names(aliased)
 	names(aliased) <- substr(cn, 2, nchar(cn))
@@ -80,11 +97,15 @@ errorsarlm <- function(formula, data = list(), listw, na.action, etype="error",
 		nacoef <- which(aliased)
 		x <- x[,-nacoef]
 	}
+#
+        sw <- sqrt(weights)
+#
         LL_null_lm <- NULL
 	if ("(Intercept)" %in% colnames(x)) LL_null_lm <- logLik(lm(y ~ 1))
 	m <- NCOL(x)
 	xcolnames <- colnames(x)
 	K <- ifelse(xcolnames[1] == "(Intercept)", 2, 1)
+	wy <- lag.listw(listw, y, zero.policy=zero.policy)
 	if (any(is.na(wy)))
 	    stop("NAs in lagged dependent variable")
 # added no intercept Guillaume Blanchet 091103
@@ -107,6 +128,11 @@ errorsarlm <- function(formula, data = list(), listw, na.action, etype="error",
 	colnames(WX) <- xcolnames
 	rm(wx)
 
+	can.sim <- FALSE
+	if (listw$style %in% c("W", "S")) 
+		can.sim <- can.be.simmed(listw)
+        sum_lw <- sum(log(weights))
+
 #        env <- new.env(parent=globalenv())
         env <- new.env()
         assign("y", y, envir=env)
@@ -125,6 +151,8 @@ errorsarlm <- function(formula, data = list(), listw, na.action, etype="error",
         assign("similar", FALSE, envir=env)
         assign("f_calls", 0L, envir=env)
         assign("hf_calls", 0L, envir=env)
+        assign("sum_lw", sum_lw, envir=env)
+        assign("sw", sw, envir=env)
         timings[["set_up"]] <- proc.time() - .ptime_start
         .ptime_start <- proc.time()
 
@@ -155,7 +183,8 @@ errorsarlm <- function(formula, data = list(), listw, na.action, etype="error",
         nm <- paste(method, "opt", sep="_")
         timings[[nm]] <- proc.time() - .ptime_start
         .ptime_start <- proc.time()
-	lm.target <- lm(I(y - lambda*wy) ~ I(x - lambda*WX) - 1)
+	lm.target <- lm(I(y - lambda*wy) ~ I(x - lambda*WX) - 1,
+            weights=weights)
 	r <- as.vector(residuals(lm.target))
 	fit <- as.vector(y - r)
 	p <- lm.target$rank
@@ -164,10 +193,47 @@ errorsarlm <- function(formula, data = list(), listw, na.action, etype="error",
 	rest.se <- (summary(lm.target)$coefficients[,2])*sqrt((n-p)/n)
 	coef.lambda <- coefficients(lm.target)
 	names(coef.lambda) <- xcolnames
-        Vs <- summary.lm(lm.target, correlation = FALSE)$cov.unscaled
+        sum_lm_target <- summary.lm(lm.target, correlation = FALSE)
+        emixedImps <- NULL
+	if (etype == "emixed") {
+            odd <- (m%/%2) > 0
+            if (odd) {
+                m2 <- (m-1)/2
+            } else {
+                m2 <- m/2
+            }
+            if (K == 1 && odd) {
+                warning("model configuration issue: no total impacts")
+            } else {
+                cm <- matrix(0, ncol=m, nrow=m2)
+                if (K == 2) {
+                    if (odd) {
+                        rownames(cm) <- xxcolnames[2:(m2+1)]
+                    } else {
+                        rownames(cm) <- xxcolnames[1:m2]
+                    }
+                    for (i in 1:m2) cm[i, c(i+1, i+(m2+1))] <- 1
+                    dirImps <- sum_lm_target$coefficients[2:(m2+1), 1:2]
+                    rownames(dirImps) <- rownames(cm)
+                    indirImps <- sum_lm_target$coefficients[(m2+2):m, 1:2]
+                    rownames(indirImps) <- rownames(cm)
+                } else {
+                    rownames(cm) <- xxcolnames[1:m2]
+                    for (i in 1:m2) cm[i, c(i, i+m2)] <- 1
+                    dirImps <- sum_lm_target$coefficients[1:m2, 1:2]
+                    rownames(dirImps) <- rownames(cm)
+                    indirImps <- sum_lm_target$coefficients[(m2+1):m, 1:2]
+                    rownames(indirImps) <- rownames(cm)
+                }
+            }
+            totImps <- as.matrix(estimable(lm.target, cm)[, 1:2])
+            emixedImps <- list(dirImps=dirImps, indirImps=indirImps,
+                totImps=totImps)
+        }
+        Vs <- sum_lm_target$cov.unscaled
         tarX <- model.matrix(lm.target)
         tary <- model.response(model.frame(lm.target))
-	lm.model <- lm(y ~ x - 1)
+	lm.model <- lm(y ~ x - 1, weights=weights)
         logLik_lm.model <- logLik(lm.model)
         AIC_lm.model <- AIC(lm.model)
 	ase <- FALSE
@@ -188,9 +254,9 @@ errorsarlm <- function(formula, data = list(), listw, na.action, etype="error",
                     pp <- lm.model$rank
                     p1 <- 1L:pp
                     R <- chol2inv(lm.model$qr$qr[p1, p1, drop = FALSE])
-                    B <- tcrossprod(R, x) %*% A
+                    B <- tcrossprod(R, (sw*x)) %*% A
 #                    A <- solve(diag(n) - lambda*t(W))
-                    C <- A %*% x %*% R
+                    C <- A %*% (sw*x) %*% R
                     Hcov <- B %*% C
                     attr(Hcov, "method") <- method
                     timings[["eigen_hcov"]] <- proc.time() - .ptime_start
@@ -206,7 +272,7 @@ errorsarlm <- function(formula, data = list(), listw, na.action, etype="error",
 		asyvar[2,2] <- tr(WA %*% WA) + tr(crossprod(WA))
 # bug found 100224 German Muchnik Izon
 #		asyvar[3:(p+2),3:(p+2)] <- s2*(t(x - lambda*WX) %*% 
-                xl <- (x - lambda*WX)
+                xl <- sw * (x - lambda*WX)
 #		asyvar[3:(p+2),3:(p+2)] <- crossprod(xl)
 		asyvar[3:(p+2),3:(p+2)] <- crossprod(xl)/s2
 		asyvar1 <- try(solve(asyvar, tol=tol.solve), silent=TRUE)
@@ -234,7 +300,7 @@ errorsarlm <- function(formula, data = list(), listw, na.action, etype="error",
                     pp <- lm.model$rank
                     p1 <- 1L:pp
                     R <- chol2inv(lm.model$qr$qr[p1, p1, drop = FALSE])
-                    B <- tcrossprod(R, x)
+                    B <- tcrossprod(R, (sw*x))
                     W <- as(get("listw", envir=env), "CsparseMatrix")
                     B0 <- powerWeights(W=W, rho=lambda, order=con$pWOrder,
                         X=B, tol=tol.solve)
@@ -242,7 +308,7 @@ errorsarlm <- function(formula, data = list(), listw, na.action, etype="error",
                         !attr(B0, "internal")$conv)
                         pWinternal <- c(pWinternal, attr(B0, "internal"))
                     B1 <- as(B0, "matrix")
-                    C <- x %*% R
+                    C <- (sw*x) %*% R
                     C0 <- powerWeights(W=t(W), rho=lambda, order=con$pWOrder,
                         X=C, tol=tol.solve)
                     if (!is.null(attr(C0, "internal")) &&
@@ -305,7 +371,7 @@ errorsarlm <- function(formula, data = list(), listw, na.action, etype="error",
                 timings=do.call("rbind", timings)[, c(1, 3)], 
                 f_calls=get("f_calls", envir=env),
                 hf_calls=get("hf_calls", envir=env), intern_classic=iC,
-                pWinternal=pWinternal),
+                pWinternal=pWinternal, weights=weights, emixedImps=emixedImps),
                 class=c("sarlm"))
         rm(env)
         GC <- gc()
@@ -327,7 +393,9 @@ sar_error_sse <- function(lambda, env) {
         if (ft) assign("first_time", FALSE, envir=env)
     } else {
         yl <- get("y", envir=env) - lambda * get("wy", envir=env)
+        yl <- get("sw", envir=env) * yl
         xl <- get("x", envir=env) - lambda * get("WX", envir=env)
+        xl <- get("sw", envir=env) * xl
 	xl.q <- qr.Q(qr(xl, LAPACK=get("LAPACK", envir=env)))
 	xl.q.yl <- crossprod(xl.q, yl)
 #        xl.q.yl <- qr.qty(qr(xl, LAPACK=get("LAPACK", envir=env)), yl)
@@ -342,33 +410,93 @@ sar.error.f <- function(lambda, env) {
     n <- get("n", envir=env)
     s2 <- SSE/n
     ldet <- do_ldet(lambda, env)
-    ret <- (ldet - ((n/2)*log(2*pi)) - (n/2)*log(s2) - (1/(2*(s2)))*SSE)
+    ret <- (ldet + (1/2)*get("sum_lw", envir=env) - ((n/2)*log(2*pi)) - 
+        (n/2)*log(s2) - (1/(2*(s2)))*SSE)
     if (get("verbose", envir=env)) cat("lambda:", lambda, " function:", ret, " Jacobian:", ldet, " SSE:", SSE, "\n")
     assign("f_calls", get("f_calls", envir=env)+1L, envir=env)
     ret
 }
 
-lmSLX <- function(formula, data = list(), listw, na.action, zero.policy=NULL) {
+lmSLX <- function(formula, data = list(), listw, na.action, weights=NULL, zero.policy=NULL) {
         if (is.null(zero.policy))
             zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
         if (class(formula) != "formula") formula <- as.formula(formula)
-	mt <- terms(formula, data = data)
-	mf <- lm(formula, data, na.action=na.action, method="model.frame")
+#	mt <- terms(formula, data = data)
+#	mf <- lm(formula, data, na.action=na.action, weights=weights,
+#            method="model.frame")
+        mf <- match.call(expand.dots = FALSE)
+        m <- match(c("formula", "data", "weights", "na.action"), names(mf), 0)
+        mf <- mf[c(1, m)]
+        mf$drop.unused.levels <- TRUE
+        mf[[1]] <- as.name("model.frame")
+        mf <- eval(mf, parent.frame())
+        mt <- attr(mf, "terms")
+
 	na.act <- attr(mf, "na.action")
 	if (!inherits(listw, "listw")) stop("No neighbourhood list")
 	if (!is.null(na.act)) {
 	    subset <- !(1:length(listw$neighbours) %in% na.act)
 	    listw <- subset(listw, subset, zero.policy=zero.policy)
 	}
+        
 	y <- model.response(mf, "numeric")
 	if (any(is.na(y))) stop("NAs in dependent variable")
 	x <- model.matrix(mt, mf)
 	if (any(is.na(x))) stop("NAs in independent variable")
-        WX <- create_WX(x, listw, zero.policy=zero.policy, prefix="")
-        data$WX <- WX
-        nfo <- update(formula, . ~ . + WX)
-        lm.model <- lm(nfo, data=data, na.action=na.action)
+        n <- nrow(x)
+        nclt <- colnames(x)
+
+        weights <- as.vector(model.extract(mf, "weights"))
+        if (!is.null(weights) && !is.numeric(weights)) 
+            stop("'weights' must be a numeric vector")
+        if (is.null(weights)) weights <- rep(as.numeric(1), n)
+        if (any(is.na(weights))) stop("NAs in weights")
+        if (any(weights < 0)) stop("negative weights")
+
+        WX <- create_WX(x, listw, zero.policy=zero.policy, prefix="lag")
+        x <- cbind(x, WX)
+        lm.model <- lm(y ~ x - 1, weights=weights)
+
+        sum_lm_model <- summary.lm(lm.model, correlation = FALSE)
+        mixedImps <- NULL
+	K <- ifelse(isTRUE(grep("\\(Intercept\\)",
+            names(coefficients(lm.model))[1]) == 1L), 2, 1)
+        m <- length(coefficients(lm.model))
+        odd <- (m%/%2) > 0
+        if (odd) {
+            m2 <- (m-1)/2
+        } else {
+            m2 <- m/2
+        }
+        if (K == 1 && odd) {
+            warning("model configuration issue: no total impacts")
+        } else {
+            cm <- matrix(0, ncol=m, nrow=m2)
+            if (K == 2) {
+                if (odd) {
+                    rownames(cm) <- nclt[2:(m2+1)]
+                } else {
+                    rownames(cm) <- nclt[1:m2]
+                 }
+                for (i in 1:m2) cm[i, c(i+1, i+(m2+1))] <- 1
+                dirImps <- sum_lm_model$coefficients[2:(m2+1), 1:2]
+                rownames(dirImps) <- rownames(cm)
+                indirImps <- sum_lm_model$coefficients[(m2+2):m, 1:2]
+                rownames(indirImps) <- rownames(cm)
+            } else {
+                rownames(cm) <- nclt[1:m2] # FIXME
+                for (i in 1:m2) cm[i, c(i, i+m2)] <- 1
+                dirImps <- sum_lm_model$coefficients[1:m2, 1:2]
+                rownames(dirImps) <- rownames(cm)
+                indirImps <- sum_lm_model$coefficients[(m2+1):m, 1:2]
+                rownames(indirImps) <- rownames(cm)
+            }
+            totImps <- as.matrix(estimable(lm.model, cm)[, 1:2])
+            mixedImps <- list(dirImps=dirImps, indirImps=indirImps,
+                totImps=totImps)
+        }
+        attr(lm.model, "mixedImps") <- mixedImps
         lm.model
 }
 

@@ -665,7 +665,7 @@ SE_setup_intern <- function(env, SE_method="LU", p=16, m=30, nrho=100,
 
   switch(SE_method,
     LU = {tull <- LU_setup(env, which=which)},
-    MC = {tull <- mcdet_setup(env, p=16, m=30, which=which)}, 
+    MC = {tull <- mcdet_setup(env, p=p, m=m, which=which)}, 
     stop("...\n\nUnknown SE_method\n"))
 
     rho <- seq(interval[1], interval[2], length.out=nrho)

@@ -10,9 +10,11 @@ importFrom(splines, interpSpline)
 importFrom(graphics, par, locator, lines, text, plot.new, plot.window, segments, points, identify, symbols, abline, hist, arrows, axis, stem)
 importFrom(utils, write.table, object.size, read.table, read.csv, packageDescription)
 importFrom(grDevices, rainbow)
+if (.Platform$OS.type == "windows") importFrom(grDevices, bringToTop)
 
 import(Matrix)
 importFrom(LearnBayes, rwmetrop)
+importFrom(gmodels, estimable)
 
 import(sp)
 import(methods)

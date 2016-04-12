@@ -44,10 +44,12 @@ trW <- function(W=NULL, m=30, p=16, type="mult", listw=NULL, momentsSymmetry=TRU
             listw <- mat2listw(W)
         }
         tr <- mom_calc(listw, m)
+        n <- length(listw$neighbours)
     } else stop("unknown type")
     timings[["make_traces"]] <- proc.time() - .ptime_start
     attr(tr, "timings") <- do.call("rbind", timings)[, c(1, 3)]
     attr(tr, "type") <- type
+    attr(tr, "n") <- n
     tr
 }
 
@@ -288,7 +290,7 @@ processXSample <- function(x, drop2beta, type, iicept, icept, n, listw,
 
 intImpacts <- function(rho, beta, P, n, mu, Sigma, irho, drop2beta, bnames,
     interval, type, tr, R, listw, tol, empirical, Q, icept, iicept, p,
-    mess=FALSE) {
+    mess=FALSE, samples=NULL) {
     if (is.null(listw) && is.null(tr))
         stop("either tr or listw must be given")
     timings <- list()
@@ -311,9 +313,11 @@ intImpacts <- function(rho, beta, P, n, mu, Sigma, irho, drop2beta, bnames,
         timings[["trace_impacts"]] <- proc.time() - .ptime_start
         .ptime_start <- proc.time()
         if (!is.null(R)) {
-            samples <- mvrnorm(n=R, mu=mu, Sigma=Sigma, tol=tol,
-                empirical=empirical)
-            if (mess) samples[,irho] <- 1 - exp(samples[,irho])
+            if (is.null(samples)) {
+                samples <- mvrnorm(n=R, mu=mu, Sigma=Sigma, tol=tol,
+                    empirical=empirical)
+                if (mess) samples[,irho] <- 1 - exp(samples[,irho])
+            }
             if (!is.null(interval)) {
                 check <- ((samples[,irho] > interval[1]) & 
                     (samples[,irho] < interval[2]))
@@ -682,6 +686,7 @@ summary.lagImpact <- function(object, ..., zstats=FALSE, short=FALSE, reportQ=NU
             if ("gstsls" %in% attr(object, "iClass")) 
                 tp <- "GSTSLS"
     }
+    if ("MCMC_sar_g" %in% attr(object, "iClass")) tp <- "MCMC samples"
     attr(res, "tp") <- tp
     class(res) <- "summary.lagImpact"
     res
@@ -704,7 +709,12 @@ print.summary.lagImpact <- function(x, ...) {
     }
     cat("========================================================\n")
 
-    cat("Simulation results (", attr(x, "tp"), " variance matrix):\n", sep="")
+    if (!is.null(attr(x, "tp")) && attr(x, "tp") == "MCMC samples") {
+        cat("MCMC sample impact results:\n")
+    } else {
+        cat("Simulation results (", attr(x, "tp"), " variance matrix):\n",
+            sep="")
+    }
     if (!attr(x, "short")) {
         cat("Direct:\n")
         print(x$direct_sum)

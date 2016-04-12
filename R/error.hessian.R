@@ -38,7 +38,7 @@ sar_error_hess_sse <- function(lambda, beta, env) {
     } else {
         yl <- get("y", envir=env) - lambda * get("wy", envir=env)
         xl <- get("x", envir=env) - lambda * get("WX", envir=env)
-        res <- yl - (xl %*% beta)
+        res <- get("sw", envir=env) * (yl - (xl %*% beta))
         SSE <- c(crossprod(res))
     }
     SSE
@@ -53,8 +53,8 @@ f_errlm_hess <- function(coefs, env) {
     n <- get("n", envir=env)
     s2 <- SSE/n
     det <- do_ldet(lambda, env)
-    ret <- (det - ((n/2) * log(2 * pi)) - (n/2) * log(s2) - 
-        (1/(2 * s2)) * SSE)
+    ret <- (det + (1/2)*get("sum_lw", envir=env) - ((n/2) * log(2 * pi)) - 
+        (n/2) * log(s2) - (1/(2 * s2)) * SSE)
     if (get("verbose", envir=env)) cat("lambda:", lambda, " function:", ret,
         " Jacobian:", det, " SSE:", SSE, "\n")
     assign("hf_calls", get("hf_calls", envir=env)+1L, envir=env)
@@ -67,7 +67,8 @@ insert_asye <- function(coefs, env, s2, mat, trs) {
     p <- length(coefs)-1L
     p2 <- p+2
     omat <- matrix(0, nrow=p2, ncol=p2)
-    LX <- get("x", envir=env) - lambda * get("WX", envir=env)
+    LX <- get("sw", envir=env) * (get("x", envir=env) - lambda *
+        get("WX", envir=env))
 #    omat[3:p2, 3:p2] <- -crossprod(LX)*s2
 #    omat[3:p2, 3:p2] <- -crossprod(LX)
     omat[3:p2, 3:p2] <- -crossprod(LX)/s2
