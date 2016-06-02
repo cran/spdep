@@ -19,7 +19,7 @@ object into a neighbour list. The plot functions plot the graph objects.
 gabrielneigh(coords, nnmult=3)
 relativeneigh(coords, nnmult=3)
 %beta.skel(coords,beta)
-soi.graph(tri.nb, coords)
+soi.graph(tri.nb, coords, quadsegs=10)
 graph2nb(gob, row.names=NULL,sym=FALSE)
 \method{plot}{Gabriel}(x, show.points=FALSE, add=FALSE, linecol=par(col), ...)
 \method{plot}{relative}(x, show.points=FALSE, add=FALSE, linecol=par(col),...)
@@ -29,6 +29,7 @@ graph2nb(gob, row.names=NULL,sym=FALSE)
   \item{coords}{matrix of region point coordinates}
   \item{nnmult}{scaling factor for memory allocation, default 3; if higher values are required, the function will exit with an error; example below thanks to Dan Putler}
   \item{tri.nb}{a neighbor list created from tri2nb}
+  \item{quadsegs}{number of line segments making a quarter circle buffer, see \code{\link[rgeos]{gBuffer}}}
 %  \item{beta}{the parameter for a beta skeleton}
   \item{gob}{a graph object created from any of the graph funtions}
   \item{row.names}{character vector of region ids to be added to the
@@ -64,7 +65,7 @@ where x,y,z and S are as before. The sphere of influence graph is
 defined for a finite point set S, let \eqn{r_x} be the distance from point x
 to its nearest neighbor in S, and \eqn{C_x} is the circle centered on x. Then
 x and y are SOI neigbors iff \eqn{C_x} and \eqn{C_y} intersect in at
-least 2 places.
+least 2 places. From 2016-05-31, Computational Geometry in C code replaced by calls to functions in \pkg{RANN} and \pkg{rgeos}; with a large \code{quadsegs=} argument, the behaviour of the function is the same, otherwise buffer intersections only closely approximate the original function.
 
 %The \eqn{beta}{\beta} 
 See \code{\link{card}} for details of \dQuote{nb} objects.
@@ -108,7 +109,6 @@ par(mfrow=c(2,2))
 col.tri.nb<-tri2nb(coords)
 col.gab.nb<-graph2nb(gabrielneigh(coords), sym=TRUE)
 col.rel.nb<- graph2nb(relativeneigh(coords), sym=TRUE)
-col.soi.nb<- graph2nb(soi.graph(col.tri.nb,coords), sym=TRUE)
 plot(columbus, border="grey")
 plot(col.tri.nb,coords,add=TRUE)
 title(main="Delaunay Triangulation")
@@ -119,8 +119,11 @@ plot(columbus, border="grey")
 plot(col.rel.nb, coords, add=TRUE)
 title(main="Relative Neighbor Graph")
 plot(columbus, border="grey")
-plot(col.soi.nb, coords, add=TRUE)
-title(main="Sphere of Influence Graph")
+if (require(rgeos, quietly=TRUE) && require(RANN, quietly=TRUE)) {
+  col.soi.nb<- graph2nb(soi.graph(col.tri.nb,coords), sym=TRUE)
+  plot(col.soi.nb, coords, add=TRUE)
+  title(main="Sphere of Influence Graph")
+}
 par(mfrow=c(1,1))
 dx <- rep(0.25*0:4,5)
 dy <- c(rep(0,5),rep(0.25,5),rep(0.5,5), rep(0.75,5),rep(1,5))

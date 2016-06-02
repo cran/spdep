@@ -9,7 +9,6 @@ static const R_CMethodDef CEntries[]  = {
     {"compute_gabriel", (DL_FUNC) &compute_gabriel, 7},
     {"compute_relative", (DL_FUNC) &compute_relative, 7},
     {"prunemst", (DL_FUNC) &prunemst, 4},
-    {"compute_soi", (DL_FUNC) &compute_soi, 10},
     {"gcdist", (DL_FUNC) &gcdist, 5},
     {"knearneigh", (DL_FUNC) &knearneigh, 7},
     {NULL, NULL, 0}

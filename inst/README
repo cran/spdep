@@ -26,13 +26,6 @@ man/compon.Rd, man/graphneigh.Rd, man/nboperations.Rd are copyright (c)
 2001 by Nicholas Lewin-Koh and are subject to the licence at the foot
 of this file.
 
-File: src/soigraph.c is copyright (c) 2001 by Nicholas Lewin-Koh and
-is subject to the licence at the foot of this file, but also contains
-subroutines TwoCirclesxx and SubVec, which are adapted for R and Double
-precision coordinates by Nicholas Lewin-Koh, from Computational Geometry
-in C, Joseph O.Rourke, Cambridge University Press (1998). Copyright for
-those subroutines remains his.
-
 File: R/lag.spsarlm.R is copyright (c) 1998-2002 by Roger Bivand and Andrew
 Bernat, and is subject to the licence at the foot of this file.
 

@@ -302,7 +302,9 @@ coords <- coordinates(Syracuse)
 IDs <- row.names(as(Syracuse, "data.frame"))
 #FIXME library(tripack)
 Sy4_nb <- tri2nb(coords, row.names=IDs)
-Sy5_nb <- graph2nb(soi.graph(Sy4_nb, coords), row.names=IDs)
+if (require(rgeos, quietly=TRUE) && require(RANN, quietly=TRUE)) {
+  Sy5_nb <- graph2nb(soi.graph(Sy4_nb, coords), row.names=IDs)
+} else Sy5_nb <- NULL
 Sy6_nb <- graph2nb(gabrielneigh(coords), row.names=IDs)
 Sy7_nb <- graph2nb(relativeneigh(coords), row.names=IDs)
 @
@@ -320,8 +322,10 @@ plot(Syracuse, border="grey60")
 plot(Sy4_nb, coords, add=TRUE, pch=".")
 text(bbox(Syracuse)[1,1], bbox(Syracuse)[2,2], labels="a)", cex=0.8)
 plot(Syracuse, border="grey60")
-plot(Sy5_nb, coords, add=TRUE, pch=".")
-text(bbox(Syracuse)[1,1], bbox(Syracuse)[2,2], labels="b)", cex=0.8)
+if (!is.null(Sy5_nb)) {
+  plot(Sy5_nb, coords, add=TRUE, pch=".")
+  text(bbox(Syracuse)[1,1], bbox(Syracuse)[2,2], labels="b)", cex=0.8)
+}
 plot(Syracuse, border="grey60")
 plot(Sy6_nb, coords, add=TRUE, pch=".")
 text(bbox(Syracuse)[1,1], bbox(Syracuse)[2,2], labels="c)", cex=0.8)
@@ -334,7 +338,7 @@ par(oopar)
 @ 
 \caption{(\textbf{a})
 Delauney triangulation neighbours; (\textbf{b}) Sphere of
-influence neighbours; (\textbf{c}) Gabriel graph neighbours;
+influence neighbours (if available); (\textbf{c}) Gabriel graph neighbours;
 (\textbf{d}) Relative graph neighbours} \label{fig:NB_graph}\vspace*{-12pt}
 \end{figure}
 
@@ -361,8 +365,9 @@ spatial weights can become block-diagonal if observations are appropriately sort
 
 \begin{footnotesize}
 <<echo=TRUE>>= 
-nb_l <- list(Triangulation=Sy4_nb, SOI=Sy5_nb, Gabriel=Sy6_nb,
+nb_l <- list(Triangulation=Sy4_nb, Gabriel=Sy6_nb,
   Relative=Sy7_nb)
+if (!is.null(Sy5_nb)) nb_l <- c(nb_l, list(SOI=Sy5_nb))
 sapply(nb_l, function(x) is.symmetric.nb(x, verbose=FALSE, force=TRUE))
 sapply(nb_l, function(x) n.comp.nb(x)$nc)
 @

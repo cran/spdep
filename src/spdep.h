@@ -52,7 +52,6 @@ void dfs(SEXP nblst, SEXP cmpnm, SEXP visited, int curcmp, int nodeid);
 void compute_gabriel(int *no_nodes, int *g1, int *g2, int *nogab, int *ngaballoc,  double *nodes_xd, double *nodes_yd);
 void compute_relative(int *no_nodes, int *g1, int *g2, int *nogab, int *ngaballoc, double *nodes_xd, double *nodes_yd);
 void prunemst(int *e1, int *e2, int *ne, int *gr);
-void compute_soi(int *no_nodes, int *g1, int *g2, int *noedges, int *noneigh, int *neigh, int *nearneigh, double *rad, double *nodes_xd, double *nodes_yd);
 
 void gcdist(double *lon1, double *lon2, double *lat1, double *lat2, double *dist);
 void knearneigh(int *kin, int *pnte, int *p, double *test, int *res, double *dists, int *lonlat);

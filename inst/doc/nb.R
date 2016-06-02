@@ -157,19 +157,21 @@ cat("\\includegraphics[width=0.95\\textwidth]{", file, "}\n\n", sep="")
 
 
 ###################################################
-### code chunk number 18: nb.Rnw:300-307
+### code chunk number 18: nb.Rnw:300-309
 ###################################################
 coords <- coordinates(Syracuse)
 IDs <- row.names(as(Syracuse, "data.frame"))
 #FIXME library(tripack)
 Sy4_nb <- tri2nb(coords, row.names=IDs)
-Sy5_nb <- graph2nb(soi.graph(Sy4_nb, coords), row.names=IDs)
+if (require(rgeos, quietly=TRUE) && require(RANN, quietly=TRUE)) {
+  Sy5_nb <- graph2nb(soi.graph(Sy4_nb, coords), row.names=IDs)
+} else Sy5_nb <- NULL
 Sy6_nb <- graph2nb(gabrielneigh(coords), row.names=IDs)
 Sy7_nb <- graph2nb(relativeneigh(coords), row.names=IDs)
 
 
 ###################################################
-### code chunk number 19: nb.Rnw:313-333
+### code chunk number 19: nb.Rnw:315-337
 ###################################################
 .iwidth <- 5
 .iheight <- 3.5
@@ -182,8 +184,10 @@ plot(Syracuse, border="grey60")
 plot(Sy4_nb, coords, add=TRUE, pch=".")
 text(bbox(Syracuse)[1,1], bbox(Syracuse)[2,2], labels="a)", cex=0.8)
 plot(Syracuse, border="grey60")
-plot(Sy5_nb, coords, add=TRUE, pch=".")
-text(bbox(Syracuse)[1,1], bbox(Syracuse)[2,2], labels="b)", cex=0.8)
+if (!is.null(Sy5_nb)) {
+  plot(Sy5_nb, coords, add=TRUE, pch=".")
+  text(bbox(Syracuse)[1,1], bbox(Syracuse)[2,2], labels="b)", cex=0.8)
+}
 plot(Syracuse, border="grey60")
 plot(Sy6_nb, coords, add=TRUE, pch=".")
 text(bbox(Syracuse)[1,1], bbox(Syracuse)[2,2], labels="c)", cex=0.8)
@@ -200,16 +204,17 @@ cat("\\includegraphics[width=0.95\\textwidth]{", file, "}\n\n", sep="")
 
 
 ###################################################
-### code chunk number 20: nb.Rnw:363-367
+### code chunk number 20: nb.Rnw:367-372
 ###################################################
-nb_l <- list(Triangulation=Sy4_nb, SOI=Sy5_nb, Gabriel=Sy6_nb,
+nb_l <- list(Triangulation=Sy4_nb, Gabriel=Sy6_nb,
   Relative=Sy7_nb)
+if (!is.null(Sy5_nb)) nb_l <- c(nb_l, list(SOI=Sy5_nb))
 sapply(nb_l, function(x) is.symmetric.nb(x, verbose=FALSE, force=TRUE))
 sapply(nb_l, function(x) n.comp.nb(x)$nc)
 
 
 ###################################################
-### code chunk number 21: nb.Rnw:386-392
+### code chunk number 21: nb.Rnw:391-397
 ###################################################
 Sy8_nb <- knn2nb(knearneigh(coords, k=1), row.names=IDs)
 Sy9_nb <- knn2nb(knearneigh(coords, k=2), row.names=IDs)
@@ -220,7 +225,7 @@ sapply(nb_l, function(x) n.comp.nb(x)$nc)
 
 
 ###################################################
-### code chunk number 22: nb.Rnw:398-415
+### code chunk number 22: nb.Rnw:403-420
 ###################################################
 .iwidth <- 5
 .iheight <- 2.5
@@ -248,7 +253,7 @@ cat("\\includegraphics[width=0.95\\textwidth]{", file, "}\n\n", sep="")
 
 
 ###################################################
-### code chunk number 23: nb.Rnw:439-449
+### code chunk number 23: nb.Rnw:444-454
 ###################################################
 dsts <- unlist(nbdists(Sy8_nb, coords))
 summary(dsts)
@@ -263,7 +268,7 @@ sapply(nb_l, function(x) n.comp.nb(x)$nc)
 
 
 ###################################################
-### code chunk number 24: nb.Rnw:455-472
+### code chunk number 24: nb.Rnw:460-477
 ###################################################
 .iwidth <- 5
 .iheight <- 2.5
@@ -291,7 +296,7 @@ cat("\\includegraphics[width=0.95\\textwidth]{", file, "}\n\n", sep="")
 
 
 ###################################################
-### code chunk number 25: nb.Rnw:481-498
+### code chunk number 25: nb.Rnw:486-503
 ###################################################
 .iwidth <- 5
 .iheight <- 2.5
@@ -319,20 +324,20 @@ cat("\\includegraphics[width=0.95\\textwidth]{", file, "}\n\n", sep="")
 
 
 ###################################################
-### code chunk number 26: nb.Rnw:523-525
+### code chunk number 26: nb.Rnw:528-530
 ###################################################
 dsts0 <- unlist(nbdists(NY_nb, coordinates(NY8)))
 summary(dsts0)
 
 
 ###################################################
-### code chunk number 27: nb.Rnw:557-558
+### code chunk number 27: nb.Rnw:562-563
 ###################################################
 Sy0_nb_lags <- nblag(Sy0_nb, maxlag=9)
 
 
 ###################################################
-### code chunk number 28: nb.Rnw:571-581
+### code chunk number 28: nb.Rnw:576-586
 ###################################################
 library(xtable)
 names(Sy0_nb_lags) <- c("first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth")
@@ -347,14 +352,14 @@ print(xtable(t(res1), align=c("r", "|", rep("r", nn)), digits=0), floating=FALSE
 
 
 ###################################################
-### code chunk number 29: nb.Rnw:608-610
+### code chunk number 29: nb.Rnw:613-615
 ###################################################
 cell2nb(7, 7, type="rook", torus=TRUE)
 cell2nb(7, 7, type="rook", torus=FALSE)
 
 
 ###################################################
-### code chunk number 30: nb.Rnw:627-634
+### code chunk number 30: nb.Rnw:632-639
 ###################################################
 data(meuse.grid)
 coordinates(meuse.grid) <- c("x", "y")
