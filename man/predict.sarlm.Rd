@@ -1,6 +1,7 @@
 % Copyright 2002 by Roger S. Bivand, 2015 Martin Gubri
 \name{predict.sarlm}
 \alias{predict.sarlm}
+\alias{predict.SLX}
 \alias{print.sarlm.pred}
 \alias{as.data.frame.sarlm.pred}
 
@@ -15,13 +16,14 @@ trend, signal, and noise, or other types of predictors --- see references.
 \method{predict}{sarlm}(object, newdata = NULL, listw = NULL, pred.type = "TS", all.data = FALSE,
  zero.policy = NULL, legacy = TRUE, legacy.mixed = FALSE, power = NULL, order = 250,
  tol = .Machine$double.eps^(3/5), spChk = NULL, ...)
+\method{predict}{SLX}(object, newdata, listw, zero.policy=NULL, ...)
 \method{print}{sarlm.pred}(x, ...)
 \method{as.data.frame}{sarlm.pred}(x, ...)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
   \item{object}{\code{sarlm} object returned by \code{lagsarlm}, 
-\code{errorsarlm} or \code{sacsarlm}}
+\code{errorsarlm} or \code{sacsarlm}, the method for SLX objects takes the output of \code{lmSLX}}
   \item{newdata}{data frame in which to predict --- if NULL, predictions are
 for the data on which the model was fitted. Should have row names corresponding to region.id. If row names are exactly the same than the ones used for training, it uses in-sample predictors for forecast.  See \sQuote{Details}}
   \item{listw}{a \code{listw} object created for example by \code{nb2listw}. In the out-of-sample prediction case (ie. if newdata is not NULL), if \code{legacy.mixed=FALSE} or if \code{pred.type!="TS"}, it should include both in-sample and out-of-sample spatial units. In this case, if regions of the listw are not in the correct order, they are reordered.  See \sQuote{Details}}
@@ -204,6 +206,17 @@ all.equal(p2, p4, check.attributes=FALSE)
 p5 <- predict(COL.mix.eig, newdata=COL.OLD, listw=lw, pred.type = "TS",
  legacy=TRUE, power=TRUE, legacy.mixed = TRUE)
 all.equal(p2, p5, check.attributes=FALSE)
+
+COL.SLX <- lmSLX(CRIME ~ INC + HOVAL, data=COL.OLD, listw=lw)
+pslx0 <- predict(COL.SLX)
+pslx1 <- predict(COL.SLX, newdata=COL.OLD, listw=lw)
+all.equal(pslx0, pslx1)
+COL.OLD1 <- COL.OLD
+COL.OLD1$INC <- COL.OLD1$INC + 1
+pslx2 <- predict(COL.SLX, newdata=COL.OLD1, listw=lw)
+sum(coef(COL.SLX)[c(2,4)])
+mean(pslx2-pslx1)
 }
+
 
 \keyword{spatial}

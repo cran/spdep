@@ -1,3 +1,32 @@
+2016-07-29 19:42  rsbivand
+
+	* DESCRIPTION: tidy
+
+2016-06-21 11:43  rsbivand
+
+	* R/lm.LMtests.R: tidy
+
+2016-06-20 11:27  rsbivand
+
+	* DESCRIPTION, NAMESPACE, R/jacobian.R, R/lag.spsarlm.R,
+	  R/spBreg.R, data/elect80.rda, man/impacts.sarlm.Rd,
+	  man/lagsarlm.Rd: adding Bayesian lag model
+
+2016-06-17 19:14  rsbivand
+
+	* R/error.spsarlm.R, R/sarlm.R: add impacts and predict methods for
+	  SLX
+
+2016-06-17 10:12  rsbivand
+
+	* DESCRIPTION, NAMESPACE, R/error.spsarlm.R, R/impacts.R,
+	  man/errorsarlm.Rd, man/impacts.sarlm.Rd, man/predict.sarlm.Rd:
+	  add impacts and predict methods for SLX
+
+2016-05-31 16:27  rsbivand
+
+	* ChangeLog, inst/ChangeLog: tidy
+
 2016-05-31 16:25  rsbivand
 
 	* man/graphneigh.Rd, vignettes/nb.Rnw: remove questioned C code

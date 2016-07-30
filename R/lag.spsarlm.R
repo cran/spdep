@@ -36,6 +36,7 @@ lagsarlm <- function(formula, data = list(), listw,
 	    subset <- !(1:length(listw$neighbours) %in% na.act)
 	    listw <- subset(listw, subset, zero.policy=zero.policy)
 	}
+        if (type == "Durbin") type <- "mixed"
 	switch(type, lag = if (!quiet) cat("\nSpatial lag model\n"),
 	    mixed = if (!quiet) cat("\nSpatial mixed autoregressive model\n"),
 	    stop("\nUnknown model type\n"))

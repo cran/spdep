@@ -1,20 +1,24 @@
-% Copyright 2002-12 by Roger S. Bivand
+% Copyright 2002-16 by Roger S. Bivand
 \name{lagsarlm}
 \alias{lagsarlm}
+\alias{spBreg_lag}
 \title{Spatial simultaneous autoregressive lag model estimation}
 \description{
-  Maximum likelihood estimation of spatial simultaneous autoregressive
-lag and spatial Durbin (mixed) models of the form:
+  The \code{lagsarlm} function provides Maximum likelihood estimation of spatial simultaneous autoregressive lag and spatial Durbin (mixed) models of the form:
 
 \deqn{y = \rho W y + X \beta + \varepsilon}{y = rho W y + X beta + e}
 
 where \eqn{\rho}{rho} is found by \code{optimize()} first, and \eqn{\beta}{beta} and other parameters by generalized least squares subsequently (one-dimensional search using optim performs badly on some platforms). In the spatial Durbin (mixed) model, the spatially lagged independent variables are added to X. Note that interpretation of the fitted coefficients should use impact measures, because of the feedback loops induced by the data generation process for this model. With one of the sparse matrix methods, larger numbers of observations can be handled, but the \code{interval=} argument may need be set when the weights are not row-standardised.
+
+The \code{spBreg_lag} function is an early-release version of the Matlab Spatial Econometrics Toolbox function \code{sar_g.m}, using drawing by inversion, and not accommodating heteroskedastic disturbances.
 }
 \usage{
 lagsarlm(formula, data = list(), listw, 
 	na.action, type="lag", method="eigen", quiet=NULL, 
 	zero.policy=NULL, interval=NULL, tol.solve=1.0e-10, trs=NULL, 
 	control=list())
+spBreg_lag(formula, data = list(), listw, na.action, type="lag",
+    zero.policy=NULL, control=list())
 }
 \arguments{
   \item{formula}{a symbolic description of the model to be fit. The details 
@@ -24,7 +28,7 @@ By default the variables are taken from the environment which the function
 is called.}
   \item{listw}{a \code{listw} object created for example by \code{nb2listw}}
   \item{na.action}{a function (default \code{options("na.action")}), can also be \code{na.omit} or \code{na.exclude} with consequences for residuals and fitted values - in these cases the weights list will be subsetted to remove NAs in the data. It may be necessary to set zero.policy to TRUE because this subsetting may create no-neighbour observations. Note that only weights lists created without using the glist argument to \code{nb2listw} may be subsetted.}
-  \item{type}{default "lag", may be set to "mixed"; when "mixed", the lagged intercept is dropped for spatial weights style "W", that is row-standardised weights, but otherwise included}
+  \item{type}{default "lag", may be set to "mixed"; when "mixed", the lagged intercept is dropped for spatial weights style "W", that is row-standardised weights, but otherwise included; \dQuote{Durbin} may be used instead of \dQuote{mixed}}
   \item{method}{"eigen" (default) - the Jacobian is computed as the product 
 of (1 - rho*eigenvalue) using \code{eigenw}, and "spam" or "Matrix_J" for strictly symmetric weights lists of styles "B" and "C", or made symmetric by similarity (Ord, 1975, Appendix C) if possible for styles "W" and "S", using code from the spam or Matrix packages to calculate the determinant; \dQuote{Matrix} and \dQuote{spam_update} provide updating Cholesky decomposition methods; "LU" provides an alternative sparse matrix decomposition approach. In addition, there are "Chebyshev" and Monte Carlo "MC" approximate log-determinant methods; the Smirnov/Anselin (2009) trace approximation is available as "moments". Three methods: "SE_classic", "SE_whichMin", and "SE_interp" are provided experimentally, the first to attempt to emulate the behaviour of Spatial Econometrics toolbox ML fitting functions. All use grids of log determinant values, and the latter two attempt to ameliorate some features of "SE_classic".
 }
@@ -79,6 +83,28 @@ variable in making predictions for the fitting data.
   \item{SElndet}{default NULL, may be used to pass a pre-computed SE toolbox style matrix of coefficients and their lndet values to the "SE_classic" and "SE_whichMin" methods}
   \item{LU_order}{default FALSE; used in \dQuote{LU_prepermutate}, note warnings given for \code{lu} method}
   \item{pre_eig}{default NULL; may be used to pass a pre-computed vector of eigenvalues}
+}}
+
+\section{Extra Bayesian control arguments}{
+\describe{
+  \item{ldet_method}{default \dQuote{SE_classic}; equivalent to the \code{method} argument in \code{lagsarlm}}
+  \item{interval}{default \code{c(-1, 1)}; used unmodified or set internally by \code{jacobianSetup}}
+  \item{ndraw}{default \code{2500L}; integer total number of draws}
+  \item{nomit}{default \code{500L}; integer total number of omitted burn-in draws}
+  \item{thin}{default \code{1L}; integer thinning proportion}
+  \item{verbose}{default \code{FALSE}; inverse of \code{quiet} argument in \code{lagsarlm}}
+  \item{detval}{default \code{NULL}; not yet in use, precomputed matrix of log determinants}
+  \item{prior}{a list with the following components:
+    \describe{
+      \item{Tbeta}{default \code{NULL}; values of the betas variance-covariance matrix, set to \code{diag(k)*1e+12} if \code{NULL}}
+      \item{c_beta}{default \code{NULL}; values of the betas set to 0 if \code{NULL}}
+      \item{rho}{default \code{0.5}; value of the autoregressive coefficient}
+      \item{sige}{default \code{1}; value of the residual variance}
+      \item{nu}{default \code{0}; informative Gamma(nu,d0) prior on sige}
+      \item{d0}{default \code{0}; informative Gamma(nu,d0) prior on sige}
+      \item{a1}{default \code{1.01}; parameter for beta(a1,a2) prior on rho}
+      \item{a2}{default \code{1.01}; parameter for beta(a1,a2) prior on rho}
+    }}
 }}
 
 \value{
@@ -205,6 +231,25 @@ I(RM^2) +  AGE + log(DIS) + log(RAD) + TAX + PTRATIO + B + log(LSTAT),
 data=boston.c, nb2listw(boston.soi), type="mixed", method="Matrix", 
 trs=trMatb)
 summary(gp2mMi)
+}
+summary(COL.lag.eig)
+COL.lag.Bayes <- spBreg_lag(CRIME ~ INC + HOVAL, data=COL.OLD,
+ nb2listw(COL.nb, style="W"))
+summary(COL.lag.Bayes)
+set.seed(1)
+summary(impacts(COL.lag.Bayes, tr=trMatc), short=TRUE, zstats=TRUE)
+\dontrun{
+data(elect80)
+lw <- nb2listw(e80_queen, zero.policy=TRUE)
+el_ml <- lagsarlm(log(pc_turnout) ~ log(pc_college) + log(pc_homeownership)
+ + log(pc_income), data=elect80, listw=lw, zero.policy=TRUE, method="LU")
+summary(el_ml)
+set.seed(1)
+el_B <- spBreg_lag(log(pc_turnout) ~ log(pc_college) + log(pc_homeownership)
+ + log(pc_income), data=elect80, listw=lw, zero.policy=TRUE)
+summary(el_B)
+el_ml$timings
+attr(el_B, "timings")
 }
 }
 \keyword{spatial}

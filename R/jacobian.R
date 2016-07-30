@@ -668,7 +668,7 @@ SE_setup_intern <- function(env, SE_method="LU", p=16, m=30, nrho=100,
     MC = {tull <- mcdet_setup(env, p=p, m=m, which=which)}, 
     stop("...\n\nUnknown SE_method\n"))
 
-    rho <- seq(interval[1], interval[2], length.out=nrho)
+    rho <- seq(interval[1]+0.001, interval[2]-0.001, length.out=nrho)
 
     ldets <- sapply(rho, function(r) do_ldet(r, env, which=which))
     detval <- cbind(rho, ldets)

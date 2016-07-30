@@ -68,7 +68,7 @@ predict.sarlm <- function(object, newdata=NULL, listw=NULL, pred.type="TS", all.
   stopifnot(is.logical(legacy.mixed))
   stopifnot(is.logical(power))
   if (is.null(spChk)) spChk <- get.spChkOption()
-  if (!is.null(newdata) && is.null(rownames(newdata))) stop("newdata should have region.id as rownames")
+  if (!is.null(newdata) && is.null(row.names(newdata))) stop("newdata should have region.id as row.names")
   
   #        if (pred.se && object$type == "error") {
   #            pred.se <- FALSE
@@ -87,7 +87,7 @@ predict.sarlm <- function(object, newdata=NULL, listw=NULL, pred.type="TS", all.
   
   # forecast case: newdata with the same names than data
   # use a sub-samble of in-sample predictors
-  if (!is.null(newdata) && nrow(newdata) == length(ys) && rownames(newdata) == attr(ys, "names")) {
+  if (!is.null(newdata) && nrow(newdata) == length(ys) && row.names(newdata) == attr(ys, "names")) {
     if (!pred.type %in% c("trend", "TC", "TS"))
       warning("no such predictor type for prevision")
     # DATA
@@ -203,22 +203,22 @@ predict.sarlm <- function(object, newdata=NULL, listw=NULL, pred.type="TS", all.
     attr(res, "region.id") <- as.vector(attr(ys, "names"))
   } else { # out-of-sample
     #CHECK
-    if (any(rownames(newdata) %in% attr(ys, "names")) && !(pred.type == "TS" && nrow(newdata) == length(ys) && rownames(newdata) == attr(ys, "names"))) # no warning in the computation of TS in forecast
+    if (any(row.names(newdata) %in% attr(ys, "names")) && !(pred.type == "TS" && nrow(newdata) == length(ys) && row.names(newdata) == attr(ys, "names"))) # no warning in the computation of TS in forecast
       warning("some region.id are both in data and newdata")
     if (!(pred.type == "TS" && object$type == "error" && object$etype == "error") && !(pred.type == "trend" && (object$type != "mixed" && !(object$type == "error" && object$etype == "emixed")))) { # need of listw (ie. neither in the case of defaut predictor and SEM model, nor trend type without mixed models)
       if (is.null(listw) || !inherits(listw, "listw"))
         stop ("spatial weights list required")
-      if (any(! rownames(newdata) %in% attr(listw, "region.id")))
-        stop("mismatch between newdata and spatial weights. newdata should have region.id as rownames")
+      if (any(! row.names(newdata) %in% attr(listw, "region.id")))
+        stop("mismatch between newdata and spatial weights. newdata should have region.id as row.names")
       listw.old <- NULL
       
       # wanted order of the listw
       if (pred.type == "TS") { # only need Woo
-        region.id <- rownames(newdata)
+        region.id <- row.names(newdata)
         if (!legacy.mixed) listw.old <- listw # keep the old listw to allow the computation of lagged variable from the full WX
-        # listw <- mat2listw(matrix(0), row.names = rownames(newdata)) # avoid crash of subset.listw
+        # listw <- mat2listw(matrix(0), row.names = row.names(newdata)) # avoid crash of subset.listw
       } else {
-        region.id <- c(attr(ys, "names"), rownames(newdata))
+        region.id <- c(attr(ys, "names"), row.names(newdata))
         if (legacy.mixed) listw.old <- listw # keep the old listw to allow the computation of lagged variable from Woo (as mat2listw() cannot compute Woo from the new listw, because it has general weights lists)
       }
       
@@ -427,7 +427,7 @@ predict.sarlm <- function(object, newdata=NULL, listw=NULL, pred.type="TS", all.
       }
     } else { # new predictors
       if (pred.type %in% c("TS1", "KP4", "KP2", "KP3")) { # need to compute TS1/KP4
-        Wos <- .listw.decompose(listw, region.id.data = attr(ys, "names"), region.id.newdata = rownames(newdata), type = "Wos")$Wos
+        Wos <- .listw.decompose(listw, region.id.data = attr(ys, "names"), region.id.newdata = row.names(newdata), type = "Wos")$Wos
         if (is.null(object$rho)) TS1 <- Xo %*% B
         else TS1 <- Xo %*% B + object$rho * Wos %*% ys
       }
@@ -444,7 +444,7 @@ predict.sarlm <- function(object, newdata=NULL, listw=NULL, pred.type="TS", all.
             TC <- invIrW(listw, object$rho) %*% trend
           }
         } else { # TCo = TC for out-of-sample spatial units
-          listw.d <- .listw.decompose(listw, region.id.data = attr(ys, "names"), region.id.newdata = rownames(newdata), type = c("Wss", "Wos", "Wso", "Woo"))
+          listw.d <- .listw.decompose(listw, region.id.data = attr(ys, "names"), region.id.newdata = row.names(newdata), type = c("Wss", "Wos", "Wso", "Woo"))
           Wss <- listw.d$Wss
           Wso <- listw.d$Wso
           Wos <- listw.d$Wos
@@ -506,7 +506,7 @@ predict.sarlm <- function(object, newdata=NULL, listw=NULL, pred.type="TS", all.
         Sigma <- object$s2 * invW %*% t(invW)
         Sos <- Sigma[is.newdata, is.data, drop=F]
         Sss <- Sigma[is.data, is.data, drop=F]
-        Wos <- .listw.decompose(listw, region.id.data = attr(ys, "names"), region.id.newdata = rownames(newdata), type = "Wos")$Wos
+        Wos <- .listw.decompose(listw, region.id.data = attr(ys, "names"), region.id.newdata = row.names(newdata), type = "Wos")$Wos
         BPW <- as.numeric(TCo + Sos %*% t(Wos) %*% solve(Wos %*% Sss %*% t(Wos)) %*% (Wos %*% ys - Wos %*% TCs))
         res <- as.vector(BPW)
       } else if (pred.type == "BPN") {
@@ -515,7 +515,7 @@ predict.sarlm <- function(object, newdata=NULL, listw=NULL, pred.type="TS", all.
         TCs <- TC[is.data]
         TCo <- TC[is.newdata]
         # compute J = set of all sites in S which are neighbors of at least one site in O
-        O <- which(attr(listw,"region.id") %in% rownames(newdata))
+        O <- which(attr(listw,"region.id") %in% row.names(newdata))
         S <- which(attr(listw,"region.id") %in% attr(ys, "names"))
         #bug fix: J = set of S s.t. at least 1 elmt of O is neigbourg with S. And not: set of S s.t. these elmts of S are neigbourgs with at least 1 elmt of S.
         #different iff W is not symetric
@@ -535,7 +535,7 @@ predict.sarlm <- function(object, newdata=NULL, listw=NULL, pred.type="TS", all.
           BPN <- TCo
         } else {
           W <- as(listw, "CsparseMatrix")
-          region.id <- c(J, rownames(newdata))
+          region.id <- c(J, row.names(newdata))
           W_jo <- W[region.id, region.id]
           rm(W)
           Q_jo <- 1/object$s2 * (Diagonal(length(region.id)) - object$rho * (W_jo + t(W_jo)) + object$rho^2 * (t(W_jo) %*% W_jo))
@@ -553,7 +553,7 @@ predict.sarlm <- function(object, newdata=NULL, listw=NULL, pred.type="TS", all.
         if (nrow(newdata) > 1)
           warning("newdata have more than 1 row and the predictor type is leave-one-out")
         region.id.data <- attr(ys, "names")
-        region.id.newdata <- rownames(newdata)
+        region.id.newdata <- row.names(newdata)
         res <- rep(NA, nrow(newdata))
         W <- as(listw, "CsparseMatrix")
         style <- listw$style
@@ -577,7 +577,7 @@ predict.sarlm <- function(object, newdata=NULL, listw=NULL, pred.type="TS", all.
         if (nrow(newdata) > 1)
           warning("newdata have more than 1 row and the predictor type is leave-one-out")
         region.id.data <- attr(ys, "names")
-        region.id.newdata <- rownames(newdata)
+        region.id.newdata <- row.names(newdata)
         BP1o <- rep(NA, nrow(newdata))
         W <- as(listw, "CsparseMatrix")
         style <- listw$style
@@ -612,7 +612,7 @@ predict.sarlm <- function(object, newdata=NULL, listw=NULL, pred.type="TS", all.
         if (nrow(newdata) > 1)
           warning("newdata have more than 1 row and the predictor type is leave-one-out")
         region.id.data <- attr(ys, "names")
-        region.id.newdata <- rownames(newdata)
+        region.id.newdata <- row.names(newdata)
         BPW1o <- rep(NA, nrow(newdata))
         W <- as(listw, "CsparseMatrix")
         style <- listw$style
@@ -646,7 +646,7 @@ predict.sarlm <- function(object, newdata=NULL, listw=NULL, pred.type="TS", all.
         if (nrow(newdata) > 1)
           warning("newdata have more than 1 row and the predictor type is leave-one-out")
         region.id.data <- attr(ys, "names")
-        region.id.newdata <- rownames(newdata)
+        region.id.newdata <- row.names(newdata)
         BPN1o <- rep(NA, nrow(newdata))
         W <- as(listw, "CsparseMatrix")
         style <- listw$style
@@ -672,7 +672,7 @@ predict.sarlm <- function(object, newdata=NULL, listw=NULL, pred.type="TS", all.
           TC1oi <- TC1i[is.newdata]
           
           # compute J = set of all sites in S which are neighbors of at least one site in O
-          o <- which(attr(listwi,"region.id") %in% rownames(newdata)[i])
+          o <- which(attr(listwi,"region.id") %in% row.names(newdata)[i])
           S <- which(attr(listwi,"region.id") %in% attr(ys, "names"))
           J.ref <- NULL
           for (k in o) {
@@ -684,7 +684,7 @@ predict.sarlm <- function(object, newdata=NULL, listw=NULL, pred.type="TS", all.
             warning("out-of-sample units have no neighbours")
             BPN1o[i] <- TC1oi
           } else {
-            region.id <- c(J, rownames(newdata)[i])
+            region.id <- c(J, row.names(newdata)[i])
             W_jo <- Wi[region.id, region.id, drop=F]
             Q_jo <- 1/object$s2 * (Diagonal(length(region.id)) - object$rho * (W_jo + t(W_jo)) + object$rho^2 * (t(W_jo) %*% W_jo))
             is.j <- 1:length(J)
@@ -701,7 +701,7 @@ predict.sarlm <- function(object, newdata=NULL, listw=NULL, pred.type="TS", all.
         if (nrow(newdata) > 1)
           warning("newdata have more than 1 row and the predictor type is leave-one-out")
         region.id.data <- attr(ys, "names")
-        region.id.newdata <- rownames(newdata)
+        region.id.newdata <- row.names(newdata)
         W <- as(listw, "CsparseMatrix")
         KP2 <- rep(NA, nrow(newdata))
         for (i in 1:nrow(newdata)) {
@@ -748,7 +748,7 @@ predict.sarlm <- function(object, newdata=NULL, listw=NULL, pred.type="TS", all.
         if (nrow(newdata) > 1)
           warning("newdata have more than 1 row and the predictor type is leave-one-out")
         region.id.data <- attr(ys, "names")
-        region.id.newdata <- rownames(newdata)
+        region.id.newdata <- row.names(newdata)
         W <- as(listw, "CsparseMatrix")
         KP3 <- rep(NA, nrow(newdata))
         for (i in 1:nrow(newdata)) {
@@ -793,7 +793,7 @@ predict.sarlm <- function(object, newdata=NULL, listw=NULL, pred.type="TS", all.
       } else if (pred.type == "KP5") {
         if (nrow(newdata) > 1)
           warning("newdata have more than 1 row and the predictor type is leave-one-out")
-        Wos <- .listw.decompose(listw, region.id.data = attr(ys, "names"), region.id.newdata = rownames(newdata), type = "Wos")$Wos
+        Wos <- .listw.decompose(listw, region.id.data = attr(ys, "names"), region.id.newdata = row.names(newdata), type = "Wos")$Wos
         res <- as.vector(trendo + object$lambda * Wos %*% (ys - trends))
       } else {
         stop("unknow predictor type")
@@ -801,9 +801,9 @@ predict.sarlm <- function(object, newdata=NULL, listw=NULL, pred.type="TS", all.
     }
     # add region.id attribute
     if (length(res) == nrow(newdata)) {
-      attr(res, "region.id") <- as.vector(rownames(newdata))
+      attr(res, "region.id") <- as.vector(row.names(newdata))
     } else if (length(res) == length(ys)+nrow(newdata)) {
-      attr(res, "region.id") <- c(attr(ys, "names"), rownames(newdata))
+      attr(res, "region.id") <- c(attr(ys, "names"), row.names(newdata))
     } else stop("incorrect final output")
   }
   attr(res, "pred.type") <- pred.type
@@ -849,7 +849,7 @@ as.data.frame.sarlm.pred <- function(x, ...) {
   #        signal=attr(x, "signal"))
   #fix bug when no signal or trend attributes
   res <- data.frame(fit=as.vector(x))
-  if(!is.null(attr(x, "region.id"))) rownames(res) <- attr(x, "region.id")
+  if(!is.null(attr(x, "region.id"))) row.names(res) <- attr(x, "region.id")
   if(!is.null(attr(x, "trend"))) res$trend <- attr(x, "trend")
   if(!is.null(attr(x, "signal"))) res$signal <- attr(x, "signal")
   res

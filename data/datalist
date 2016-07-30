@@ -5,7 +5,7 @@ baltimore
 boston: boston.c boston.soi boston.utm
 columbus: bbs col.gal.nb columbus coords polys
 eire: eire.coords.utm eire.df eire.nb eire.polys.utm
-elect80: dll e80_queen elect80 elect80_lw k4
+elect80: dll e80_queen elect80 k4
 getisord: x xyz y
 hopkins
 house: LO_nb house trMat

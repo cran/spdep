@@ -184,13 +184,14 @@ trMatc <- trW(W, type="mult")
 COL.errW.M <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  lw, method="Matrix", quiet=FALSE, trs=trMatc)
 summary(COL.errW.M, correlation=TRUE)
-COL.SDEMW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
+COL.SDEM.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  lw, method="eigen", etype="emixed")
-summary(COL.SDEMW.eig, correlation=TRUE)
-do.call("cbind", COL.SDEMW.eig$emixedImps)
+summary(COL.SDEM.eig, correlation=TRUE)
+summary(impacts(COL.SDEM.eig))
+summary(impacts(COL.SDEM.eig), adjust_k=TRUE)
 COL.SLX <- lmSLX(CRIME ~ INC + HOVAL, data=COL.OLD, listw=lw)
 summary(COL.SLX)
-do.call("cbind", attr(COL.SLX, "mixedImps"))
+summary(impacts(COL.SLX))
 COL.SLX <- lmSLX(CRIME ~ INC + HOVAL + I(HOVAL^2), data=COL.OLD, listw=lw)
 summary(COL.SLX)
 \donttest{
@@ -211,7 +212,7 @@ glst <- lapply(dists, function(d) 1/(d^opt$maximum))
 lw <- nb2listw(dnb, glist=glst, style="B")
 SLX <- lmSLX(CRIME ~ INC + HOVAL, data=COL.OLD, listw=lw)
 summary(SLX)
-do.call("cbind", attr(SLX, "mixedImps"))
+summary(impacts(SLX))
 }
 NA.COL.OLD <- COL.OLD
 NA.COL.OLD$CRIME[20:25] <- NA

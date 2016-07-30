@@ -124,6 +124,92 @@ mom_calc <- function(lw, m) {
 impacts <- function(obj, ...)
     UseMethod("impacts", obj)
 
+impacts.SLX <- function(obj, ...) {
+    stopifnot(!is.null(attr(obj, "mixedImps")))
+    n <- nrow(obj$model)
+    k <- obj$qr$rank
+    impactsWX(attr(obj, "mixedImps"), n, k, type="SLX")
+}
+
+impactSDEM <- function(obj) {
+    n <- nrow(obj$tarX)
+    k <- ncol(obj$tarX)
+    impactsWX(obj$emixedImps, n, k, type="SDEM")
+}
+
+impactsWX <- function(obj, n, k, type="SLX") {
+    imps <- lapply(obj, function(x) x[, 1])
+    names(imps) <- c("direct", "indirect", "total")
+    attr(imps, "bnames") <- rownames(obj[[1]])
+    ses <- lapply(obj, function(x) x[, 2])
+    names(ses) <- c("direct", "indirect", "total")
+    attr(ses, "bnames") <- rownames(obj[[1]])
+    res <- list(impacts=imps, se=ses)
+    attr(res, "n") <- n
+    attr(res, "k") <- k
+    attr(res, "type") <- type
+    attr(res, "method") <- "estimable"
+    attr(res, "bnames") <- rownames(obj[[1]])
+    class(res) <- "WXImpact"
+    res
+}
+
+
+print.WXImpact <- function(x, ...) {
+    mat <- lagImpactMat(x$impacts)
+    cat("Impact measures (", attr(x, "type"), ", ",
+        attr(x, "method"), "):\n", sep="")
+    print(mat, ...)
+    cat("\n")
+    invisible(x)
+}
+
+print.summary.WXImpact <- function(x, ...) {
+    mat <- x$mat
+    cat("Impact measures (", attr(x, "type"), ", ",
+        attr(x, "method"), "):\n", sep="")
+    print(mat, ...)
+    cat("========================================================\n")
+    mat <- x$semat
+    cat("Standard errors:\n", sep="")
+    print(mat, ...)
+    cat("========================================================\n")
+    cat("Z-values:\n")
+    mat <- x$zmat
+    rownames(mat) <- attr(x, "bnames")
+    print(mat, ...)
+    cat("\np-values:\n")
+    xx <- apply(x$pzmat, 2, format.pval)
+# 100928 Eelke Folmer
+    if (length(attr(x, "bnames")) == 1L) {
+        xx <- matrix(xx, ncol=3)
+        colnames(xx) <- c("Direct", "Indirect", "Total")
+    }
+    rownames(xx) <- attr(x, "bnames")
+    print(xx, ..., quote=FALSE)
+    cat("\n")
+    invisible(x)
+}
+
+summary.WXImpact <- function(object, ..., adjust_k=FALSE) {
+    stopifnot(is.logical(adjust_k))
+    stopifnot(length(adjust_k) == 1L)
+    object$mat <- lagImpactMat(object$impacts)
+    object$semat <- lagImpactMat(object$se)
+    if (adjust_k) {
+        object$semat <- object$semat * (attr(object, "n")/
+            (attr(object, "n") - attr(object, "k")))
+        attr(object, "method") <- paste(attr(object, "method"),
+            ", n-k", sep="")
+    }
+    object$zmat <- object$mat/object$semat
+    object$pzmat <- 2*(1-pnorm(abs(object$zmat)))
+    class(object) <- c("summary.WXImpact", class(object))
+    object
+}
+
+
+
 impacts.stsls <- function(obj, ..., tr=NULL, R=NULL, listw=NULL,
   tol=1e-6, empirical=FALSE, Q=NULL) {
     if (is.null(listw) && !is.null(obj$listw_style) && 
@@ -438,8 +524,13 @@ impacts.lagmess <- function(obj, ..., tr=NULL, R=NULL, listw=NULL,
 
 impacts.sarlm <- function(obj, ..., tr=NULL, R=NULL, listw=NULL, useHESS=NULL,
   tol=1e-6, empirical=FALSE, Q=NULL) {
-    if (obj$type == "error")
-        stop("impact measures not for error models")
+    if (obj$type == "error") {
+        if (obj$etype == "emixed") {
+            return(impactSDEM(obj))
+        } else {
+            stop("impact measures not for error models")
+        }
+    }
     if (is.null(listw) && !is.null(obj$listw_style) && 
             obj$listw_style != "W")
             stop("Only row-standardised weights supported")

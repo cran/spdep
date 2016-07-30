@@ -1,6 +1,7 @@
 useDynLib(spdep)
 
-importFrom(stats, model.matrix, model.response, aggregate, optimize, optim, nlminb, influence.measures, lag, punif, na.fail, as.formula, terms, lm, model.extract, coefficients, residuals, var, deviance, integrate, summary.lm, coef, pchisq, logLik, gaussian, pnorm, model.weights, model.offset, glm.fit, sd, predict, formula, lm.fit, anova, ppois, model.frame, AIC, qnorm, napredict, nlm, optimHess, resid, fitted, weighted.residuals, weights, naresid, rnorm, optimise, uniroot, mahalanobis, dist, p.adjust, density, fitted.values, delete.response, printCoefmat, quantile, na.omit, cor)
+importFrom(stats, model.matrix, model.response, aggregate, optimize, optim, nlminb, influence.measures, lag, punif, na.fail, as.formula, terms, lm, model.extract, coefficients, residuals, var, deviance, integrate, summary.lm, coef, pchisq, logLik, gaussian, pnorm, model.weights, model.offset, glm.fit, sd, predict, formula, lm.fit, anova, ppois, model.frame, AIC, qnorm, napredict, nlm, optimHess, resid, fitted, weighted.residuals, weights, naresid, rnorm, optimise, uniroot, mahalanobis, dist, p.adjust, density, fitted.values, delete.response, printCoefmat, quantile, na.omit, cor, predict.lm)
+importFrom("stats", "dbeta", "rchisq", "runif")
 importFrom(nlme, fdHess)
 importFrom(deldir, deldir)
 importFrom(boot, boot)
@@ -25,7 +26,7 @@ export(EBImoran.mc, probmap, choynowski, EBest, EBlocal, LR.sarlm,
 	LR1.sarlm, Wald1.sarlm, airdist, card, rookcell, 
 	queencell, mrc2vi, vi2mrc, cell2nb, n.comp.nb, diffnb,
 	dnearneigh, droplinks, eigenw, errorsarlm, lmSLX, create_WX,
-        gabrielneigh, geary.test,
+        predict.SLX, gabrielneigh, geary.test,
 	geary, geary.mc, globalG.test, graph2nb, joincount.test, joincount.mc,
 	joincount.multi, print.jcmulti,
 	knearneigh, knn2nb, lagsarlm, listw2sn, sn2listw, read.gwt2nb,
@@ -100,6 +101,8 @@ export(lextrB, lextrW, lextrS, l_max)
 
 export(lee.mc, lee, lee.test)
 
+export(spBreg_lag)
+
 #import(maptools)
 
 S3method(print, nb)
@@ -155,6 +158,11 @@ S3method(impacts, sarlm)
 S3method(Hausman.test, sarlm)
 S3method(MCMCsamp, sarlm)
 
+S3method(impacts, MCMC_sar_g)
+
+S3method(impacts, SLX)
+S3method(predict, SLX)
+
 S3method(print, summary.sarlm)
 S3method(print, sarlm.pred)
 S3method(as.data.frame, sarlm.pred)
@@ -203,6 +211,10 @@ S3method(plot, lagImpact)
 S3method(summary, lagImpact)
 S3method(HPDinterval, lagImpact)
 S3method(print, summary.lagImpact)
+
+S3method(print, WXImpact)
+S3method(summary, WXImpact)
+S3method(print, summary.WXImpact)
 
 S3method(print, lagmess)
 S3method(summary, lagmess)

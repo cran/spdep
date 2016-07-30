@@ -1,6 +1,6 @@
 Package: spdep
-Version: 0.6-5
-Date: 2016-05-31
+Version: 0.6-6
+Date: 2016-07-29
 Title: Spatial Dependence: Weighting Schemes, Statistics and Models
 Encoding: UTF-8
 Authors@R: c(person("Roger", "Bivand", role = c("cre", "aut"), email = "Roger.Bivand@nhh.no"),	person("Micah", "Altman", role = "ctb"),
@@ -23,6 +23,7 @@ Authors@R: c(person("Roger", "Bivand", role = c("cre", "aut"), email = "Roger.Bi
 	person("Nicholas", "Lewin-Koh", role = "ctb"),
 	person("Hongfei", "Li", role = "ctb"),
 	person("Jielai", "Ma", role = "ctb"),
+        person("Abhirup", "Mallik", role = c("ctb", "trl")),
 	person("Giovanni", "Millo", role = "ctb"),
 	person("Werner", "Mueller", role = "ctb"),
 	person("Hisaji", "Ono", role = "ctb"),
@@ -54,7 +55,7 @@ License: GPL (>= 2)
 VignetteBuilder: knitr
 URL: https://r-forge.r-project.org/projects/spdep/
 NeedsCompilation: yes
-Packaged: 2016-05-31 16:27:56 UTC; rsb
+Packaged: 2016-07-29 19:45:16 UTC; rsb
 Author: Roger Bivand [cre, aut],
   Micah Altman [ctb],
   Luc Anselin [ctb],
@@ -76,6 +77,7 @@ Author: Roger Bivand [cre, aut],
   Nicholas Lewin-Koh [ctb],
   Hongfei Li [ctb],
   Jielai Ma [ctb],
+  Abhirup Mallik [ctb, trl],
   Giovanni Millo [ctb],
   Werner Mueller [ctb],
   Hisaji Ono [ctb],
@@ -86,4 +88,4 @@ Author: Roger Bivand [cre, aut],
   Danlin Yu [ctb]
 Maintainer: Roger Bivand <Roger.Bivand@nhh.no>
 Repository: CRAN
-Date/Publication: 2016-06-02 18:33:23
+Date/Publication: 2016-07-30 20:52:10

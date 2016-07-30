@@ -445,6 +445,8 @@ lmSLX <- function(formula, data = list(), listw, na.action, weights=NULL, zero.p
 	x <- model.matrix(mt, mf)
 	if (any(is.na(x))) stop("NAs in independent variable")
         n <- nrow(x)
+        if (n != length(listw$neighbours))
+            stop("listw and data of different lengths")
         nclt <- colnames(x)
 
         weights <- as.vector(model.extract(mf, "weights"))
@@ -497,7 +499,36 @@ lmSLX <- function(formula, data = list(), listw, na.action, weights=NULL, zero.p
                 totImps=totImps)
         }
         attr(lm.model, "mixedImps") <- mixedImps
+        class(lm.model) <- c("SLX", class(lm.model))
         lm.model
+}
+
+
+predict.SLX <- function(object, newdata, listw, zero.policy=NULL, ...) {
+    if (is.null(zero.policy))
+        zero.policy <- get("zeroPolicy", envir = .spdepOptions)
+    stopifnot(is.logical(zero.policy))
+    if (missing(newdata)) {
+        return(fitted(object))
+    }
+    if (!inherits(listw, "listw")) stop("No neighbourhood list")
+    if (is(newdata, "Spatial")) newdata <- as(newdata, "data.frame")
+    if (!inherits(newdata, "data.frame"))
+        stop("newdata must be a Spatial*DataFrame or a data.frame")
+    vars <- rownames(attr(object, "mixedImps")$dirImps)
+    f <- formula(paste("~", paste(vars, collapse=" + ")))
+    mf <- lm(f, newdata, method="model.frame")
+    mt <- attr(mf, "terms")
+    x <- model.matrix(mt, mf)
+    if (any(is.na(x))) stop("NAs in independent variable")
+    n <- nrow(x)
+    if (n != length(listw$neighbours))
+        stop("listw and data of different lengths")
+    WX <- create_WX(x, listw, zero.policy=zero.policy, prefix="lag")
+    x <- cbind(x, WX)
+    res <- as.vector(x %*% coef(object))
+    names(res) <- row.names(newdata)
+    res
 }
 
 create_WX <- function(x, listw, zero.policy=NULL, prefix="") {

@@ -4,7 +4,7 @@
 lm.LMtests <- function(model, listw, zero.policy=NULL, test="LMerr",
 	spChk=NULL, naSubset=TRUE) {
 
-	if (class(model) == "lm") na.act <- model$na.action
+	if (inherits(model, "lm")) na.act <- model$na.action
 	else na.act <- attr(model, "na.action")
 
 	listw_name <- deparse(substitute(listw))
@@ -22,7 +22,7 @@ lm.LMtests <- function(model, listw, zero.policy=NULL, test="LMerr",
 	if (length(test) == 1L && test[1] == "LMerr") {
 		res <- lm.LMErr(model=model, listw=listw, 
 			zero.policy=zero.policy, spChk=spChk) 
-		if (class(model) == "lm") res$data.name <- paste("\n", 
+		if (inherits(model, "lm")) res$data.name <- paste("\n", 
 	    		paste(strwrap(paste("model: ",
 	    		gsub("[ ]+", " ", paste(deparse(model$call), 
 	    		sep="", collapse="")))), collapse="\n"),
@@ -36,7 +36,7 @@ lm.LMtests <- function(model, listw, zero.policy=NULL, test="LMerr",
 		class(tres) <- "LMtestlist"
 		return(tres)
 	}
-	if(class(model) != "lm") stop(paste(deparse(substitute(model)),
+	if(!inherits(model, "lm")) stop(paste(deparse(substitute(model)),
 		"not an lm object"))
 	N <- length(listw$neighbours)
 	u <- resid(model)
@@ -157,7 +157,7 @@ tracew <- function (listw) {
 lm.LMErr <- function(model, listw, zero.policy=FALSE, spChk=NULL) {
 	if (!inherits(listw, "listw")) stop("listw is not a listw object")
 	N <- length(listw$neighbours)
-	if (class(model) == "lm") u <- resid(model)
+	if (inherits(model, "lm")) u <- resid(model)
 	else if (is.numeric(model) && length(model) == N) {
 		u <- model
 		if (!isTRUE(all.equal(mean(u), 0.0)))
@@ -187,7 +187,7 @@ lm.LMErr <- function(model, listw, zero.policy=FALSE, spChk=NULL) {
 	    warning("Out-of-range p-value: reconsider test arguments")
 	names(p.value) <- ""
 	method <- "Lagrange multiplier diagnostics for spatial dependence"
-	if (class(model) == "lm") data.name <- paste("\n", 
+	if (inherits(model, "lm")) data.name <- paste("\n", 
 	    paste(strwrap(paste("model: ",
 	    gsub("[ ]+", " ", paste(deparse(model$call), 
 	    sep="", collapse="")))), collapse="\n"),
