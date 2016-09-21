@@ -194,6 +194,7 @@ summary(COL.SLX)
 summary(impacts(COL.SLX))
 COL.SLX <- lmSLX(CRIME ~ INC + HOVAL + I(HOVAL^2), data=COL.OLD, listw=lw)
 summary(COL.SLX)
+COL.SLX <- lmSLX(CRIME ~ INC, data=COL.OLD, listw=lw)
 \donttest{
 crds <- cbind(COL.OLD$X, COL.OLD$Y)
 mdist <- sqrt(sum(diff(apply(crds, 2, range))^2))

@@ -1,3 +1,36 @@
+2016-09-21 07:49  rsbivand
+
+	* ChangeLog, inst/ChangeLog: tidy
+
+2016-09-21 07:48  rsbivand
+
+	* man/baltimore.Rd, man/columbus.Rd, man/nc.sids.Rd,
+	  man/read.gal.Rd, man/read.gwt2nb.Rd: tidy
+
+2016-09-21 07:10  rsbivand
+
+	* ChangeLog, inst/ChangeLog: tidy
+
+2016-09-21 07:09  rsbivand
+
+	* DESCRIPTION, R/error.spsarlm.R, man/errorsarlm.Rd: drop bug fix
+	  in lmSLX
+
+2016-08-23 15:29  rsbivand
+
+	* man/COL.OLD.Rd, man/baltimore.Rd, man/columbus.Rd,
+	  man/nc.sids.Rd, man/read.gal.Rd, man/read.gwt2nb.Rd: asu links to
+	  chicago
+
+2016-08-23 12:52  rsbivand
+
+	* DESCRIPTION, R/knearneigh.R, R/nb2blocknb.R: nb2blocknb and
+	  knearneigh fixes
+
+2016-07-29 19:44  rsbivand
+
+	* ChangeLog, inst/ChangeLog: tidy
+
 2016-07-29 19:42  rsbivand
 
 	* DESCRIPTION: tidy

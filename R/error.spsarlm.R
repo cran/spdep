@@ -213,20 +213,21 @@ errorsarlm <- function(formula, data = list(), listw, na.action, weights=NULL,
                         rownames(cm) <- xxcolnames[1:m2]
                     }
                     for (i in 1:m2) cm[i, c(i+1, i+(m2+1))] <- 1
-                    dirImps <- sum_lm_target$coefficients[2:(m2+1), 1:2]
+# drop bug fix 2016-09-21 Philipp Hunziker
+                    dirImps <- sum_lm_target$coefficients[2:(m2+1), 1:2, drop=FALSE]
                     rownames(dirImps) <- rownames(cm)
-                    indirImps <- sum_lm_target$coefficients[(m2+2):m, 1:2]
+                    indirImps <- sum_lm_target$coefficients[(m2+2):m, 1:2, drop=FALSE]
                     rownames(indirImps) <- rownames(cm)
                 } else {
                     rownames(cm) <- xxcolnames[1:m2]
                     for (i in 1:m2) cm[i, c(i, i+m2)] <- 1
-                    dirImps <- sum_lm_target$coefficients[1:m2, 1:2]
+                    dirImps <- sum_lm_target$coefficients[1:m2, 1:2, drop=FALSE]
                     rownames(dirImps) <- rownames(cm)
-                    indirImps <- sum_lm_target$coefficients[(m2+1):m, 1:2]
+                    indirImps <- sum_lm_target$coefficients[(m2+1):m, 1:2, drop=FALSE]
                     rownames(indirImps) <- rownames(cm)
                 }
             }
-            totImps <- as.matrix(estimable(lm.target, cm)[, 1:2])
+            totImps <- as.matrix(estimable(lm.target, cm)[, 1:2, drop=FALSE])
             emixedImps <- list(dirImps=dirImps, indirImps=indirImps,
                 totImps=totImps)
         }
@@ -482,19 +483,20 @@ lmSLX <- function(formula, data = list(), listw, na.action, weights=NULL, zero.p
                     rownames(cm) <- nclt[1:m2]
                  }
                 for (i in 1:m2) cm[i, c(i+1, i+(m2+1))] <- 1
-                dirImps <- sum_lm_model$coefficients[2:(m2+1), 1:2]
+# drop bug fix 2016-09-21 Philipp Hunziker
+                dirImps <- sum_lm_model$coefficients[2:(m2+1), 1:2, drop=FALSE]
                 rownames(dirImps) <- rownames(cm)
-                indirImps <- sum_lm_model$coefficients[(m2+2):m, 1:2]
+                indirImps <- sum_lm_model$coefficients[(m2+2):m, 1:2, drop=FALSE]
                 rownames(indirImps) <- rownames(cm)
             } else {
                 rownames(cm) <- nclt[1:m2] # FIXME
                 for (i in 1:m2) cm[i, c(i, i+m2)] <- 1
-                dirImps <- sum_lm_model$coefficients[1:m2, 1:2]
+                dirImps <- sum_lm_model$coefficients[1:m2, 1:2, drop=FALSE]
                 rownames(dirImps) <- rownames(cm)
-                indirImps <- sum_lm_model$coefficients[(m2+1):m, 1:2]
+                indirImps <- sum_lm_model$coefficients[(m2+1):m, 1:2, drop=FALSE]
                 rownames(indirImps) <- rownames(cm)
             }
-            totImps <- as.matrix(estimable(lm.model, cm)[, 1:2])
+            totImps <- as.matrix(estimable(lm.model, cm)[, 1:2, drop=FALSE])
             mixedImps <- list(dirImps=dirImps, indirImps=indirImps,
                 totImps=totImps)
         }

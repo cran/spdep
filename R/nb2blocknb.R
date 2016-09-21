@@ -33,7 +33,13 @@ nb2blocknb <- function(nb=NULL, ID, row.names = NULL) {
 		blocks <- c(ii, nb[[ii]])
 		vec <- sort(unlist(inter[blocks]))
                 svec <- vec[vec != i]
-		res[[i]] <- ifelse(length(svec) == 0, 0L, svec)
+                if (length(svec) == 0) {
+                    res[[i]] <- 0L
+                } else {
+                    res[[i]] <- svec
+                }
+# Ann Hartell bug for NULL 2016-08-22
+#		res[[i]] <- ifelse(length(svec) == 0, 0L, svec)
 	}
 
 	attr(res, "region.id") <- row.names
