@@ -24,6 +24,8 @@
 %%\format{}
 %%\details{}
 \examples{
-### see example in 'skater' function help
+require(maptools)
+bh <- readShapePoly(system.file("etc/shapes/bhicv.shp",
+      package="spdep")[1])
 }
 \keyword{data}% at least one, from doc/KEYWORDS

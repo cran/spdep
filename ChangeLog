@@ -1,3 +1,19 @@
+2016-12-20 14:54  rsbivand
+
+	* man/bhicv.Rd: tidy
+
+2016-12-09 07:53  rsbivand
+
+	* DESCRIPTION, src/dnn.c: gcdists bug fixed
+
+2016-09-21 07:56  rsbivand
+
+	* man/COL.OLD.Rd: tidy
+
+2016-09-21 07:50  rsbivand
+
+	* ChangeLog, inst/ChangeLog: tidy
+
 2016-09-21 07:49  rsbivand
 
 	* ChangeLog, inst/ChangeLog: tidy

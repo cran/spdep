@@ -122,7 +122,8 @@ void gcdist(double *lon1, double *lon2, double *lat1, double *lat2,
 
     D = 2*w*a;
     H1 = ( 3*R - 1 )/( 2*C );
-    H2 = ( 3*R + 2 )/( 2*S );
+// was H2 = ( 3*R + 2 )/( 2*S ); 161209
+    H2 = ( 3*R + 1 )/( 2*S );
 
     dist[0] = D*( 1 + f*H1*sinF2*cosG2 - f*H2*cosF2*sinG2 ); 
 
