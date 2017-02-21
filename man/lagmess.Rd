@@ -13,7 +13,8 @@
 \description{The function fits a matrix exponential spatial lag model, using \code{optim} to find the value of \code{alpha}, the spatial coefficient.}
 \usage{
 lagmess(formula, data = list(), listw, zero.policy = NULL, na.action = na.fail,
- q = 10, start = -2.5, control=list(), method="BFGS", verbose=NULL)
+ q = 10, start = -2.5, control=list(), method="BFGS", verbose=NULL,
+ use_expm=FALSE)
 \method{summary}{lagmess}(object, ...)
 \method{print}{lagmess}(x, ...)
 \method{print}{summary.lagmess}(x, digits = max(5, .Options$digits - 3),
@@ -40,6 +41,7 @@ neighbours, if FALSE assign NA - causing \code{lagmess()} to terminate with an e
   \item{control}{control parameters passed to \code{optim}}
   \item{method}{default \code{BFGS}, method passed to \code{optim}}
   \item{verbose}{default NULL, use global option value; if TRUE report function values during optimization}
+  \item{use_expm}{default FALSE; if TRUE use \code{expm::expAtv} instead of a truncated power series of W}
   \item{x,object}{Objects of classes \code{lagmess} or \code{summary.lagmess} to be passed to methods}
   \item{digits}{the number of significant digits to use when printing}
   \item{signif.stars}{logical. If TRUE, "significance stars" are printed
@@ -80,15 +82,16 @@ The function returns an object of class \code{lagmess} with components:
 data(baltimore)
 baltimore$AGE <- ifelse(baltimore$AGE < 1, 1, baltimore$AGE)
 lw <- nb2listw(knn2nb(knearneigh(cbind(baltimore$X, baltimore$Y), k=7)))
-obj1 <- lm(log(PRICE) ~ PATIO + log(AGE) + log(SQFT) + lag(lw, log(AGE)),
+obj1 <- lm(log(PRICE) ~ PATIO + log(AGE) + log(SQFT),
  data=baltimore)
 lm.morantest(obj1, lw)
 lm.LMtests(obj1, lw, test="all")
-obj2 <- lagmess(log(PRICE) ~ PATIO + log(AGE) + log(SQFT) + 
- lag(lw, log(AGE)), data=baltimore, listw=lw)
+system.time(obj2 <- lagmess(log(PRICE) ~ PATIO + log(AGE) + log(SQFT), data=baltimore, listw=lw))
 summary(obj2)
-obj3 <- lagsarlm(log(PRICE) ~ PATIO + log(AGE) + log(SQFT) + 
- lag(lw, log(AGE)), data=baltimore, listw=lw)
+system.time(obj2a <- lagmess(log(PRICE) ~ PATIO + log(AGE) + log(SQFT), data=baltimore, listw=lw,
+ use_expm=TRUE))
+summary(obj2a)
+obj3 <- lagsarlm(log(PRICE) ~ PATIO + log(AGE) + log(SQFT), data=baltimore, listw=lw)
 summary(obj3)
 data(boston)
 lw <- nb2listw(boston.soi)

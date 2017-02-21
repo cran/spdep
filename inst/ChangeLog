@@ -1,3 +1,34 @@
+2017-02-18 19:01  rsbivand
+
+	* NAMESPACE: impacts for lagmess
+
+2017-02-18 18:38  rsbivand
+
+	* NAMESPACE: impacts for lagmess
+
+2017-02-18 18:38  rsbivand
+
+	* NAMESPACE, R/impacts.R, R/mess.R, man/impacts.sarlm.Rd,
+	  man/lagmess.Rd: impacts for lagmess
+
+2017-02-16 17:44  rsbivand
+
+	* DESCRIPTION, NAMESPACE, R/mess.R, man/lagmess.Rd: add expm to
+	  MESS
+
+2017-02-15 13:14  rsbivand
+
+	* ChangeLog, inst/ChangeLog: tidy
+
+2017-02-15 13:13  rsbivand
+
+	* ChangeLog, DESCRIPTION, R/nb2mat.R, man/invIrM.Rd: powerWeights
+	  bug fixed
+
+2017-01-08 19:59  rsbivand
+
+	* ChangeLog, inst/ChangeLog: tidy
+
 2016-12-20 14:54  rsbivand
 
 	* man/bhicv.Rd: tidy

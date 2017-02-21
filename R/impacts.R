@@ -1,4 +1,4 @@
-# Copyright 2009-2014 by Roger Bivand
+# Copyright 2009-2017 by Roger Bivand
 
 trW <- function(W=NULL, m=30, p=16, type="mult", listw=NULL, momentsSymmetry=TRUE) {
 # returns traces
@@ -516,12 +516,6 @@ intImpacts <- function(rho, beta, P, n, mu, Sigma, irho, drop2beta, bnames,
     res
 }
 
-impacts.lagmess <- function(obj, ..., tr=NULL, R=NULL, listw=NULL, 
-  tol=1e-6, empirical=FALSE, Q=NULL) {
-    stopifnot(!is.null(obj$mixedHess))
-    stop("method not yet available")
-}
-
 impacts.sarlm <- function(obj, ..., tr=NULL, R=NULL, listw=NULL, useHESS=NULL,
   tol=1e-6, empirical=FALSE, Q=NULL) {
     if (obj$type == "error") {
@@ -764,6 +758,8 @@ summary.lagImpact <- function(object, ..., zstats=FALSE, short=FALSE, reportQ=NU
            "useHESS"), ifelse(attr(object, "insert"),
            "mixed Hessian approximation", "numerical Hessian approximation"),
            "asymptotic")
+    } else if ("lagmess" %in% attr(object, "iClass")) {
+        tp <- "numerical Hessian approximation"
     } else if ("stsls" %in% attr(object, "iClass")) {
         tp <- "asymptotic IV"
         if (!is.null(attr(object, "robust")) && attr(object, "robust")) {

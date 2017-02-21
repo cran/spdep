@@ -6,6 +6,7 @@
 \alias{impacts.gmsar}
 \alias{impacts.SLX}
 \alias{impacts.MCMC_sar_g}
+\alias{impacts.lagmess}
 \alias{plot.lagImpact}
 \alias{print.lagImpact}
 \alias{summary.lagImpact}
@@ -24,6 +25,7 @@
  tol = 1e-06, empirical = FALSE, Q=NULL)
 \method{impacts}{gmsar}(obj, \dots, n = NULL, tr = NULL, R = NULL, listw = NULL,
  tol = 1e-06, empirical = FALSE, Q=NULL)
+\method{impacts}{lagmess}(obj, ..., R=NULL, listw=NULL, tol=1e-6, empirical=FALSE)
 \method{impacts}{SLX}(obj, ...)
 \method{impacts}{MCMC_sar_g}(obj, ..., tr=NULL, listw=NULL, Q=NULL)
 \method{plot}{lagImpact}(x, ..., choice="direct", trace=FALSE, density=TRUE)
@@ -37,7 +39,7 @@ intImpacts(rho, beta, P, n, mu, Sigma, irho, drop2beta, bnames, interval,
  samples=NULL)
 }
 \arguments{
-  \item{obj}{A sarlm spatial regression object created by \code{lagsarlm} or by \code{lmSLX}; in \code{HPDinterval.lagImpact}, a lagImpact object}
+  \item{obj}{A spatial regression object created by \code{lagsarlm}, \code{lagmess} or by \code{lmSLX}; in \code{HPDinterval.lagImpact}, a lagImpact object}
   \item{\dots}{Arguments passed through to methods in the \pkg{coda} package}
   \item{tr}{A vector of traces of powers of the spatial weights matrix created using \code{trW}, for approximate impact measures; if not given, \code{listw} must be given for exact measures (for small to moderate spatial weights matrices); the traces must be for the same spatial weights as were used in fitting the spatial regression, and must be row-standardised}
   \item{listw}{If \code{tr} is not given, a spatial weights object as created by \code{nb2listw}; they must be the same spatial weights as were used in fitting the spatial regression, but do not have to be row-standardised}
@@ -113,6 +115,8 @@ impacts(lobj, tr=trMC)
 lobj1 <- stsls(CRIME ~ INC + HOVAL, columbus, listw)
 loobj1 <- impacts(lobj1, tr=trMatc, R=200)
 summary(loobj1, zstats=TRUE, short=TRUE)
+library(coda)
+HPDinterval(loobj1)
 lobj1r <- stsls(CRIME ~ INC + HOVAL, columbus, listw, robust=TRUE)
 loobj1r <- impacts(lobj1r, tr=trMatc, R=200)
 summary(loobj1r, zstats=TRUE, short=TRUE)

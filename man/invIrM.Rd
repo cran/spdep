@@ -36,6 +36,9 @@ The \code{powerWeights} function uses power series summation to cumulate the pro
 \value{
   An nxn matrix with a "call" attribute; the \code{powerWeights} function returns a matrix of the same dimensions as X which has been multipled by the power series equivalent of the dense matrix \deqn{(I - \rho V)^{-1}}.
 }
+\note{
+Before version 0.6-10, \code{powerWeights} only worked correctly for positive rho, with differences from true values increasing as rho approached -1, and exploding between -1 and the true negative bound.
+}
 \references{Tiefelsdorf, M., Griffith, D. A., Boots, B. 1999 A variance-stabilizing coding scheme for spatial link matrices, Environment and Planning A, 31, pp. 165-180; Tiefelsdorf, M. 2000 Modelling spatial processes, Lecture notes in earth sciences, Springer, p. 76; Haining, R. 1990 Spatial data analysis in the social and environmental sciences, Cambridge University Press, p. 117; Cliff, A. D., Ord, J. K. 1981 Spatial processes, Pion, p. 152; Reder, M. and Mueller, W. (2007) An Improvement of the invIrM Routine of the Geostatistical R-package spdep by Cholesky Inversion, Statistical Projects, LV No: 238.205, SS 2006, Department of Applied Statistics, Johannes Kepler University, Linz}
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 

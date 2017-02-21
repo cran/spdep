@@ -97,7 +97,8 @@ powerWeights <- function(W, rho, order=250, X, tol=.Machine$double.eps^(3/5)) {
             last <- last %*% aW
             acc <- acc + last
         }
-        series[iter] <- mean(as(last, "matrix"))
+# abs() added 2017-02-15, bug spotted by Yongwan Chun
+        series[iter] <- mean(abs(as(last, "matrix")))
         if (series[iter] < tol) {
             conv <- TRUE
             break
