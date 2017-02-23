@@ -13,7 +13,16 @@ importFrom(utils, write.table, object.size, read.table, read.csv, packageDescrip
 importFrom(grDevices, rainbow)
 if (.Platform$OS.type == "windows") importFrom(grDevices, bringToTop)
 
-import(Matrix, except=c("expm"))
+if (R.version$major >= 3) {
+  if (R.version$major == 3 && R.version$minor < 3) {
+    import(Matrix)
+  } else if (R.version$major == 3 && R.version$minor >= 3) {
+    import(Matrix, except=c("expm"))
+  } else if(R.version$major > 3)
+    import(Matrix, except=c("expm"))
+} else {
+  import(Matrix)
+}
 importFrom(LearnBayes, rwmetrop)
 importFrom(gmodels, estimable)
 importFrom(expm, expAtv, expm)

@@ -249,7 +249,12 @@ hr {
 </code></pre>
 
 <pre><code class="r">columbus &lt;- readShapePoly(system.file(&quot;etc/shapes/columbus.shp&quot;, package=&quot;spdep&quot;)[1])
-row.names(columbus)[1:10]
+</code></pre>
+
+<pre><code>## Warning: use rgdal::readOGR or sf::st_read
+</code></pre>
+
+<pre><code class="r">row.names(columbus)[1:10]
 </code></pre>
 
 <pre><code>##  [1] &quot;0&quot; &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot; &quot;5&quot; &quot;6&quot; &quot;7&quot; &quot;8&quot; &quot;9&quot;
