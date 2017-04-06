@@ -62,7 +62,7 @@ void opt_error_set(SEXP env) {
 
     OPT_ERROR_SSE *pt;
     SEXP y, x, wy, WX;
-    int i, n, p, np;
+    int i, n, p, np, pc=0;
 
     n = INTEGER_POINTER(findVarInFrame(env, install("n")))[0];
     p = INTEGER_POINTER(findVarInFrame(env, install("p")))[0];
@@ -72,10 +72,10 @@ void opt_error_set(SEXP env) {
         install("ptr")));
     if (pt->set) error("opt_error_set: function called out of order");
 
-    y = findVarInFrame(env, install("y"));
-    x = findVarInFrame(env, install("x"));
-    wy = findVarInFrame(env, install("wy"));
-    WX = findVarInFrame(env, install("WX"));
+    PROTECT(y = findVarInFrame(env, install("y"))); pc++;
+    PROTECT(x = findVarInFrame(env, install("x"))); pc++;
+    PROTECT(wy = findVarInFrame(env, install("wy"))); pc++;
+    PROTECT(WX = findVarInFrame(env, install("WX"))); pc++;
 
     pt->y = Calloc(n, double);
     pt->x = Calloc(np, double);
@@ -99,6 +99,7 @@ void opt_error_set(SEXP env) {
         pt->wx1[i] = NUMERIC_POINTER(WX)[i];
     }
     pt->set = TRUE;
+    UNPROTECT(pc);
 
     return;
 }
@@ -147,7 +148,7 @@ void hess_error_set(SEXP env) {
 
     HESS_ERROR_SSE *pt;
     SEXP y, x, wy, WX;
-    int i, n, p, np;
+    int i, n, p, np, pc=0;
 
     n = INTEGER_POINTER(findVarInFrame(env, install("n")))[0];
     p = INTEGER_POINTER(findVarInFrame(env, install("p")))[0];
@@ -157,10 +158,10 @@ void hess_error_set(SEXP env) {
         install("ptr")));
     if (pt->set) error("hess_error_set: function called out of order");
 
-    y = findVarInFrame(env, install("y"));
-    x = findVarInFrame(env, install("x"));
-    wy = findVarInFrame(env, install("wy"));
-    WX = findVarInFrame(env, install("WX"));
+    PROTECT(y = findVarInFrame(env, install("y"))); pc++;
+    PROTECT(x = findVarInFrame(env, install("x"))); pc++;
+    PROTECT(wy = findVarInFrame(env, install("wy"))); pc++;
+    PROTECT(WX = findVarInFrame(env, install("WX"))); pc++;
 
     pt->y = Calloc(n, double);
     pt->x = Calloc(np, double);
@@ -180,6 +181,7 @@ void hess_error_set(SEXP env) {
         pt->wx1[i] = NUMERIC_POINTER(WX)[i];
     }
     pt->set = TRUE;
+    UNPROTECT(pc);
 
     return;
 }
@@ -225,7 +227,7 @@ void hess_lag_set(SEXP env) {
 
     HESS_LAG_SSE *pt;
     SEXP y, x, wy;
-    int i, n, p, np;
+    int i, n, p, np, pc=0;
 
     n = INTEGER_POINTER(findVarInFrame(env, install("n")))[0];
     p = INTEGER_POINTER(findVarInFrame(env, install("m")))[0];
@@ -235,9 +237,9 @@ void hess_lag_set(SEXP env) {
         install("ptr")));
     if (pt->set) error("hess_lag_set: function called out of order");
 
-    y = findVarInFrame(env, install("y"));
-    x = findVarInFrame(env, install("x"));
-    wy = findVarInFrame(env, install("wy"));
+    PROTECT(y = findVarInFrame(env, install("y"))); pc++;
+    PROTECT(x = findVarInFrame(env, install("x"))); pc++;
+    PROTECT(wy = findVarInFrame(env, install("wy"))); pc++;
 
     pt->y = Calloc(n, double);
     pt->x = Calloc(np, double);
@@ -252,6 +254,7 @@ void hess_lag_set(SEXP env) {
     }
     for (i=0; i<np; i++) pt->x[i] = NUMERIC_POINTER(x)[i];
     pt->set = TRUE;
+    UNPROTECT(pc);
 
     return;
 }

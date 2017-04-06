@@ -182,9 +182,11 @@ In spatial regression, the domain of the spatial coefficient is given by the inv
 ```{r}
 1/range(eigenw(nb_B))
 library(igraph)
-f2 <- function(x, extra=NULL) {as.vector(B %*% x)}
-1/arpack(f2, sym=TRUE, options=list(n=n, nev=1, ncv=8, which="LA", maxiter=200))$values
-1/arpack(f2, sym=TRUE, options=list(n=n, nev=1, ncv=8, which="SA", maxiter=200))$values
+#f2 <- function(x, extra=NULL) {as.vector(B %*% x)}
+#1/arpack(f2, sym=TRUE, options=list(n=n, nev=1, ncv=8, which="LA", maxiter=200))$values
+#1/arpack(f2, sym=TRUE, options=list(n=n, nev=1, ncv=8, which="SA", maxiter=200))$values
+# At line 409 of file dsaupd.f: Fortran runtime error: Actual string
+# length is shorter than the declared one for dummy argument 'which' (0/2)
 #1/arpack(f2, sym=TRUE, options=list(n=n, nev=2, ncv=8, which="BE", maxiter=200))$values
 # "BE" gives: At line 558 of file dsaup2.f: Fortran runtime error: 
 # Index '9' of dimension 1 of array 'bounds' above upper bound of 8
@@ -195,8 +197,10 @@ In this case, the results are trivial with small `n` and a symmetric sparse matr
 ```{r}
 1/range(eigenw(nb_W))
 f2 <- function(x, extra=NULL) {as.vector(W %*% x)}
-1/arpack(f2, sym=FALSE, options=list(n=n, nev=1, ncv=8, which="LR", maxiter=200))$values
-1/arpack(f2, sym=FALSE, options=list(n=n, nev=1, ncv=8, which="SR", maxiter=200))$values
+#1/arpack(f2, sym=FALSE, options=list(n=n, nev=1, ncv=8, which="LR", maxiter=200))$values
+#1/arpack(f2, sym=FALSE, options=list(n=n, nev=1, ncv=8, which="SR", maxiter=200))$values
+# At line 409 of file dsaupd.f: Fortran runtime error: Actual string
+# length is shorter than the declared one for dummy argument 'which' (0/2)
 ```
 For asymmetric matrices, we need to go to each end separately, so finding the domain bounds can be hard. Using row-standardisation has the nice feature of setting the upper bound to unity, and there are graph methods for finding out whether the lower bound is `-1`.
 
