@@ -82,6 +82,12 @@ The \code{GMargminImage} may be used to visualize the shape of the surface of th
   \item{optres}{object returned by optimizer}
   \item{pars}{start parameter values for optimisation}
   \item{Hcov}{Spatial DGP covariance matrix for Hausman test if available}
+  \item{legacy}{input choice of unfiltered or filtered values}
+  \item{lambda.se}{value computed if input argument TRUE}
+  \item{arnoldWied}{were Arnold-Wied moments used}
+  \item{GMs2}{GM argmin sigma squared}
+  \item{scaleU}{input choice of scaled OLS residuals}
+  \item{vcov}{variance-covariance matrix of regression coefficients}
   \item{na.action}{(possibly) named vector of excluded or omitted observations if non-default na.action argument used}
 }
 \references{Kelejian, H. H., and Prucha, I. R., 1999. A Generalized Moments Estimator for the Autoregressive Parameter in a Spatial Model. International Economic Review, 40, pp. 509--533; Cressie, N. A. C. 1993 \emph{Statistics for spatial data}, Wiley, New York.

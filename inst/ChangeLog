@@ -1,3 +1,21 @@
+2017-04-12 13:38  rsbivand
+
+	* src/dnn.c: gcdist returned -nan for zero distance
+
+2017-04-11 13:47  rsbivand
+
+	* DESCRIPTION, R/kpgm_new.R, man/GMerrorsar.Rd: return GMerrorsar
+	  vcov
+
+2017-04-11 12:47  rsbivand
+
+	* DESCRIPTION, man/boston.Rd, man/lextrB.Rd, src/ml_sse.c,
+	  vignettes/nb_igraph.Rmd: unprotected SEXP; igraph arpack error
+
+2017-02-23 11:41  rsbivand
+
+	* ChangeLog, inst/ChangeLog: tidy
+
 2017-02-23 11:37  rsbivand
 
 	* DESCRIPTION, NAMESPACE: condition R 3.3 imports(, except=())

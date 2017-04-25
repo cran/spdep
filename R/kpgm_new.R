@@ -139,6 +139,7 @@ GMerrorsar <- function(#W, y, X,
 	    rest.se <- (summary(lm.target)$coefficients[,2])*sqrt((n-p)/n)
 	    r <- as.vector(residuals(lm.target))
 	    fit <- as.vector(y - r)
+            vcov <- vcov(lm.target)
         } else {
             fit <- as.vector(x %*% coef.lambda)
             r <- as.vector(y - fit)
@@ -150,6 +151,7 @@ GMerrorsar <- function(#W, y, X,
             Qr <- qr(Bx/(sqrt(s2)))
             invxpx <- chol2inv(Qr$qr)
             rest.se <- sqrt(diag(invxpx))
+            vcov <- invxpx
         }
 
         W <- as(listw, "CsparseMatrix")
@@ -222,7 +224,7 @@ GMerrorsar <- function(#W, y, X,
 		fitted.values=fit, formula=formula, aliased=aliased,
 		zero.policy=zero.policy, vv=vv, optres=optres,
                 pars=pars, Hcov=Hcov, legacy=legacy, lambda.se=lambda.se,
-                arnoldWied=arnoldWied, GMs2=GMs2, scaleU=scaleU),
+                arnoldWied=arnoldWied, GMs2=GMs2, scaleU=scaleU, vcov=vcov),
                 class=c("gmsar"))
 	if (zero.policy) {
 		zero.regs <- attr(listw$neighbours, 
