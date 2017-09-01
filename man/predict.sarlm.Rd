@@ -45,7 +45,7 @@ terminate with an error}
   \item{...}{further arguments passed through}
 }
 \details{
-The function supports three types of prediction.  In-sample prediction is the computation of predictors on the data used to fit the model (\code{newdata=NULL}).  Prevision, also called forecast, is the computation of some predictors (\dQuote{trend}, in-sample \dQuote{TC} and out-of-sample \dQuote{TS}) on the same spatial units than the ones used to fit the model, but with different observations of the variables in the model (row names of \code{newdata} should have the same row names than the data frame used to fit the model).  And out-of-sample prediction is the computation of predictors on other spatial units than the ones used to fit the model (\code{newdata} has different row names).  For extensive definitions, see Thomas-Agnan et al. (2015). % add that warning if out-of-sample with newdata containing one in-sample spatial unit
+The function supports three types of prediction.  In-sample prediction is the computation of predictors on the data used to fit the model (\code{newdata=NULL}).  Prevision, also called forecast, is the computation of some predictors (\dQuote{trend}, in-sample \dQuote{TC} and out-of-sample \dQuote{TS}) on the same spatial units than the ones used to fit the model, but with different observations of the variables in the model (row names of \code{newdata} should have the same row names than the data frame used to fit the model).  And out-of-sample prediction is the computation of predictors on other spatial units than the ones used to fit the model (\code{newdata} has different row names).  For extensive definitions, see Goulard et al. (2017). % add that warning if out-of-sample with newdata containing one in-sample spatial unit
 
 \code{pred.type} of predictors are available according to the model of \code{object} an to the type of prediction.  In the two following tables, \dQuote{yes} means that the predictor can be used with the model, \dQuote{no} means that \code{predict.sarlm()} will stop with an error, and \dQuote{yes*} means that the predictor is not designed for the specified model, but it can be used with \code{predict.sarlm()}.  In the last case, be careful with the computation of a inappropriate predictor.
 
@@ -83,7 +83,7 @@ Note that only \dQuote{trend} and \dQuote{TC} are available for prevision.
   \dQuote{KP5}   \tab  yes \tab  no \tab  yes* \cr
 }
 
-Values for \code{pred.type=} include \dQuote{TS1}, \dQuote{TC}, \dQuote{TC1}, \dQuote{BP}, \dQuote{BP1}, \dQuote{BPW}, \dQuote{BPW1}, \dQuote{BPN}, \dQuote{BPN1}, following the notation in Thomas-Agnan et al. (2015), and for \code{pred.type=} \dQuote{KP1}, \dQuote{KP2}, \dQuote{KP3}, \dQuote{KP4}, \dQuote{KP5}, following the notation in Kelejian et al. (2007).  \code{pred.type="TS"} is described bellow and in Bivand (2002).  
+Values for \code{pred.type=} include \dQuote{TS1}, \dQuote{TC}, \dQuote{TC1}, \dQuote{BP}, \dQuote{BP1}, \dQuote{BPW}, \dQuote{BPW1}, \dQuote{BPN}, \dQuote{BPN1}, following the notation in Goulard et al. (2017), and for \code{pred.type=} \dQuote{KP1}, \dQuote{KP2}, \dQuote{KP3}, \dQuote{KP4}, \dQuote{KP5}, following the notation in Kelejian et al. (2007).  \code{pred.type="TS"} is described bellow and in Bivand (2002).  
 
 
 In the following, the trend is the non-spatial smooth, the signal is the
@@ -156,7 +156,7 @@ of pred.type and call with class \code{sarlm.pred}.
 returning a data frame with columns: "fit", "trend" and "signal" (when available) and with region.id as row names.
 }
 
-\references{Haining, R. 1990 \emph{Spatial data analysis in the social and environmental sciences}, Cambridge: Cambridge University Press, p. 258; Cressie, N. A. C. 1993 \emph{Statistics for spatial data}, Wiley, New York; Thomas-Agnan, C., Laurent, T. and Goulard, M. 2015 \emph{About predictions in spatial autoregressive models: Optimal and almost optimal strategies}, TSE Working Paper, n. 13-452; Kelejian, H. H. and Prucha, I. R. 2007 \emph{The relative efficiencies of various predictors in spatial econometric models containing spatial lags}, Regional Science and Urban Economics, Volume 37, Issue 3, 363--374; Bivand, R. 2002 \emph{Spatial econometrics functions in R: Classes and methods}, Journal of Geographical Systems, Volume 4, No. 4, 405--421}
+\references{Haining, R. 1990 \emph{Spatial data analysis in the social and environmental sciences}, Cambridge: Cambridge University Press, p. 258; Cressie, N. A. C. 1993 \emph{Statistics for spatial data}, Wiley, New York; Michel Goulard, Thibault Laurent & Christine Thomas-Agnan, 2017 \emph{About predictions in spatial autoregressive models: optimal and almost optimal strategies},  Spatial Economic Analysis Volume 12, Issue 2--3, 304--325, ; Kelejian, H. H. and Prucha, I. R. 2007 \emph{The relative efficiencies of various predictors in spatial econometric models containing spatial lags}, Regional Science and Urban Economics, Volume 37, Issue 3, 363--374; Bivand, R. 2002 \emph{Spatial econometrics functions in R: Classes and methods}, Journal of Geographical Systems, Volume 4, No. 4, 405--421}
 \author{Roger Bivand \email{Roger.Bivand@nhh.no} and Martin Gubri}
 
 \seealso{\code{\link{errorsarlm}}, \code{\link{lagsarlm}}, \code{\link{sacsarlm}}}

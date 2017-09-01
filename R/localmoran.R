@@ -3,7 +3,7 @@
 
 localmoran <- function(x, listw, zero.policy=NULL, na.action=na.fail, 
 	alternative = "greater", p.adjust.method="none", mlvar=TRUE,
-	spChk=NULL) {
+	spChk=NULL, sokal98=FALSE) {
         stopifnot(is.vector(x))
 	if (!inherits(listw, "listw"))
 		stop(paste(deparse(substitute(listw)), "is not a listw object"))
@@ -44,14 +44,18 @@ localmoran <- function(x, listw, zero.policy=NULL, na.action=na.fail,
 	res[,2] <- -Wi / (n-1)
 	if (!mlvar) s2 <- sum(z^2, na.rm=NAOK)/n
 	b2 <- (sum(z^4, na.rm=NAOK)/n)/(s2^2)
+	Wi2 <- sapply(listw$weights, function(x) sum(x^2))
 	A <- (n-b2) / (n-1)
 	B <- (2*b2 - n) / ((n-1)*(n-2))
-	C <- Wi^2 / ((n-1)^2)
-	Wi2 <- sapply(listw$weights, function(x) sum(x^2))
-	Wikh2 <- sapply(listw$weights, function(x) {
+        if (sokal98) {
+            res[,3] <- A*Wi2 + B*(Wi^2 - Wi2) - res[,2]^2
+        } else {
+	    C <- Wi^2 / ((n-1)^2)
+	    Wikh2 <- sapply(listw$weights, function(x) {
 		ifelse(is.null(x), 0, 1 - crossprod(x,x))
-	})
-	res[,3] <- A*Wi2 + B*Wikh2 - C
+	    })
+	    res[,3] <- A*Wi2 + B*Wikh2 - C
+        }
 	res[,4] <- (res[,1] - res[,2]) / sqrt(res[,3])
         if (alternative == "two.sided") pv <- 2 * pnorm(abs(res[,4]), 
 	    lower.tail=FALSE)

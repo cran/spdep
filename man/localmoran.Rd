@@ -12,7 +12,7 @@ and its expectation and variance are given in Anselin (1995).
 \usage{
 localmoran(x, listw, zero.policy=NULL, na.action=na.fail, 
 	alternative = "greater", p.adjust.method="none", mlvar=TRUE,
-        spChk=NULL)
+        spChk=NULL, sokal98=FALSE)
 }
 \arguments{
   \item{x}{a numeric vector the same length as the neighbours list in listw}
@@ -23,6 +23,7 @@ localmoran(x, listw, zero.policy=NULL, na.action=na.fail,
   \item{p.adjust.method}{a character string specifying the probability value adjustment for multiple tests, default "none"; see \code{\link{p.adjustSP}}. Note that the number of multiple tests for each region is only taken as the number of neighbours + 1 for each region, rather than the total number of regions.}
   \item{mlvar}{default TRUE: values of local Moran's I are reported using the variance of the variable of interest (sum of squared deviances over n), but can be reported as the sample variance, dividing by (n-1) instead; both are used in other implementations.}
   \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
+  \item{sokal98}{default=FALSE, if TRUE, use VI as defined by Sokal et al. (1998)}
 }
 
 \details{
@@ -42,7 +43,7 @@ Geographical Analysis, 27, 93--115;
 Getis, A. and Ord, J. K. 1996 Local spatial
 statistics: an overview. In P. Longley and M. Batty (eds) \emph{Spatial
 analysis: modelling in a GIS environment} (Cambridge: Geoinformation
-International), 261--277.}
+International), 261--277; Sokal, R. R, Oden, N. L. and Thomson, B. A. 1998. Local Spatial Autocorrelation in a Biological Model. Geographical Analysis, 30. 331--354.}
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 
 \seealso{\code{\link{localG}}}

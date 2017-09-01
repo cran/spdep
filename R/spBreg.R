@@ -14,6 +14,14 @@ spBreg_lag <- function(formula, data = list(), listw, na.action, type="lag",
         pre_eig=NULL, interval=c(-1, 1), ndraw=2500L, nomit=500L, thin=1L,
         verbose=FALSE, detval=NULL, prior=list(Tbeta=NULL, c_beta=NULL,
         rho=0.5, sige=1, nu=0, d0=0, a1 = 1.01, a2 = 1.01))
+    priors <- con$prior
+    nmsP <- names(priors)
+    priors[(namp <- names(control$prior))] <- control$prior
+    if (length(noNms <- namp[!namp %in% nmsP])) 
+        warning("unknown names in control$prior: ",
+            paste(noNms, collapse = ", "))
+    control$prior <- NULL
+    con$prior <- NULL
     nmsC <- names(con)
     con[(namc <- names(control))] <- control
     if (length(noNms <- namc[!namc %in% nmsC])) 
@@ -87,7 +95,7 @@ spBreg_lag <- function(formula, data = list(), listw, na.action, type="lag",
         pre_eig=con$pre_eig, interval=con$interval)
     detval1 <- get("detval1", envir=env)[,1]
     detval2 <- get("detval1", envir=env)[,2]
-    bprior <-  dbeta(detval1, con$prior$a1, con$prior$a2)
+    bprior <-  dbeta(detval1, priors$a1, priors$a2)
 
     nm <- paste(con$ldet_method, "set_up", sep="_")
     timings[[nm]] <- proc.time() - .ptime_start
@@ -95,18 +103,18 @@ spBreg_lag <- function(formula, data = list(), listw, na.action, type="lag",
 
     k <- m 
 
-    if (is.null(con$prior$c_beta))
-        con$prior$c_beta <- rep(0, k)
+    if (is.null(priors$c_beta))
+        priors$c_beta <- rep(0, k)
     else 
-        stopifnot(length(con$prior$c_beta) == k)
+        stopifnot(length(priors$c_beta) == k)
 
-    if (is.null(con$prior$Tbeta))
-        con$prior$Tbeta <- diag(k)*1e+12
+    if (is.null(priors$Tbeta))
+        priors$Tbeta <- diag(k)*1e+12
     else
-        stopifnot(nrow(con$prior$Tbeta) == k && ncol(con$prior$Tbeta) == k)
+        stopifnot(nrow(priors$Tbeta) == k && ncol(priors$Tbeta) == k)
 
-    sige <- con$prior$sige
-    rho <- con$prior$rho
+    sige <- priors$sige
+    rho <- priors$rho
 
 #% storage for draws
     bsave <- matrix(0, nrow=con$ndraw, ncol=k)
@@ -117,13 +125,13 @@ spBreg_lag <- function(formula, data = list(), listw, na.action, type="lag",
 #% ====== initializations
 #% compute this stuff once to save time
 
-    TI = solve(con$prior$Tbeta); # see eq 5.29, Lesage & Pace (2009) p. 140
-    TIc = TI%*%con$prior$c_beta;
+    TI = solve(priors$Tbeta); # see eq 5.29, Lesage & Pace (2009) p. 140
+    TIc = TI%*%priors$c_beta;
            
     xpx = crossprod(x)
     xpy = crossprod(x, y)
     xpWy = crossprod(x, wy)
-    nu1 = n + 2*con$prior$nu
+    nu1 = n + 2*priors$nu
     nrho = length(detval1)
     rho_out = 0
 #    nano_1 = 0
@@ -150,7 +158,7 @@ spBreg_lag <- function(formula, data = list(), listw, na.action, type="lag",
 #        nano_p <- microbenchmark::get_nanotime()
         xb = x %*% bhat
         e = (ys - xb)
-        d1 = 2*con$prior$d0 + crossprod(e)
+        d1 = 2*priors$d0 + crossprod(e)
         chi = rchisq(1, nu1) #chi = chis_rnd(1,nu1);
         sige = as.numeric(d1/chi) # see eq 5.30, p. 141
         ssave[iter] = as.vector(sige)

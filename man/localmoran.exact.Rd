@@ -6,7 +6,7 @@
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Exact local Moran's Ii tests}
 \description{
- \code{localmoran.exact} provides exact local Moran's Ii tests under the null hypothesis, while \code{localmoran.exact.alt} provides exact local Moran's Ii tests under the alternative hypothesis. In this case, the model may be a fitted model returned by \code{errorsarlm} from which the covariance matrix is retrieved, or the covariance matrix can be passed through the \code{Omega=} argument.
+ \code{localmoran.exact} provides exact local Moran's Ii tests under the null hypothesis, while \code{localmoran.exact.alt} provides exact local Moran's Ii tests under the alternative hypothesis. In this case, the model may be a fitted model derived from a model fitted by \code{errorsarlm}, with the covariance matrix can be passed through the \code{Omega=} argument.
 }
 \usage{
 localmoran.exact(model, select, nb, glist = NULL, style = "W", 
@@ -51,10 +51,9 @@ row names assigned from localmoranex object}
 \value{
 A list with class \code{localmoranex} containing "select" lists, each with
  class \code{moranex} with the following components:
-  \item{statistic}{the value of the saddlepoint approximation of the
- standard deviate of global Moran's I.}
+  \item{statistic}{the value of the exact standard deviate of global Moran's I.}
   \item{p.value}{the p-value of the test.}
-  \item{estimate}{the value of the observed global Moran's I.}
+  \item{estimate}{the value of the observed local Moran's Ii.}
   \item{method}{a character string giving the method used.}
   \item{alternative}{a character string describing the alternative hypothesis.}
   \item{gamma}{eigenvalues (two extreme values for null, vector for alternative)}

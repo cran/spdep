@@ -100,7 +100,7 @@ moranSadAlt <- function(I, M, U, Omega, n, tol=.Machine$double.eps^0.5,
 
 moranSad <- function(tau, I, tol=.Machine$double.eps^0.5, maxiter=1000,
     tol.bounds=0.0001, alternative="greater", type="Global") {
-    if (type == "Global") taumi <- tau - I
+    if (type == "Global") taumi <- tau - c(I)
     else if (type == "Alternative") taumi <- tau
     low <- (1 / (2*taumi[length(taumi)])) + tol.bounds
     high <- (1 / (2*taumi[1])) - tol.bounds

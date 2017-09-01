@@ -1,6 +1,6 @@
 Package: spdep
-Version: 0.6-13
-Date: 2017-04-11
+Version: 0.6-15
+Date: 2017-08-18
 Title: Spatial Dependence: Weighting Schemes, Statistics and Models
 Encoding: UTF-8
 Authors@R: c(person("Roger", "Bivand", role = c("cre", "aut"), email = "Roger.Bivand@nhh.no"),	person("Micah", "Altman", role = "ctb"),
@@ -55,7 +55,7 @@ License: GPL (>= 2)
 VignetteBuilder: knitr
 URL: https://r-forge.r-project.org/projects/spdep/
 NeedsCompilation: yes
-Packaged: 2017-04-25 07:41:59 UTC; rsb
+Packaged: 2017-09-01 13:28:59 UTC; rsb
 Author: Roger Bivand [cre, aut],
   Micah Altman [ctb],
   Luc Anselin [ctb],
@@ -88,4 +88,4 @@ Author: Roger Bivand [cre, aut],
   Danlin Yu [ctb]
 Maintainer: Roger Bivand <Roger.Bivand@nhh.no>
 Repository: CRAN
-Date/Publication: 2017-04-25 10:39:12 UTC
+Date/Publication: 2017-09-01 20:24:01 UTC

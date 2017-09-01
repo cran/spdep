@@ -92,7 +92,7 @@ exactMoran <- function(I, gamma, alternative="greater", type="Global", np2=NULL,
     if (!(alternative %in% c("greater", "less", "two.sided")))
 	stop("alternative must be one of: \"greater\", \"less\", or \"two.sided\"")
     if (type == "Global") {
-        SpecI <- gamma - I
+        SpecI <- gamma - c(I)
         integrand <- function(x) {
         sin(0.5 * colSums(atan(SpecI %*% t(x)))) /
         (x * apply((1 + SpecI^2 %*% t(x^2))^(1/4), 2, prod))}
