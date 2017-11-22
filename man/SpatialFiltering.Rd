@@ -46,12 +46,13 @@ SpatialFiltering(formula, lagformula, data = list(), nb, glist = NULL, style = "
   }
   \item{dataset}{a matrix of the selected eigenvectors in order of selection}
 }
-\references{Tiefelsdorf M, Griffith DA. (2007) Semiparametric Filtering of Spatial Autocorrelation: The Eigenvector Approach. Environment and Planning A, 39 (5) 1193 - 1221. \url{http://www.spatialfiltering.com}}
+\references{Tiefelsdorf M, Griffith DA. (2007) Semiparametric Filtering of Spatial Autocorrelation: The Eigenvector Approach. Environment and Planning A, 39 (5) 1193 - 1221.}
 \author{Yongwan Chun, Michael Tiefelsdorf, Roger Bivand}
 
 \seealso{\code{\link[stats]{lm}}, \code{\link[base]{eigen}}, \code{\link{nb2listw}}, \code{\link{listw2U}}}
 \examples{
-example(columbus)
+if (require(rgdal, quietly=TRUE)) {
+example(columbus, package="spData")
 lmbase <- lm(CRIME ~ INC + HOVAL, data=columbus)
 sarcol <- SpatialFiltering(CRIME ~ INC + HOVAL, data=columbus,
  nb=col.gal.nb, style="W", ExactEV=TRUE)
@@ -67,6 +68,7 @@ lmlag <- lm(CRIME ~ INC + HOVAL + fitted(lagcol), data=columbus)
 lmlag
 anova(lmbase, lmlag)
 lm.morantest(lmlag, nb2listw(col.gal.nb))
+}
 }
 \keyword{spatial}
 

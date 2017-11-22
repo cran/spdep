@@ -19,9 +19,11 @@ The function returns an object of class \code{nb} with a list of integer vectors
 \seealso{\code{\link{summary.nb}}}
 
 \examples{
-example(columbus)
+if (require(rgdal, quietly=TRUE)) {
+example(columbus, package="spData")
 coords <- coordinates(columbus)
 summary(col.gal.nb, coords)
 summary(include.self(col.gal.nb), coords)
+}
 }
 \keyword{spatial}

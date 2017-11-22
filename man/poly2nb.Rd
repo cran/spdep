@@ -28,7 +28,8 @@ From 0.5-8, the function includes faster bounding box indexing and other improve
 \seealso{\code{\link{summary.nb}}, \code{\link{card}}}
 
 \examples{
-example(columbus)
+if (require(rgdal, quietly=TRUE)) {
+example(columbus, package="spData")
 coords <- coordinates(columbus)
 xx <- poly2nb(columbus)
 dxx <- diffnb(xx, col.gal.nb)
@@ -52,9 +53,10 @@ fg[maxconts] <- "red"
 fg[xx[[maxconts]]] <- "green"
 plot(columbus, col=fg)
 title(main="Region with largest number of contiguities")
-example(nc.sids)
+example(nc.sids, package="spData")
 system.time(xxnb <- poly2nb(nc.sids))
 plot(nc.sids)
 plot(xxnb, coordinates(nc.sids), add=TRUE, col="blue")
+}
 }
 \keyword{spatial}

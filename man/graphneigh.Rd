@@ -103,7 +103,8 @@ The helper functions return an \code{nb} object with a list of integer
 \code{\link{knn2nb}}, \code{\link{card}}}
 
 \examples{
-example(columbus)
+if (require(rgdal, quietly=TRUE)) {
+example(columbus, package="spData")
 coords <- coordinates(columbus)
 par(mfrow=c(2,2))
 col.tri.nb<-tri2nb(coords)
@@ -140,5 +141,6 @@ opar <- par(mfrow=c(1,2))
 plot(r2, show=TRUE, linecol=2)
 plot(r3, show=TRUE, linecol=2)
 par(opar)
+}
 }
 \keyword{spatial}

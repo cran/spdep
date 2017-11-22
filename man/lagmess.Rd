@@ -79,7 +79,7 @@ The function returns an object of class \code{lagmess} with components:
 \seealso{\code{\link{lagsarlm}}, \code{\link[stats]{optim}}}
 
 \examples{
-data(baltimore)
+data(baltimore, package="spData")
 baltimore$AGE <- ifelse(baltimore$AGE < 1, 1, baltimore$AGE)
 lw <- nb2listw(knn2nb(knearneigh(cbind(baltimore$X, baltimore$Y), k=7)))
 obj1 <- lm(log(PRICE) ~ PATIO + log(AGE) + log(SQFT),
@@ -93,7 +93,8 @@ system.time(obj2a <- lagmess(log(PRICE) ~ PATIO + log(AGE) + log(SQFT), data=bal
 summary(obj2a)
 obj3 <- lagsarlm(log(PRICE) ~ PATIO + log(AGE) + log(SQFT), data=baltimore, listw=lw)
 summary(obj3)
-data(boston)
+\donttest{
+data(boston, package="spData")
 lw <- nb2listw(boston.soi)
 gp2 <- lagsarlm(log(CMEDV) ~ CRIM + ZN + INDUS + CHAS + I(NOX^2) + I(RM^2)
  +  AGE + log(DIS) + log(RAD) + TAX + PTRATIO + B + log(LSTAT),
@@ -103,6 +104,7 @@ gp2a <- lagmess(CMEDV ~ CRIM + ZN + INDUS + CHAS + I(NOX^2) + I(RM^2)
  +  AGE + log(DIS) + log(RAD) + TAX + PTRATIO + B + log(LSTAT),
  data=boston.c, lw)
 summary(gp2a)
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

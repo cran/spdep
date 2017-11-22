@@ -25,7 +25,7 @@ p.adjustSP(p, nb, method = "none")
 
 \seealso{\code{\link{p.adjust}}, \code{\link{localG}}, \code{\link{localmoran}}}
 \examples{
-data(afcon)
+data(afcon, package="spData")
 oid <- order(afcon$id)
 resG <- as.vector(localG(afcon$totcon, nb2listw(include.self(paper.nb))))
 non <- format.pval(pnorm(2*(abs(resG)), lower.tail=FALSE), 2)

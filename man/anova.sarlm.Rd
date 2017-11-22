@@ -25,7 +25,8 @@
 \seealso{\code{\link{LR.sarlm}}, \code{\link{AIC}}}
 
 \examples{
-example(columbus)
+if (require(rgdal, quietly=TRUE)) {
+example(columbus, package="spData")
 lm.mod <- lm(CRIME ~ HOVAL + INC, data=columbus)
 lag <- lagsarlm(CRIME ~ HOVAL + INC, data=columbus, nb2listw(col.gal.nb))
 mixed <- lagsarlm(CRIME ~ HOVAL + INC, data=columbus, nb2listw(col.gal.nb),
@@ -35,5 +36,6 @@ LR.sarlm(mixed, error)
 anova(lag, lm.mod)
 anova(lag, error, mixed)
 AIC(lag, error, mixed)
+}
 }
 \keyword{spatial}

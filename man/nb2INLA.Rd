@@ -22,9 +22,11 @@ the adjacency matrix as required by INLA for its spatial models.
 
 %\seealso{\code{\link[INLA]{inla}}}
 \examples{
-example(columbus)
+if (require(rgdal, quietly=TRUE)) {
+example(columbus, package="spData")
 td <- tempdir()
 x <- nb2INLA(paste(td, "columbus-INLA.adj", sep="/"), col.gal.nb)
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

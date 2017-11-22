@@ -1,3 +1,119 @@
+2017-10-27 17:36  rsbivand
+
+	* data/boston.rda, inst/etc/shapes/NY8_utm18.dbf,
+	  inst/etc/shapes/NY8_utm18.prj, inst/etc/shapes/NY8_utm18.shp,
+	  inst/etc/shapes/NY8_utm18.shx, inst/etc/shapes/boston_tracts.dbf,
+	  inst/etc/shapes/boston_tracts.prj,
+	  inst/etc/shapes/boston_tracts.shp,
+	  inst/etc/shapes/boston_tracts.shx, man/boston.Rd, man/do_ldet.Rd,
+	  man/impacts.sarlm.Rd, man/lagmess.Rd, man/lagsarlm.Rd,
+	  man/lee.Rd, man/lee.mc.Rd, man/lee.test.Rd, man/lextrB.Rd,
+	  man/nb2blocknb.Rd, man/skater.Rd, man/spautolm.Rd, man/stsls.Rd,
+	  man/trW.Rd, vignettes/SpatialFiltering.Rnw: rebase boston to
+	  spData
+
+2017-10-27 09:17  rsbivand
+
+	* vignettes/nb_sf.Rmd: tidy
+
+2017-10-26 16:07  rsbivand
+
+	* vignettes/nb_sf.Rmd: add silent to vignette try()
+
+2017-10-26 12:42  rsbivand
+
+	* vignettes/nb_sf.Rmd: adding sf/sp nb vignette
+
+2017-10-20 09:40  rsbivand
+
+	* data/NY_data.rda, man/GMerrorsar.Rd, man/MCMCsamp.Rd,
+	  man/NY_data.Rd, man/spautolm.Rd, vignettes/nb.Rnw: spData
+	  transition progress
+
+2017-10-14 20:54  rsbivand
+
+	* man/card.Rd: spData transition progress
+
+2017-10-13 22:06  rsbivand
+
+	* data/columbus.rda, data/nc.sids.rda,
+	  inst/etc/shapes/columbus.dbf, inst/etc/shapes/columbus.shp,
+	  inst/etc/shapes/columbus.shx, inst/etc/shapes/sids.dbf,
+	  inst/etc/shapes/sids.shp, inst/etc/shapes/sids.shx,
+	  man/EBImoran.mc.Rd, man/LR.sarlm.Rd, man/ME.Rd,
+	  man/SpatialFiltering.Rd, man/anova.sarlm.Rd, man/autocov_dist.Rd,
+	  man/card.Rd, man/columbus.Rd, man/compon.Rd, man/diffnb.Rd,
+	  man/dnearneigh.Rd, man/edit.nb.Rd, man/globalG.test.Rd,
+	  man/graphneigh.Rd, man/impacts.sarlm.Rd, man/include.self.Rd,
+	  man/knearneigh.Rd, man/knn2nb.Rd, man/mat2listw.Rd,
+	  man/nb2INLA.Rd, man/nb2WB.Rd, man/nb2listw.Rd, man/nb2mat.Rd,
+	  man/nbdists.Rd, man/nblag.Rd, man/nboperations.Rd,
+	  man/nc.sids.Rd, man/plot.nb.Rd, man/poly2nb.Rd,
+	  man/set.spChkOption.Rd, man/sp.correlogram.Rd, man/spautolm.Rd,
+	  man/subset.listw.Rd, man/subset.nb.Rd, man/summary.nb.Rd,
+	  man/testnb.Rd, man/trW.Rd, man/tri2nb.Rd, man/write.nb.gal.Rd,
+	  vignettes/nb_igraph.Rmd, vignettes/sids.Rnw: spData transition
+	  progress
+
+2017-10-12 19:19  rsbivand
+
+	* data/eire.rda, inst/etc/shapes/eire.dbf,
+	  inst/etc/shapes/eire.shp, inst/etc/shapes/eire.shx, man/bhicv.Rd,
+	  man/eire.Rd, man/lm.morantest.exact.Rd, man/lm.morantest.sad.Rd,
+	  man/localmoran.exact.Rd, man/localmoran.sad.Rd,
+	  vignettes/CO69.Rnw: transition to spData data
+
+2017-10-12 15:53  rsbivand
+
+	* DESCRIPTION, data/huddersfield.rda, data/used.cars.rda,
+	  data/wheat.rda, inst/etc/shapes/wheat.dbf,
+	  inst/etc/shapes/wheat.shp, inst/etc/shapes/wheat.shx,
+	  man/EBest.Rd, man/aggregate.nb.Rd, man/aple.Rd, man/aple.mc.Rd,
+	  man/aple.plot.Rd, man/huddersfield.Rd, man/used.cars.Rd,
+	  man/wheat.Rd: transition to spData data
+
+2017-10-12 15:29  rsbivand
+
+	* DESCRIPTION, data/elect80.rda, data/house.RData, man/elect80.Rd,
+	  man/house.Rd, man/impacts.sarlm.Rd, man/lagsarlm.Rd: transition
+	  to spData data
+
+2017-10-12 13:25  rsbivand
+
+	* data/getisord.rda, data/hopkins.rda, man/ME.Rd, man/getisord.Rd,
+	  man/hopkins.Rd, man/joincount.multi.Rd, man/localG.Rd: start
+	  transition to spData
+
+2017-10-12 12:53  rsbivand
+
+	* DESCRIPTION, NAMESPACE, data/afcon.rda, data/auckland.rda,
+	  data/baltimore.rda, inst/etc/shapes/auckland.dbf,
+	  inst/etc/shapes/auckland.shp, inst/etc/shapes/auckland.shx,
+	  man/EBest.Rd, man/EBlocal.Rd, man/NY_data.Rd, man/afcon.Rd,
+	  man/auckland.Rd, man/baltimore.Rd, man/choynowski.Rd,
+	  man/lagmess.Rd, man/localmoran.Rd, man/moran.plot.Rd,
+	  man/nb2listw.Rd, man/p.adjustSP.Rd, man/probmap.Rd,
+	  man/read.gwt2nb.Rd: start transition to spData
+
+2017-10-12 10:57  rsbivand
+
+	* data/NY_data.rda, vignettes/nb_sf.Rmd: sidetrack vignette
+
+2017-10-04 12:30  rsbivand
+
+	* DESCRIPTION, inst/CITATION, man/GMerrorsar.Rd, man/errorsarlm.Rd,
+	  man/gstsls.Rd, man/impacts.sarlm.Rd, man/lagsarlm.Rd,
+	  man/sacsarlm.Rd, man/stsls.Rd, vignettes/nb_sf.Rmd: starting sf
+	  facilitation
+
+2017-09-20 09:10  rsbivand
+
+	* R/sp.mantel.R: tidy
+
+2017-09-01 13:28  rsbivand
+
+	* ChangeLog, inst/ChangeLog: tidy
+
 2017-09-01 13:27  rsbivand
 
 	* ChangeLog, inst/ChangeLog: tidy

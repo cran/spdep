@@ -24,11 +24,13 @@ The function returns an object of class \code{nb} with a list of integer vectors
 \seealso{\code{\link{knearneigh}}, \code{\link{card}}}
 
 \examples{
-example(columbus)
+if (require(rgdal, quietly=TRUE)) {
+example(columbus, package="spData")
 coords <- coordinates(columbus)
 col.knn <- knearneigh(coords, k=4)
 plot(columbus, border="grey")
 plot(knn2nb(col.knn), coords, add=TRUE)
 title(main="K nearest neighbours, k = 4")
+}
 }
 \keyword{spatial}

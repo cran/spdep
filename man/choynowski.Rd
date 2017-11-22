@@ -31,7 +31,8 @@ Interactive Spatial Data Analysis, Harlow: Longman, pp. 300--303.}
 
 \seealso{\code{\link{probmap}}}
 \examples{
-example(auckland)
+if (require(rgdal, quietly=TRUE)) {
+example(auckland, package="spData")
 res <- choynowski(auckland$M77_85, 9*auckland$Und5_81)
 resl <- choynowski(auckland$M77_85, 9*auckland$Und5_81, legacy=TRUE)
 all.equal(res, resl)
@@ -53,5 +54,6 @@ cols[lt005] <- grey(2/7)
 cols[ge005] <- grey(5/7)
 plot(auckland, col=cols) 
 legend("bottomleft", fill=grey(c(2,5)/7), legend=c("low", "high"), bty="n")
+}
 }
 \keyword{spatial}

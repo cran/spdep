@@ -38,7 +38,8 @@ The function returns an object of class \code{nb} with a list of integer vectors
 \seealso{\code{\link{knn2nb}}, \code{\link{dnearneigh}}, \code{\link{cell2nb}}}
 
 \examples{
-example(columbus)
+if (require(rgdal, quietly=TRUE)) {
+example(columbus, package="spData")
 coords <- coordinates(columbus)
 ind <- sapply(slot(columbus, "polygons"), function(x) slot(x, "ID"))
 col.tri.nb <- tri2nb(coords, row.names=ind)
@@ -54,5 +55,5 @@ seed <- 1234
 xid <- sample(1:nrow(xy))
 xy.nb <- tri2nb(xy[xid,])
 plot(xy.nb, xy[xid,])
-}
+}}
 \keyword{spatial}

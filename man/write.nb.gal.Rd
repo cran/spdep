@@ -22,10 +22,11 @@ write.nb.gal(nb, file, oldstyle=TRUE, shpfile=NULL, ind=NULL)
 \seealso{\code{\link{read.gal}}}
 
 \examples{
-example(columbus)
+if (require(rgdal, quietly=TRUE)) {
+example(columbus, package="spData")
 GALfile <- tempfile("GAL")
 write.nb.gal(col.gal.nb, GALfile)
 col.queen <- read.gal(GALfile)
 summary(diffnb(col.queen, col.gal.nb))
-}
+}}
 \keyword{spatial}

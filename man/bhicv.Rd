@@ -24,8 +24,9 @@
 %%\format{}
 %%\details{}
 \examples{
-require(maptools)
-bh <- readShapePoly(system.file("etc/shapes/bhicv.shp",
+if (require(rgdal, quietly=TRUE)) {
+bh <- readOGR(system.file("etc/shapes/bhicv.shp",
       package="spdep")[1])
+}
 }
 \keyword{data}% at least one, from doc/KEYWORDS

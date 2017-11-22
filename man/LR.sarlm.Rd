@@ -48,11 +48,13 @@ Wald1.sarlm(object)
 \seealso{\code{\link{logLik.lm}}, \code{\link{anova.sarlm}}}
 
 \examples{
-example(columbus)
+if (require(rgdal, quietly=TRUE)) {
+example(columbus, package="spData")
 mixed <- lagsarlm(CRIME ~ HOVAL + INC, data=columbus, nb2listw(col.gal.nb),
   type="mixed")
 error <- errorsarlm(CRIME ~ HOVAL + INC, data=columbus, nb2listw(col.gal.nb))
 LR.sarlm(mixed, error)
 Hausman.test(error)
+}
 }
 \keyword{spatial}

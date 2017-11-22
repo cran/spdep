@@ -49,7 +49,7 @@ The function returns an object of class \code{nb} with a list of integer vectors
 
 \examples{
 \dontrun{
-data(boston)
+data(boston, package="spData")
 summary(as.vector(table(boston.c$TOWN)))
 townaggr <- aggregate(boston.utm, list(town=boston.c$TOWN), mean)
 block.rel <- graph2nb(relativeneigh(as.matrix(townaggr[,2:3])),

@@ -35,7 +35,7 @@ An integration of Pearson's r and Moran's I. J Geograph Syst  3: 369-385}
 \seealso{\code{\link{lee.mc}}}%, \code{\link{lee.mc}}}
 
 \examples{
-data(boston)
+data(boston, package="spData")
 lw<-nb2listw(boston.soi)
 
 x<-boston.c$CMEDV

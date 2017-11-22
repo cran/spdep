@@ -57,24 +57,28 @@ options("warn"=-1)
 
 
 ###################################################
-### code chunk number 8: CO69.Rnw:100-105
+### code chunk number 8: CO69.Rnw:100-109
 ###################################################
 library(spdep)
-require(maptools)
-fn <- system.file("etc/shapes/eire.shp", package="spdep")[1]
-prj <- CRS("+proj=utm +zone=30 +units=km +ellps=mod_airy")
-eire <- readShapeSpatial(fn, ID="names", proj4string=prj)
+if (require(rgdal, quietly=TRUE)) {
+  eire <- readOGR(system.file("shapes/eire.shp", package="spData")[1])
+} else {
+  require(maptools, quietly=TRUE)
+  eire <- readShapeSpatial(system.file("shapes/eire.shp", package="spData")[1])
+}
+row.names(eire) <- as.character(eire$names)
+proj4string(eire) <- CRS("+proj=utm +zone=30 +ellps=airy +units=km")
 
 
 ###################################################
-### code chunk number 9: CO69.Rnw:107-109
+### code chunk number 9: CO69.Rnw:111-113
 ###################################################
 class(eire)
 names(eire)
 
 
 ###################################################
-### code chunk number 10: CO69.Rnw:122-125
+### code chunk number 10: CO69.Rnw:126-129
 ###################################################
 fn <- system.file("etc/misc/geary_eire.txt", package="spdep")[1]
 ge <- read.table(fn, header=TRUE)
@@ -82,29 +86,30 @@ names(ge)
 
 
 ###################################################
-### code chunk number 11: CO69.Rnw:133-136
+### code chunk number 11: CO69.Rnw:137-141
 ###################################################
 row.names(ge) <- as.character(ge$county)
 all.equal(row.names(ge), row.names(eire))
+library(maptools)
 eire_ge <- spCbind(eire, ge)
 
 
 ###################################################
-### code chunk number 12: CO69.Rnw:144-146
+### code chunk number 12: CO69.Rnw:149-151
 ###################################################
 eire_ge1 <- eire_ge[!(row.names(eire_ge) %in% "Dublin"),]
 length(row.names(eire_ge1))
 
 
 ###################################################
-### code chunk number 13: CO69.Rnw:153-155
+### code chunk number 13: CO69.Rnw:158-160
 ###################################################
 skewness <- function(z) {z <- scale(z, scale=FALSE); ((sum(z^3)/length(z))^2)/((sum(z^2)/length(z))^3)}
 kurtosis <- function(z) {z <- scale(z, scale=FALSE); (sum(z^4)/length(z))/((sum(z^2)/length(z))^2)}
 
 
 ###################################################
-### code chunk number 14: CO69.Rnw:162-166
+### code chunk number 14: CO69.Rnw:167-171
 ###################################################
 print(sapply(as(eire_ge1, "data.frame")[13:24], skewness), digits=3)
 print(sapply(as(eire_ge1, "data.frame")[13:24], kurtosis), digits=4)
@@ -113,7 +118,7 @@ print(sapply(as(eire_ge1, "data.frame")[c(13,16,18,19)], function(x) kurtosis(lo
 
 
 ###################################################
-### code chunk number 15: CO69.Rnw:212-215
+### code chunk number 15: CO69.Rnw:217-220
 ###################################################
 fn <- system.file("etc/misc/unstand_sn.txt", package="spdep")[1]
 unstand <- read.table(fn, header=TRUE)
@@ -121,7 +126,7 @@ summary(unstand)
 
 
 ###################################################
-### code chunk number 16: CO69.Rnw:225-231
+### code chunk number 16: CO69.Rnw:230-236
 ###################################################
 class(unstand) <- c("spatial.neighbour", class(unstand))
 of <- ordered(unstand$from)
@@ -132,7 +137,7 @@ attr(unstand, "n") <- length(unique(unstand$from))
 
 
 ###################################################
-### code chunk number 17: CO69.Rnw:240-243
+### code chunk number 17: CO69.Rnw:245-248
 ###################################################
 lw_unstand <- sn2listw(unstand)
 lw_unstand$style <- "B"
@@ -140,20 +145,20 @@ lw_unstand
 
 
 ###################################################
-### code chunk number 18: CO69.Rnw:257-259
+### code chunk number 18: CO69.Rnw:262-264
 ###################################################
 nb <- poly2nb(eire_ge1)
 nb
 
 
 ###################################################
-### code chunk number 19: CO69.Rnw:268-269
+### code chunk number 19: CO69.Rnw:273-274
 ###################################################
 xx <- diffnb(nb, lw_unstand$neighbours, verbose=TRUE)
 
 
 ###################################################
-### code chunk number 20: CO69.Rnw:271-274 (eval = FALSE)
+### code chunk number 20: CO69.Rnw:276-279 (eval = FALSE)
 ###################################################
 ## plot(eire_ge1, border="grey60")
 ## plot(nb, coordinates(eire_ge1), add=TRUE, pch=".", lwd=2)
@@ -161,7 +166,7 @@ xx <- diffnb(nb, lw_unstand$neighbours, verbose=TRUE)
 
 
 ###################################################
-### code chunk number 21: CO69.Rnw:280-292
+### code chunk number 21: CO69.Rnw:285-297
 ###################################################
 .PngNo <- .PngNo + 1; file <- paste("Fig-bitmap-", .PngNo, ".pdf", sep="")
 pdf(file=file, width = 6.5, height = 3.5, pointsize = 12, bg = "white")
@@ -182,13 +187,13 @@ cat("\\includegraphics[width=0.95\\textwidth]{", file, "}\n\n", sep="")
 
 
 ###################################################
-### code chunk number 22: CO69.Rnw:322-323
+### code chunk number 22: CO69.Rnw:327-328
 ###################################################
 load(system.file("etc/misc/raw_grass_borders.RData", package="spdep")[1])
 
 
 ###################################################
-### code chunk number 23: CO69.Rnw:325-332 (eval = FALSE)
+### code chunk number 23: CO69.Rnw:330-337 (eval = FALSE)
 ###################################################
 ## library(maptools)
 ## SG <- Sobj_SpatialGrid(eire_ge1)$SG
@@ -200,7 +205,7 @@ load(system.file("etc/misc/raw_grass_borders.RData", package="spdep")[1])
 
 
 ###################################################
-### code chunk number 24: CO69.Rnw:334-343
+### code chunk number 24: CO69.Rnw:339-348
 ###################################################
 grass_borders <- sn2listw(res)
 raw_borders <- grass_borders$weights
@@ -214,7 +219,7 @@ summary(combo_km_lw)
 
 
 ###################################################
-### code chunk number 25: CO69.Rnw:356-367
+### code chunk number 25: CO69.Rnw:361-372
 ###################################################
 red_lw_unstand <- lw_unstand
 Clare <- which(attr(lw_unstand, "region.id") == "C")
@@ -230,7 +235,7 @@ cor(unlist(red_lw_unstand$weights), unlist(combo_km_lw$weights))
 
 
 ###################################################
-### code chunk number 26: CO69.Rnw:380-392
+### code chunk number 26: CO69.Rnw:385-397
 ###################################################
 flatten <- function(x, digits=3, statistic="I") {
   res <- c(format(x$estimate, digits=digits),
@@ -247,7 +252,7 @@ print(rbind(flatten(`reconstructed weights`), flatten(`original weights`)), quot
 
 
 ###################################################
-### code chunk number 27: CO69.Rnw:413-425
+### code chunk number 27: CO69.Rnw:418-430
 ###################################################
 eire_ge1$ln_pagval2_10 <- log(eire_ge1$pagval2_10)
 eire_ge1$ln_cowspacre <- log(eire_ge1$cowspacre)
@@ -264,7 +269,7 @@ lw_std
 
 
 ###################################################
-### code chunk number 28: CO69.Rnw:455-468
+### code chunk number 28: CO69.Rnw:460-473
 ###################################################
 system.time({
 MoranN <- lapply(vars, function(x) moran.test(eire_ge1[[x]], listw=nb_B, randomisation=FALSE))
@@ -282,25 +287,25 @@ ores <- res[,c(1,2,5:8)]
 
 
 ###################################################
-### code chunk number 29: CO69.Rnw:480-481
+### code chunk number 29: CO69.Rnw:485-486
 ###################################################
 options("width"=100)
 
 
 ###################################################
-### code chunk number 30: CO69.Rnw:483-484
+### code chunk number 30: CO69.Rnw:488-489
 ###################################################
 print(formatC(res, format="f", digits=4), quote=FALSE)
 
 
 ###################################################
-### code chunk number 31: CO69.Rnw:486-487
+### code chunk number 31: CO69.Rnw:491-492
 ###################################################
 options("width"=90)
 
 
 ###################################################
-### code chunk number 32: CO69.Rnw:499-507
+### code chunk number 32: CO69.Rnw:504-512
 ###################################################
 wc_unstd <- spweights.constants(lw_unstand)
 wrong_N_sqVI <- sqrt((wc_unstd$nn*wc_unstd$S1 - wc_unstd$n*wc_unstd$S2 + 3*wc_unstd$S0*wc_unstd$S0)/((wc_unstd$nn-1)*wc_unstd$S0*wc_unstd$S0)-((-1/(wc_unstd$n-1))^2))
@@ -313,7 +318,7 @@ print(formatC(res, format="f", digits=4), quote=FALSE)
 
 
 ###################################################
-### code chunk number 33: CO69.Rnw:517-522
+### code chunk number 33: CO69.Rnw:522-527
 ###################################################
 res <- lapply(c("MoranR", "GearyR", "Prop_unstdR", "Prop_stdR"), function(x) sapply(get(x), function(y) c(y$estimate[1], sqrt(y$estimate[3]))))
 res <- t(do.call("rbind", res))
@@ -323,7 +328,7 @@ print(formatC(res, format="f", digits=4), quote=FALSE)
 
 
 ###################################################
-### code chunk number 34: CO69.Rnw:539-550
+### code chunk number 34: CO69.Rnw:544-555
 ###################################################
 oMoranf <- function(x, nb) {
   z <- scale(x, scale=FALSE)
@@ -339,7 +344,7 @@ print(formatC(res, format="f", digits=4), quote=FALSE)
 
 
 ###################################################
-### code chunk number 35: CO69.Rnw:582-601
+### code chunk number 35: CO69.Rnw:587-606
 ###################################################
 MoranI.boot <- function(var, i, ...) {
   var <- var[i]
@@ -363,7 +368,7 @@ set.seed(1234)
 
 
 ###################################################
-### code chunk number 36: CO69.Rnw:616-624 (eval = FALSE)
+### code chunk number 36: CO69.Rnw:621-629 (eval = FALSE)
 ###################################################
 ## system.time({
 ## MoranNb <- lapply(vars, function(x) f_bpara(x=eire_ge1[[x]], nsim=nsim, listw=nb_B))
@@ -376,7 +381,7 @@ set.seed(1234)
 
 
 ###################################################
-### code chunk number 37: CO69.Rnw:626-639 (eval = FALSE)
+### code chunk number 37: CO69.Rnw:631-644 (eval = FALSE)
 ###################################################
 ## zzz <- system.time({
 ## MoranNb <- lapply(vars, function(x) f_bpara(x=eire_ge1[[x]], nsim=nsim, listw=nb_B))
@@ -394,7 +399,7 @@ set.seed(1234)
 
 
 ###################################################
-### code chunk number 38: CO69.Rnw:641-644
+### code chunk number 38: CO69.Rnw:646-649
 ###################################################
 bsfn <- system.file("doc/backstore/boot_res.RData", package="spdep")
 load(bsfn)
@@ -402,7 +407,7 @@ zzz
 
 
 ###################################################
-### code chunk number 39: CO69.Rnw:646-650 (eval = FALSE)
+### code chunk number 39: CO69.Rnw:651-655 (eval = FALSE)
 ###################################################
 ## res <- lapply(c("MoranNb", "MoranRb", "Prop_unstdNb", "Prop_unstdRb", "Prop_stdNb", "Prop_stdRb"), function(x) sapply(get(x), function(y) (y$t0 - mean(y$t))/sd(y$t)))
 ## res <- t(do.call("rbind", res))
@@ -411,7 +416,7 @@ zzz
 
 
 ###################################################
-### code chunk number 40: CO69.Rnw:664-669
+### code chunk number 40: CO69.Rnw:669-674
 ###################################################
 print(formatC(res, format="f", digits=4), quote=FALSE)
 oores <- ores - res
@@ -421,7 +426,7 @@ all((res >= alpha_0.05) == (ores >= alpha_0.05))
 
 
 ###################################################
-### code chunk number 41: CO69.Rnw:685-693
+### code chunk number 41: CO69.Rnw:690-698
 ###################################################
 lm_objs <- lapply(vars, function(x) lm(formula(paste(x, "~1")), data=eire_ge1))
 system.time({
@@ -434,7 +439,7 @@ rownames(res) <- vars
 
 
 ###################################################
-### code chunk number 42: CO69.Rnw:709-713
+### code chunk number 42: CO69.Rnw:714-718
 ###################################################
 print(formatC(res, format="f", digits=4), quote=FALSE)
 oores <- res - ores[,c(1,3,5)]
@@ -443,7 +448,7 @@ all((res >= alpha_0.05) == (ores[,c(1,3,5)] >= alpha_0.05))
 
 
 ###################################################
-### code chunk number 43: CO69.Rnw:724-731
+### code chunk number 43: CO69.Rnw:729-736
 ###################################################
 system.time({ 
 MoranEx <- lapply(lm_objs, function(x) lm.morantest.exact(x, listw=nb_B))
@@ -455,7 +460,7 @@ rownames(res) <- vars
 
 
 ###################################################
-### code chunk number 44: CO69.Rnw:740-744
+### code chunk number 44: CO69.Rnw:745-749
 ###################################################
 print(formatC(res, format="f", digits=4), quote=FALSE)
 oores <- res - ores[,c(1,3,5)]
@@ -464,7 +469,7 @@ all((res >= alpha_0.05) == (ores[,c(1,3,5)] >= alpha_0.05))
 
 
 ###################################################
-### code chunk number 45: CO69.Rnw:756-765
+### code chunk number 45: CO69.Rnw:761-770
 ###################################################
 vars_scaled <- lapply(vars, function(x) scale(eire_ge1[[x]], scale=FALSE))
 nb_W <- nb2listw(lw_unstand$neighbours, style="W")
@@ -478,13 +483,13 @@ rownames(res) <- vars
 
 
 ###################################################
-### code chunk number 46: CO69.Rnw:781-782
+### code chunk number 46: CO69.Rnw:786-787
 ###################################################
 print(formatC(res, format="f", digits=4), quote=FALSE)
 
 
 ###################################################
-### code chunk number 47: CO69.Rnw:788-807
+### code chunk number 47: CO69.Rnw:793-812
 ###################################################
 .PngNo <- .PngNo + 1; file <- paste("Fig-bitmap-", .PngNo, ".pdf", sep="")
 pdf(file=file, width = 6.5, height = 3.5, pointsize = 12, bg = "white")
@@ -512,7 +517,7 @@ cat("\\includegraphics[width=0.95\\textwidth]{", file, "}\n\n", sep="")
 
 
 ###################################################
-### code chunk number 48: CO69.Rnw:816-826
+### code chunk number 48: CO69.Rnw:821-831
 ###################################################
 .PngNo <- .PngNo + 1; file <- paste("Fig-bitmap-", .PngNo, ".pdf", sep="")
 pdf(file=file, width = 6.5, height = 3.5, pointsize = 12, bg = "white")
@@ -529,7 +534,7 @@ cat("\\includegraphics[width=0.95\\textwidth]{", file, "}\n\n", sep="")
 
 
 ###################################################
-### code chunk number 49: CO69.Rnw:843-845
+### code chunk number 49: CO69.Rnw:848-850
 ###################################################
 options("width"=owidth)
 options("warn"=ow)

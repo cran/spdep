@@ -32,7 +32,8 @@ A \code{listw} object with the following members:
  
 \seealso{\code{\link{nb2listw}}, \code{\link{nb2mat}}}
 \examples{
-example(columbus)
+if (require(rgdal, quietly=TRUE)) {
+example(columbus, package="spData")
 coords <- coordinates(columbus)
 col005 <- dnearneigh(coords, 0, 0.5, attr(col.gal.nb, "region.id"))
 summary(col005)
@@ -50,5 +51,6 @@ diffnb(col005, col005.spM$neighbours)
 IW <- kronecker(Diagonal(3), W)
 col005.spM.3T <- mat2listw(IW, style="W")
 summary(col005.spM.3T$neighbours)
+}
 }
 \keyword{spatial}

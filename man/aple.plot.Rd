@@ -35,6 +35,7 @@ localAple(x, listw, override_similarity_check=FALSE, useTrace=TRUE)
 \seealso{\code{\link{aple}}}
 \examples{
 \dontrun{
+if (require(rgdal, quietly=TRUE)) {
 example(aple)
 plt_out <- aple.plot(as.vector(scale(wheat$yield_detrend, scale=FALSE)),
  nb2listw(nbr12, style="W"), cex=0.6)
@@ -51,6 +52,7 @@ mean(wheat$localAple)
 hist(wheat$localAple)
 spl <- list("sp.text", coordinates(wheat)[infl,], rep("*", length(infl)))
 spplot(wheat, "localAple", sp.layout=spl)
+}
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

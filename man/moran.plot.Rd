@@ -37,7 +37,7 @@ Geographical Analysis, 27, 93--115}
 \seealso{\code{\link{localmoran}}, \code{\link[stats]{influence.measures}}}
 
 \examples{
-data(afcon)
+data(afcon, package="spData")
 moran.plot(afcon$totcon, nb2listw(paper.nb),
  labels=as.character(afcon$name), pch=19)
 moran.plot(as.vector(scale(afcon$totcon)), nb2listw(paper.nb),

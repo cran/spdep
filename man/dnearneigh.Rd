@@ -25,7 +25,8 @@ for neighbours satisfying the distance criteria. See \code{\link{card}} for deta
 \seealso{\code{\link{knearneigh}}, \code{\link{card}}}
 
 \examples{
-example(columbus)
+if (require(rgdal, quietly=TRUE)) {
+example(columbus, package="spData")
 coords <- coordinates(columbus)
 rn <- sapply(slot(columbus, "polygons"), function(x) slot(x, "ID"))
 k1 <- knn2nb(knearneigh(coords))
@@ -36,6 +37,7 @@ plot(columbus, border="grey")
 plot(col.nb.0.all, coords, add=TRUE)
 title(main=paste("Distance based neighbours 0-",  format(all.linked),
  " distance units", sep=""))
+}
 data(state)
 us48.fipsno <- read.geoda(system.file("etc/weights/us48.txt",
  package="spdep")[1])

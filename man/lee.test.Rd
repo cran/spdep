@@ -67,7 +67,7 @@ lee.test(x, y, col.W, zero.policy=TRUE, na.action=na.omit)
 
 
 
-data(boston)
+data(boston, package="spData")
 lw<-nb2listw(boston.soi)
 
 x<-boston.c$CMEDV

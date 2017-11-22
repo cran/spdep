@@ -75,14 +75,14 @@ options("warn"=-1)
 ###################################################
 ### code chunk number 10: nb.Rnw:113-121
 ###################################################
-library(maptools)
-owd <- getwd()
-setwd(system.file("etc/shapes", package="spdep"))
-NY8 <- readShapeSpatial("NY8_utm18")
+if (require(rgdal, quietly=TRUE)) {
+  NY8 <- readOGR(system.file("shapes/NY8_utm18.shp", package="spData"))
+} else {
+  require(maptools, quietly=TRUE)
+  NY8 <- readShapeSpatial(system.file("shapes/NY8_utm18.shp", package="spData"))
+}
 library(spdep)
-setwd(system.file("etc/weights", package="spdep"))
-NY_nb <- read.gal("NY_nb.gal", region.id=row.names(NY8))
-setwd(owd)
+NY_nb <- read.gal(system.file("weights/NY_nb.gal", package="spData"), region.id=row.names(NY8))
 
 
 ###################################################

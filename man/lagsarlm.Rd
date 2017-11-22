@@ -166,7 +166,7 @@ with an introduction to spatial econometrics. In: Ullah A, Giles DEA
 (eds) Handbook of applied economic statistics. Marcel Dekker, New York,
 pp. 237-289; Cressie, N. A. C. 1993 \emph{Statistics for spatial data}, Wiley, New York; LeSage J and RK Pace (2009) Introduction to Spatial Econometrics. CRC Press, Boca Raton.
 
-Roger Bivand, Gianfranco Piras (2015). Comparing Implementations of Estimation Methods for Spatial Econometrics. \emph{Journal of Statistical Software}, 63(18), 1-36. \url{http://www.jstatsoft.org/v63/i18/}.
+Roger Bivand, Gianfranco Piras (2015). Comparing Implementations of Estimation Methods for Spatial Econometrics. \emph{Journal of Statistical Software}, 63(18), 1-36. \url{https://www.jstatsoft.org/v63/i18/}.
 
 Bivand, R. S., Hauke, J., and Kossowski, T. (2013). Computing the Jacobian in Gaussian spatial autoregressive models: An illustrated comparison of available methods. \emph{Geographical Analysis}, 45(2), 150-179.
 
@@ -219,7 +219,7 @@ COL.lag.NA$na.action
 COL.lag.NA
 resid(COL.lag.NA)
 \dontrun{
-data(boston)
+data(boston, package="spData")
 gp2mM <- lagsarlm(log(CMEDV) ~ CRIM + ZN + INDUS + CHAS + I(NOX^2) + 
 I(RM^2) +  AGE + log(DIS) + log(RAD) + TAX + PTRATIO + B + log(LSTAT), 
 data=boston.c, nb2listw(boston.soi), type="mixed", method="Matrix")
@@ -239,7 +239,7 @@ summary(COL.lag.Bayes)
 set.seed(1)
 summary(impacts(COL.lag.Bayes, tr=trMatc), short=TRUE, zstats=TRUE)
 \dontrun{
-data(elect80)
+data(elect80, package="spData")
 lw <- nb2listw(e80_queen, zero.policy=TRUE)
 el_ml <- lagsarlm(log(pc_turnout) ~ log(pc_college) + log(pc_homeownership)
  + log(pc_income), data=elect80, listw=lw, zero.policy=TRUE, method="LU")

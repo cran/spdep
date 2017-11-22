@@ -23,7 +23,8 @@
 \seealso{\code{\link{nb2listw}}}
 
 \examples{
-example(columbus)
+if (require(rgdal, quietly=TRUE)) {
+example(columbus, package="spData")
 coords <- coordinates(columbus)
 plot(col.gal.nb, coords)
 to.be.dropped <- c(31, 34, 36, 39, 42, 46)
@@ -34,5 +35,5 @@ sub.col.gal.nb <- subset(col.gal.nb,
 plot(sub.col.gal.nb, coords[-to.be.dropped,], col="red", add=TRUE)
 which(!(attr(col.gal.nb, "region.id") \%in\%
   attr(sub.col.gal.nb, "region.id")))
-}
+}}
 \keyword{spatial}

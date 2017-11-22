@@ -29,9 +29,10 @@ The function returns an object of class \code{nb} with the edited list of intege
 
 \examples{
 \dontrun{
-example(columbus)
+if (require(rgdal, quietly=TRUE)) {
+example(columbus, package="spData")
 class(columbus)
 nnb1 <- edit.nb(col.gal.nb, polys=columbus)
-}}
+}}}
 
 \keyword{spatial}

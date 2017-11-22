@@ -47,7 +47,8 @@ An object of class \code{ME_res}:
 
 \examples{
 \dontrun{
-example(columbus)
+if (require(rgdal, quietly=TRUE)) {
+example(columbus, package="spData")
 lmbase <- lm(CRIME ~ INC + HOVAL, data=columbus)
 lagcol <- SpatialFiltering(CRIME ~ 1, ~ INC + HOVAL, data=columbus,
  nb=col.gal.nb, style="W", alpha=0.1, verbose=TRUE)
@@ -69,7 +70,7 @@ lagcol2
 lmlag2 <- lm(CRIME ~ INC + HOVAL + fitted(lagcol2), data=columbus)
 anova(lmlag2)
 anova(lmbase, lmlag2)
-example(nc.sids)
+example(nc.sids, package="spData")
 glmbase <- glm(SID74 ~ 1, data=nc.sids, offset=log(BIR74),
  family="poisson")
 set.seed(123)
@@ -80,7 +81,8 @@ glmME <- glm(SID74 ~ 1 + fitted(MEpois1), data=nc.sids, offset=log(BIR74),
  family="poisson")
 anova(glmME, test="Chisq")
 anova(glmbase, glmME, test="Chisq")
-data(hopkins)
+}
+data(hopkins, package="spData")
 hopkins_part <- hopkins[21:36,36:21]
 hopkins_part[which(hopkins_part > 0, arr.ind=TRUE)] <- 1
 hopkins.rook.nb <- cell2nb(16, 16, type="rook")

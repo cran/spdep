@@ -99,10 +99,14 @@ available by Michael Tiefelsdorf, is used as a starting point:
 \begin{footnotesize}
 <<echo=TRUE,eval=TRUE,results=hide>>= 
 library(spdep)
-require(maptools)
-fn <- system.file("etc/shapes/eire.shp", package="spdep")[1]
-prj <- CRS("+proj=utm +zone=30 +units=km +ellps=mod_airy")
-eire <- readShapeSpatial(fn, ID="names", proj4string=prj)
+if (require(rgdal, quietly=TRUE)) {
+  eire <- readOGR(system.file("shapes/eire.shp", package="spData")[1])
+} else {
+  require(maptools, quietly=TRUE)
+  eire <- readShapeSpatial(system.file("shapes/eire.shp", package="spData")[1])
+}
+row.names(eire) <- as.character(eire$names)
+proj4string(eire) <- CRS("+proj=utm +zone=30 +ellps=airy +units=km")
 @
 <<echo=TRUE,eval=TRUE>>= 
 class(eire)
@@ -133,6 +137,7 @@ combine the objects:
 <<echo=TRUE,eval=TRUE>>= 
 row.names(ge) <- as.character(ge$county)
 all.equal(row.names(ge), row.names(eire))
+library(maptools)
 eire_ge <- spCbind(eire, ge)
 @
 \end{footnotesize}

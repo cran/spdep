@@ -90,7 +90,7 @@ If simulation is carried out, the object returned is a list with:
 
 \references{LeSage J and RK Pace (2009) \emph{Introduction to Spatial Econometrics}. CRC Press, Boca Raton, pp. 33--42, 114--115; LeSage J and MM Fischer (2008) Spatial growth regressions: model specification, estimation and interpretation. \emph{Spatial Economic Analysis} 3 (3), pp. 275--304.
 
-Roger Bivand, Gianfranco Piras (2015). Comparing Implementations of Estimation Methods for Spatial Econometrics. \emph{Journal of Statistical Software}, 63(18), 1-36. \url{http://www.jstatsoft.org/v63/i18/}.
+Roger Bivand, Gianfranco Piras (2015). Comparing Implementations of Estimation Methods for Spatial Econometrics. \emph{Journal of Statistical Software}, 63(18), 1-36. \url{https://www.jstatsoft.org/v63/i18/}.
 }
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 
@@ -99,7 +99,8 @@ Roger Bivand, Gianfranco Piras (2015). Comparing Implementations of Estimation M
 \code{\link{trW}}, \code{\link{lagsarlm}}, \code{\link{nb2listw}}, \code{\link[MASS]{mvrnorm}}, \code{\link[coda]{plot.mcmc}}, \code{\link[coda]{summary.mcmc}}, \code{\link[coda]{HPDinterval}}
 }
 \examples{
-example(columbus)
+if (require(rgdal, quietly=TRUE)) {
+example(columbus, package="spData")
 listw <- nb2listw(col.gal.nb)
 lobj <- lagsarlm(CRIME ~ INC + HOVAL, columbus, listw)
 summary(lobj)
@@ -144,7 +145,9 @@ summary(impacts(mobj2, tr=trMatc, R=1000), zstats=TRUE, short=TRUE)
 mobj3 <- lagsarlm(CRIME ~ INC + HOVAL, columbus, listw, type="mixed", 
 method="spam", control=list(fdHess=TRUE))
 summary(impacts(mobj3, tr=trMatc, R=1000), zstats=TRUE, short=TRUE)
-data(boston)
+}
+\dontrun{
+data(boston, package="spData")
 Wb <- as(nb2listw(boston.soi), "CsparseMatrix")
 trMatb <- trW(Wb, type="mult")
 gp2mMi <- lagsarlm(log(CMEDV) ~ CRIM + ZN + INDUS + CHAS + I(NOX^2) + 
@@ -153,7 +156,7 @@ data=boston.c, nb2listw(boston.soi), type="mixed", method="Matrix",
 control=list(fdHess=TRUE), trs=trMatb)
 summary(gp2mMi)
 summary(impacts(gp2mMi, tr=trMatb, R=1000), zstats=TRUE, short=TRUE)
-data(house)
+data(house, package="spData")
 lw <- nb2listw(LO_nb)
 form <- formula(log(price) ~ age + I(age^2) + I(age^3) + log(lotsize) +
    rooms + log(TLA) + beds + syear)
@@ -170,6 +173,7 @@ mobj <- lagsarlm(form, house, lw, type="mixed",
 summary(mobj)
 moobj <- impacts(mobj, tr=trMat, R=1000)
 summary(moobj, zstats=TRUE, short=TRUE)
+}
 }
 }
 \keyword{spatial}

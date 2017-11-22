@@ -24,10 +24,11 @@ A list with class \code{nbdist}
 \seealso{\code{\link{summary.nb}}, \code{\link{nb2listw}}}
 
 \examples{
-example(columbus)
+if (require(rgdal, quietly=TRUE)) {
+example(columbus, package="spData")
 coords <- coordinates(columbus)
 dlist <- nbdists(col.gal.nb, coords)
 dlist <- lapply(dlist, function(x) 1/x)
 stem(unlist(dlist))
-}
+}}
 \keyword{spatial}

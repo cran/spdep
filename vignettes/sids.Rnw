@@ -83,7 +83,7 @@ library(spdep)
 We will be using the \pkg{spdep} package, here version:
 \Sexpr{spdep()[1]}, the \pkg{sp} package and the \pkg{maptools}
 package. The data from the sources refered to above is documented in
-the help page for the \code{nc.sids} data set in \pkg{spdep}. The
+the help page for the \code{nc.sids} data set in \pkg{spData}. The
 actual data, included in a shapefile of the county boundaries
 for North Carolina has been made available in the \pkg{maptools}
 package\footnote{These data are taken with permission from:
@@ -94,11 +94,15 @@ and are assumed to use the NAD27 datum.
 \begin{footnotesize}
 <<echo=TRUE,eval=TRUE>>= 
 library(sp)
-library(maptools)
 library(spdep)
-nc_file <- system.file("etc/shapes/sids.shp", package="spdep")[1]
-llCRS <- CRS("+proj=longlat +datum=NAD27")
-nc <- readShapeSpatial(nc_file, ID="FIPSNO", proj4string=llCRS)
+if (require(rgdal, quietly=TRUE)) {
+  nc <- readOGR(system.file("shapes/sids.shp", package="spData")[1])
+} else {
+  require(maptools, quietly=TRUE)
+  nc <- readShapeSpatial(system.file("shapes/sids.shp", package="spData")[1])
+}
+proj4string(nc) <- CRS("+proj=longlat +datum=NAD27")
+row.names(nc) <- as.character(nc$FIPSNO)
 @
 \end{footnotesize}
 
@@ -149,10 +153,10 @@ included in \pkg{spdep}, and add the neighbour relationships used in
 
 \begin{footnotesize}
 <<echo=TRUE,eval=TRUE>>= 
-gal_file <- system.file("etc/weights/ncCR85.gal", package="spdep")[1]
+gal_file <- system.file("weights/ncCR85.gal", package="spData")[1]
 ncCR85 <- read.gal(gal_file, region.id=nc$FIPSNO)
 ncCR85
-gal_file <- system.file("etc/weights/ncCC89.gal", package="spdep")[1]
+gal_file <- system.file("weights/ncCC89.gal", package="spData")[1]
 ncCC89 <- read.gal(gal_file, region.id=nc$FIPSNO)
 ncCC89
 @

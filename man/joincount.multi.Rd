@@ -39,7 +39,7 @@ HICRIME <- cut(COL.OLD$CRIME, breaks=c(0,35,80), labels=c("low","high"))
 names(HICRIME) <- rownames(COL.OLD)
 joincount.multi(HICRIME, nb2listw(COL.nb, style="B"))
 \dontrun{
-data(hopkins)
+data(hopkins, package="spData")
 image(1:32, 1:32, hopkins[5:36,36:5], breaks=c(-0.5, 3.5, 20),
  col=c("white", "black"))
 box()

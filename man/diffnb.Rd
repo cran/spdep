@@ -21,7 +21,8 @@ A neighbours list with class \code{nb}
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 
 \examples{
-example(columbus)
+if (require(rgdal, quietly=TRUE)) {
+example(columbus, package="spData")
 coords <- coordinates(columbus)
 rn <- sapply(slot(columbus, "polygons"), function(x) slot(x, "ID"))
 knn1 <- knearneigh(coords, 1)
@@ -33,5 +34,6 @@ plot(columbus, border="grey")
 plot(nb1, coords, add=TRUE)
 plot(diffs, coords, add=TRUE, col="red", lty=2)
 title(main="Plot of first (black) and second (red)\nnearest neighbours")
+}
 }
 \keyword{spatial}

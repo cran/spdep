@@ -30,11 +30,12 @@ neighbours lists}
 \seealso{\code{\link{summary.nb}}}
 
 \examples{
-example(columbus)
+if (require(rgdal, quietly=TRUE)) {
+example(columbus, package="spData")
 coords <- coordinates(columbus)
 plot(col.gal.nb, coords)
 title(main="GAL order 1 links with first nearest neighbours in red")
 col.knn <- knearneigh(coords, k=1)
 plot(knn2nb(col.knn), coords, add=TRUE, col="red", length=0.08)
-}
+}}
 \keyword{spatial}

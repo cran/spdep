@@ -23,7 +23,8 @@ returns a list of lagged neighbours lists each with class \code{nb}
 \seealso{\code{\link{summary.nb}}}
 
 \examples{
-example(columbus)
+if (require(rgdal, quietly=TRUE)) {
+example(columbus, package="spData")
 coords <- coordinates(columbus)
 summary(col.gal.nb, coords)
 plot(columbus, border="grey")
@@ -47,7 +48,7 @@ for (i in seq(along=lmat)) mat = mat + i*lmat[[i]]
 G2 <- shortest.paths(G)
 print(all.equal(G2, mat, check.attributes=FALSE))
 
-
+}
 }
 }
 \keyword{spatial}

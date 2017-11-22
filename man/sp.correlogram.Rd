@@ -52,7 +52,8 @@ of the Institute of British Geographers}, 66, 95--118.}
 \seealso{\code{\link{nblag}}, \code{\link{moran}}, \code{\link[stats]{p.adjust}}}
 
 \examples{
-example(nc.sids)
+if (require(rgdal, quietly=TRUE)) {
+example(nc.sids, package="spData")
 ft.SID74 <- sqrt(1000)*(sqrt(nc.sids$SID74/nc.sids$BIR74) +
   sqrt((nc.sids$SID74+1)/nc.sids$BIR74))
 tr.SIDS74 <- ft.SID74*sqrt(nc.sids$BIR74)
@@ -74,5 +75,6 @@ drop.no.neighs <- !(1:length(ncCC89_nb) \%in\% which(card(ncCC89_nb) == 0))
 sub.ncCC89.nb <- subset(ncCC89_nb, drop.no.neighs)
 plot(sp.correlogram(sub.ncCC89.nb, subset(tr.SIDS74,  drop.no.neighs),
  order=8, method="corr"))
+}
 }
 \keyword{spatial}

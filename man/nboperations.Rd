@@ -39,7 +39,8 @@ complement.nb(nb.obj)
 \code{\link{setdiff.nb}}}
 
 \examples{
-example(columbus)
+if (require(rgdal, quietly=TRUE)) {
+example(columbus, package="spData")
 coords <- coordinates(columbus)
 col.tri.nb <- tri2nb(coords)
 oldpar <- par(mfrow=c(1,2))
@@ -59,5 +60,6 @@ title(main="Union")
 plot(setdiff.nb(col.gal.nb, col2), coords)
 title(main="Set diff")
 par(oldpar)
+}
 }
 \keyword{spatial}

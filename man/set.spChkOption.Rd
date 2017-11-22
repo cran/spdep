@@ -50,7 +50,7 @@ The motivation for this mechanism is provided by the observation that spatial ob
 \examples{
 data(oldcol)
 rownames(COL.OLD)
-data(columbus)
+data(columbus, package="spData")
 rownames(columbus)
 get.spChkOption()
 oldChk <- set.spChkOption(TRUE)

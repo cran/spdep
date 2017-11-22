@@ -35,7 +35,8 @@ for details.}
 
 \seealso{\code{\link{nb2listw}}}
 \examples{
-example(columbus)
+if (require(rgdal, quietly=TRUE)) {
+example(columbus, package="spData")
 xy <- cbind(columbus$X, columbus$Y)
 ac1a <- autocov_dist(columbus$CRIME, xy, nbs=10, style="B",
  type="one")
@@ -78,7 +79,7 @@ gl <- lapply(nbd, function(x) 1/x)
 lw <- nb2listw(nb, glist=gl)
 acinvb <- lag(lw, columbus$CRIME)
 all.equal(acinvb, acinva)
-
+}
 }
 \keyword{spatial}
 

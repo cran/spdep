@@ -68,11 +68,11 @@ Geographical Analysis, 34, pp. 187--206.}
 \seealso{\code{\link{lm.morantest}}}
 
 \examples{
-require(maptools)
-eire <- readShapePoly(system.file("etc/shapes/eire.shp", package="spdep")[1],
-  ID="names", proj4string=CRS("+proj=utm +zone=30 +ellps=airy +units=km"))
+if (require(rgdal, quietly=TRUE)) {
+eire <- readOGR(system.file("shapes/eire.shp", package="spData")[1])
+row.names(eire) <- as.character(eire$names)
+proj4string(eire) <- CRS("+proj=utm +zone=30 +ellps=airy +units=km")
 eire.nb <- poly2nb(eire)
-#data(eire)
 e.lm <- lm(OWNCONS ~ ROADACC, data=eire)
 lm.morantest(e.lm, nb2listw(eire.nb))
 lm.morantest.sad(e.lm, nb2listw(eire.nb))
@@ -80,5 +80,6 @@ summary(lm.morantest.sad(e.lm, nb2listw(eire.nb)))
 e.wlm <- lm(OWNCONS ~ ROADACC, data=eire, weights=RETSALE)
 lm.morantest(e.wlm, nb2listw(eire.nb), resfun=rstudent)
 lm.morantest.sad(e.wlm, nb2listw(eire.nb), resfun=rstudent)
+}
 }
 \keyword{spatial}

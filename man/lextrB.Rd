@@ -35,7 +35,7 @@ The functions return approximations to the extreme eigenvalues with the eigenvec
 \note{It may be necessary to modify control arguments if warnings about lack of convergence are seen.}
 
 \examples{
-data(boston)
+data(boston, package="spData")
 ab.listb <- nb2listw(boston.soi, style="B")
 er <- range(eigenw(ab.listb))
 er
@@ -90,11 +90,13 @@ c(res_1)
 # Index '9' of dimension 1 of array 'bounds' above upper bound of 8
 #  print(ar1$values)
 #}
+\donttest{
 ab.listw <- nb2listw(boston.soi, style="S")
 er <- range(eigenw(similar.listw(ab.listw)))
 er
 res_1 <- lextrS(ab.listw)
 c(res_1)
+}
 #if (require(igraph)) {
 #  B <- as(similar.listw(ab.listw), "symmetricMatrix")
 #  ar1 <- arpack(f2, sym=TRUE, options=list(n=n, nev=1, ncv=8,

@@ -38,7 +38,8 @@ A \code{listw} object with the following members:
 \seealso{\code{\link{summary.nb}}, \code{\link{read.gal}}}
 
 \examples{
-example(columbus)
+if (require(rgdal, quietly=TRUE)) {
+example(columbus, package="spData")
 coords <- coordinates(columbus)
 cards <- card(col.gal.nb)
 col.w <- nb2listw(col.gal.nb)
@@ -60,9 +61,10 @@ dlist <- lapply(dlist, function(x) 1/x)
 col.w.d <- nb2listw(col.gal.nb, glist=dlist)
 summary(unlist(col.w$weights))
 summary(unlist(col.w.d$weights))
+}
 # introducing other conditions into weights - only earlier sales count
 # see http://sal.uiuc.edu/pipermail/openspace/2005-October/000610.html
-data(baltimore)
+data(baltimore, package="spData")
 set.seed(211)
 dates <- sample(1:500, nrow(baltimore), replace=TRUE)
 nb_15nn <- knn2nb(knearneigh(cbind(baltimore$X, baltimore$Y), k=15))

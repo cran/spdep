@@ -92,7 +92,7 @@ The \code{GMargminImage} may be used to visualize the shape of the surface of th
 }
 \references{Kelejian, H. H., and Prucha, I. R., 1999. A Generalized Moments Estimator for the Autoregressive Parameter in a Spatial Model. International Economic Review, 40, pp. 509--533; Cressie, N. A. C. 1993 \emph{Statistics for spatial data}, Wiley, New York.
 
-Roger Bivand, Gianfranco Piras (2015). Comparing Implementations of Estimation Methods for Spatial Econometrics. \emph{Journal of Statistical Software}, 63(18), 1-36. \url{http://www.jstatsoft.org/v63/i18/}.
+Roger Bivand, Gianfranco Piras (2015). Comparing Implementations of Estimation Methods for Spatial Econometrics. \emph{Journal of Statistical Software}, 63(18), 1-36. \url{https://www.jstatsoft.org/v63/i18/}.
 }
 \author{Luc Anselin and Roger Bivand}
 
@@ -113,7 +113,8 @@ contour(aa, levels=signif(levs, 4), add=TRUE)
 COL.errW.GM1 <- GMerrorsar(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb, style="W"))
 summary(COL.errW.GM1)
-example(NY_data)
+if (require(foreign, quietly=TRUE)) {
+example(NY_data, package="spData")
 esar1f <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
  listw=listw_NY, family="SAR", method="eigen")
 summary(esar1f)
@@ -123,6 +124,7 @@ summary(esar1gm)
 esar1gm1 <- GMerrorsar(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
  data=nydata, listw=listw_NY, method="Nelder-Mead")
 summary(esar1gm1)
+}
 }
 \keyword{spatial}
 

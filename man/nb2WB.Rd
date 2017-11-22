@@ -24,11 +24,13 @@ listw2WB(listw)
 
 \seealso{\code{\link[base]{dput}}}
 \examples{
-example(columbus)
+if (require(rgdal, quietly=TRUE)) {
+example(columbus, package="spData")
 x <- nb2WB(col.gal.nb)
 dput(x, control=NULL)
 x <- listw2WB(nb2listw(col.gal.nb))
 dput(x, control=NULL)
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

@@ -32,12 +32,13 @@ the link lengths are also printed. Print and summary functions are also availabl
 \seealso{\code{\link{plot.nb}}}
 
 \examples{
-example(columbus)
+if (require(rgdal, quietly=TRUE)) {
+example(columbus, package="spData")
 coords <- coordinates(columbus)
 col.gal.nb
 summary(col.gal.nb, coords)
 col.listw <- nb2listw(col.gal.nb, style="W")
 col.listw
 summary(col.listw)
-}
+}}
 \keyword{spatial}

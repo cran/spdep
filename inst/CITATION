@@ -9,7 +9,7 @@ citEntry(entry = "Article",
   volume       = "63",
   number       = "18",
   pages        = "1--36",
-  url          = "http://www.jstatsoft.org/v63/i18/",
+  url          = "https://www.jstatsoft.org/v63/i18/",
 
   textVersion  =
   paste("Roger Bivand, Gianfranco Piras (2015).",

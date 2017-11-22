@@ -41,7 +41,8 @@ A new version of \code{make.sym.nb} by Bjarke Christensen is now included. The o
 \seealso{\code{\link{read.gal}}}
 
 \examples{
-example(columbus)
+if (require(rgdal, quietly=TRUE)) {
+example(columbus, package="spData")
 coords <- coordinates(columbus)
 ind <- sapply(slot(columbus, "polygons"), function(x) slot(x, "ID"))
 print(is.symmetric.nb(col.gal.nb, verbose=TRUE, force=TRUE))
@@ -50,5 +51,5 @@ k4 <- sym.attr.nb(k4)
 print(is.symmetric.nb(k4))
 k4.sym <- make.sym.nb(k4)
 print(is.symmetric.nb(k4.sym))
-}
+}}
 \keyword{spatial}

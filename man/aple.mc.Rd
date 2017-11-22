@@ -26,6 +26,7 @@ aple.mc(x, listw, nsim, override_similarity_check=FALSE, useTrace=TRUE)
 \seealso{\code{\link{aple}}, \code{\link[boot]{boot}}}
 \examples{
 \donttest{
+if (require(rgdal, quietly=TRUE)) {
 example(aple)
 oldRNG <- RNGkind()
 RNGkind("L'Ecuyer-CMRG")
@@ -56,6 +57,7 @@ if (!get.mcOption()) {
 boot_out_par
 invisible(set.coresOption(oldCores))
 RNGkind(oldRNG[1], oldRNG[2])
+}
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

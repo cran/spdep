@@ -29,7 +29,8 @@ MCMCsamp(object, mcmc = 1L, verbose = NULL, ...)
 
 \seealso{\code{\link[LearnBayes]{rwmetrop}}, \code{\link{spautolm}}, \code{\link{lagsarlm}}, \code{\link{errorsarlm}}, \code{\link{sacsarlm}}}
 \examples{
-example(NY_data)
+if (require(foreign, quietly=TRUE)) {
+example(NY_data, package="spData")
 \dontrun{
 esar1f <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
  listw=listw_NY, family="SAR", method="eigen")
@@ -93,6 +94,7 @@ ssar1 <- sacsarlm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
 summary(ssar1)
 res <- MCMCsamp(ssar1, mcmc=5000, burnin=500, listw=listw_NY)
 summary(res)
+}
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

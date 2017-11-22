@@ -27,7 +27,7 @@ sp.mantel.mc <- function(var, listw, nsim, type="moran", zero.policy=NULL,
 	
 	listw.U <- listw2U(listw)
 	mantel.moran <- function(x, listwU, zero.policy) {
-		res <- x * lag.listw(listw.U, x, zero.policy=zero.policy)
+		res <- x * lag.listw(listwU, x, zero.policy=zero.policy)
 		res <- sum(res)
 		res
 	}

@@ -105,12 +105,12 @@ Geographical Analysis, 34, pp. 187--206.}
  \code{\link{lm.morantest.sad}}, \code{\link{errorsarlm}}}
 
 \examples{
-require(maptools)
-eire <- readShapePoly(system.file("etc/shapes/eire.shp", package="spdep")[1],
-  ID="names", proj4string=CRS("+proj=utm +zone=30 +ellps=airy +units=km"))
+if (require(rgdal, quietly=TRUE)) {
+eire <- readOGR(system.file("shapes/eire.shp", package="spData")[1])
+row.names(eire) <- as.character(eire$names)
+proj4string(eire) <- CRS("+proj=utm +zone=30 +ellps=airy +units=km")
 eire.nb <- poly2nb(eire)
 lw <- nb2listw(eire.nb)
-#data(eire)
 e.lm <- lm(OWNCONS ~ ROADACC, data=eire)
 e.locmor <- summary(localmoran.sad(e.lm, nb=eire.nb))
 e.locmor
@@ -133,5 +133,6 @@ Omega <- tcrossprod(invIrW(lw, rho=e.errorsar$lambda))
 e.clocmor <- summary(localmoran.sad(lm.target, nb=eire.nb, Omega=Omega))
 e.clocmor
 hist(e.clocmor[,"Pr. (Sad)"])
+}
 }
 \keyword{spatial}

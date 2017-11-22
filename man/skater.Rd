@@ -159,7 +159,7 @@ res5d <- skater(res5c, dpad, 1, c(20, 40), rep(1,nrow(bh@data)))
 table(res5d$groups)
 
 \donttest{
-data(boston)
+data(boston, package="spData")
 bh.nb <- boston.soi
 dpad <- data.frame(scale(boston.c[,c(7:10)]))
 ### calculating costs

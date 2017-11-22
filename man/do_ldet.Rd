@@ -251,7 +251,7 @@ Bivand, R. S., Hauke, J., and Kossowski, T. (2013). Computing the Jacobian in Ga
 \seealso{\code{\link{spautolm}}, \code{\link{lagsarlm}}, \code{\link{errorsarlm}}, \code{\link[Matrix]{Cholesky}}}
 
 \examples{
-data(boston)
+data(boston, package="spData")
 lw <- nb2listw(boston.soi)
 can.sim <- spdep:::can.be.simmed(lw)
 env <- new.env(parent=globalenv())

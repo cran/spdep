@@ -24,7 +24,7 @@
 \note{Method suggested by Roberto Patuelli}
 
 \examples{
-data(used.cars)
+data(used.cars, package="spData")
 data(state)
 cont_st <- match(attr(usa48.nb, "region.id"), state.abb)
 cents <- as.matrix(as.data.frame(state.center))[cont_st,]

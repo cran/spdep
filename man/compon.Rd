@@ -22,7 +22,8 @@ A list of:
 \author{Nicholas Lewin-Koh \email{nikko@hailmail.net}}
 \seealso{\code{\link{plot.nb}}}
 \examples{
-example(columbus)
+if (require(rgdal, quietly=TRUE)) {
+example(columbus, package="spData")
 coords <- coordinates(columbus)
 plot(col.gal.nb, coords, col="grey")
 col2 <- droplinks(col.gal.nb, 21)
@@ -43,6 +44,7 @@ c1W <- clusters(g1W)
 print(all.equal(c1W$membership, res$comp.id))
 B1 <- get.adjacency(g1)
 print(all.equal(B, B1))
+}
 }
 }
 

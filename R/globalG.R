@@ -1,10 +1,10 @@
-# Copyright 2002-3 by Hisaji ONO and Roger Bivand 
+# Copyright 2002-2017 by Hisaji ONO and Roger Bivand 
 #
 # General G Statistics
 #
 #
 globalG.test <- function(x, listw, zero.policy=NULL,
-	alternative="greater", spChk=NULL, adjust.n=TRUE, B1correct=TRUE) {
+	alternative="greater", spChk=NULL, adjust.n=TRUE, B1correct=TRUE, adjust.x=TRUE, Arc_all_x=FALSE) {
         if (is.null(zero.policy))
             zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
@@ -27,17 +27,30 @@ globalG.test <- function(x, listw, zero.policy=NULL,
 
 	wc <- spweights.constants(listw, zero.policy=zero.policy, 
 		adjust.n=adjust.n)
-	n1 <- n - 1
-	n2 <- n - 2
-	n3 <- n - 3
-	nn <- n * n
+        n <- wc$n
+	n1 <- wc$n1
+	n2 <- wc$n2
+	n3 <- wc$n3
+	nn <- wc$nn
 	S0 <- wc$S0
 	S1 <- wc$S1
 	S2 <- wc$S2
 	S02 <- S0*S0
-	G <- (t(x) %*% lag.listw(listw, x, zero.policy=zero.policy)) /
-		(sum(x %x% x) - (t(x) %*% x))
 
+        if (adjust.x) ax <- x[card(listw$neighbours) > 0L]
+        else ax <- x
+
+        numer <- (t(x) %*% lag.listw(listw, x, zero.policy=zero.policy))
+        if (Arc_all_x) {
+          outer_prod <- sapply(ax, function(axi) sum(x*axi))
+#(sum(x %x% ax)
+        } else {
+          outer_prod <- sapply(ax, function(axi) sum(ax*axi))
+#(sum(ax %x% ax)
+        }
+        denom <- sum(outer_prod) - crossprod(ax)
+	G <- numer / denom
+		
 	E.G <- S0 / (n * n1)
 
 	B0 <- ((nn - 3*n + 3)*S1) - (n*S2) + (3*S02)
@@ -46,10 +59,10 @@ globalG.test <- function(x, listw, zero.policy=NULL,
 	B2 <- -((2*n*S1) - ((n+3)*S2) + (6*S02))
 	B3 <- (4*n1*S1) - (2*(n+1)*S2) + (8*S02)
 	B4 <- S1 - S2 + S02
-	sx <- sum(x)
-	sx2 <- sum(x^2)
-	sx3 <- sum(x^3)
-	sx4 <- sum(x^4)
+	sx <- sum(ax)
+	sx2 <- sum(ax^2)
+	sx3 <- sum(ax^3)
+	sx4 <- sum(ax^4)
 
 	var.G <- ((B0*(sx2^2) + B1*sx4 + B2*(sx^2)*sx2 + B3*sx*sx3 +
 		 B4*(sx^4)) / ((((sx^2) - sx2)^2)*n*n1*n2*n3)) - (E.G^2)
@@ -58,7 +71,7 @@ globalG.test <- function(x, listw, zero.policy=NULL,
 	names(statistic) <- "standard deviate"
 	method <- "Getis-Ord global G statistic"
 	if (alternative == "two.sided") PrG <- 2 * pnorm(abs(statistic), 
-# swirched -abs() to abs() 141121 RSB comment Tomasz Kossowski
+# switched -abs() to abs() 141121 RSB comment Tomasz Kossowski
 		lower.tail=FALSE)
         else if (alternative == "greater")
             PrG <- pnorm(statistic, lower.tail=FALSE)

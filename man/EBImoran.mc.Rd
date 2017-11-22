@@ -59,12 +59,14 @@ following components:
 \seealso{\code{\link{moran}}, \code{\link{moran.mc}}, \code{\link{EBest}}}
 
 \examples{
-example(nc.sids)
+if (require(rgdal, quietly=TRUE)) {
+example(nc.sids, package="spData")
 EBImoran.mc(nc.sids$SID74, nc.sids$BIR74,
  nb2listw(ncCC89_nb, style="B", zero.policy=TRUE), nsim=999, zero.policy=TRUE)
 sids.p <- nc.sids$SID74 / nc.sids$BIR74
 moran.mc(sids.p, nb2listw(ncCC89_nb, style="B", zero.policy=TRUE),
  nsim=999, zero.policy=TRUE)
+}
 }
 \keyword{spatial}
 

@@ -22,13 +22,15 @@ list.
 
 \references{Bivand R, Pebesma EJ, Gomez-Rubio V, (2008) \emph{Applied Spatial Data Analysis with R}, Springer, New York, pp. 239-251; Bivand R, Portnov B, (2004) Exploring spatial data analysis techniques using R: the case of observations with no neighbours. In: Anselin L, Florax R, Rey S, (eds.), \emph{Advances in Spatial Econometrics, Methodology, Tools and Applications}. Berlin: Springer-Verlag, pp. 121-142.}
 
+
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 
 \seealso{\code{\link{summary.nb}}}
 
 \examples{
-example(columbus)
+if (require(rgdal, quietly=TRUE)) {
+example(columbus, package="spData")
 table(card(col.gal.nb))
-}
+}}
 \keyword{spatial}
 
