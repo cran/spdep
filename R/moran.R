@@ -1,4 +1,4 @@
-# Copyright 2001-5 by Roger Bivand 
+# Copyright 2001-18 by Roger Bivand 
 #
 
 moran <- function(x, listw, n, S0, zero.policy=NULL, NAOK=FALSE) {
@@ -21,7 +21,7 @@ moran <- function(x, listw, n, S0, zero.policy=NULL, NAOK=FALSE) {
 
 moran.test <- function(x, listw, randomisation=TRUE, zero.policy=NULL,
 	alternative="greater", rank = FALSE, na.action=na.fail, spChk=NULL, 
-	adjust.n=TRUE) {
+	adjust.n=TRUE, drop.EI2=FALSE) {
 	alternative <- match.arg(alternative, c("greater", "less", "two.sided"))
 	if (!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
@@ -60,14 +60,12 @@ moran.test <- function(x, listw, randomisation=TRUE, zero.policy=NULL,
 		tmp <- K*(wc$S1*(wc$nn - wc$n) - 2*wc$n*wc$S2 + 6*S02)
                 if (tmp > VI) warning("Kurtosis overflow,\ndistribution of variable does not meet test assumptions")
 		VI <- (VI - tmp) / (wc$n1*wc$n2*wc$n3*S02)
-                tmp <- (VI - EI^2)
-                if (tmp < 0) warning("Negative variance,\ndistribution of variable does not meet test assumptions")
-		VI <- tmp
+                if (!drop.EI2) VI <- (VI - EI^2)
+                if (VI < 0) warning("Negative variance,\ndistribution of variable does not meet test assumptions")
 	} else {
 		VI <- (wc$nn*wc$S1 - wc$n*wc$S2 + 3*S02) / (S02*(wc$nn - 1))
-                tmp <- (VI - EI^2)
-                if (tmp < 0) warning("Negative variance,\ndistribution of variable does not meet test assumptions")
-		VI <- tmp
+                if (!drop.EI2) VI <- (VI - EI^2)
+                if (VI < 0) warning("Negative variance,\ndistribution of variable does not meet test assumptions")
 	}
 	ZI <- (I - EI) / sqrt(VI)
 	statistic <- ZI
@@ -86,7 +84,10 @@ moran.test <- function(x, listw, randomisation=TRUE, zero.policy=NULL,
 	data.name <- paste(xname, ifelse(rank,
 		"using rank correction",""), "\nweights:",
 		wname, ifelse(is.null(na.act), "", paste("\nomitted:", 
-	    paste(na.act, collapse=", "))), "\n")
+	    paste(na.act, collapse=", "))),
+            ifelse(adjust.n && isTRUE(any(sum(card(listw$neighbours) == 0L))),
+            "n reduced by no-neighbour observations\n", ""),
+            ifelse(drop.EI2, "EI^2 term dropped in VI", ""), "\n")
 	res <- list(statistic=statistic, p.value=PrI, estimate=vec, 
 	    alternative=alternative, method=method, data.name=data.name)
 	if (!is.null(na.act)) attr(res, "na.action") <- na.act

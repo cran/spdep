@@ -1,9 +1,9 @@
-# Copyright 2001-12 by Roger Bivand
+# Copyright 2001-18 by Roger Bivand
 #
 
 localmoran <- function(x, listw, zero.policy=NULL, na.action=na.fail, 
 	alternative = "greater", p.adjust.method="none", mlvar=TRUE,
-	spChk=NULL) {
+	spChk=NULL, adjust.x=FALSE) {
         stopifnot(is.vector(x))
 	if (!inherits(listw, "listw"))
 		stop(paste(deparse(substitute(listw)), "is not a listw object"))
@@ -34,19 +34,45 @@ localmoran <- function(x, listw, zero.policy=NULL, na.action=na.fail,
         else if (alternative == "greater") Prname <- "Pr(z > 0)"
         else Prname <- "Pr(z < 0)"
 	colnames(res) <- c("Ii", "E.Ii", "Var.Ii", "Z.Ii", Prname)
-	xx <- mean(x, na.rm=NAOK)
+	if (adjust.x) {
+          nc <- card(listw$neighbours) > 0L
+	  xx <- mean(x[nc], na.rm=NAOK)
+	} else {
+	  xx <- mean(x, na.rm=NAOK)
+	}
 	z <- x - xx 
 	lz <- lag.listw(listw, z, zero.policy=zero.policy, NAOK=NAOK)
 
-	if (mlvar) s2 <- sum(z^2, na.rm=NAOK)/n
-	else s2 <- sum(z^2, na.rm=NAOK)/(n-1) 
-
+	if (mlvar) {
+          if (adjust.x) {
+            s2 <- sum(z[nc]^2, na.rm=NAOK)/sum(nc)
+          } else {
+            s2 <- sum(z^2, na.rm=NAOK)/n
+          }
+	} else {
+          if (adjust.x) {
+            s2 <- sum(z[nc]^2, na.rm=NAOK)/(sum(nc)-1) 
+          } else {
+            s2 <- sum(z^2, na.rm=NAOK)/(n-1) 
+          }
+        }
 	res[,1] <- (z/s2) * lz
 	Wi <- sapply(listw$weights, sum) 
 	res[,2] <- -Wi / (n-1) 
 
-	if (mlvar) b2 <- (sum(z^4, na.rm=NAOK)/n)/(s2^2)
-        else b2 <- (sum(z^4, na.rm=NAOK)/(n-1))/(s2^2) 
+	if (mlvar)  {
+          if (adjust.x) {
+            b2 <- (sum(z[nc]^4, na.rm=NAOK)/sum(nc))/(s2^2)
+          } else {
+            b2 <- (sum(z^4, na.rm=NAOK)/n)/(s2^2)
+          }
+	} else {
+          if (adjust.x) {
+            b2 <- (sum(z[nc]^4, na.rm=NAOK)/(sum(nc)-1))/(s2^2) 
+          } else {
+            b2 <- (sum(z^4, na.rm=NAOK)/(n-1))/(s2^2)
+          }
+        }
         
 	Wi2 <- sapply(listw$weights, function(x) sum(x^2)) 
 	A <- (n-b2) / (n-1)

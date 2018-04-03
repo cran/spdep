@@ -13,8 +13,8 @@ factors, and results may be checked against those of \code{joincount.mc}
 permutations.
 }
 \usage{
-joincount.test(fx, listw, zero.policy=NULL, alternative="greater", spChk=NULL,
- adjust.n=TRUE)
+joincount.test(fx, listw, zero.policy=NULL, alternative="greater",
+ sampling="nonfree", spChk=NULL, adjust.n=TRUE)
 \method{print}{jclist}(x, ...)
 }
 \arguments{
@@ -22,6 +22,7 @@ joincount.test(fx, listw, zero.policy=NULL, alternative="greater", spChk=NULL,
   \item{listw}{a \code{listw} object created for example by \code{nb2listw}}
   \item{zero.policy}{default NULL, use global option value; if TRUE assign zero to the lagged value of zones without neighbours, if FALSE assign NA}
   \item{alternative}{a character string specifying the alternative hypothesis, must be one of "greater" (default), "less" or "two.sided".}
+  \item{sampling}{default \dQuote{nonfree}, may be \dQuote{free}}
   \item{adjust.n}{default TRUE, if FALSE the number of observations is not adjusted for no-neighbour observations, if TRUE, the number of observations is adjusted consistently (up to and including spdep 0.3-28 the adjustment was inconsistent - thanks to Tomoki NAKAYA for a careful bug report)}
   \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
   \item{x}{object to be printed}
@@ -37,7 +38,7 @@ A list with class \code{jclist} of lists with class \code{htest} for each of the
   \item{method}{a character string giving the method used.}
   \item{data.name}{a character string giving the name(s) of the data.}
 }
-\references{Cliff, A. D., Ord, J. K. 1981 Spatial processes, Pion, p. 20.}
+\references{Cliff, A. D., Ord, J. K. 1981 Spatial processes, Pion, pp. 19-20.}
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 \note{The derivation of the test (Cliff and Ord, 1981, p. 18) assumes that the weights matrix is symmetric. For inherently non-symmetric matrices, such as k-nearest neighbour matrices, \code{listw2U()} can be used to make the matrix symmetric. In non-symmetric weights matrix cases, the variance of the test statistic may be negative.
 }
@@ -49,6 +50,7 @@ data(oldcol)
 HICRIME <- cut(COL.OLD$CRIME, breaks=c(0,35,80), labels=c("low","high"))
 names(HICRIME) <- rownames(COL.OLD)
 joincount.test(HICRIME, nb2listw(COL.nb, style="B"))
+joincount.test(HICRIME, nb2listw(COL.nb, style="B"), sampling="free")
 joincount.test(HICRIME, nb2listw(COL.nb, style="C"))
 joincount.test(HICRIME, nb2listw(COL.nb, style="S"))
 joincount.test(HICRIME, nb2listw(COL.nb, style="W"))
