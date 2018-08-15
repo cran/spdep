@@ -249,7 +249,8 @@ spBreg_lag <- function(formula, data = list(), listw, na.action, type="lag",
 }
 
 
-impacts.MCMC_sar_g <- function(obj, ..., tr=NULL, listw=NULL, Q=NULL) {
+impacts.MCMC_sar_g <- function(obj, ..., tr=NULL, listw=NULL, evalues=NULL,
+    Q=NULL) {
     if (is.null(listw) && !is.null(attr(obj, "listw_style")) && 
         attr(obj, "listw_style") != "W")
         stop("Only row-standardised weights supported")
@@ -285,14 +286,30 @@ impacts.MCMC_sar_g <- function(obj, ..., tr=NULL, listw=NULL, Q=NULL) {
       P <- cbind(b1[1:(p/2)], b1[((p/2)+1):p])
       bnames <- names(b1[1:(p/2)])
     }
-    if (is.null(tr) && !is.null(listw)) n <- length(listw$neighbours)
-    else if (!is.null(tr)) n <- attr(tr, "n")
-    else stop("either tr or listw must be given")
+    if (is.null(evalues)) {
+        if (is.null(listw) && is.null(tr)) {
+            stop("either tr or listw must be given")
+        } else {
+            if (is.null(tr) && !is.null(listw)) n <- length(listw$neighbours)
+            else if (!is.null(tr)) n <- attr(tr, "n")
+        }
+    } else {
+        if (!is.null(listw)) {
+            warning("evalues given: listw will be ignored")
+            listw <-NULL
+        }
+        if (!is.null(tr)) {
+            warning("evalues given: listw will be ignored")
+            tr <- NULL
+        }
+        n <- length(evalues)
+    }
+
     R <- nrow(samples)
 
     res <- intImpacts(rho=rho, beta=beta, P=P, n=n, mu=NULL, Sigma=NULL,
         irho=irho, drop2beta=drop2beta, bnames=bnames, interval=interval,
-        type=type, tr=tr, R=R, listw=listw, tol=NULL,
+        type=type, tr=tr, R=R, listw=listw, evalues=evalues, tol=NULL,
         empirical=NULL, Q=Q, icept=icept, iicept=iicept, p=p, samples=samples)
     attr(res, "iClass") <- class(obj)
     res

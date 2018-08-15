@@ -19,15 +19,16 @@
 \title{Impacts in spatial lag models}
 \description{The calculation of impacts for spatial lag and spatial Durbin models is needed in order to interpret the regression coefficients correctly, because of the spillovers between the terms in these data generation processes (unlike the spatial error model). Methods for \dQuote{SLX} and Bayesian fitted models are also provided, the former do not need MC simulations, while the latter pass through MCMC draws.}
 \usage{
-\method{impacts}{sarlm}(obj, \dots, tr, R = NULL, listw = NULL, useHESS = NULL,
+\method{impacts}{sarlm}(obj, \dots, tr, R = NULL, listw = NULL, evalues=NULL,
+ useHESS = NULL, tol = 1e-06, empirical = FALSE, Q=NULL)
+\method{impacts}{stsls}(obj, \dots, tr, R = NULL, listw = NULL, evalues=NULL,
  tol = 1e-06, empirical = FALSE, Q=NULL)
-\method{impacts}{stsls}(obj, \dots, tr, R = NULL, listw = NULL,
- tol = 1e-06, empirical = FALSE, Q=NULL)
-\method{impacts}{gmsar}(obj, \dots, n = NULL, tr = NULL, R = NULL, listw = NULL,
- tol = 1e-06, empirical = FALSE, Q=NULL)
-\method{impacts}{lagmess}(obj, ..., R=NULL, listw=NULL, tol=1e-6, empirical=FALSE)
+\method{impacts}{gmsar}(obj, \dots, n = NULL, tr = NULL, R = NULL,
+ listw = NULL, evalues=NULL, tol = 1e-06, empirical = FALSE, Q=NULL)
+\method{impacts}{lagmess}(obj, ..., R=NULL, listw=NULL, tol=1e-6,
+ empirical=FALSE)
 \method{impacts}{SLX}(obj, ...)
-\method{impacts}{MCMC_sar_g}(obj, ..., tr=NULL, listw=NULL, Q=NULL)
+\method{impacts}{MCMC_sar_g}(obj, ..., tr=NULL, listw=NULL, evalues=NULL, Q=NULL)
 \method{plot}{lagImpact}(x, ..., choice="direct", trace=FALSE, density=TRUE)
 \method{print}{lagImpact}(x, ..., reportQ=NULL)
 \method{summary}{lagImpact}(object, ..., zstats=FALSE, short=FALSE, reportQ=NULL)
@@ -35,7 +36,7 @@
 \method{summary}{WXImpact}(object, ..., adjust_k=FALSE)
 \method{HPDinterval}{lagImpact}(obj, prob = 0.95, ..., choice="direct")
 intImpacts(rho, beta, P, n, mu, Sigma, irho, drop2beta, bnames, interval,
- type, tr, R, listw, tol, empirical, Q, icept, iicept, p, mess=FALSE,
+ type, tr, R, listw, evalues, tol, empirical, Q, icept, iicept, p, mess=FALSE,
  samples=NULL)
 }
 \arguments{
@@ -43,6 +44,7 @@ intImpacts(rho, beta, P, n, mu, Sigma, irho, drop2beta, bnames, interval,
   \item{\dots}{Arguments passed through to methods in the \pkg{coda} package}
   \item{tr}{A vector of traces of powers of the spatial weights matrix created using \code{trW}, for approximate impact measures; if not given, \code{listw} must be given for exact measures (for small to moderate spatial weights matrices); the traces must be for the same spatial weights as were used in fitting the spatial regression, and must be row-standardised}
   \item{listw}{If \code{tr} is not given, a spatial weights object as created by \code{nb2listw}; they must be the same spatial weights as were used in fitting the spatial regression, but do not have to be row-standardised}
+  \item{evalues}{vector of eigenvalues of spatial weights matrix for impacts calculations}
   \item{n}{defaults to \code{length(obj$residuals)}; in the method for \code{gmsar} objects it may be used in panel settings to compute the impacts for cross-sectional weights only, suggested by Angela Parenti}
   \item{R}{If given, simulations are used to compute distributions for the impact measures, returned as \code{mcmc} objects; the objects are used for convenience but are not output by an MCMC process}
   \item{useHESS}{Use the Hessian approximation (if available) even if the asymptotic coefficient covariance matrix is available; used for comparing methods}
@@ -102,9 +104,12 @@ Roger Bivand, Gianfranco Piras (2015). Comparing Implementations of Estimation M
 if (require(rgdal, quietly=TRUE)) {
 example(columbus, package="spData")
 listw <- nb2listw(col.gal.nb)
-lobj <- lagsarlm(CRIME ~ INC + HOVAL, columbus, listw)
+ev <- eigenw(listw)
+lobj <- lagsarlm(CRIME ~ INC + HOVAL, columbus, listw,
+ control=list(pre_eig=ev))
 summary(lobj)
-mobj <- lagsarlm(CRIME ~ INC + HOVAL, columbus, listw, type="mixed")
+mobj <- lagsarlm(CRIME ~ INC + HOVAL, columbus, listw, type="mixed",
+ control=list(pre_eig=ev))
 summary(mobj)
 W <- as(listw, "CsparseMatrix")
 trMatc <- trW(W, type="mult")
@@ -113,9 +118,12 @@ set.seed(1)
 impacts(lobj, listw=listw)
 impacts(lobj, tr=trMatc)
 impacts(lobj, tr=trMC)
+impacts(lobj, evalues=ev)
 lobj1 <- stsls(CRIME ~ INC + HOVAL, columbus, listw)
-loobj1 <- impacts(lobj1, tr=trMatc, R=200)
+loobj1 <- impacts(lobj1, R=200, tr=trMatc)
 summary(loobj1, zstats=TRUE, short=TRUE)
+loobj2 <- impacts(lobj1, R=200, evalues=ev)
+summary(loobj2, zstats=TRUE, short=TRUE)
 library(coda)
 HPDinterval(loobj1)
 lobj1r <- stsls(CRIME ~ INC + HOVAL, columbus, listw, robust=TRUE)
@@ -127,6 +135,7 @@ summary(lobjIQ5, zstats=TRUE, short=TRUE, reportQ=TRUE)
 impacts(mobj, listw=listw)
 impacts(mobj, tr=trMatc)
 impacts(mobj, tr=trMC)
+try(impacts(mobj, evalues=ev))
 summary(impacts(mobj, tr=trMatc, R=200), zstats=TRUE)
 xobj <- lmSLX(CRIME ~ INC + HOVAL, columbus, listw)
 summary(impacts(xobj))
