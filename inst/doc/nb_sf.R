@@ -293,7 +293,7 @@ isTRUE(all.equal(NY88_nb_sf, NY88_nb, check.attributes=FALSE))
 
 ## ---- echo=dothis, eval=dothis-------------------------------------------
 NY89_nb <- knn2nb(knearneigh(coords, k=4), row.names=IDs)
-NY89_nb_sf <- knn2nb(knearneigh(coords_sf, k=2))
+NY89_nb_sf <- knn2nb(knearneigh(coords_sf, k=4))
 isTRUE(all.equal(NY89_nb_sf, NY89_nb, check.attributes=FALSE))
 
 ## ---- echo=dothis, eval=dothis-------------------------------------------

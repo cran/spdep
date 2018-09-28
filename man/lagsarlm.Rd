@@ -1,4 +1,4 @@
-% Copyright 2002-16 by Roger S. Bivand
+% Copyright 2002-18 by Roger S. Bivand
 \name{lagsarlm}
 \alias{lagsarlm}
 \alias{spBreg_lag}
@@ -14,10 +14,10 @@ The \code{spBreg_lag} function is an early-release version of the Matlab Spatial
 }
 \usage{
 lagsarlm(formula, data = list(), listw, 
-	na.action, type="lag", method="eigen", quiet=NULL, 
+	na.action, Durbin, type, method="eigen", quiet=NULL, 
 	zero.policy=NULL, interval=NULL, tol.solve=1.0e-10, trs=NULL, 
 	control=list())
-spBreg_lag(formula, data = list(), listw, na.action, type="lag",
+spBreg_lag(formula, data = list(), listw, na.action, Durbin, type,
     zero.policy=NULL, control=list())
 }
 \arguments{
@@ -28,7 +28,8 @@ By default the variables are taken from the environment which the function
 is called.}
   \item{listw}{a \code{listw} object created for example by \code{nb2listw}}
   \item{na.action}{a function (default \code{options("na.action")}), can also be \code{na.omit} or \code{na.exclude} with consequences for residuals and fitted values - in these cases the weights list will be subsetted to remove NAs in the data. It may be necessary to set zero.policy to TRUE because this subsetting may create no-neighbour observations. Note that only weights lists created without using the glist argument to \code{nb2listw} may be subsetted.}
-  \item{type}{default "lag", may be set to "mixed"; when "mixed", the lagged intercept is dropped for spatial weights style "W", that is row-standardised weights, but otherwise included; \dQuote{Durbin} may be used instead of \dQuote{mixed}}
+  \item{Durbin}{default FALSE (spatial lag model); if TRUE, full spatial Durbin model; if a formula object, the subset of explanatory variables to lag}
+  \item{type}{(use the \sQuote{Durbin=} argument - retained for backwards compatibility only) default "lag", may be set to "mixed"; when "mixed", the lagged intercept is dropped for spatial weights style "W", that is row-standardised weights, but otherwise included; \dQuote{Durbin} may be used instead of \dQuote{mixed}}
   \item{method}{"eigen" (default) - the Jacobian is computed as the product 
 of (1 - rho*eigenvalue) using \code{eigenw}, and "spam" or "Matrix_J" for strictly symmetric weights lists of styles "B" and "C", or made symmetric by similarity (Ord, 1975, Appendix C) if possible for styles "W" and "S", using code from the spam or Matrix packages to calculate the determinant; \dQuote{Matrix} and \dQuote{spam_update} provide updating Cholesky decomposition methods; "LU" provides an alternative sparse matrix decomposition approach. In addition, there are "Chebyshev" and Monte Carlo "MC" approximate log-determinant methods; the Smirnov/Anselin (2009) trace approximation is available as "moments". Three methods: "SE_classic", "SE_whichMin", and "SE_interp" are provided experimentally, the first to attempt to emulate the behaviour of Spatial Econometrics toolbox ML fitting functions. All use grids of log determinant values, and the latter two attempt to ameliorate some features of "SE_classic".
 }
@@ -83,6 +84,7 @@ variable in making predictions for the fitting data.
   \item{SElndet}{default NULL, may be used to pass a pre-computed SE toolbox style matrix of coefficients and their lndet values to the "SE_classic" and "SE_whichMin" methods}
   \item{LU_order}{default FALSE; used in \dQuote{LU_prepermutate}, note warnings given for \code{lu} method}
   \item{pre_eig}{default NULL; may be used to pass a pre-computed vector of eigenvalues}
+  \item{OrdVsign}{default 1; used to set the sign of the final component to negative if -1 (alpha times ((sigma squared) squared) in Ord (1975) equation B.1).}
 }}
 
 \section{Extra Bayesian control arguments}{
@@ -110,6 +112,7 @@ variable in making predictions for the fitting data.
 \value{
   A list object of class \code{sarlm}
   \item{type}{"lag" or "mixed"}
+  \item{dvars}{vector of length 2, numbers of columns in X and WX; if Durbin is given as a formula, the formula as attribute \dQuote{f}, the indices of the included Wx as \dQuote{inds}, and indices of added zero Wx coefficients as \dQuote{zero_fill}}
   \item{rho}{simultaneous autoregressive lag coefficient}
   \item{coefficients}{GLS coefficient estimates}
   \item{rest.se}{asymptotic standard errors if ase=TRUE, otherwise approximate numeriacal Hessian-based values}
@@ -184,16 +187,38 @@ Bernat for contributions to the asymptotic standard error code.}
 data(oldcol)
 listw <- nb2listw(COL.nb, style="W")
 ev <- eigenw(listw)
-COL.lag.eig <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD, listw=listw,
- method="eigen", quiet=FALSE, control=list(pre_eig=ev))
-summary(COL.lag.eig, correlation=TRUE)
-COL.lag.eig$fdHess
-COL.lag.eig$resvar
 W <- as(listw, "CsparseMatrix")
 trMatc <- trW(W, type="mult")
+COL.lag.eig <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD, listw=listw,
+ method="eigen", quiet=FALSE, control=list(pre_eig=ev, OrdVsign=1))
+summary(COL.lag.eig, correlation=TRUE)
+\dontrun{
+COL.lag.eig$fdHess
+COL.lag.eig$resvar
+# using the apparent sign in Ord (1975, equation B.1) 
+COL.lag.eigb <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD, listw=listw,
+ method="eigen", control=list(pre_eig=ev, OrdVsign=-1))
+summary(COL.lag.eigb)
+COL.lag.eigb$fdHess
+COL.lag.eigb$resvar
+# force numerical Hessian
 COL.lag.eig1 <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- listw=listw, control=list(fdHess=TRUE, pre_eig=ev), trs=trMatc)
+ listw=listw, method="Matrix", control=list(small=25))
+summary(COL.lag.eig1)
 COL.lag.eig1$fdHess
+# force LeSage & Pace (2008, p. 57) approximation 
+COL.lag.eig1a <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
+ listw=listw, method="Matrix", control=list(small=25), trs=trMatc)
+summary(COL.lag.eig1a)
+COL.lag.eig1a$fdHess
+COL.lag.eig$resvar[2,2]
+# using the apparent sign in Ord (1975, equation B.1) 
+COL.lag.eigb$resvar[2,2]
+# force numerical Hessian
+COL.lag.eig1$fdHess[1,1]
+# force LeSage & Pace (2008, p. 57) approximation 
+COL.lag.eig1a$fdHess[2,2]
+}
 system.time(COL.lag.M <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb), method="Matrix", quiet=FALSE))
 summary(COL.lag.M)
@@ -205,13 +230,42 @@ summary(COL.lag.sp)
 }
 COL.lag.B <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb, style="B"))
-summary(COL.lag.B, correlation=TRUE)
+summary(COL.lag.B)
 COL.mixed.B <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb, style="B"), type="mixed", tol.solve=1e-9)
-summary(COL.mixed.B, correlation=TRUE)
+ nb2listw(COL.nb, style="B"), type="mixed", tol.solve=1e-9,
+ control=list(pre_eig=ev))
+summary(COL.mixed.B)
 COL.mixed.W <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb, style="W"), type="mixed")
-summary(COL.mixed.W, correlation=TRUE)
+ listw, type="mixed",
+ control=list(pre_eig=ev))
+summary(COL.mixed.W)
+COL.mixed.D00 <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
+ listw, Durbin=TRUE,
+ control=list(pre_eig=ev))
+summary(COL.mixed.D00)
+COL.mixed.D01 <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
+ listw, Durbin=FALSE,
+ control=list(pre_eig=ev))
+summary(COL.mixed.D01)
+COL.mixed.D1 <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
+ listw, Durbin= ~ INC + HOVAL,
+ control=list(pre_eig=ev))
+summary(COL.mixed.D1)
+f <- CRIME ~ INC + HOVAL
+COL.mixed.D2 <- lagsarlm(f, data=COL.OLD, listw,
+ Durbin=as.formula(delete.response(terms(f))),
+ control=list(pre_eig=ev))
+summary(COL.mixed.D2)
+COL.mixed.D1a <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
+ listw, Durbin= ~ INC,
+ control=list(pre_eig=ev))
+summary(COL.mixed.D1a)
+try(COL.mixed.D1 <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
+ listw, Durbin= ~ inc + HOVAL,
+ control=list(pre_eig=ev)))
+try(COL.mixed.D1 <- lagsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
+ listw, Durbin= ~ DISCBD + HOVAL,
+ control=list(pre_eig=ev)))
 NA.COL.OLD <- COL.OLD
 NA.COL.OLD$CRIME[20:25] <- NA
 COL.lag.NA <- lagsarlm(CRIME ~ INC + HOVAL, data=NA.COL.OLD,
@@ -234,13 +288,24 @@ data=boston.c, nb2listw(boston.soi), type="mixed", method="Matrix",
 trs=trMatb)
 summary(gp2mMi)
 }
-summary(COL.lag.eig)
+\dontrun{
 set.seed(1)
 COL.lag.Bayes <- spBreg_lag(CRIME ~ INC + HOVAL, data=COL.OLD,
  listw=listw)
 summary(COL.lag.Bayes)
 summary(impacts(COL.lag.Bayes, tr=trMatc), short=TRUE, zstats=TRUE)
 summary(impacts(COL.lag.Bayes, evalues=ev), short=TRUE, zstats=TRUE)
+set.seed(1)
+COL.D0.Bayes <- spBreg_lag(CRIME ~ INC + HOVAL, data=COL.OLD,
+ listw=listw, Durbin=TRUE)
+summary(COL.D0.Bayes)
+summary(impacts(COL.D0.Bayes, tr=trMatc), short=TRUE, zstats=TRUE)
+}
+set.seed(1)
+COL.D1.Bayes <- spBreg_lag(CRIME ~ DISCBD + INC + HOVAL, data=COL.OLD,
+ listw=listw, Durbin= ~ INC)
+summary(COL.D1.Bayes)
+summary(impacts(COL.D1.Bayes, tr=trMatc), short=TRUE, zstats=TRUE)
 \dontrun{
 data(elect80, package="spData")
 lw <- nb2listw(e80_queen, zero.policy=TRUE)

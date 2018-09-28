@@ -1,8 +1,12 @@
-# Copyright 1998-2012 by Roger Bivand and Andrew Bernat
+# Copyright 1998-2018 by Roger Bivand and Andrew Bernat
 #
 
+is.formula <- function(x){
+   inherits(x,"formula")
+}
+
 lagsarlm <- function(formula, data = list(), listw, 
-	na.action, type="lag", method="eigen", quiet=NULL, 
+	na.action, Durbin, type, method="eigen", quiet=NULL, 
 	zero.policy=NULL, interval=NULL, tol.solve=1.0e-10, 
 	trs=NULL, control=list()) {
         timings <- list()
@@ -13,7 +17,8 @@ lagsarlm <- function(formula, data = list(), listw,
             cheb_q=5, MC_p=16L, MC_m=30L, super=NULL, spamPivot="MMD",
             in_coef=0.1, type="MC", correct=TRUE, trunc=TRUE,
             SE_method="LU", nrho=200, interpn=2000, small_asy=TRUE,
-            small=1500, SElndet=NULL, LU_order=FALSE, pre_eig=NULL)
+            small=1500, SElndet=NULL, LU_order=FALSE, pre_eig=NULL,
+            OrdVsign=1)
         nmsC <- names(con)
         con[(namc <- names(control))] <- control
         if (length(noNms <- namc[!namc %in% nmsC])) 
@@ -36,7 +41,17 @@ lagsarlm <- function(formula, data = list(), listw,
 	    subset <- !(1:length(listw$neighbours) %in% na.act)
 	    listw <- subset(listw, subset, zero.policy=zero.policy)
 	}
+#FIXME
+        if (missing(type)) type <- "lag"
         if (type == "Durbin") type <- "mixed"
+        if (missing(Durbin)) Durbin <- ifelse(type == "lag", FALSE, TRUE)
+        if (listw$style != "W" && is.formula(Durbin)) {
+            Durbin <- TRUE
+            warning("formula Durbin requires row-standardised weights; set TRUE")
+        }
+        if (is.logical(Durbin) && isTRUE(Durbin)) type <- "mixed"
+        if (is.formula(Durbin)) type <- "mixed"
+        if (is.logical(Durbin) && !isTRUE(Durbin)) type <- "lag"
 	switch(type, lag = if (!quiet) cat("\nSpatial lag model\n"),
 	    mixed = if (!quiet) cat("\nSpatial mixed autoregressive model\n"),
 	    stop("\nUnknown model type\n"))
@@ -56,13 +71,52 @@ lagsarlm <- function(formula, data = list(), listw,
             fdHess <- NULL
         }
         stopifnot(is.logical(con$fdHess))
+        stopifnot(is.numeric(con$OrdVsign))
+        stopifnot(length(con$OrdVsign) == 1)
+        stopifnot(abs(con$OrdVsign) == 1)
 	xcolnames <- colnames(x)
 	K <- ifelse(xcolnames[1] == "(Intercept)", 2, 1)
 	wy <- lag.listw(listw, y, zero.policy=zero.policy)
 	if (any(is.na(wy))) stop("NAs in lagged dependent variable")
-	if (type != "lag") {
-                WX <- create_WX(x, listw, zero.policy=zero.policy,
-                    prefix="lag")
+        dvars <- c(NCOL(x), 0L)
+#FIXME
+	if (is.formula(Durbin) || isTRUE(Durbin)) {
+                prefix <- "lag"
+                if (isTRUE(Durbin)) {
+                    WX <- create_WX(x, listw, zero.policy=zero.policy,
+                        prefix=prefix)
+                } else {
+	            dmf <- lm(Durbin, data, na.action=na.action, 
+		        method="model.frame")
+                    fx <- try(model.matrix(Durbin, dmf), silent=TRUE)
+                    if (class(fx) == "try-error") 
+                        stop("Durbin variable mis-match")
+                    WX <- create_WX(fx, listw, zero.policy=zero.policy,
+                        prefix=prefix)
+                    inds <- match(substring(colnames(WX), 5,
+	                nchar(colnames(WX))), colnames(x))
+                    if (anyNA(inds)) stop("WX variables not in X: ",
+                        paste(substring(colnames(WX), 5,
+                        nchar(colnames(WX)))[is.na(inds)], collapse=" "))
+                    icept <- grep("(Intercept)", colnames(x))
+                    iicept <- length(icept) > 0L
+                    if (iicept) {
+                        xn <- colnames(x)[-1]
+                    } else {
+                        xn <- colnames(x)
+                    }
+                    wxn <- substring(colnames(WX), nchar(prefix)+2,
+                        nchar(colnames(WX)))
+                    zero_fill <- NULL
+                    if (length((which(!(xn %in% wxn)))) > 0L)
+                        zero_fill <- length(xn) + (which(!(xn %in% wxn)))
+                }
+                dvars <- c(NCOL(x), NCOL(WX))
+                if (is.formula(Durbin)) {
+                    attr(dvars, "f") <- Durbin
+                    attr(dvars, "inds") <- inds
+                    attr(dvars, "zero_fill") <- zero_fill
+                }
 		x <- cbind(x, WX)
 		m <- NCOL(x)
 		rm(WX)
@@ -72,9 +126,17 @@ lagsarlm <- function(formula, data = list(), listw,
 	aliased <- is.na(coefficients(lm.base))
 	cn <- names(aliased)
 	names(aliased) <- substr(cn, 2, nchar(cn))
+#FIXME
 	if (any(aliased)) {
-		nacoef <- which(aliased)
+          if (is.formula(Durbin)) {
+	    stop("Aliased variables found: ",
+                paste(names(aliased)[aliased], collapse=" "))
+          } else {
+	    warning("Aliased variables found: ",
+                paste(names(aliased)[aliased], collapse=" "))
+	    nacoef <- which(aliased)
 		x <- x[,-nacoef]
+          }
 	}
 	LL_null_lm <- logLik(lm(y ~ 1))
 	m <- NCOL(x)
@@ -166,7 +228,8 @@ lagsarlm <- function(formula, data = list(), listw,
 #			t(AW %*% x %*% coef.rho) %*%
 #			(AW %*% x %*% coef.rho)) + omega*s2^2
 		V <- s2*(s2*tr(crossprod(AW)) +
-			crossprod(AW %*% x %*% coef.rho)) + omega*s2^2
+			crossprod(AW %*% x %*% coef.rho)) +
+                        sign(con$OrdVsign)*omega*s2^2
 		inf1 <- rbind(n/2, s2*tr(AW), t(zero))
 		inf2 <- rbind(s2*tr(AW), V, xtawxb)
 #		xtx <- s2*t(x) %*% x
@@ -240,7 +303,8 @@ lagsarlm <- function(formula, data = list(), listw,
         if (method=="SE_classic") {
             iC <- get("intern_classic", envir=env)
         } else iC <- NULL
-	ret <- structure(list(type=type, rho=rho, 
+#FIXME
+	ret <- structure(list(type=type, dvars=dvars, rho=rho, 
 		coefficients=coef.rho, rest.se=rest.se, 
 		LL=LL, s2=s2, SSE=SSE, parameters=(m+2), #lm.model=lm.null,
                 logLik_lm.model=logLik_lm.model, AIC_lm.model=AIC_lm.model,
