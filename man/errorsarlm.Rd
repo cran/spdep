@@ -1,8 +1,9 @@
-% Copyright 2002-16 by Roger S. Bivand
+% Copyright 2002-18 by Roger S. Bivand
 \name{errorsarlm}
 \alias{errorsarlm}
 \alias{lmSLX}
 \alias{create_WX}
+\alias{spBreg_err}
 %\alias{sar.error.f}
 %\alias{sar.error.f.s}
 \title{Spatial simultaneous autoregressive error model estimation}
@@ -18,6 +19,8 @@ where \eqn{\lambda}{lambda} is found by \code{optimize()} first, and \eqn{\beta}
 errorsarlm(formula, data=list(), listw, na.action, weights=NULL,
  Durbin, etype, method="eigen", quiet=NULL, zero.policy=NULL,
  interval = NULL, tol.solve=1.0e-10, trs=NULL, control=list())
+spBreg_err(formula, data = list(), listw, na.action, Durbin, etype,
+    zero.policy=NULL, control=list())
 lmSLX(formula, data = list(), listw, na.action, weights=NULL,
  Durbin=TRUE, zero.policy=NULL)
 create_WX(x, listw, zero.policy=NULL, prefix="")
@@ -96,6 +99,34 @@ variable in making predictions for the fitting data.
   \item{pre_eig}{default NULL; may be used to pass a pre-computed vector of eigenvalues}
 }}
 
+\section{Extra Bayesian control arguments}{
+\describe{
+  \item{ldet_method}{default \dQuote{SE_classic}; equivalent to the \code{method} argument in \code{lagsarlm}}
+  \item{interval}{default \code{c(-1, 1)}; used unmodified or set internally by \code{jacobianSetup}}
+  \item{ndraw}{default \code{2500L}; integer total number of draws}
+  \item{nomit}{default \code{500L}; integer total number of omitted burn-in draws}
+  \item{thin}{default \code{1L}; integer thinning proportion}
+  \item{verbose}{default \code{FALSE}; inverse of \code{quiet} argument in \code{lagsarlm}}
+  \item{detval}{default \code{NULL}; not yet in use, precomputed matrix of log determinants}
+  \item{prior}{a list with the following components:
+    \describe{
+      \item{lambdaMH}{default FALSE; if TRUE use Metropolis or FALSE griddy Gibbs}
+      \item{Tbeta}{default \code{NULL}; values of the betas variance-covariance matrix, set to \code{diag(k)*1e+12} if \code{NULL}}
+      \item{c_beta}{default \code{NULL}; values of the betas set to 0 if \code{NULL}}
+      \item{rho}{default \code{0.5}; value of the autoregressive coefficient}
+      \item{sige}{default \code{1}; value of the residual variance}
+      \item{nu}{default \code{0}; informative Gamma(nu,d0) prior on sige}
+      \item{d0}{default \code{0}; informative Gamma(nu,d0) prior on sige}
+      \item{a1}{default \code{1.01}; parameter for beta(a1,a2) prior on rho}
+      \item{a2}{default \code{1.01}; parameter for beta(a1,a2) prior on rho}
+      \item{cc}{default \code{0.2}; initial tuning parameter for M-H sampling}
+      \item{gG_sige}{default TRUE; include sige in lambda griddy Gibbs update}
+    }}
+}
+
+}
+
+
 \value{
   A list object of class \code{sarlm}
   \item{type}{"error"}
@@ -171,15 +202,15 @@ Bivand, R. S., Hauke, J., and Kossowski, T. (2013). Computing the Jacobian in Ga
 \examples{
 data(oldcol)
 lw <- nb2listw(COL.nb, style="W")
-COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- lw, method="eigen", quiet=FALSE)
-summary(COL.errW.eig)
 ev <- eigenw(similar.listw(lw))
+COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
+ lw, quiet=FALSE, control=list(pre_eig=ev))
+summary(COL.errW.eig)
 COL.errW.eig_ev <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- lw, method="eigen", control=list(pre_eig=ev))
+ lw, control=list(pre_eig=ev))
 all.equal(coefficients(COL.errW.eig), coefficients(COL.errW.eig_ev))
 COL.errB.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- nb2listw(COL.nb, style="B"), method="eigen", quiet=FALSE)
+ nb2listw(COL.nb, style="B"))
 summary(COL.errB.eig)
 W <- as(nb2listw(COL.nb), "CsparseMatrix")
 trMatc <- trW(W, type="mult")
@@ -187,13 +218,13 @@ COL.errW.M <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
  lw, method="Matrix", quiet=FALSE, trs=trMatc)
 summary(COL.errW.M)
 COL.SDEM.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- lw, method="eigen", etype="emixed")
+ lw, etype="emixed", control=list(pre_eig=ev))
 summary(COL.SDEM.eig)
 COL.SDEM.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- lw, method="eigen", Durbin=TRUE)
+ lw, Durbin=TRUE, control=list(pre_eig=ev))
 summary(COL.SDEM.eig)
 COL.SDEM.eig <- errorsarlm(CRIME ~ DISCBD + INC + HOVAL, data=COL.OLD,
- lw, method="eigen", Durbin=~INC)
+ lw, Durbin=~INC, control=list(pre_eig=ev))
 summary(COL.SDEM.eig)
 summary(impacts(COL.SDEM.eig))
 COL.SLX <- lmSLX(CRIME ~ INC + HOVAL, data=COL.OLD, listw=lw)
@@ -237,45 +268,83 @@ COL.err.NA
 resid(COL.err.NA)
 \donttest{
 lw <- nb2listw(COL.nb, style="W")
-system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- lw, method="eigen"))
+print(system.time(ev <- eigenw(similar.listw(lw))))
+print(system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
+ lw, method="eigen", control=list(pre_eig=ev))))
 ocoef <- coefficients(COL.errW.eig)
-system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- lw, method="eigen", control=list(LAPACK=FALSE)))
-all.equal(ocoef, coefficients(COL.errW.eig))
-system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- lw, method="eigen", control=list(compiled_sse=TRUE)))
-all.equal(ocoef, coefficients(COL.errW.eig))
-system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- lw, method="Matrix_J", control=list(super=TRUE)))
-all.equal(ocoef, coefficients(COL.errW.eig))
-system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- lw, method="Matrix_J", control=list(super=FALSE)))
-all.equal(ocoef, coefficients(COL.errW.eig))
-system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- lw, method="Matrix_J", control=list(super=as.logical(NA))))
-all.equal(ocoef, coefficients(COL.errW.eig))
-system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- lw, method="Matrix", control=list(super=TRUE)))
-all.equal(ocoef, coefficients(COL.errW.eig))
-system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- lw, method="Matrix", control=list(super=FALSE)))
-all.equal(ocoef, coefficients(COL.errW.eig))
-system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- lw, method="Matrix", control=list(super=as.logical(NA))))
-all.equal(ocoef, coefficients(COL.errW.eig))
-system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- lw, method="spam", control=list(spamPivot="MMD")))
-all.equal(ocoef, coefficients(COL.errW.eig))
-system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- lw, method="spam", control=list(spamPivot="RCM")))
-all.equal(ocoef, coefficients(COL.errW.eig))
-system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- lw, method="spam_update", control=list(spamPivot="MMD")))
-all.equal(ocoef, coefficients(COL.errW.eig))
-system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
- lw, method="spam_update", control=list(spamPivot="RCM")))
-all.equal(ocoef, coefficients(COL.errW.eig))
+print(system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
+ lw, method="eigen", control=list(pre_eig=ev, LAPACK=FALSE))))
+print(all.equal(ocoef, coefficients(COL.errW.eig)))
+print(system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
+ lw, method="eigen", control=list(pre_eig=ev, compiled_sse=TRUE))))
+print(all.equal(ocoef, coefficients(COL.errW.eig)))
+print(system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
+ lw, method="Matrix_J", control=list(super=TRUE))))
+print(all.equal(ocoef, coefficients(COL.errW.eig)))
+print(system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
+ lw, method="Matrix_J", control=list(super=FALSE))))
+print(all.equal(ocoef, coefficients(COL.errW.eig)))
+print(system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
+ lw, method="Matrix_J", control=list(super=as.logical(NA)))))
+print(all.equal(ocoef, coefficients(COL.errW.eig)))
+print(system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
+ lw, method="Matrix", control=list(super=TRUE))))
+print(all.equal(ocoef, coefficients(COL.errW.eig)))
+print(system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
+ lw, method="Matrix", control=list(super=FALSE))))
+print(all.equal(ocoef, coefficients(COL.errW.eig)))
+print(system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
+ lw, method="Matrix", control=list(super=as.logical(NA)))))
+print(all.equal(ocoef, coefficients(COL.errW.eig)))
+print(system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
+ lw, method="spam", control=list(spamPivot="MMD"))))
+print(all.equal(ocoef, coefficients(COL.errW.eig)))
+print(system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
+ lw, method="spam", control=list(spamPivot="RCM"))))
+print(all.equal(ocoef, coefficients(COL.errW.eig)))
+print(system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
+ lw, method="spam_update", control=list(spamPivot="MMD"))))
+print(all.equal(ocoef, coefficients(COL.errW.eig)))
+print(system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
+ lw, method="spam_update", control=list(spamPivot="RCM"))))
+print(all.equal(ocoef, coefficients(COL.errW.eig)))
+}
+\dontrun{
+if (require(coda, quietly=TRUE)) {
+set.seed(1)
+COL.err.Bayes <- spBreg_err(CRIME ~ INC + HOVAL, data=COL.OLD, listw=lw)
+print(summary(COL.err.Bayes))
+print(raftery.diag(COL.err.Bayes, r=0.01))
+set.seed(1)
+COL.err.Bayes <- spBreg_err(CRIME ~ INC + HOVAL, data=COL.OLD, listw=lw,
+ control=list(prior=list(lambdaMH=TRUE)))
+print(summary(COL.err.Bayes))
+print(raftery.diag(COL.err.Bayes, r=0.01))
+set.seed(1)
+COL.err.Bayes <- spBreg_err(CRIME ~ INC + HOVAL, data=COL.OLD, listw=lw,
+ Durbin=TRUE)
+print(summary(COL.err.Bayes))
+print(summary(impacts(COL.err.Bayes)))
+print(raftery.diag(COL.err.Bayes, r=0.01))
+set.seed(1)
+COL.err.Bayes <- spBreg_err(CRIME ~ INC + HOVAL, data=COL.OLD, listw=lw,
+ Durbin=TRUE, control=list(prior=list(lambdaMH=TRUE)))
+print(summary(COL.err.Bayes))
+print(summary(impacts(COL.err.Bayes)))
+print(raftery.diag(COL.err.Bayes, r=0.01))
+set.seed(1)
+COL.err.Bayes <- spBreg_err(CRIME ~ INC + HOVAL, data=COL.OLD, listw=lw,
+ Durbin=~INC)
+print(summary(COL.err.Bayes))
+print(summary(impacts(COL.err.Bayes)))
+print(raftery.diag(COL.err.Bayes, r=0.01))
+set.seed(1)
+COL.err.Bayes <- spBreg_err(CRIME ~ INC + HOVAL, data=COL.OLD, listw=lw,
+ Durbin=~INC, control=list(prior=list(lambdaMH=TRUE)))
+print(summary(COL.err.Bayes))
+print(summary(impacts(COL.err.Bayes)))
+print(raftery.diag(COL.err.Bayes, r=0.01))
+}
 }
 }
 \keyword{spatial}
