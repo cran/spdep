@@ -23,20 +23,22 @@ returns a list of lagged neighbours lists each with class \code{nb}
 \seealso{\code{\link{summary.nb}}}
 
 \examples{
-if (require(rgdal, quietly=TRUE)) {
-example(columbus, package="spData")
-coords <- coordinates(columbus)
+columbus <- st_read(system.file("shapes/columbus.shp", package="spData")[1], quiet=TRUE)
+col.gal.nb <- read.gal(system.file("weights/columbus.gal", package="spData")[1])
+coords <- coordinates(as(columbus, "Spatial"))
 summary(col.gal.nb, coords)
-plot(columbus, border="grey")
+col.lags <- nblag(col.gal.nb, 2)
+print(col.lags)
+summary(col.lags[[2]], coords)
+plot(st_geometry(columbus), border="grey")
 plot(col.gal.nb, coords, add=TRUE)
 title(main="GAL order 1 (black) and 2 (red) links")
-col.lags <- nblag(col.gal.nb, 2)
-lapply(col.lags, print)
-summary(col.lags[[2]], coords)
 plot(col.lags[[2]], coords, add=TRUE, col="red", lty=2)
 cuml <- nblag_cumul(col.lags)
 cuml
-if (require(igraph)) {
+run <- FALSE
+if (require(igraph, quietly=TRUE)) run <- TRUE
+if (run) {
 W <- as(nb2listw(col.gal.nb), "CsparseMatrix")
 G <- graph.adjacency(W, mode="directed", weight="W")
 D <- diameter(G)
@@ -47,8 +49,6 @@ mat <- matrix(0, n, n)
 for (i in seq(along=lmat)) mat = mat + i*lmat[[i]]
 G2 <- shortest.paths(G)
 print(all.equal(G2, mat, check.attributes=FALSE))
-
-}
 }
 }
 \keyword{spatial}

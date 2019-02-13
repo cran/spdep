@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-<title>Spatial weights objects as sparse matrices and graphs</title>
+<title>Introduction</title>
 
 <script type="text/javascript">
 window.onload = function() {
@@ -204,18 +204,7 @@ hr {
 </head>
 
 <body>
-<!--
-%\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{Spatial weights objects as sparse matrices and graphs}
--->
-
-<h1>Spatial weights objects as sparse matrices and graphs</h1>
-
-<h1></h1>
-
 <h2>Introduction</h2>
-
-<h1></h1>
 
 <p>Since the <strong>spdep</strong> package was created, <em>spatial weights</em> objects have been constructed as lists with three components and a few attributes, in old-style class <code>listw</code> objects. The first component of a <code>listw</code> object is an <code>nb</code> object, a list of <code>n</code> integer vectors, with at least a character vector <code>region.id</code> attribute with <code>n</code> unique values (like the <code>row.names</code> of a <code>data.frame</code> object); <code>n</code> is the number of spatial entities. Component <code>i</code> of this list contains the integer identifiers of the neighbours of <code>i</code> as a sorted vector with no duplication and values in <code>1:n</code>; if <code>i</code> has no neighbours, the component is a vector of length <code>1</code> with value <code>0L</code>. The <code>nb</code> object may contain an attribute indicating whether it is symmetric or not, that is whether <code>i</code> is a neighbour of <code>j</code> implies that <code>j</code> is a neighbour of <code>i</code>. Some neighbour definitions are symmetric by construction, such as contiguities or distance thresholds, others are asymmetric, such as <code>k</code>-nearest neighbours. The <code>nb</code> object redundantly stores both <code>i</code>-<code>j</code> and <code>j</code>-<code>i</code> links.</p>
 
@@ -230,15 +219,6 @@ hr {
 <p>Since <strong>Matrix</strong> is a recommended package, its functionality has increasingly been used over time, and it has become one of two packages on which <strong>spdep</strong> depends. This is reported on loading:</p>
 
 <pre><code class="r">library(spdep)
-</code></pre>
-
-<pre><code>## Loading required package: sp
-</code></pre>
-
-<pre><code>## Loading required package: Matrix
-</code></pre>
-
-<pre><code>## Loading required package: spData
 </code></pre>
 
 <h3>Getting some data</h3>
@@ -257,7 +237,7 @@ if (dothis) {
 </code></pre>
 
 <pre><code>##           GDAL GDAL_with_GEOS         PROJ.4             sp 
-##        &quot;2.3.2&quot;         &quot;TRUE&quot;        &quot;5.2.0&quot;        &quot;1.3-1&quot;
+##        &quot;2.4.0&quot;         &quot;TRUE&quot;        &quot;5.2.0&quot;        &quot;1.3-1&quot;
 </code></pre>
 
 <pre><code class="r">library(rgdal)
@@ -346,8 +326,6 @@ plot(col2, coords, add=TRUE)
 
 <h2>Using sparse matrices to represent spatial weights</h2>
 
-<h1></h1>
-
 <p>At present only <code>listw</code> objects can be coerced to objects of classes defined in <strong>Matrix</strong>. Because the <code>style</code> is lost on coercion, it may not be possible to reconstruct spatial weights as the sparse matrix representation does not preserve it. We will start with symmetric binary weights, first creating a spatial weights object, and signalling that one entity has no neighbours with the <code>zero.policy</code> argument (default false). The matrix and graph representations of no-neighbour entities are not obvious.</p>
 
 <pre><code class="r">nb_B &lt;- nb2listw(col2, style=&quot;B&quot;, zero.policy=TRUE)
@@ -361,7 +339,7 @@ nb_B$style
 
 <p><strong>spdep</strong> provides coercion methods from <code>listw</code> to the <code>&quot;symmetricMatrix&quot;</code>, <code>&quot;RsparseMatrix&quot;</code> and <code>&quot;CsparseMatrix&quot;</code> classes defined in <strong>Matrix</strong>. The <code>&quot;RsparseMatrix&quot;</code> is the representation that is most similar to <code>listw</code>, as it is row-based, but it is used less frequently in operations on sparse matrices. The entity IDs are passed using sparse matrix row and column names at present. Here we believe that our <code>listw</code> object can be represented as a symmetric matrix, storing only a triangle rather than both <code>i</code>-<code>j</code> and <code>j</code>-<code>i</code> weights. The coercion method does check whether symmetry is present before proceeding:</p>
 
-<pre><code class="r">B &lt;- as(nb_B, &quot;symmetricMatrix&quot;)
+<pre><code class="r">B &lt;- as(nb_B, &quot;CsparseMatrix&quot;)
 all(B == t(B))
 </code></pre>
 
@@ -371,15 +349,14 @@ all(B == t(B))
 <pre><code class="r">str(B)
 </code></pre>
 
-<pre><code>## Formal class &#39;dsTMatrix&#39; [package &quot;Matrix&quot;] with 7 slots
-##   ..@ i       : int [1:115] 0 0 1 1 2 2 3 3 4 4 ...
-##   ..@ j       : int [1:115] 1 2 2 3 3 4 4 7 5 7 ...
+<pre><code>## Formal class &#39;dgCMatrix&#39; [package &quot;Matrix&quot;] with 6 slots
+##   ..@ i       : int [1:230] 1 2 0 2 3 0 1 3 4 1 ...
+##   ..@ p       : int [1:50] 0 2 5 9 13 21 23 27 33 41 ...
 ##   ..@ Dim     : int [1:2] 49 49
 ##   ..@ Dimnames:List of 2
 ##   .. ..$ : chr [1:49] &quot;0&quot; &quot;1&quot; &quot;2&quot; &quot;3&quot; ...
 ##   .. ..$ : chr [1:49] &quot;0&quot; &quot;1&quot; &quot;2&quot; &quot;3&quot; ...
-##   ..@ x       : num [1:115] 1 1 1 1 1 1 1 1 1 1 ...
-##   ..@ uplo    : chr &quot;U&quot;
+##   ..@ x       : num [1:230] 1 1 1 1 1 1 1 1 1 1 ...
 ##   ..@ factors : list()
 </code></pre>
 
@@ -433,7 +410,7 @@ I &lt;- Diagonal(n)
 class(I - rho * B)
 </code></pre>
 
-<pre><code>## [1] &quot;dsCMatrix&quot;
+<pre><code>## [1] &quot;dgCMatrix&quot;
 ## attr(,&quot;package&quot;)
 ## [1] &quot;Matrix&quot;
 </code></pre>
@@ -451,7 +428,7 @@ nChol &lt;- Cholesky(nW, Imult=8)
 n * log(rho) + (2 * c(determinant(update(nChol, nW, 1/rho))$modulus))
 </code></pre>
 
-<pre><code>## [1] -1.44787
+<pre><code>## [1] 15.40218
 </code></pre>
 
 <h3>Asymmetric sparse matrices</h3>
@@ -588,9 +565,9 @@ rowSums(Ws)[21]
 
 <p>As can be seen, the division by the square root of zero for entity 21 is not a problem as the row of <code>dW</code> is zero. The transformation by similarity permits the use of numerical methods for sparse symmetric matrices (and equivalently for eigenvalues and dense matrices). Note that this transformation is not available for intrinsically asymmetric neighbours, or for intrinsically asymmetric general weights.</p>
 
-<h3>Using <code>arpack</code> in <strong>igraph</strong> for finding some eigenvalues</h3>
+<h3>Using <code>eigs</code> in <strong>RSpectra</strong> for finding some eigenvalues</h3>
 
-<p>In spatial regression, the domain of the spatial coefficient is given by the inverse of the maximum and minimum eigenvalues. When <code>n</code> is moderate, we have the eigenvalues anyway, so the interval for line search is available without extra effort. When <code>n</code> is somewhat larger, use may be made of the <code>arpack</code> function in <strong>igraph</strong>. The function is not stable and requires manual tuning, so its use is commented out here:</p>
+<p>In spatial regression, the domain of the spatial coefficient is given by the inverse of the maximum and minimum eigenvalues. When <code>n</code> is moderate, we have the eigenvalues anyway, so the interval for line search is available without extra effort. When <code>n</code> is somewhat larger, use may be made of the <code>eigs</code> function in <strong>RSpectra</strong>:</p>
 
 <pre><code class="r">1/range(eigenw(nb_B))
 </code></pre>
@@ -598,7 +575,53 @@ rowSums(Ws)[21]
 <pre><code>## [1] -0.3212551  0.1638329
 </code></pre>
 
-<pre><code class="r">library(igraph)
+<pre><code class="r">if (!require(&quot;RSpectra&quot;, quietly=TRUE)) dothis &lt;- FALSE
+1/c(eigs(B, k=1, which=&quot;SR&quot;)$values, eigs(B, k=1, which=&quot;LR&quot;)$values)
+</code></pre>
+
+<pre><code>## [1] -0.3212551  0.1638329
+</code></pre>
+
+<p>In this case, the results are trivial with small <code>k</code>.</p>
+
+<pre><code class="r">1/range(eigenw(nb_W))
+</code></pre>
+
+<pre><code>## [1] -1.544645  1.000000
+</code></pre>
+
+<pre><code class="r">1/Re(c(eigs(W, k=1, which=&quot;SR&quot;)$values, eigs(W, k=1, which=&quot;LR&quot;)$values))
+</code></pre>
+
+<pre><code>## [1] -1.544645  1.000000
+</code></pre>
+
+<p>Using row-standardisation has the nice feature of setting the upper bound to unity, and there are graph methods for finding out whether the lower bound is <code>-1</code>.</p>
+
+<h2>Using <strong>igraph</strong> for spatial weights as graphs</h2>
+
+<h3>Converting from symmetric adjacency matrix to graph</h3>
+
+<p>First we&#39;ll see how to get from sparse matrices to graphs. The mode of a symmetric matrix is <code>&quot;undirected&quot;</code> by definition:</p>
+
+<pre><code class="r">class(B)
+</code></pre>
+
+<pre><code>## [1] &quot;dgCMatrix&quot;
+## attr(,&quot;package&quot;)
+## [1] &quot;Matrix&quot;
+</code></pre>
+
+<pre><code class="r">object.size(B)
+</code></pre>
+
+<pre><code>## 10824 bytes
+</code></pre>
+
+<pre><code class="r">if (!require(&quot;igraph&quot;, quietly=FALSE)) dothis &lt;- FALSE
+</code></pre>
+
+<pre><code>## Loading required package: igraph
 </code></pre>
 
 <pre><code>## 
@@ -615,57 +638,7 @@ rowSums(Ws)[21]
 ##     union
 </code></pre>
 
-<pre><code class="r">#f2 &lt;- function(x, extra=NULL) {as.vector(B %*% x)}
-#1/arpack(f2, sym=TRUE, options=list(n=n, nev=1, ncv=8, which=&quot;LA&quot;, maxiter=200))$values
-#1/arpack(f2, sym=TRUE, options=list(n=n, nev=1, ncv=8, which=&quot;SA&quot;, maxiter=200))$values
-# At line 409 of file dsaupd.f: Fortran runtime error: Actual string
-# length is shorter than the declared one for dummy argument &#39;which&#39; (0/2)
-#1/arpack(f2, sym=TRUE, options=list(n=n, nev=2, ncv=8, which=&quot;BE&quot;, maxiter=200))$values
-# &quot;BE&quot; gives: At line 558 of file dsaup2.f: Fortran runtime error: 
-# Index &#39;9&#39; of dimension 1 of array &#39;bounds&#39; above upper bound of 8
-</code></pre>
-
-<p>In this case, the results are trivial with small <code>n</code> and a symmetric sparse matrix. It can be challenging to find the <code>maxiter=</code> cutoff for larger <code>n</code>; the <code>which=&quot;BE&quot;</code> argument takes both ends here.</p>
-
-<pre><code class="r">1/range(eigenw(nb_W))
-</code></pre>
-
-<pre><code>## [1] -1.544645  1.000000
-</code></pre>
-
-<pre><code class="r">f2 &lt;- function(x, extra=NULL) {as.vector(W %*% x)}
-#1/arpack(f2, sym=FALSE, options=list(n=n, nev=1, ncv=8, which=&quot;LR&quot;, maxiter=200))$values
-#1/arpack(f2, sym=FALSE, options=list(n=n, nev=1, ncv=8, which=&quot;SR&quot;, maxiter=200))$values
-# At line 409 of file dsaupd.f: Fortran runtime error: Actual string
-# length is shorter than the declared one for dummy argument &#39;which&#39; (0/2)
-</code></pre>
-
-<p>For asymmetric matrices, we need to go to each end separately, so finding the domain bounds can be hard. Using row-standardisation has the nice feature of setting the upper bound to unity, and there are graph methods for finding out whether the lower bound is <code>-1</code>.</p>
-
-<h2>Using <strong>igraph</strong> for spatial weights as graphs</h2>
-
-<h1></h1>
-
-<h3>Converting from symmetric adjacency matrix to graph</h3>
-
-<p>First we&#39;ll see how to get from sparse matrices to graphs. The mode of a symmetric matrix is <code>&quot;undirected&quot;</code> by definition:</p>
-
-<pre><code class="r">class(B)
-</code></pre>
-
-<pre><code>## [1] &quot;dsTMatrix&quot;
-## attr(,&quot;package&quot;)
-## [1] &quot;Matrix&quot;
-</code></pre>
-
-<pre><code class="r">object.size(B)
-</code></pre>
-
-<pre><code>## 9936 bytes
-</code></pre>
-
-<pre><code class="r">library(igraph)
-g1 &lt;- graph.adjacency(B, mode=&quot;undirected&quot;)
+<pre><code class="r">g1 &lt;- graph.adjacency(B, mode=&quot;undirected&quot;)
 class(g1)
 </code></pre>
 
@@ -700,7 +673,8 @@ class(B1)
 <pre><code class="r">all.equal(B, as(as(B1, &quot;dgTMatrix&quot;), &quot;symmetricMatrix&quot;))
 </code></pre>
 
-<pre><code>## [1] TRUE
+<pre><code>## [1] &quot;Length mismatch: comparison on first 2 components&quot;
+## [2] &quot;class(target) is dgCMatrix, current is dsTMatrix&quot;
 </code></pre>
 
 <h3>Graph components in <strong>spdep</strong></h3>

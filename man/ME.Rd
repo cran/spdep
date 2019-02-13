@@ -8,8 +8,8 @@
   The Moran eigenvector filtering function is intended to remove spatial autocorrelation from the residuals of generalised linear models. It uses brute force eigenvector selection to reach a subset of such vectors to be added to the RHS of the GLM model to reduce residual autocorrelation to below the specified alpha value. Since eigenvector selection only works on symmetric weights, the weights are made symmetric before the eigenvectors are found (from spdep 0.5-50).
 }
 \usage{
-ME(formula, data, family = gaussian, weights, offset, listw,
- alpha=0.05, nsim=99, verbose=NULL, stdev=FALSE)
+ME(formula, data, family = gaussian, weights, offset, na.action, listw,
+ alpha=0.05, nsim=99, verbose=NULL, stdev=FALSE, zero.policy = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -19,11 +19,13 @@ ME(formula, data, family = gaussian, weights, offset, listw,
           be used in the model}
   \item{weights}{an optional vector of weights to be used in the fitting process}
   \item{offset}{this can be used to specify an a priori known component to be included in the linear predictor during fitting}
+  \item{na.action}{a function (default \code{options("na.action")}), can also be \code{na.omit} or \code{na.exclude} with consequences for residuals and fitted values - in these cases the spatial weights list will be subsetted to remove NAs in the data. It may be necessary to set zero.policy to TRUE because this subsetting may create no-neighbour observations. Note that only weights lists created without using the glist argument to \code{nb2listw} may be subsetted.}
   \item{listw}{a \code{listw} object created for example by \code{nb2listw}}
   \item{alpha}{used as a stopping rule to choose all eigenvectors up to and including the one with a p-value exceeding alpha}
   \item{nsim}{number of permutations for permutation bootstrap for finding p-values}
   \item{verbose}{default NULL, use global option value; if TRUE report eigenvectors selected}
   \item{stdev}{if TRUE, p-value calculated from bootstrap permutation standard deviate using \code{pnorm} with alternative="greater", if FALSE the Hope-type p-value}
+  \item{zero.policy}{default NULL, use global option value; if FALSE stop with error for any empty neighbour sets, if TRUE permit the weights list to be formed with zero-length weights vectors}
 }
 \details{
   The eigenvectors for inclusion are chosen by calculating the empirical Moran's I values for the initial model plus each of the doubly centred symmetric spatial weights matrix eigenvectors in turn. Then the first eigenvector is chosen as that with the lowest Moran's I value. The procedure is repeated until the lowest remaining Moran's I value has a permutation-based probability value above alpha. The probability value is either Hope-type or based on using the mean and standard deviation of the permutations to calculate ZI based on the stdev argument.
@@ -47,30 +49,40 @@ An object of class \code{ME_res}:
 
 \examples{
 \dontrun{
-if (require(rgdal, quietly=TRUE)) {
-example(columbus, package="spData")
+columbus <- st_read(system.file("shapes/columbus.shp", package="spData")[1], quiet=TRUE)
+col.gal.nb <- read.gal(system.file("weights/columbus.gal", package="spData")[1])
 lmbase <- lm(CRIME ~ INC + HOVAL, data=columbus)
 lagcol <- SpatialFiltering(CRIME ~ 1, ~ INC + HOVAL, data=columbus,
  nb=col.gal.nb, style="W", alpha=0.1, verbose=TRUE)
 lagcol
 lmlag <- lm(CRIME ~ INC + HOVAL + fitted(lagcol), data=columbus)
-anova(lmlag)
 anova(lmbase, lmlag)
 set.seed(123)
 lagcol1 <- ME(CRIME ~ INC + HOVAL, data=columbus, family="gaussian",
  listw=nb2listw(col.gal.nb), alpha=0.1, verbose=TRUE)
 lagcol1
 lmlag1 <- lm(CRIME ~ INC + HOVAL + fitted(lagcol1), data=columbus)
-anova(lmlag1)
 anova(lmbase, lmlag1)
 set.seed(123)
 lagcol2 <- ME(CRIME ~ INC + HOVAL, data=columbus, family="gaussian",
  listw=nb2listw(col.gal.nb), alpha=0.1, stdev=TRUE, verbose=TRUE)
 lagcol2
 lmlag2 <- lm(CRIME ~ INC + HOVAL + fitted(lagcol2), data=columbus)
-anova(lmlag2)
 anova(lmbase, lmlag2)
-example(nc.sids, package="spData")
+NA.columbus <- columbus
+NA.columbus$CRIME[20:25] <- NA
+COL.ME.NA <- ME(CRIME ~ INC + HOVAL, data=NA.columbus, family="gaussian",
+ listw=nb2listw(col.gal.nb), alpha=0.1, stdev=TRUE, verbose=TRUE,
+ na.action=na.exclude)
+COL.ME.NA$na.action
+summary(lm(CRIME ~ INC + HOVAL + fitted(COL.ME.NA), data=NA.columbus,
+ na.action=na.exclude))
+nc.sids <- st_read(system.file("shapes/sids.shp", package="spData")[1], quiet=TRUE)
+rn <- as.character(nc.sids$FIPS)
+ncCC89_nb <- read.gal(system.file("weights/ncCC89.gal", package="spData")[1],
+ region.id=rn)
+ncCR85_nb <- read.gal(system.file("weights/ncCR85.gal", package="spData")[1],
+ region.id=rn)
 glmbase <- glm(SID74 ~ 1, data=nc.sids, offset=log(BIR74),
  family="poisson")
 set.seed(123)
@@ -93,7 +105,6 @@ MEbinom1 <- ME(c(hopkins_part) ~ 1, family="binomial",
 glmME <- glm(c(hopkins_part) ~ 1 + fitted(MEbinom1), family="binomial")
 anova(glmME, test="Chisq")
 anova(glmbase, glmME, test="Chisq")
-}
 }
 \keyword{spatial}
 

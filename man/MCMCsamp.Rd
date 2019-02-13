@@ -29,9 +29,13 @@ MCMCsamp(object, mcmc = 1L, verbose = NULL, ...)
 
 \seealso{\code{\link[LearnBayes]{rwmetrop}}, \code{\link{spautolm}}, \code{\link{lagsarlm}}, \code{\link{errorsarlm}}, \code{\link{sacsarlm}}}
 \examples{
-if (require(foreign, quietly=TRUE)) {
-example(NY_data, package="spData")
 \dontrun{
+nydata <- st_read(system.file("shapes/NY8_bna_utm18.gpkg", package="spData")[1], quiet=TRUE)
+suppressMessages(nyadjmat <- as.matrix(foreign::read.dbf(system.file(
+ "misc/nyadjwts.dbf", package="spData")[1])[-1]))
+suppressMessages(ID <- as.character(names(foreign::read.dbf(system.file(
+ "misc/nyadjwts.dbf", package="spData")[1]))[-1]))
+identical(substring(ID, 2, 10), substring(as.character(nydata$AREAKEY), 2, 10))
 esar1f <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
  listw=listw_NY, family="SAR", method="eigen")
 summary(esar1f)
@@ -94,7 +98,6 @@ ssar1 <- sacsarlm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
 summary(ssar1)
 res <- MCMCsamp(ssar1, mcmc=5000, burnin=500, listw=listw_NY)
 summary(res)
-}
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

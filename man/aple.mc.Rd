@@ -25,9 +25,16 @@ aple.mc(x, listw, nsim, override_similarity_check=FALSE, useTrace=TRUE)
 
 \seealso{\code{\link{aple}}, \code{\link[boot]{boot}}}
 \examples{
-\donttest{
-if (require(rgdal, quietly=TRUE)) {
-example(aple)
+\dontrun{
+wheat <- st_read(system.file("shapes/wheat.shp", package="spData")[1], quiet=TRUE)
+nbr1 <- poly2nb(wheat, queen=FALSE)
+nbrl <- nblag(nbr1, 2)
+nbr12 <- nblag_cumul(nbrl)
+wheat_g <- wheat
+st_geometry(wheat_g) <- NULL
+cms0 <- with(wheat_g, tapply(yield, c, median))
+cms1 <- c(model.matrix(~ factor(c) -1, data=wheat) \%*\% cms0)
+wheat$yield_detrend <- wheat$yield - cms1
 oldRNG <- RNGkind()
 RNGkind("L'Ecuyer-CMRG")
 set.seed(1L)
@@ -57,7 +64,6 @@ if (!get.mcOption()) {
 boot_out_par
 invisible(set.coresOption(oldCores))
 RNGkind(oldRNG[1], oldRNG[2])
-}
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

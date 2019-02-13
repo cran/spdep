@@ -1,4 +1,4 @@
-% Copyright 2001-2014 by Roger S. Bivand
+% Copyright 2001-2019 by Roger S. Bivand
 \name{dnearneigh}
 \alias{dnearneigh}
 \title{Neighbourhood contiguity by distance}
@@ -9,7 +9,7 @@ The function identifies neighbours of region points by Euclidean distance betwee
 dnearneigh(x, d1, d2, row.names = NULL, longlat = NULL, bounds=c("GT", "LE"))
 }
 \arguments{
-  \item{x}{matrix of point coordinates or a SpatialPoints object}
+  \item{x}{matrix of point coordinates or a SpatialPoints object or an \code{sf} or \code{sfc} points object}
   \item{d1}{lower distance bound}
   \item{d2}{upper distance bound}
   \item{row.names}{character vector of region ids to be added to the neighbours list as attribute \code{region.id}, default \code{seq(1, nrow(x))}}
@@ -25,19 +25,21 @@ for neighbours satisfying the distance criteria. See \code{\link{card}} for deta
 \seealso{\code{\link{knearneigh}}, \code{\link{card}}}
 
 \examples{
-if (require(rgdal, quietly=TRUE)) {
-example(columbus, package="spData")
-coords <- coordinates(columbus)
-rn <- sapply(slot(columbus, "polygons"), function(x) slot(x, "ID"))
+columbus <- st_read(system.file("shapes/columbus.shp", package="spData")[1], quiet=TRUE)
+coords <- st_centroid(st_geometry(columbus), of_largest_polygon=TRUE)
+rn <- row.names(columbus)
 k1 <- knn2nb(knearneigh(coords))
 all.linked <- max(unlist(nbdists(k1, coords)))
 col.nb.0.all <- dnearneigh(coords, 0, all.linked, row.names=rn)
 summary(col.nb.0.all, coords)
-plot(columbus, border="grey")
+opar <- par(no.readonly=TRUE)
+plot(st_geometry(columbus), border="grey", reset=FALSE,
+ main=paste("Distance based neighbours 0-",  format(all.linked), sep=""))
 plot(col.nb.0.all, coords, add=TRUE)
-title(main=paste("Distance based neighbours 0-",  format(all.linked),
- " distance units", sep=""))
-}
+par(opar)
+(sfc_obj <- st_centroid(st_geometry(columbus)))
+col.nb.0.all_sf <- dnearneigh(sfc_obj, 0, all.linked, row.names=rn)
+all.equal(col.nb.0.all, col.nb.0.all_sf, check.attributes=FALSE)
 data(state)
 us48.fipsno <- read.geoda(system.file("etc/weights/us48.txt",
  package="spdep")[1])
@@ -57,7 +59,7 @@ gc.nb <- dnearneigh(xy, 0, all.linked, longlat=TRUE)
 summary(gc.nb, xy, longlat=TRUE, scale=0.5)
 plot(ll.nb, xy)
 plot(diffnb(ll.nb, gc.nb), xy, add=TRUE, col="red", lty=2)
-title(main="Differences between Euclidean and Great Circle neighbours")
+title(main="Differences Euclidean/Great Circle")
 
 xy1 <- SpatialPoints((as.data.frame(state.center))[m50.48,],
   proj4string=CRS("+proj=longlat +ellps=GRS80"))

@@ -24,9 +24,7 @@
 %%\format{}
 %%\details{}
 \examples{
-if (require(rgdal, quietly=TRUE)) {
-bh <- readOGR(system.file("etc/shapes/bhicv.shp",
+bh <- st_read(system.file("etc/shapes/bhicv.shp",
       package="spdep")[1])
-}
 }
 \keyword{data}% at least one, from doc/KEYWORDS

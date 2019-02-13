@@ -113,8 +113,14 @@ contour(aa, levels=signif(levs, 4), add=TRUE)
 COL.errW.GM1 <- GMerrorsar(CRIME ~ INC + HOVAL, data=COL.OLD,
  nb2listw(COL.nb, style="W"))
 summary(COL.errW.GM1)
-if (require(foreign, quietly=TRUE)) {
-example(NY_data, package="spData")
+nydata <- st_read(system.file("shapes/NY8_bna_utm18.gpkg", package="spData")[1], quiet=TRUE)
+suppressMessages(nyadjmat <- as.matrix(foreign::read.dbf(system.file(
+ "misc/nyadjwts.dbf", package="spData")[1])[-1]))
+suppressMessages(ID <- as.character(names(foreign::read.dbf(system.file(
+ "misc/nyadjwts.dbf", package="spData")[1]))[-1]))
+identical(substring(ID, 2, 10), substring(as.character(nydata$AREAKEY), 2, 10))
+nyadjlw <- mat2listw(nyadjmat, as.character(nydata$AREAKEY))
+listw_NY <- nb2listw(nyadjlw$neighbours, style="B")
 esar1f <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
  listw=listw_NY, family="SAR", method="eigen")
 summary(esar1f)
@@ -124,7 +130,6 @@ summary(esar1gm)
 esar1gm1 <- GMerrorsar(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
  data=nydata, listw=listw_NY, method="Nelder-Mead")
 summary(esar1gm1)
-}
 }
 \keyword{spatial}
 

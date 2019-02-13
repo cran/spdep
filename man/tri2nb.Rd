@@ -12,7 +12,7 @@ ids.
 tri2nb(coords, row.names = NULL)
 }
 \arguments{
-  \item{coords}{matrix of point coordinates with two columns}
+  \item{coords}{matrix of point coordinates with two columns, a SpatialPoints object or an \code{sfc} points object}
   \item{row.names}{character vector of region ids to be added to the neighbours list as attribute \code{region.id}, default \code{seq(1, nrow(x))}}
 }
 
@@ -38,15 +38,14 @@ The function returns an object of class \code{nb} with a list of integer vectors
 \seealso{\code{\link{knn2nb}}, \code{\link{dnearneigh}}, \code{\link{cell2nb}}}
 
 \examples{
-if (require(rgdal, quietly=TRUE)) {
-example(columbus, package="spData")
-coords <- coordinates(columbus)
-ind <- sapply(slot(columbus, "polygons"), function(x) slot(x, "ID"))
+columbus <- st_read(system.file("shapes/columbus.shp", package="spData")[1], quiet=TRUE)
+coords <- st_centroid(st_geometry(columbus), of_largest_polygon=TRUE)
+ind <- row.names(columbus)
+suppressPackageStartupMessages(require(deldir))
 col.tri.nb <- tri2nb(coords, row.names=ind)
-W <- as(nb2listw(col.tri.nb, style="B"), "CsparseMatrix")
-plot(columbus, border="grey")
+plot(st_geometry(columbus), border="grey")
 plot(col.tri.nb, coords, add=TRUE)
-title(main="Raw triangulation links")
+title(main="Raw triangulation links", cex.main=0.6)
 x <- seq(0,1,0.1)
 y <- seq(0,2,0.2)
 xy <- expand.grid(x, y)
@@ -55,5 +54,5 @@ seed <- 1234
 xid <- sample(1:nrow(xy))
 xy.nb <- tri2nb(xy[xid,])
 plot(xy.nb, xy[xid,])
-}}
+}
 \keyword{spatial}

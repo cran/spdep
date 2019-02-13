@@ -68,10 +68,9 @@ Geographical Analysis, 34, pp. 187--206; Bivand RS, Wong DWS 2018 Comparing impl
 \seealso{\code{\link{lm.morantest}}}
 
 \examples{
-if (require(rgdal, quietly=TRUE)) {
-eire <- readOGR(system.file("shapes/eire.shp", package="spData")[1])
+eire <- st_read(system.file("shapes/eire.shp", package="spData")[1])
 row.names(eire) <- as.character(eire$names)
-proj4string(eire) <- CRS("+proj=utm +zone=30 +ellps=airy +units=km")
+st_crs(eire) <- "+proj=utm +zone=30 +ellps=airy +units=km"
 eire.nb <- poly2nb(eire)
 e.lm <- lm(OWNCONS ~ ROADACC, data=eire)
 lm.morantest(e.lm, nb2listw(eire.nb))
@@ -80,6 +79,5 @@ summary(lm.morantest.sad(e.lm, nb2listw(eire.nb)))
 e.wlm <- lm(OWNCONS ~ ROADACC, data=eire, weights=RETSALE)
 lm.morantest(e.wlm, nb2listw(eire.nb), resfun=rstudent)
 lm.morantest.sad(e.wlm, nb2listw(eire.nb), resfun=rstudent)
-}
 }
 \keyword{spatial}

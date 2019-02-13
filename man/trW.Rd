@@ -37,8 +37,8 @@ A numeric vector of \code{m} traces, with \dQuote{timings} and \dQuote{type} att
 \code{\link{as_dgRMatrix_listw}}, \code{\link{nb2listw}}
 }
 \examples{
-if (require(rgdal, quietly=TRUE)) {
-example(columbus, package="spData")
+columbus <- st_read(system.file("shapes/columbus.shp", package="spData")[1], quiet=TRUE)
+col.gal.nb <- read.gal(system.file("weights/columbus.gal", package="spData")[1])
 listw <- nb2listw(col.gal.nb)
 W <- as(listw, "CsparseMatrix")
 system.time(trMat <- trW(W, type="mult"))
@@ -63,8 +63,7 @@ all.equal(trMat, trmom, check.attributes=FALSE)
 set.seed(1)
 system.time(trMC <- trW(W, m=24, type="MC"))
 str(trMC)
-}
-\donttest{
+\dontrun{
 data(boston, package="spData")
 listw <- nb2listw(boston.soi)
 listwS <- similar.listw(listw)

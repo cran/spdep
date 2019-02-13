@@ -32,10 +32,9 @@ A \code{listw} object with the following members:
  
 \seealso{\code{\link{nb2listw}}, \code{\link{nb2mat}}}
 \examples{
-if (require(rgdal, quietly=TRUE)) {
-example(columbus, package="spData")
-coords <- coordinates(columbus)
-col005 <- dnearneigh(coords, 0, 0.5, attr(col.gal.nb, "region.id"))
+columbus <- st_read(system.file("shapes/columbus.shp", package="spData")[1], quiet=TRUE)
+col005 <- dnearneigh(st_coordinates(st_centroid(st_geometry(columbus),
+ of_largest_polygon=TRUE)), 0, 0.5, as.character(columbus$NEIGNO))
 summary(col005)
 col005.w.mat <- nb2mat(col005, zero.policy=TRUE)
 col005.w.b <- mat2listw(col005.w.mat)
@@ -51,6 +50,5 @@ diffnb(col005, col005.spM$neighbours)
 IW <- kronecker(Diagonal(3), W)
 col005.spM.3T <- mat2listw(IW, style="W")
 summary(col005.spM.3T$neighbours)
-}
 }
 \keyword{spatial}

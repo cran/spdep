@@ -130,27 +130,33 @@ Ord, J. K. 1975 Estimation methods for models of spatial interaction,
 \seealso{\code{\link[stats]{optimize}}, \code{\link{errorsarlm}}, \code{\link{do_ldet}}}
 \examples{
 \dontrun{
-if (require(foreign, quietly=TRUE)) {
-example(NY_data, package="spData")
+nydata <- st_read(system.file("shapes/NY8_bna_utm18.gpkg", package="spData")[1], quiet=TRUE)
 lm0 <- lm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata)
 summary(lm0)
 lm0w <- lm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata, weights=POP8)
 summary(lm0w)
+suppressMessages(nyadjmat <- as.matrix(foreign::read.dbf(system.file(
+ "misc/nyadjwts.dbf", package="spData")[1])[-1]))
+suppressMessages(ID <- as.character(names(foreign::read.dbf(system.file(
+ "misc/nyadjwts.dbf", package="spData")[1]))[-1]))
+identical(substring(ID, 2, 10), substring(as.character(nydata$AREAKEY), 2, 10))
+nyadjlw <- mat2listw(nyadjmat, as.character(nydata$AREAKEY))
+listw_NY <- nb2listw(nyadjlw$neighbours, style="B")
 esar0 <- errorsarlm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
  listw=listw_NY)
 summary(esar0)
 system.time(esar1f <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
- data=nydata, listw=listw_NY, family="SAR", method="eigen", verbose=TRUE))
+ data=nydata, listw=listw_NY, family="SAR", method="eigen"))
 res <- summary(esar1f)
 print(res)
 sqrt(diag(res$resvar))
 sqrt(diag(esar1f$fit$imat)*esar1f$fit$s2)
 sqrt(diag(esar1f$fdHess))
 system.time(esar1M <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
- data=nydata, listw=listw_NY, family="SAR", method="Matrix", verbose=TRUE))
+ data=nydata, listw=listw_NY, family="SAR", method="Matrix"))
 summary(esar1M)
 system.time(esar1M <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
- data=nydata, listw=listw_NY, family="SAR", method="Matrix", verbose=TRUE,
+ data=nydata, listw=listw_NY, family="SAR", method="Matrix",
  control=list(super=TRUE)))
 summary(esar1M)
 esar1wf <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME, data=nydata,
@@ -177,9 +183,8 @@ summary(ecar1wf)
 system.time(ecar1wM <- spautolm(Z ~ PEXPOSURE + PCTAGE65P + PCTOWNHOME,
  data=nydata, listw=listw_NY, weights=POP8, family="CAR", method="Matrix"))
 summary(ecar1wM)
-}}
-if (require(rgdal, quietly=TRUE)) {
-example(nc.sids, package="spData")
+}
+nc.sids <- st_read(system.file("shapes/sids.shp", package="spData")[1], quiet=TRUE)
 ft.SID74 <- sqrt(1000)*(sqrt(nc.sids$SID74/nc.sids$BIR74) +
  sqrt((nc.sids$SID74+1)/nc.sids$BIR74))
 lm_nc <- lm(ft.SID74 ~ 1)
@@ -197,7 +202,7 @@ ft.NWBIR74 <- sqrt(1000)*(sqrt(nc.sids$NWBIR74/nc.sids$BIR74) +
  sqrt((nc.sids$NWBIR74+1)/nc.sids$BIR74))
 mdata <- data.frame(both, ft.NWBIR74, ft.SID74, BIR74=nc.sids$BIR74)
 outl <- which.max(rstandard(lm_nc))
-as.character(nc.sids$names[outl])
+as.character(nc.sids$NAME[outl])
 mdata.4 <- mdata[-outl,]
 W <- listw2mat(sids.nhbr.listw)
 W.4 <- W[-outl, -outl]
@@ -233,8 +238,7 @@ ecarIVaw <- spautolm(ft.SID74 ~ ft.NWBIR74, data=mdata.4,
  listw=sids.nhbr.listw.4, weights=BIR74, family="CAR")
 summary(ecarIVaw)
 nc.sids$fitIV <- append(fitted.values(ecarIVaw), NA, outl-1)
-spplot(nc.sids, c("fitIV"), cuts=12) # Cressie 1993, p. 565
-}
+plot(nc.sids[,"fitIV"], nbreaks=12) # Cressie 1993, p. 565
 \dontrun{
 data(oldcol)
 COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,

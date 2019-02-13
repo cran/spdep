@@ -33,7 +33,7 @@ of model specification are given for \code{lm()}}
 By default the variables are taken from the environment which the function 
 is called.}
   \item{listw}{a \code{listw} object created for example by \code{nb2listw}}
-  \item{na.action}{a function (default \code{options("na.action")}), can also be \code{na.omit} or \code{na.exclude} with consequences for residuals and fitted values - in these cases the weights list will be subsetted to remove NAs in the data. It may be necessary to set zero.policy to TRUE because this subsetting may create no-neighbour observations. Note that only weights lists created without using the glist argument to \code{nb2listw} may be subsetted.}
+  \item{na.action}{a function (default \code{options("na.action")}), can also be \code{na.omit} or \code{na.exclude} with consequences for residuals and fitted values - in these cases the spatial weights list will be subsetted to remove NAs in the data. It may be necessary to set zero.policy to TRUE because this subsetting may create no-neighbour observations. Note that only weights lists created without using the glist argument to \code{nb2listw} may be subsetted.}
   \item{weights}{an optional vector of weights to be used in the fitting process. Non-NULL weights can be used to indicate that different observations have different variances (with the values in weights being inversely proportional to the variances); or equivalently, when the elements of weights are positive integers w_i, that each response y_i is the mean of w_i unit-weight observations (including the case that there are w_i observations equal to y_i and the data have been summarized) - \code{\link{lm}}}
   \item{Durbin}{default FALSE for \code{errorsarlm}, TRUE for \code{lmSLX} (Durbin model including WX); if TRUE, full spatial Durbin model; if a formula object, the subset of explanatory variables to lag}
   \item{etype}{(use the \sQuote{Durbin=} argument - retained for backwards compatibility only) default "error", may be set to "emixed" to include the spatially lagged independent variables added to X; when "emixed", the lagged intercept is dropped for spatial weights style "W", that is row-standardised weights, but otherwise included}
@@ -239,7 +239,7 @@ summary(COL.SLX)
 COL.SLX <- lmSLX(CRIME ~ INC, data=COL.OLD, listw=lw)
 summary(COL.SLX)
 summary(impacts(COL.SLX))
-\donttest{
+\dontrun{
 crds <- cbind(COL.OLD$X, COL.OLD$Y)
 mdist <- sqrt(sum(diff(apply(crds, 2, range))^2))
 dnb <- dnearneigh(crds, 0, mdist)
@@ -266,7 +266,7 @@ COL.err.NA <- errorsarlm(CRIME ~ INC + HOVAL, data=NA.COL.OLD,
 COL.err.NA$na.action
 COL.err.NA
 resid(COL.err.NA)
-\donttest{
+\dontrun{
 lw <- nb2listw(COL.nb, style="W")
 print(system.time(ev <- eigenw(similar.listw(lw))))
 print(system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
@@ -310,7 +310,7 @@ print(system.time(COL.errW.eig <- errorsarlm(CRIME ~ INC + HOVAL, data=COL.OLD,
 print(all.equal(ocoef, coefficients(COL.errW.eig)))
 }
 \dontrun{
-if (require(coda, quietly=TRUE)) {
+library(coda)
 set.seed(1)
 COL.err.Bayes <- spBreg_err(CRIME ~ INC + HOVAL, data=COL.OLD, listw=lw)
 print(summary(COL.err.Bayes))
@@ -344,7 +344,6 @@ COL.err.Bayes <- spBreg_err(CRIME ~ INC + HOVAL, data=COL.OLD, listw=lw,
 print(summary(COL.err.Bayes))
 print(summary(impacts(COL.err.Bayes)))
 print(raftery.diag(COL.err.Bayes, r=0.01))
-}
 }
 }
 \keyword{spatial}

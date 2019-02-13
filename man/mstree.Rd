@@ -45,11 +45,11 @@ mstree(nbw, ini = NULL)
 %%\seealso{ ~~objects to See Also as \code{\link{help}}, ~~~ }
 \examples{
 ### loading data
-require(maptools)
-bh <- readShapePoly(system.file("etc/shapes/bhicv.shp",
-      package="spdep")[1])
+bh <- st_read(system.file("etc/shapes/bhicv.shp",
+      package="spdep")[1], quiet=TRUE)
+st_crs(bh) <- "+proj=longlat +ellps=WGS84"
 ### data padronized
-dpad <- data.frame(scale(bh@data[,5:8]))
+dpad <- data.frame(scale(as.data.frame(bh)[,5:8]))
 
 ### neighboorhod list 
 bh.nb <- poly2nb(bh)
@@ -62,18 +62,14 @@ nb.w <- nb2listw(bh.nb, lcosts, style="B")
 
 ### find a minimum spanning tree
 system.time(mst.bh <- mstree(nb.w,5))
-
 dim(mst.bh)
-
 head(mst.bh)
 tail(mst.bh)
-
 ### the mstree plot
 par(mar=c(0,0,0,0))
-plot(mst.bh, coordinates(bh), col=2, 
-     cex.lab=.7, cex.circles=0.035, fg="blue")
-plot(bh, border=gray(.5), add=TRUE)
-
+plot(st_geometry(bh), border=gray(.5))
+plot(mst.bh, coordinates(as(bh, "Spatial")), col=2, 
+     cex.lab=.6, cex.circles=0.035, fg="blue", add=TRUE)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

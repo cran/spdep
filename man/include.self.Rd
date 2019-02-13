@@ -19,11 +19,10 @@ The function returns an object of class \code{nb} with a list of integer vectors
 \seealso{\code{\link{summary.nb}}}
 
 \examples{
-if (require(rgdal, quietly=TRUE)) {
-example(columbus, package="spData")
-coords <- coordinates(columbus)
+columbus <- st_read(system.file("shapes/columbus.shp", package="spData")[1], quiet=TRUE)
+col.gal.nb <- read.gal(system.file("weights/columbus.gal", package="spData")[1])
+coords <- coordinates(as(columbus, "Spatial"))
 summary(col.gal.nb, coords)
 summary(include.self(col.gal.nb), coords)
-}
 }
 \keyword{spatial}

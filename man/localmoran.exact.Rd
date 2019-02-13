@@ -72,10 +72,9 @@ When the alternative is being tested, a list of left and right M products in att
 
 \seealso{\code{\link{lm.morantest.exact}}, \code{\link{localmoran.sad}}}
 \examples{
-if (require(rgdal, quietly=TRUE)) {
-eire <- readOGR(system.file("shapes/eire.shp", package="spData")[1])
+eire <- st_read(system.file("shapes/eire.shp", package="spData")[1])
 row.names(eire) <- as.character(eire$names)
-proj4string(eire) <- CRS("+proj=utm +zone=30 +ellps=airy +units=km")
+st_crs(eire) <- "+proj=utm +zone=30 +ellps=airy +units=km"
 eire.nb <- poly2nb(eire)
 e.lm <- lm(OWNCONS ~ ROADACC, data=eire)
 localmoran.sad(e.lm, nb=eire.nb)
@@ -89,7 +88,6 @@ Omega <- invIrW(nb2listw(eire.nb), rho=0.6)
 Omega1 <- tcrossprod(Omega)
 localmoran.exact.alt(lm.target, nb=eire.nb, Omega=Omega1)
 localmoran.exact.alt(lm.target, nb=eire.nb, Omega=Omega1, useTP=TRUE)
-}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

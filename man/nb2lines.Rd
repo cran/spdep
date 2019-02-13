@@ -3,9 +3,9 @@
 \alias{listw2lines}
 \alias{df2sn}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{Use arc-type shapefiles for import and export of weights}
+\title{Use vector files for import and export of weights}
 \description{
-  Use arc-type shapefiles for import and export of weights, storing spatial entity coordinates in the arcs, and the entity indices in the data frame.
+  Use vector files for import and export of weights, storing spatial entity coordinates in the arcs, and the entity indices in the data frame.
 }
 \usage{
 nb2lines(nb, wts, coords, proj4string=CRS(as.character(NA)))
@@ -39,17 +39,16 @@ df2sn(df, i="i", i_ID="i_ID", j="j", wt="wt")
 \seealso{\code{\link{sn2listw}}, \code{\link[maptools]{readShapeLines}}}
 
 \examples{
-#require(maptools)
-if (require(rgdal, quietly=TRUE)) {
-example(columbus)
-coords <- coordinates(columbus)
+columbus <- st_read(system.file("shapes/columbus.shp", package="spData")[1], quiet=TRUE)
+col.gal.nb <- read.gal(system.file("weights/columbus.gal", package="spData")[1])
+coords <- coordinates(as(columbus, "Spatial"))
 res <- listw2lines(nb2listw(col.gal.nb), coords)
 summary(res)
-tf <- paste0(tempdir(), "/nbshape.gpkg")
-writeOGR(res, dsn=tf, layer="nbshape", driver="GPKG")
-inMap <- readOGR(tf)
+tf <- paste0(tempfile(), ".gpkg")
+st_write(st_as_sf(res), dsn=tf, driver="GPKG")
+inMap <- st_read(tf)
 summary(inMap)
-diffnb(sn2listw(df2sn(as(inMap, "data.frame")))$neighbours, col.gal.nb)
-}}
+diffnb(sn2listw(df2sn(as.data.frame(inMap)))$neighbours, col.gal.nb)
+}
 \keyword{spatial}
 

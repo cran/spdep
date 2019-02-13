@@ -27,22 +27,20 @@ aple(x, listw, override_similarity_check=FALSE, useTrace=TRUE)
 \seealso{\code{\link{nb2listw}}, \code{\link{aple.mc}}, \code{\link{aple.plot}}
 }
 \examples{
-if (require(rgdal, quietly=TRUE)) {
-wheat <- readOGR(system.file("shapes/wheat.shp", package="spData"))
+wheat <- st_read(system.file("shapes/wheat.shp", package="spData")[1], quiet=TRUE)
 nbr1 <- poly2nb(wheat, queen=FALSE)
 nbrl <- nblag(nbr1, 2)
 nbr12 <- nblag_cumul(nbrl)
-cms0 <- with(as(wheat, "data.frame"), tapply(yield, c, median))
+cms0 <- with(as.data.frame(wheat), tapply(yield, c, median))
 cms1 <- c(model.matrix(~ factor(c) -1, data=wheat) \%*\% cms0)
 wheat$yield_detrend <- wheat$yield - cms1
-isTRUE(all.equal(c(with(as(wheat, "data.frame"),
+isTRUE(all.equal(c(with(as.data.frame(wheat),
  tapply(yield_detrend, c, median))), rep(0.0, 25),
  check.attributes=FALSE))
 moran.test(wheat$yield_detrend, nb2listw(nbr12, style="W"))
 aple(as.vector(scale(wheat$yield_detrend, scale=FALSE)), nb2listw(nbr12, style="W"))
-\donttest{
+\dontrun{
 errorsarlm(yield_detrend ~ 1, wheat, nb2listw(nbr12, style="W"))
-}
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

@@ -1,6 +1,7 @@
 useDynLib(spdep)
 
 import(spData)
+import(sf)
 importFrom(stats, model.matrix, model.response, aggregate, optimize, optim, nlminb, influence.measures, lag, punif, na.fail, as.formula, terms, lm, model.extract, coefficients, residuals, var, deviance, integrate, summary.lm, coef, pchisq, logLik, gaussian, pnorm, model.weights, model.offset, glm.fit, sd, predict, formula, lm.fit, anova, ppois, model.frame, AIC, qnorm, napredict, nlm, optimHess, resid, fitted, weighted.residuals, weights, naresid, rnorm, optimise, uniroot, mahalanobis, dist, p.adjust, density, fitted.values, delete.response, printCoefmat, quantile, na.omit, cor, predict.lm)
 importFrom("stats", "dbeta", "rchisq", "runif")
 importFrom("stats", "spline")
@@ -116,6 +117,8 @@ export(lee.mc, lee, lee.test)
 export(spBreg_lag, spBreg_err, spBreg_sac)
 
 export(LOSH, LOSH.cs, LOSH.mc)
+
+export(grid2nb)
 
 #import(maptools)
 

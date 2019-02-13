@@ -107,8 +107,8 @@ Roger Bivand, Gianfranco Piras (2015). Comparing Implementations of Estimation M
 \code{\link{trW}}, \code{\link{lagsarlm}}, \code{\link{nb2listw}}, \code{\link[MASS]{mvrnorm}}, \code{\link[coda]{plot.mcmc}}, \code{\link[coda]{summary.mcmc}}, \code{\link[coda]{HPDinterval}}
 }
 \examples{
-if (require(rgdal, quietly=TRUE)) {
-example(columbus, package="spData")
+columbus <- st_read(system.file("shapes/columbus.shp", package="spData")[1], quiet=TRUE)
+col.gal.nb <- read.gal(system.file("weights/columbus.gal", package="spData")[1])
 listw <- nb2listw(col.gal.nb)
 ev <- eigenw(listw)
 lobj <- lagsarlm(CRIME ~ INC + HOVAL, columbus, listw,
@@ -146,7 +146,7 @@ impacts(mobj, tr=trMatc)
 impacts(mobj, tr=trMC)
 impacts(mobj1, tr=trMatc)
 impacts(mobj1, listw=listw)
-try(impacts(mobj, evalues=ev))
+cat(try(impacts(mobj, evalues=ev), silent=TRUE), "\n")
 summary(impacts(mobj, tr=trMatc, R=200), short=TRUE, zstats=TRUE)
 summary(impacts(mobj1, tr=trMatc, R=200), short=TRUE, zstats=TRUE)
 xobj <- lmSLX(CRIME ~ INC + HOVAL, columbus, listw)
@@ -194,7 +194,6 @@ mobj <- lagsarlm(form, house, lw, type="mixed",
 summary(mobj)
 moobj <- impacts(mobj, tr=trMat, R=1000)
 summary(moobj, zstats=TRUE, short=TRUE)
-}
 }
 }
 \keyword{spatial}
