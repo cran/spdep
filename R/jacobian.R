@@ -2,6 +2,14 @@
 
 # Chebyshev approximation setup and run functions
 cheb_setup <- function(env, q=5, which=1) {
+    .Deprecated("spatialreg::cheb_setup", msg="Function cheb_setup moved to the spatialreg package")
+#    if (!requireNamespace("spatialreg", quietly=TRUE))
+#      stop("install the spatialreg package")
+    if (requireNamespace("spatialreg", quietly=TRUE)) {
+      return(spatialreg::cheb_setup(env=env, q=5, which=which))
+    }
+    warning("install the spatialreg package")
+#  if (FALSE) {
     if (which == 1) {
         W <- as(get("listw", envir=env), "CsparseMatrix")
     } else {
@@ -33,7 +41,8 @@ cheb_setup <- function(env, q=5, which=1) {
     assign("method", "Chebyshev", envir=env)
     invisible(NULL)
 }
-
+#}
+#if (FALSE) {
 cheb_ldet <- function(alpha, env, which=1) {
 # trT output from cheb_setup()
 # alpha spatial coefficient
@@ -62,9 +71,17 @@ cheb_ldet <- function(alpha, env, which=1) {
     x <- x - (n/2)*C1
     x
 }
-
+#}
 # MC approximation setup and run functions
 mcdet_setup <- function(env, p=16, m=30, which=1) {
+    .Deprecated("spatialreg::mcdet_setup", msg="Function mcdet_setup moved to the spatialreg package")
+#    if (!requireNamespace("spatialreg", quietly=TRUE))
+#      stop("install the spatialreg package")
+    if (requireNamespace("spatialreg", quietly=TRUE)) {
+      return(spatialreg::mcdet_setup(env=env, p=p, m=m, which=which))
+    }
+    warning("install the spatialreg package")
+#  if (FALSE) {
         if (which == 1) {
           W <- as(get("listw", envir=env), "CsparseMatrix")
         } else {
@@ -96,7 +113,9 @@ mcdet_setup <- function(env, p=16, m=30, which=1) {
         assign("method", "MC", envir=env)
         invisible(NULL)
 }
+#}
 
+#if (FALSE) {
 mcdet_ldet <- function(alpha, env, which=1) {
 # clx output from mcdet_setup()
 # alpha spatial coefficient
@@ -114,8 +133,17 @@ mcdet_ldet <- function(alpha, env, which=1) {
         attr(res, "sd") <- sd(v)/sqrt(clx$p)
         res
 }
+#}
 
 eigen_setup <- function(env, which=1) {
+    .Deprecated("spatialreg::eigen_setup", msg="Function eigen_setup moved to the spatialreg package")
+#    if (!requireNamespace("spatialreg", quietly=TRUE))
+#      stop("install the spatialreg package")
+    if (requireNamespace("spatialreg", quietly=TRUE)) {
+      return(spatialreg::eigen_setup(env=env, which=which))
+    }
+    warning("install the spatialreg package")
+#  if (FALSE) {
     if (get("verbose", envir=env))
        cat("Computing eigenvalues ...\n")
     if (which == 1) {
@@ -143,8 +171,17 @@ eigen_setup <- function(env, which=1) {
     assign("method", "eigen", envir=env)
     invisible(NULL)
 }
+#}
 
 eigen_pre_setup <- function(env, pre_eig, which=1) {
+    .Deprecated("spatialreg::eigen_pre_setup", msg="Function eigen_pre_setup moved to the spatialreg package")
+#    if (!requireNamespace("spatialreg", quietly=TRUE))
+#      stop("install the spatialreg package")
+    if (requireNamespace("spatialreg", quietly=TRUE)) {
+      return(spatialreg::eigen_pre_setup(env=env, pre_eig=pre_eig, which=which))
+    }
+    warning("install the spatialreg package")
+#  if (FALSE) {
     stopifnot(length(pre_eig) == get("n", envir=env))
     if (which == 1) {
 	if (is.complex(pre_eig))
@@ -159,9 +196,18 @@ eigen_pre_setup <- function(env, pre_eig, which=1) {
     assign("method", "eigen", envir=env)
     invisible(NULL)
 }
+#}
 
 
 do_ldet <- function(coef, env, which=1) {
+    .Deprecated("spatialreg::do_ldet", msg="Function do_ldet moved to the spatialreg package")
+#    if (!requireNamespace("spatialreg", quietly=TRUE))
+#      stop("install the spatialreg package")
+    if (requireNamespace("spatialreg", quietly=TRUE)) {
+      return(spatialreg::do_ldet(coef=coef, env=env, which=which))
+    }
+    warning("install the spatialreg package")
+#  if (FALSE) {
     method <- get("method", envir=env)
     if (get("family", envir=env) == "SMA") {
         ldet <- eigen_sma_ldet(coef, env, which=which)
@@ -184,7 +230,9 @@ do_ldet <- function(coef, env, which=1) {
     }
     ldet
 }
+#}
 
+#if (FALSE) {
 eigen_sma_ldet <- function(coef, env, which=1) {
     eig <- get("eig", envir=env)
 # modified 110414 RSB
@@ -205,8 +253,16 @@ eigen_ldet <- function(coef, env, which=1) {
     else det <- sum(log(1 - coef * eig))
     det
 }
-
+#}
 spam_setup <- function(env, pivot="MMD", which=1) {
+    .Deprecated("spatialreg::spam_setup", msg="Function spam_setup moved to the spatialreg package")
+#    if (!requireNamespace("spatialreg", quietly=TRUE))
+#      stop("install the spatialreg package")
+    if (requireNamespace("spatialreg", quietly=TRUE)) {
+      return(spatialreg::spam_setup(env=env, pivot=pivot, which=which))
+    }
+    warning("install the spatialreg package")
+#  if (FALSE) {
 #    if (!require(spam)) stop("spam not available")
   if (requireNamespace("spam", quietly = TRUE)) {
     if (which == 1) {
@@ -232,9 +288,11 @@ spam_setup <- function(env, pivot="MMD", which=1) {
   } else {
     stop("spam not available")
   }
-  invisible(NULL)
+#  invisible(NULL)
 }
+#}
 
+#if (FALSE) {
 spam_ldet <- function(coef, env, which=1) {
   if (requireNamespace("spam", quietly = TRUE)) {
 #    if (!require(spam)) stop("spam not available")
@@ -257,8 +315,16 @@ spam_ldet <- function(coef, env, which=1) {
     stop("spam not available")
   }
 }
-
+#}
 spam_update_setup <- function(env, in_coef=0.1, pivot="MMD", which=1) {
+    .Deprecated("spatialreg::spam_update_setup", msg="Function spam_update_setup moved to the spatialreg package")
+#    if (!requireNamespace("spatialreg", quietly=TRUE))
+#      stop("install the spatialreg package")
+    if (requireNamespace("spatialreg", quietly=TRUE)) {
+      return(spatialreg::spam_update_setup(env=env, in_coef=in_coef, pivot=pivot, which=which))
+    }
+    warning("install the spatialreg package")
+#  if (FALSE) {
 #    if (!require(spam)) stop("spam not available")
   if (requireNamespace("spam", quietly = TRUE)) {
     if (which == 1) {
@@ -289,9 +355,12 @@ spam_update_setup <- function(env, in_coef=0.1, pivot="MMD", which=1) {
   } else {
     stop("spam not available")
   }
-  invisible(NULL)
+#  invisible(NULL)
 }
+#}
 
+
+#if (FALSE) {
 spam_update_ldet <- function(coef, env, which=1) {
 #    if (!require(spam)) stop("spam not available")
   if (requireNamespace("spam", quietly = TRUE)) {
@@ -318,9 +387,18 @@ spam_update_ldet <- function(coef, env, which=1) {
   } else {
     stop("spam not available")
   }
+#}
 }
 
 Matrix_setup <- function(env, Imult, super=as.logical(NA), which=1) {
+    .Deprecated("spatialreg::Matrix_setup", msg="Function Matrix_setup moved to the spatialreg package")
+#    if (!requireNamespace("spatialreg", quietly=TRUE))
+#      stop("install the spatialreg package")
+    if (requireNamespace("spatialreg", quietly=TRUE)) {
+      return(spatialreg::Matrix_setup(env=env, Imult=Imult, super=super, which=which))
+    }
+    warning("install the spatialreg package")
+#  if (FALSE) {
     if (which == 1) {
         if (get("listw", envir=env)$style %in% c("W", "S") && 
             get("can.sim", envir=env)) {
@@ -355,9 +433,13 @@ Matrix_setup <- function(env, Imult, super=as.logical(NA), which=1) {
     .f <- 2
     assign(".f", .f, envir=env)
     assign("method", "Matrix", envir=env)
-    invisible(NULL)
+#    invisible(NULL)
 }
+#    }
+    warning("install the spatialreg package")
+#}
 
+#if (FALSE) {
 Matrix_ldet <- function(coef, env, which=1) {
     if (which == 1) {
         csrw <- get("csrw", envir=env)
@@ -382,8 +464,16 @@ Matrix_ldet <- function(coef, env, which=1) {
             0.0))
     Jacobian
 }
-
+#}
 LU_setup <- function(env, which=1) {
+    .Deprecated("spatialreg::LU_setup", msg="Function LU_setup moved to the spatialreg package")
+#    if (!requireNamespace("spatialreg", quietly=TRUE))
+#      stop("install the spatialreg package")
+    if (requireNamespace("spatialreg", quietly=TRUE)) {
+      return(spatialreg::LU_setup(env=env, which=which))
+    }
+    warning("install the spatialreg package")
+#  if (FALSE) {
     if (which == 1) {
         W <- as(get("listw", envir=env), "CsparseMatrix")
         assign("W", W, envir=env)
@@ -396,7 +486,9 @@ LU_setup <- function(env, which=1) {
     assign("method", "LU", envir=env)
     invisible(NULL)
 }
+#}
 
+#if (FALSE) {
 LU_ldet <- function(coef, env, which=1) {
     I <- get("I", envir=env)
     if (which == 1) {
@@ -409,8 +501,16 @@ LU_ldet <- function(coef, env, which=1) {
     ldet <- sum(log(dU))
     ldet
 }
-
+#}
 LU_prepermutate_setup <- function(env, coef=0.1, order=FALSE, which=1) {
+    .Deprecated("spatialreg::LU_prepermutate_setup", msg="Function LU_prepermutate_setup moved to the spatialreg package")
+#    if (!requireNamespace("spatialreg", quietly=TRUE))
+#      stop("install the spatialreg package")
+    if (requireNamespace("spatialreg", quietly=TRUE)) {
+      return(spatialreg::LU_prepermutate_setup(env=env, coef=coef, order=order, which=which))
+    }
+    warning("install the spatialreg package")
+#  if (FALSE) {
     I <- as_dsCMatrix_I(get("n", envir=env))
     assign("I", I, envir=env)
     if (which == 1) {
@@ -431,7 +531,9 @@ LU_prepermutate_setup <- function(env, coef=0.1, order=FALSE, which=1) {
     assign("method", "LU_prepermutate", envir=env)
     invisible(NULL)
 }
+#}
 
+#if (FALSE) {
 LU_prepermutate_ldet <- function(coef, env, which=1) {
     I <- get("I", envir=env)
     if (which == 1) {
@@ -449,8 +551,16 @@ LU_prepermutate_ldet <- function(coef, env, which=1) {
     ldet <- sum(log(dU))
     ldet
 }
-
+#}
 Matrix_J_setup <- function(env, super=FALSE, which=1) {
+    .Deprecated("spatialreg::Matrix_J_setup", msg="Function Matrix_J_setup moved to the spatialreg package")
+#    if (!requireNamespace("spatialreg", quietly=TRUE))
+#      stop("install the spatialreg package")
+    if (requireNamespace("spatialreg", quietly=TRUE)) {
+      return(spatialreg::Matrix_J_setup(env=env, super=super, which=which))
+    }
+    warning("install the spatialreg package")
+#  if (FALSE) {
     if (which == 1) {
         if (get("listw", envir=env)$style %in% c("W", "S") && 
             get("can.sim", envir=env)) {
@@ -478,7 +588,9 @@ Matrix_J_setup <- function(env, super=FALSE, which=1) {
     assign("method", "Matrix_J", envir=env)
     invisible(NULL)
 }
+#}
 
+#if (FALSE) {
 Matrix_J_ldet <- function(coef, env, which=1) {
     I <- get("I", envir=env)
     super <- get("super", envir=env)
@@ -492,8 +604,9 @@ Matrix_J_ldet <- function(coef, env, which=1) {
     Jacobian <- .f * determinant(cch, logarithm = TRUE)$modulus
     Jacobian
 }
+#}
 
-
+#if (FALSE) {
 Rmrho <- function(Omega, m, rho, n, trunc=FALSE, q12, eq7=TRUE) {
     Om <- Omega[m]
     Om1 <- Omega[m-1]
@@ -563,9 +676,18 @@ ldetMoments <- function(Omega, rho, correct=TRUE, trunc=FALSE, q12,
     attr(res, "j") <- j
     res
 }
+#}
 
 moments_setup <- function(env, trs=NULL, m, p, type="MC", correct=TRUE,
     trunc=TRUE, eq7=TRUE, which=1) {
+    .Deprecated("spatialreg::moments_setup", msg="Function moments_setup moved to the spatialreg package")
+#    if (!requireNamespace("spatialreg", quietly=TRUE))
+#      stop("install the spatialreg package")
+    if (requireNamespace("spatialreg", quietly=TRUE)) {
+      return(spatialreg::moments_setup(env=env, trs=trs, m=m, p=p, type=type, correct=correct, trunc=trunc, eq7=eq7, which=which))
+    }
+    warning("install the spatialreg package")
+#  if (FALSE) {
     if (which == 1) {
         if (eq7) {
             q12 <- find_q1_q2(get("listw", envir=env))
@@ -608,9 +730,11 @@ moments_setup <- function(env, trs=NULL, m, p, type="MC", correct=TRUE,
     assign("eq7", eq7, envir=env)
     assign("m", m, envir=env)
     assign("method", "moments", envir=env)
-    invisible(NULL)
+#    invisible(NULL)
 }
+#}
 
+#if (FALSE) {
 moments_ldet <- function(x, env, which=1) {
     if (which == 1) {
         trs <- get("trs1", envir=env)
@@ -626,10 +750,19 @@ moments_ldet <- function(x, env, which=1) {
     Jacobian <- ldetMoments(trs, x, correct, trunc, q12, eq7, m)
     Jacobian
 }
-
+#}
 SE_classic_setup <- function(env, SE_method="LU", p=16, m=30, nrho=200,
   interpn=2000, interval=c(-1,0.999), SElndet=NULL, which=1) {
-#  stopifnot(require(splines))
+    .Deprecated("spatialreg::SE_classic_setup", msg="Function SE_classic_setup moved to the spatialreg package")
+#    if (!requireNamespace("spatialreg", quietly=TRUE))
+#      stop("install the spatialreg package")
+    if (requireNamespace("spatialreg", quietly=TRUE)) {
+      return(spatialreg::SE_classic_setup(env=env, SE_method=SE_method, p=p, m=m, nrho=nrho,
+  interpn=interpn, interval=interval, SElndet=SElndet, which=which))
+    }
+    warning("install the spatialreg package")
+#  if (FALSE) {
+##  stopifnot(require(splines))
 
   if (is.null(SElndet)) {
     SE_setup_intern(env, SE_method=SE_method, p=p, m=m, nrho=nrho,
@@ -656,10 +789,12 @@ SE_classic_setup <- function(env, SE_method="LU", p=16, m=30, nrho=200,
     assign("detval2", detval, envir=env)
   }
   assign("intern_classic", data.frame(), envir=env)
-  invisible(NULL)
+#  invisible(NULL)
  
 }
+#}
 
+#if (FALSE) {
 SE_setup_intern <- function(env, SE_method="LU", p=16, m=30, nrho=100,
   interval=c(-1,0.999), which=1) {
 
@@ -679,7 +814,7 @@ SE_setup_intern <- function(env, SE_method="LU", p=16, m=30, nrho=100,
         assign("detval2", detval, envir=env)
     }
 
-    invisible(NULL)
+#    invisible(NULL)
 }
 
 SE_classic_ldet <- function(x, env, which=1) {
@@ -716,10 +851,19 @@ SE_classic <- function(rho, detval) {
   res
 
 }
-
+#}
 SE_whichMin_setup <- function(env, SE_method="LU", p=16, m=30, nrho=200,
   interpn=2000, interval=c(-1,0.999), SElndet=NULL, which=1) {
-#  stopifnot(require(splines))
+    .Deprecated("spatialreg::SE_whichMin_setup", msg="Function SE_whichMin_setup moved to the spatialreg package")
+#    if (!requireNamespace("spatialreg", quietly=TRUE))
+#      stop("install the spatialreg package")
+    if (requireNamespace("spatialreg", quietly=TRUE)) {
+      return(spatialreg::SE_whichMin_setup(env=env, SE_method=SE_method, p=p, m=m, nrho=nrho,
+  interpn=interpn, interval=interval, SElndet=SElndet, which=which))
+    }
+    warning("install the spatialreg package")
+#  if (FALSE) {
+##  stopifnot(require(splines))
 
   if (is.null(SElndet)) {
     SE_setup_intern(env, SE_method=SE_method, p=p, m=m, nrho=nrho,
@@ -747,9 +891,11 @@ SE_whichMin_setup <- function(env, SE_method="LU", p=16, m=30, nrho=200,
     assign("detval2", detval, envir=env)
   }
 
-  invisible(NULL)
+#  invisible(NULL)
 }
+#}
 
+#if (FALSE) {
 SE_whichMin_ldet <- function(x, env, which=1) {
     if (which == 1) {
         detval <- get("detval1", envir=env)
@@ -770,15 +916,24 @@ SE_whichMin <- function(rho, detval) {
   i12 <- i1:i2
   mi12 <- which.min((detval[i12, 1]-rho)^2)
   index <- i12[mi12]
-#cat("index", index, "i1", i1, "i2", i2, "\n")
+##cat("index", index, "i1", i1, "i2", i2, "\n")
   if (index < 1 || index > dim(detval)[1]) stop("index out of bounds")
 
   detval[index, ]
 
 }
-
+#}
 SE_interp_setup <- function(env, SE_method="LU", p=16, m=30, nrho=200,
   interval=c(-1,0.999), which=1) {
+    .Deprecated("spatialreg::SE_interp_setup", msg="Function SE_interp_setup moved to the spatialreg package")
+#    if (!requireNamespace("spatialreg", quietly=TRUE))
+#      stop("install the spatialreg package")
+    if (requireNamespace("spatialreg", quietly=TRUE)) {
+      return(spatialreg::SE_interp_setup(env=env, SE_method=SE_method, p=p, m=m, nrho=nrho,
+  interval=interval, which=which))
+    }
+    warning("install the spatialreg package")
+#  if (FALSE) {
 
 #  stopifnot(require(splines))
 
@@ -798,9 +953,11 @@ SE_interp_setup <- function(env, SE_method="LU", p=16, m=30, nrho=200,
     assign("fit2", fit, envir=env)
   }
 
-  invisible(NULL)
+#  invisible(NULL)
 }
+#}
 
+#if (FALSE) {
 SE_interp_ldet <- function(x, env, which=1) {
     if (which == 1) {
         fit <- get("fit1", envir=env)
@@ -818,4 +975,6 @@ SE_interp <- function(rho, fit) {
   res <- predict(fit, rho)
   unname(unlist(res))
 }
+#}
+
 

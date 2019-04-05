@@ -55,17 +55,22 @@ invIrW <- function(x, rho, method="solve", feasible=NULL) {
 			stop(paste("Rho", rho, "outside feasible range:",
                         paste(feasible, collapse=":")))
 	}
-	if (method == "chol"){
-		if (x$style %in% c("W", "S") && !(can.be.simmed(x)))
+	if (!requireNamespace("spatialreg", quietly=TRUE)) method <- "solve"
+        if (method == "chol"){
+	  if (requireNamespace("spatialreg", quietly=TRUE)) {
+	    if (x$style %in% c("W", "S") && !(spatialreg::can.be.simmed(x)))
 			stop("Cholesky method requires symmetric weights")
 		if (x$style %in% c("B", "C", "U") && 
 			!(is.symmetric.glist(x$neighbours, x$weights)))
 			stop("Cholesky method requires symmetric weights")
 		if (x$style %in% c("W", "S")) {
-			V <- listw2mat(listw2U(similar.listw(x)))
+			V <- listw2mat(listw2U(spatialreg::similar.listw(x)))
 		}
 		mat <- diag(n) - rho * V
 		res <- chol2inv(chol(mat))
+          } else {
+            warning("install the spatialreg package")
+          }
 	} else if (method == "solve") {
 		mat <- diag(n) - rho * V
 		res <- solve(mat)
@@ -75,6 +80,14 @@ invIrW <- function(x, rho, method="solve", feasible=NULL) {
 }
 
 powerWeights <- function(W, rho, order=250, X, tol=.Machine$double.eps^(3/5)) {
+    .Deprecated("spatialreg::powerWeights", msg="Function powerWeights moved to the spatialreg package")
+#    if (!requireNamespace("spatialreg", quietly=TRUE))
+#      stop("install the spatialreg package")
+    if (requireNamespace("spatialreg", quietly=TRUE)) {
+      return(spatialreg::powerWeights(W=W, rho=rho, order=order, X=X, tol=tol))
+    }
+    warning("install the spatialreg package")
+#  if (FALSE) {
     timings <- list()
     .ptime_start <- proc.time()
     n <- dim(W)[1]
@@ -112,6 +125,7 @@ powerWeights <- function(W, rho, order=250, X, tol=.Machine$double.eps^(3/5)) {
     attr(acc, "timings") <- do.call("rbind", timings)[, c(1, 3)]
     acc
 }
+#}
 
 
 mat2listw <- function(x, row.names=NULL, style="M") {

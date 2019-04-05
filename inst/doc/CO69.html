@@ -689,7 +689,7 @@ Prop_stdR  &lt;- lapply(vars, function(x) moran.test(eire_ge1[[x]], listw=lw_std
 </code></pre>
 
 <pre><code>##    user  system elapsed 
-##    0.19    0.01    0.20
+##   0.181   0.003   0.185
 </code></pre>
 
 <pre><code class="r">res &lt;- sapply(c(&quot;MoranN&quot;, &quot;MoranR&quot;, &quot;GearyN&quot;, &quot;GearyR&quot;, &quot;Prop_unstdN&quot;, &quot;Prop_unstdR&quot;, &quot;Prop_stdN&quot;, &quot;Prop_stdR&quot;), function(x) sapply(get(x), &quot;[[&quot;, &quot;statistic&quot;))
@@ -938,7 +938,7 @@ Prop_stdSad  &lt;- lapply(lm_objs, function(x) lm.morantest.sad(x, listw=lw_std)
 </code></pre>
 
 <pre><code>##    user  system elapsed 
-##   0.092   0.000   0.092
+##   0.093   0.000   0.094
 </code></pre>
 
 <pre><code class="r">res &lt;- sapply(c(&quot;MoranSad&quot;, &quot;Prop_unstdSad&quot;, &quot;Prop_stdSad&quot;), function(x) sapply(get(x), &quot;[[&quot;, &quot;statistic&quot;))
@@ -1006,7 +1006,7 @@ Prop_stdEx  &lt;- lapply(lm_objs, function(x) lm.morantest.exact(x, listw=lw_std
 </code></pre>
 
 <pre><code>##    user  system elapsed 
-##   0.123   0.000   0.123
+##   0.123   0.000   0.124
 </code></pre>
 
 <pre><code class="r">res &lt;- sapply(c(&quot;MoranEx&quot;, &quot;Prop_unstdEx&quot;, &quot;Prop_stdEx&quot;), function(x) sapply(get(x), &quot;[[&quot;, &quot;statistic&quot;))

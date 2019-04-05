@@ -259,7 +259,7 @@ if (dothis) sf_extSoftVersion()
 </code></pre>
 
 <pre><code>##           GEOS           GDAL         proj.4 GDAL_with_GEOS 
-##        &quot;3.7.1&quot;        &quot;2.4.0&quot;        &quot;5.2.0&quot;         &quot;true&quot;
+##        &quot;3.7.1&quot;        &quot;2.4.1&quot;        &quot;6.0.0&quot;         &quot;true&quot;
 </code></pre>
 
 <pre><code class="r">if (!suppressPackageStartupMessages(require(rgdal, quietly=TRUE))) {
@@ -273,7 +273,7 @@ if (dothis) {
 </code></pre>
 
 <pre><code>##           GDAL GDAL_with_GEOS         PROJ.4             sp 
-##        &quot;2.4.0&quot;         &quot;TRUE&quot;        &quot;5.2.0&quot;        &quot;1.3-1&quot;
+##        &quot;2.4.1&quot;         &quot;TRUE&quot;        &quot;6.0.0&quot;        &quot;1.3-1&quot;
 </code></pre>
 
 <pre><code class="r">if (!suppressPackageStartupMessages(require(rgeos, quietly=TRUE))) {
@@ -321,7 +321,7 @@ system.time(for(i in 1:reps) NY8_sp_1_nb &lt;- poly2nb(NY8_sp, queen=TRUE, snap=
 </code></pre>
 
 <pre><code>##    user  system elapsed 
-##  0.0499  0.0001  0.0501
+##  0.0451  0.0009  0.0462
 </code></pre>
 
 <pre><code class="r">NY8_sp_1_nb
@@ -341,7 +341,7 @@ system.time(for(i in 1:reps) NY8_sp_1_fB_nb &lt;- poly2nb(NY8_sp, queen=TRUE, sn
 </code></pre>
 
 <pre><code>##    user  system elapsed 
-##  0.0201  0.0000  0.0201
+##  0.0212  0.0000  0.0213
 </code></pre>
 
 <pre><code class="r">all.equal(NY8_sp_1_fB_nb, NY8_sp_1_nb, check.attributes=FALSE)
@@ -361,7 +361,7 @@ system.time(for(i in 1:reps) NY8_sp_1_fB_nb &lt;- poly2nb(NY8_sp, queen=TRUE, sn
 </code></pre>
 
 <pre><code>##    user  system elapsed 
-##  0.4256  0.0000  0.4264
+##  0.4619  0.0000  0.4633
 </code></pre>
 
 <p>As we can see, the sf-based contiguity test is an order of magnitude slower than spdep::poly2nb; fortunately, it also scales linearly in the number of observations. spdep::poly2nb uses two heuristics, first to find candidate neighbours from intersecting bounding boxes, and second to use the symmetry of the relationship to halve the number of remaining tests. This means that performance is linear in n, but with overhead for identifying candidates, and back-filling symmetric neighbours. Further, spdep::poly2nb stops searching for queen contiguity as soon as the first neighbour point is found within snap distance (if not identical, which is tested first); second neighbour point for rook contiguities. spdep::poly2nb was heavily optimised when written, as processor speed was a major constraint at that time. </p>
@@ -405,7 +405,7 @@ all.equal(NY8_sf_1_nb, NY8_sp_1_nb, check.attributes=FALSE)
 </code></pre>
 
 <pre><code>##    user  system elapsed 
-##  0.0567  0.0000  0.0569
+##  0.0490  0.0000  0.0492
 </code></pre>
 
 <p>It is the use of GEOS functionality that costs time, as we can see by using rgeos::gTouches:</p>
@@ -414,7 +414,7 @@ all.equal(NY8_sf_1_nb, NY8_sp_1_nb, check.attributes=FALSE)
 </code></pre>
 
 <pre><code>##    user  system elapsed 
-##  0.4358  0.0000  0.4368
+##  0.4646  0.0000  0.4657
 </code></pre>
 
 <pre><code class="r">all.equal(sp_touches, NY8_sp_1_nb, check.attributes=FALSE)
@@ -429,7 +429,7 @@ all.equal(NY8_sf_1_nb, NY8_sp_1_nb, check.attributes=FALSE)
 </code></pre>
 
 <pre><code>##    user  system elapsed 
-##  0.4415  0.0000  0.4425
+##  0.4712  0.0000  0.4724
 </code></pre>
 
 <pre><code class="r">class(NY8_sf_1_touch) &lt;- &quot;sgbp&quot;
@@ -579,7 +579,7 @@ all.equal(NY8_sf_old_1_nb_buf, NY8_sf_1_nb, check.attributes=FALSE)
 </code></pre>
 
 <pre><code>##    user  system elapsed 
-##   7e-04   0e+00   7e-04
+##   8e-04   0e+00   8e-04
 </code></pre>
 
 <p>&#39;row.names&#39; gives the IDs (from feature FIDs if read with &#39;rgdal::readOGR&#39;):</p>
@@ -601,7 +601,7 @@ is.projected(NY8_sp)
 </code></pre>
 
 <pre><code>##    user  system elapsed 
-##  0.0160  0.0000  0.0161
+##  0.0173  0.0000  0.0174
 </code></pre>
 
 <pre><code class="r">if (!isTRUE(all.equal(st_crs(NY8_pt_sf), st_crs(NY8_sf)))) st_crs(NY8_pt_sf) &lt;- st_crs(NY8_sf)
@@ -634,7 +634,7 @@ if (zm %in% c(&quot;XYZ&quot;))
 </code></pre>
 
 <pre><code>##    user  system elapsed 
-##   3e-04   0e+00   2e-04
+##   3e-04   0e+00   3e-04
 </code></pre>
 
 <p>Unfortunately, the coordinate matrices differ:</p>
@@ -680,7 +680,7 @@ points(coords_sf[diffs,], pch=4, col=&quot;blue&quot;)
 </code></pre>
 
 <pre><code>##    user  system elapsed 
-##   0.004   0.000   0.004
+##  0.0043  0.0000  0.0044
 </code></pre>
 
 <p>The output coordinates are still off, but much less:</p>
@@ -822,7 +822,7 @@ if (!is.null(NY85_nb_sf) &amp;&amp; !is.null(NY85_nb)) {
 </code></pre>
 
 <pre><code>##    user  system elapsed 
-##  0.0598  0.0000  0.0599
+##  0.0545  0.0000  0.0548
 </code></pre>
 
 <p>It turns out that the geometries are identical after coercion (as we would expect from obtaining the same contiguity neighbours above):</p>
@@ -900,14 +900,14 @@ summary(dsts)
 </code></pre>
 
 <pre><code>##    user  system elapsed 
-##  0.0098  0.0000  0.0098
+##  0.0116  0.0000  0.0117
 </code></pre>
 
 <pre><code class="r">system.time(for (i in 1:reps) NY811_nb_sf &lt;- dnearneigh(coords_sf, d1=0, d2=0.75*max_1nn))/reps
 </code></pre>
 
 <pre><code>##    user  system elapsed 
-##  0.0098  0.0000  0.0099
+##  0.0112  0.0000  0.0113
 </code></pre>
 
 <pre><code class="r">isTRUE(all.equal(NY811_nb_sf, NY811_nb, check.attributes=FALSE))
@@ -924,7 +924,7 @@ NY811_nb_sf_buff &lt;- lapply(1:length(NY811_nb_sf_buff0), function(i) NY811_nb_
 </code></pre>
 
 <pre><code>##    user  system elapsed 
-##  0.0290  0.0000  0.0291
+##  0.0326  0.0000  0.0327
 </code></pre>
 
 <p>And it does not match:</p>
@@ -946,7 +946,7 @@ NY811_nb_sf_buff &lt;- lapply(1:length(NY811_nb_sf_buff0), function(i) NY811_nb_
 </code></pre>
 
 <pre><code>##    user  system elapsed 
-##  0.0637  0.0001  0.0639
+##  0.0728  0.0005  0.0735
 </code></pre>
 
 <pre><code class="r">all.equal(as.nb.sgbp(NY811_nb_sf_buff), NY811_nb, check.attributes=FALSE)
@@ -962,7 +962,7 @@ NY811_nb_sf_dist &lt;- lapply(1:length(NY811_nb_sf_dist0), function(i) NY811_nb_
 </code></pre>
 
 <pre><code>##    user  system elapsed 
-##  0.0442  0.0001  0.0444
+##  0.0507  0.0000  0.0509
 </code></pre>
 
 <pre><code class="r">all.equal(as.nb.sgbp(NY811_nb_sf_dist), NY811_nb, check.attributes=FALSE)

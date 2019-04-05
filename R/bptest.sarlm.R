@@ -5,6 +5,14 @@
 
 bptest.sarlm <- function (object, varformula=NULL, studentize = TRUE, data=list()) 
 {
+    .Deprecated("spatialreg::bptest.sarlm", msg="Method bptest.sarlm moved to the spatialreg package")
+#    if (!requireNamespace("spatialreg", quietly=TRUE))
+#      stop("install the spatialreg package")
+    if (requireNamespace("spatialreg", quietly=TRUE)) {
+      return(spatialreg::bptest.sarlm(object=object, varformula=varformula, studentize = studentize, data=data))
+    }
+    warning("install the spatialreg package")
+#  if (FALSE) {
     if(!inherits(object, "sarlm")) stop("not sarlm object")
     Z <- object$tarX
     if (!is.null(varformula)) Z <- model.matrix(varformula, data = data)
@@ -34,4 +42,5 @@ bptest.sarlm <- function (object, varformula=NULL, studentize = TRUE, data=list(
     class(RVAL) <- "htest"
     return(RVAL)
 }
+#}
 

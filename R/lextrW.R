@@ -1,5 +1,13 @@
 
 lextrW <- function(lw, zero.policy=TRUE, control=list()) {
+    .Deprecated("spatialreg::lextrW", msg="Function lextrW moved to the spatialreg package")
+#    if (!requireNamespace("spatialreg", quietly=TRUE))
+#      stop("install the spatialreg package")
+    if (requireNamespace("spatialreg", quietly=TRUE)) {
+      return(spatialreg::lextrW(lw=lw, zero.policy=zero.policy, control=control))
+    }
+    warning("install the spatialreg package")
+#  if (FALSE) {
 # must be row-standardized listw object
 
   stopifnot(lw$style == "W")
@@ -51,7 +59,9 @@ lextrW <- function(lw, zero.policy=TRUE, control=list()) {
     e1=attr(resl1, "e1")/c(resl1))
   res
 }
+#}
 
+#if (FALSE) {
 lminW_3 <- function(lw, ev1, n.nei, zero.policy=TRUE,
   control=list(
   trace=TRUE,
@@ -134,9 +144,19 @@ lminW_3 <- function(lw, ev1, n.nei, zero.policy=TRUE,
   attr(res, "en") <- ev1
   res
 }
+#}
 
 
 lextrS <- function(lw, zero.policy=TRUE, control=list()) {
+    .Deprecated("spatialreg::lextrS", msg="Function lextrS moved to the spatialreg package")
+#    if (!requireNamespace("spatialreg", quietly=TRUE))
+#      stop("install the spatialreg package")
+    if (requireNamespace("spatialreg", quietly=TRUE)) {
+      return(spatialreg::lextrS(lw=lw, zero.policy=zero.policy, control=control))
+    }
+    warning("install the spatialreg package")
+#  if (FALSE) {
+
 # must be variance-stabilized listw object
 # (possibly already transformed by similarity)
 
@@ -191,7 +211,9 @@ lextrS <- function(lw, zero.policy=TRUE, control=list()) {
     e1=attr(resl1, "e1")/c(resl1))
   res
 }
+#}
 
+#if (FALSE) {
 lminS_3 <- function(lw, ev1, comp, crd, zero.policy=TRUE,
   control=list(
   trace=TRUE,
@@ -282,5 +304,6 @@ lminS_3 <- function(lw, ev1, comp, crd, zero.policy=TRUE,
   attr(res, "en") <- ev1
   res
 }
+#}
 
 

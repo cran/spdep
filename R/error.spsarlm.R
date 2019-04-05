@@ -4,6 +4,15 @@
 errorsarlm <- function(formula, data = list(), listw, na.action, weights=NULL,
         Durbin, etype, method="eigen", quiet=NULL, zero.policy=NULL,
         interval=NULL, tol.solve=1.0e-10, trs=NULL, control=list()) {
+    .Deprecated("spatialreg::errorsarlm", msg="Function errorsarlm moved to the spatialreg package")
+#    if (!requireNamespace("spatialreg", quietly=TRUE))
+#      stop("install the spatialreg package")
+    if (requireNamespace("spatialreg", quietly=TRUE)) {
+      if (!missing(weights)) stop("run spatialreg::errorsarlm directly")
+      return(spatialreg::errorsarlm(formula=formula, data=data,listw=listw, na.action=na.action, Durbin=Durbin, etype=etype, method=method, quiet=quiet, zero.policy=zero.policy, interval=interval, tol.solve=tol.solve, trs=trs, control=control))
+    }
+    warning("install the spatialreg package")
+#  if (FALSE) {
         timings <- list()
         .ptime_start <- proc.time()
         con <- list(tol.opt=.Machine$double.eps^0.5, returnHcov=TRUE,
@@ -448,7 +457,7 @@ errorsarlm <- function(formula, data = list(), listw, na.action, weights=NULL,
             }
             nm <- paste(method, "fdHess", sep="_")
             timings[[nm]] <- proc.time() - .ptime_start
-        }
+        } else fdHess <- FALSE
 	call <- match.call()
         if (method=="SE_classic") {
             iC <- get("intern_classic", envir=env)
@@ -485,7 +494,9 @@ errorsarlm <- function(formula, data = list(), listw, na.action, weights=NULL,
 		ret$na.action <- na.act
 	ret
 }
+#}
 
+#if (FALSE) {
 sar_error_sse <- function(lambda, env) {
     if (get("compiled_sse", envir=env)) {
         ft <- get("first_time", envir=env)
@@ -516,8 +527,18 @@ sar.error.f <- function(lambda, env) {
     assign("f_calls", get("f_calls", envir=env)+1L, envir=env)
     ret
 }
+#}
 
 lmSLX <- function(formula, data = list(), listw, na.action, weights=NULL, Durbin=TRUE, zero.policy=NULL) {
+    .Deprecated("spatialreg::lmSLX", msg="Function lmSLX moved to the spatialreg package")
+#    if (!requireNamespace("spatialreg", quietly=TRUE))
+#      stop("install the spatialreg package")
+    if (requireNamespace("spatialreg", quietly=TRUE)) {
+      if (!is.null(weights)) stop("Use spatialreg::lmSLX() directly")
+      return(spatialreg::lmSLX(formula=formula, data = data, listw=listw, na.action=na.action, Durbin=Durbin, zero.policy=zero.policy))
+    }
+    warning("install the spatialreg package")
+#  if (FALSE) {
         if (is.null(zero.policy))
             zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
@@ -692,9 +713,18 @@ lmSLX <- function(formula, data = list(), listw, na.action, weights=NULL, Durbin
         class(lm.model) <- c("SLX", class(lm.model))
         lm.model
 }
+#}
 
 
 predict.SLX <- function(object, newdata, listw, zero.policy=NULL, ...) {
+    .Deprecated("spatialreg::predict.SLX", msg="Method predict.SLX moved to the spatialreg package")
+#    if (!requireNamespace("spatialreg", quietly=TRUE))
+#      stop("install the spatialreg package")
+    if (requireNamespace("spatialreg", quietly=TRUE)) {
+      return(spatialreg::predict.SLX(object=object, newdata=newdata, listw=listw, zero.policy=zero.policy, ...))
+    }
+    warning("install the spatialreg package")
+#  if (FALSE) {
     if (is.null(zero.policy))
         zero.policy <- get("zeroPolicy", envir = .spdepOptions)
     stopifnot(is.logical(zero.policy))
@@ -720,8 +750,17 @@ predict.SLX <- function(object, newdata, listw, zero.policy=NULL, ...) {
     names(res) <- row.names(newdata)
     res
 }
+#}
 
 create_WX <- function(x, listw, zero.policy=NULL, prefix="") {
+    .Deprecated("spatialreg::create_WX", msg="Function create_WX moved to the spatialreg package")
+#    if (!requireNamespace("spatialreg", quietly=TRUE))
+#      stop("install the spatialreg package")
+    if (requireNamespace("spatialreg", quietly=TRUE)) {
+      return(spatialreg::create_WX(x=x, listw=listw, zero.policy=zero.policy, prefix=prefix))
+    }
+    warning("install the spatialreg package")
+#  if (FALSE) {
         if (is.null(zero.policy))
             zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
@@ -763,4 +802,5 @@ create_WX <- function(x, listw, zero.policy=NULL, prefix="") {
         colnames(WX) <- Wvars
         WX
 }
+#}
 

@@ -38,6 +38,7 @@ nb_B <- nb2listw(col2, style="B", zero.policy=TRUE)
 nb_B$style
 
 ## ---- echo=dothis, eval=dothis-------------------------------------------
+library(Matrix)
 B <- as(nb_B, "CsparseMatrix")
 all(B == t(B))
 str(B)
