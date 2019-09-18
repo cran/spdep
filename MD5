@@ -1,5 +1,5 @@
 2428ff9c8fc1c5390035b6f09bcc9b13 *ChangeLog
-7cdab2fc2da85ddf80f3f84552d62b0f *DESCRIPTION
+89f2c33fd3fd3733f3038ce376024f65 *DESCRIPTION
 75d499ce171510f3d47cdc4219369124 *NAMESPACE
 f6f0c407abbd5b20559c61858e973849 *R/AAA.R
 b0e1b90e65dd7b62bdd3948361cb5237 *R/EBI.R
@@ -24,7 +24,7 @@ e64d4fcc81be06647777c3c71fc125b3 *R/cyclical.R
 bbee82cda474bd92b417bacb768fd186 *R/diffnb.R
 b73f7275ce913150380ef6326f6439d5 *R/dnearneigh.R
 d6b8860ef2337d9746ff5d1119f36590 *R/droplinks.R
-1c7c266113c4f079d2f0c6d9ccc5141f *R/edit.nb.R
+46466cb7fd75b36d3b5d8fe08cfa9f94 *R/edit.nb.R
 f5741e82f0054dc0d62bea24322f658c *R/eigenw.R
 20f0d53c11bba9971fb5c8dad1cbb174 *R/error.hessian.R
 73cbe1921c885b77ae792f1556ef41b0 *R/error.spsarlm.R
@@ -76,7 +76,7 @@ a63a07dadf5f8fa200f7e3c71747a403 *R/nblag.R
 5f0bbb53290e57eb01a52c265f8d1806 *R/plot.mst.R
 6c7e71d7f858adfff5aa9f88981647b4 *R/plot.nb.R
 1062440bac3bb1409c7716a8af176a79 *R/plot.skater.R
-d5acce3fda28a095de64535eb6faf6f5 *R/poly2nb.R
+ad8e3dcb396629541e253193ca42643b *R/poly2nb.R
 59a5f3980e8585d96ac511d4d23d669f *R/prunecost.R
 58fc4f67d40bb82e24a32af9ee5ee0c2 *R/prunemst.R
 72519954bdafc8521aa950d7d3b67855 *R/read.gal.R
@@ -100,7 +100,7 @@ d10fcab9d4f11c523798dc5a222a5256 *R/summary.spsarlm.R
 9cc132656403ffd40118fdb339159ec2 *R/tri2nb.R
 f5c0242936707063d64cfcd44138796f *R/utils.R
 6f1fcd3c6b9caaf4d4e78e0ad8028046 *R/weights-utils.R
-b7a2e8f58e7fd5c318cf1d54aaddcf90 *build/vignette.rds
+18492efa8af40b489d244a72ec0eac90 *build/vignette.rds
 b818650dc1a3e0335a7767fe78f721f5 *data/columbus.rda
 5e7e97b208f3d4a44393e668799ce382 *data/eire.rda
 3c410289cf12787247a95ff858bf4a97 *data/oldcol.rda
@@ -110,19 +110,19 @@ b818650dc1a3e0335a7767fe78f721f5 *data/columbus.rda
 38a8e8aedfaa0bc14eb5edd06e09c3a7 *inst/README
 9c3f16bf1ed12822b432c8d7a6c6dbea *inst/doc/CO69.R
 7385c8721943d8d2ce34b91214d0dd37 *inst/doc/CO69.Rmd
-b47e7dd5f59bad14d6aba1ea413ef205 *inst/doc/CO69.html
+14059711bf981b3de0ca12bb25f211e5 *inst/doc/CO69.html
 e12b7288630644ee28894e5b04cea06c *inst/doc/nb.R
 96bd583488e35a9e980cbe5b79f57d46 *inst/doc/nb.Rnw
-adf001daaeceae7f188c6cbfa893ec02 *inst/doc/nb.pdf
+67043118005a3cd623d785b650cdaba3 *inst/doc/nb.pdf
 4710739a7ea0586a2fbd90815a11f3d6 *inst/doc/nb_igraph.R
 0926f15bb77b188af892e3a93fc70197 *inst/doc/nb_igraph.Rmd
-abd2d5f91d2696d479f7879be7760552 *inst/doc/nb_igraph.html
+73a9899efed28e55b1c86c2860cf7cd5 *inst/doc/nb_igraph.html
 522b2484fbd34290eaa545c19089dd77 *inst/doc/nb_sf.R
-941aa1849341d87ce66e36c168b8ad7f *inst/doc/nb_sf.Rmd
-71f76a76ca7e7bc56ee6b6ec215d1f23 *inst/doc/nb_sf.html
+6bf66c0ee6e6d2bc4262855c83bdd34b *inst/doc/nb_sf.Rmd
+ccf2737aa9b22fa5d01be5e02325106e *inst/doc/nb_sf.html
 7a2777c88700eb99f2057ed2e9ac023d *inst/doc/sids.R
-9a5886447fc9eef2843f9d6875453644 *inst/doc/sids.Rmd
-d5dee234166641c8825fdbe125cfd384 *inst/doc/sids.html
+fd295235cde2bdd9407aa9b9011f44a2 *inst/doc/sids.Rmd
+61aea9f1983a013bbc1377d84dc47e07 *inst/doc/sids.html
 68a52b4a10480b4a2adedb18494c7deb *inst/etc/backstore/boot_res.RData
 3889914095150cc9ed13c578b5f51a73 *inst/etc/backstore/nyME_res.RData
 53178ac43dd150bbb835b63e018f0cd4 *inst/etc/misc/geary_eire.txt
@@ -167,7 +167,7 @@ f9199ce993af1de9e4d302b6beb79f31 *man/choynowski.Rd
 5dc8467be5c40ab177ed1f75be3b5737 *man/diffnb.Rd
 6f38c2878b23dcc1b5bb763b95dfd2f5 *man/dnearneigh.Rd
 ab9d1a7b4f443b31a4c1fa58a57da7aa *man/droplinks.Rd
-c7dec0e79dd39617f378efce3347582d *man/edit.nb.Rd
+2034afb6d33f32ebbf9bc84cf22cf3ff *man/edit.nb.Rd
 c28e1263be5dbd60f5da17b124efc534 *man/eire.Rd
 25e1a53cd6d9cbbb7bea0c1fea3e1ef0 *man/geary.Rd
 e5e5f9840a79014d86c7758de589b0f9 *man/geary.mc.Rd
@@ -178,7 +178,7 @@ e5e5f9840a79014d86c7758de589b0f9 *man/geary.mc.Rd
 5b794b4e7a14903192df556d3724eab6 *man/include.self.Rd
 dddcf9d4b16463e9c6b76c514cc5a587 *man/invIrM.Rd
 3a5aa076bb3c12d7c608a5d57eae9fb7 *man/joincount.mc.Rd
-3ef157b0a852acb019081ea67d9b3c0c *man/joincount.multi.Rd
+fc9cab3ab103f4790a80cf438dd51e8a *man/joincount.multi.Rd
 3ca8dd3ff7a52d1c2fa8ce590e66fe70 *man/joincount.test.Rd
 082bcc3cc78a644bf16b67589bffdce3 *man/knearneigh.Rd
 7f29dba937768cacca71f38982ded409 *man/knn2nb.Rd
@@ -191,7 +191,7 @@ ab1776c96e814381f2428a84cb19bec1 *man/lm.LMtests.Rd
 bf22c7dc637db3a45d7a63839a7269a8 *man/lm.morantest.Rd
 5c1c2888e6b6cd0c47219c6291eb77f0 *man/lm.morantest.exact.Rd
 64d60b3c6fca61752ed89237a50ea7ad *man/lm.morantest.sad.Rd
-5cd317c04724ebf7ab35ae2ea482079e *man/localG.Rd
+dfc81e018981e123eac55583f868590a *man/localG.Rd
 cd402b48f08dddff07c0bcb2b081154a *man/localmoran.Rd
 6c204aa004f48a99f7d41cb459c28c31 *man/localmoran.exact.Rd
 ece85e85fa53184277c9ed4d8c32efa2 *man/localmoran.sad.Rd
@@ -219,7 +219,7 @@ c4be5e2e8828f7d6e041e5ae093a0c2c *man/plot.skater.Rd
 2cb371e39e65b81677b1cb65c4ee1192 *man/probmap.Rd
 09b2776bb47f80cdbe5562d88b36ef18 *man/prunecost.Rd
 f592261ce51e820587da92afaa7cd853 *man/prunemst.Rd
-f8dc0b0518d2badebbd7f93e552a3f73 *man/read.gal.Rd
+26743a89777691183c840eb3e421b4c9 *man/read.gal.Rd
 fe86bf830f291a16d60102c52bfdf01e *man/read.gwt2nb.Rd
 feb42a50dc7b72cc991066c40fb4d75f *man/rotation.Rd
 d4ec4879830f577619f8194ac46d2876 *man/set.mcOption.Rd
@@ -227,7 +227,7 @@ d4ec4879830f577619f8194ac46d2876 *man/set.mcOption.Rd
 ecbbf3db33c5dc31f965c5ddaefb87e5 *man/skater.Rd
 a784863084158161a533f13353bea08d *man/sp.correlogram.Rd
 cc5b6792ef98679cb5ec9fe4623df4f4 *man/sp.mantel.mc.Rd
-cbdb07679c13eda199bbd23595b6534c *man/spdep-deprecated.Rd
+85b932eb4b1b0fb2a4bbe1b0c948f1c1 *man/spdep-deprecated.Rd
 487249a672c9c93ffa4370cbd5d23810 *man/spdep.Rd
 bca044be46d29893de136d50dfc28c34 *man/spweights.constants.Rd
 c2198571e7ff56c757ddbc1f90b56cb2 *man/ssw.Rd
@@ -264,6 +264,6 @@ d5188a82abbb16aac83bf280b8110355 *src/symtest.c
 7385c8721943d8d2ce34b91214d0dd37 *vignettes/CO69.Rmd
 96bd583488e35a9e980cbe5b79f57d46 *vignettes/nb.Rnw
 0926f15bb77b188af892e3a93fc70197 *vignettes/nb_igraph.Rmd
-941aa1849341d87ce66e36c168b8ad7f *vignettes/nb_sf.Rmd
+6bf66c0ee6e6d2bc4262855c83bdd34b *vignettes/nb_sf.Rmd
 b62da117254a0b1cc824f482bba57137 *vignettes/refs.bib
-9a5886447fc9eef2843f9d6875453644 *vignettes/sids.Rmd
+fd295235cde2bdd9407aa9b9011f44a2 *vignettes/sids.Rmd
