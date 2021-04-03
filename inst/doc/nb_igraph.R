@@ -107,6 +107,8 @@ c(determinant(I - rho * Ws, logarithm=TRUE)$modulus)
 ## ---- echo=dothis, eval=dothis----------------------------------------------------------
 1/range(eigenw(nb_B))
 if (!require("RSpectra", quietly=TRUE)) dothis <- FALSE
+
+## ---- echo=dothis, eval=dothis----------------------------------------------------------
 1/c(eigs(B, k=1, which="SR")$values, eigs(B, k=1, which="LR")$values)
 
 ## ---- echo=dothis, eval=dothis----------------------------------------------------------

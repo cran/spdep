@@ -1,6 +1,7 @@
 % Copyright 2001-8 by Roger S. Bivand
 \name{localmoran}
 \alias{localmoran}
+\alias{localmoran_perm}
 \title{Local Moran's I statistic}
 \description{
  The local spatial statistic Moran's I is calculated for each zone based on the
@@ -13,6 +14,9 @@ and its expectation and variance are given in Anselin (1995).
 localmoran(x, listw, zero.policy=NULL, na.action=na.fail, 
 	alternative = "greater", p.adjust.method="none", mlvar=TRUE,
         spChk=NULL, adjust.x=FALSE)
+localmoran_perm(x, listw, nsim=499, zero.policy=NULL, na.action=na.fail, 
+	alternative = "greater", p.adjust.method="none", mlvar=TRUE,
+        spChk=NULL, adjust.x=FALSE, sample_Ei=TRUE, iseed=NULL)
 }
 \arguments{
   \item{x}{a numeric vector the same length as the neighbours list in listw}
@@ -24,6 +28,9 @@ localmoran(x, listw, zero.policy=NULL, na.action=na.fail,
   \item{mlvar}{default TRUE: values of local Moran's I are reported using the variance of the variable of interest (sum of squared deviances over n), but can be reported as the sample variance, dividing by (n-1) instead; both are used in other implementations.}
   \item{spChk}{should the data vector names be checked against the spatial objects for identity integrity, TRUE, or FALSE, default NULL to use \code{get.spChkOption()}}
   \item{adjust.x}{default FALSE, if TRUE, x values of observations with no neighbours are omitted in the mean of x}
+  \item{nsim}{default 499, number of conditonal permutation simulations}
+  \item{sample_Ei}{default TRUE; if conditional permutation, use the sample $E_i$ values, or the analytical values, leaving only variances calculated by simulation.}
+  \item{iseed}{default NULL, used to set the seed for possible parallel RNGs}
 }
 
 \details{
@@ -38,12 +45,13 @@ The values of local Moran's I are divided by the variance (or sample variance) o
   \item{Z.Ii}{standard deviate of local moran statistic}
   \item{Pr()}{p-value of local moran statistic}
 }
+\note{Conditional permutations added for comparative purposes; permutations are over the whole data vector omitting the observation itself.}
 \references{Anselin, L. 1995. Local indicators of spatial association,
 Geographical Analysis, 27, 93--115;
 Getis, A. and Ord, J. K. 1996 Local spatial
 statistics: an overview. In P. Longley and M. Batty (eds) \emph{Spatial
 analysis: modelling in a GIS environment} (Cambridge: Geoinformation
-International), 261--277; Sokal, R. R, Oden, N. L. and Thomson, B. A. 1998. Local Spatial Autocorrelation in a Biological Model. Geographical Analysis, 30. 331--354; Bivand RS, Wong DWS 2018 Comparing implementations of global and local indicators of spatial association. TEST, 27(3), 716--748 \url{https://doi.org/10.1007/s11749-018-0599-x}}
+International), 261--277; Sokal, R. R, Oden, N. L. and Thomson, B. A. 1998. Local Spatial Autocorrelation in a Biological Model. Geographical Analysis, 30. 331--354; Bivand RS, Wong DWS 2018 Comparing implementations of global and local indicators of spatial association. TEST, 27(3), 716--748 \doi{10.1007/s11749-018-0599-x}}
 \author{Roger Bivand \email{Roger.Bivand@nhh.no}}
 
 \seealso{\code{\link{localG}}}
@@ -75,6 +83,9 @@ if (class(attr(resI.na, "na.action")) == "exclude") {
 } else print(resI.na, digits=2)
 resG <- localG(afcon$totcon, nb2listw(include.self(paper.nb)))
 print(data.frame(resG[oid], row.names=afcon$name[oid]), digits=2)
-
+set.seed(1)
+resI_p <- localmoran_perm(afcon$totcon, nb2listw(paper.nb))
+printCoefmat(data.frame(resI_p[oid,], row.names=afcon$name[oid]),
+ check.names=FALSE)
 }
 \keyword{spatial}

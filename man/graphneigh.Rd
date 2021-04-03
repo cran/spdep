@@ -65,7 +65,7 @@ where x,y,z and S are as before. The sphere of influence graph is
 defined for a finite point set S, let \eqn{r_x} be the distance from point x
 to its nearest neighbor in S, and \eqn{C_x} is the circle centered on x. Then
 x and y are SOI neigbors iff \eqn{C_x} and \eqn{C_y} intersect in at
-least 2 places. From 2016-05-31, Computational Geometry in C code replaced by calls to functions in \pkg{RANN} and \pkg{rgeos}; from 2019-01-21, \pkg{rgeos} replaced by equivalent functions in \pkg{sf}; with a large \code{quadsegs=} argument, the behaviour of the function is the same, otherwise buffer intersections only closely approximate the original function.
+least 2 places. From 2016-05-31, Computational Geometry in C code replaced by calls to functions in \pkg{dbscan} and \pkg{sf}; with a large \code{quadsegs=} argument, the behaviour of the function is the same, otherwise buffer intersections only closely approximate the original function.
 
 %The \eqn{beta}{\beta} 
 See \code{\link{card}} for details of \dQuote{nb} objects.
@@ -121,7 +121,7 @@ plot(st_geometry(columbus), border="grey")
 plot(col.rel.nb, coords, add=TRUE)
 title(main="Relative Neighbor Graph", cex.main=0.6)
 plot(st_geometry(columbus), border="grey")
-if (require(RANN, quietly=TRUE)) {
+if (require("dbscan", quietly=TRUE)) {
   col.soi.nb <- graph2nb(soi.graph(col.tri.nb,coords), sym=TRUE)
   plot(col.soi.nb, coords, add=TRUE)
   title(main="Sphere of Influence Graph", cex.main=0.6)
@@ -131,10 +131,12 @@ col.tri.nb_sf <- tri2nb(sf_obj)
 all.equal(col.tri.nb, col.tri.nb_sf, check.attributes=FALSE)
 col.tri.nb_sp <- tri2nb(sp_obj)
 all.equal(col.tri.nb, col.tri.nb_sp, check.attributes=FALSE)
-col.soi.nb_sf <- graph2nb(soi.graph(col.tri.nb, sf_obj), sym=TRUE)
-all.equal(col.soi.nb, col.soi.nb_sf, check.attributes=FALSE)
-col.soi.nb_sp <- graph2nb(soi.graph(col.tri.nb, sp_obj), sym=TRUE)
-all.equal(col.soi.nb, col.soi.nb_sp, check.attributes=FALSE)
+if (require("dbscan", quietly=TRUE)) {
+  col.soi.nb_sf <- graph2nb(soi.graph(col.tri.nb, sf_obj), sym=TRUE)
+  all.equal(col.soi.nb, col.soi.nb_sf, check.attributes=FALSE)
+  col.soi.nb_sp <- graph2nb(soi.graph(col.tri.nb, sp_obj), sym=TRUE)
+  all.equal(col.soi.nb, col.soi.nb_sp, check.attributes=FALSE)
+}
 col.gab.nb_sp <- graph2nb(gabrielneigh(sp_obj), sym=TRUE)
 all.equal(col.gab.nb, col.gab.nb_sp, check.attributes=FALSE)
 col.gab.nb_sf <- graph2nb(gabrielneigh(sf_obj), sym=TRUE)

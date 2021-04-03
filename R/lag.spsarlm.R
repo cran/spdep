@@ -11,12 +11,12 @@ lagsarlm <- function(formula, data = list(), listw,
 	na.action, Durbin, type, method="eigen", quiet=NULL, 
 	zero.policy=NULL, interval=NULL, tol.solve=1.0e-10, 
 	trs=NULL, control=list()) {
-    .Deprecated("spatialreg::lagsarlm", msg="Function lagsarlm moved to the spatialreg package")
+#    .Deprecated("spatialreg::lagsarlm", msg="Function lagsarlm moved to the spatialreg package")
 #    if (!requireNamespace("spatialreg", quietly=TRUE))
 #      stop("install the spatialreg package")
-    if (requireNamespace("spatialreg", quietly=TRUE)) {
-      return(spatialreg::lagsarlm(formula=formula, data=data,listw=listw, na.action=na.action, Durbin=Durbin, type=type, method=method, quiet=quiet, zero.policy=zero.policy, interval=interval, tol.solve=tol.solve, trs=trs, control=control))
-    }
+#    if (requireNamespace("spatialreg", quietly=TRUE)) {
+#      return(spatialreg::lagsarlm(formula=formula, data=data,listw=listw, na.action=na.action, Durbin=Durbin, type=type, method=method, quiet=quiet, zero.policy=zero.policy, interval=interval, tol.solve=tol.solve, trs=trs, control=control))
+#    }
     warning("install the spatialreg package")
 #  if (FALSE) {
         timings <- list()
@@ -99,7 +99,7 @@ lagsarlm <- function(formula, data = list(), listw,
 	            dmf <- lm(Durbin, data, na.action=na.action, 
 		        method="model.frame")
                     fx <- try(model.matrix(Durbin, dmf), silent=TRUE)
-                    if (class(fx) == "try-error") 
+                    if (inherits(fx, "try-error"))
                         stop("Durbin variable mis-match")
                     WX <- create_WX(fx, listw, zero.policy=zero.policy,
                         prefix=prefix)
@@ -247,7 +247,7 @@ lagsarlm <- function(formula, data = list(), listw,
 		inf3 <- rbind(zero, t(xtawxb), xtx)
 		inf <- cbind(inf1, inf2, inf3)
 		varb <- try(solve(inf, tol=tol.solve), silent=TRUE)
-                if (class(varb) == "try-error") {
+                if (inherits(varb, "try-error")) {
                     timings[["eigen_se"]] <- proc.time() - .ptime_start
                     .ptime_start <- proc.time()
                     con$fdHess <- TRUE
