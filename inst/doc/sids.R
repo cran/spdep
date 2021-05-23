@@ -11,6 +11,7 @@ st_crs(nc) <- "+proj=longlat +datum=NAD27"
 row.names(nc) <- as.character(nc$FIPSNO)
 
 ## ----echo=TRUE--------------------------------------------------------------------------
+sf_use_s2(FALSE)
 plot(st_geometry(nc), axes=TRUE)
 text(st_coordinates(st_centroid(st_geometry(nc), of_largest_polygon=TRUE)), label=nc$FIPSNO, cex=0.5)
 
@@ -162,7 +163,11 @@ mSID74 <- tapply(nc$SID74, nc$both, sum)
 
 ## ----echo=TRUE,eval=TRUE----------------------------------------------------------------
 mFT <- sqrt(1000)*(sqrt(mSID74/mBIR74) + sqrt((mSID74+1)/mBIR74))
-mFT1 <- t(matrix(mFT, 4, 4, byrow=TRUE))
+# mFT1 <- t(matrix(mFT, 4, 4, byrow=TRUE))
+# wrong assignment of 12 elements to a 4x4 matrix detected by CRAN test 2021-05-22
+rc <- do.call("rbind", lapply(strsplit(names(mFT), ":"), as.integer))
+mFT1 <- matrix(as.numeric(NA), 4, 4)
+for (i in 1:nrow(rc)) mFT1[rc[i,1], rc[i,2]] <- mFT[i]
 med <- medpolish(mFT1, na.rm=TRUE, trace.iter=FALSE)
 med
 

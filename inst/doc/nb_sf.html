@@ -1500,12 +1500,12 @@ div.tocify {
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
 <div class="row">
-<div class="col-sm-12 col-md-4 col-lg-3">
+<div class="col-xs-12 col-sm-4 col-md-3">
 <div id="TOC" class="tocify">
 </div>
 </div>
 
-<div class="toc-content col-sm-12 col-md-8 col-lg-9">
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -1565,8 +1565,8 @@ st_write(sf_bna2_utm18, &quot;NY8_bna_utm18.gpkg&quot;)</code></pre>
   dothis &lt;- FALSE
 }
 if (dothis) sf_extSoftVersion()</code></pre>
-<pre><code>##           GEOS           GDAL         proj.4 GDAL_with_GEOS     USE_PROJ_H 
-##        &quot;3.9.1&quot;        &quot;3.2.2&quot;        &quot;8.0.0&quot;         &quot;true&quot;         &quot;true&quot;</code></pre>
+<pre><code>##           GEOS           GDAL         proj.4 GDAL_with_GEOS     USE_PROJ_H           PROJ 
+##    &quot;3.10.0dev&quot;        &quot;3.3.0&quot;        &quot;8.0.1&quot;         &quot;true&quot;         &quot;true&quot;        &quot;8.0.1&quot;</code></pre>
 <p>Let us read the GPKG file with valid geometries in to ‘sf’ and ‘sp’ objects:</p>
 <pre class="r"><code>NY8_sf &lt;- st_read(system.file(&quot;shapes/NY8_bna_utm18.gpkg&quot;, package=&quot;spData&quot;), quiet=TRUE)
 table(st_is_valid(NY8_sf))</code></pre>
@@ -1581,11 +1581,11 @@ reps &lt;- 10
 eps &lt;- sqrt(.Machine$double.eps)
 system.time(for(i in 1:reps) NY8_sf_1_nb &lt;- poly2nb(NY8_sf, queen=TRUE, snap=eps))/reps</code></pre>
 <pre><code>##    user  system elapsed 
-##  0.0770  0.0003  0.0775</code></pre>
+##  0.0808  0.0000  0.0809</code></pre>
 <p>Using STR trees to check the intersection of envelopes (bounding boxes) is much faster than the internal method in poly2nb for large n (the default threshold is <code>small_n=500</code>). From <strong>spdep</strong> 1.1-7, use is made of GEOS through <strong>sf</strong> to find candidate neighbours. Because contiguity is symmetric by definition, <code>foundInBox=</code> only requires intersections for higher indices, leading to a slight overhead to remove duplicates, as <code>st_intersects()</code> reports both <code>i j</code> ans <code>j i</code> relationships.</p>
 <pre class="r"><code>system.time(for(i in 1:reps) NY8_sf_1_nb_STR &lt;- poly2nb(NY8_sf, queen=TRUE, snap=eps, small_n=250))/reps</code></pre>
 <pre><code>##    user  system elapsed 
-##  0.0931  0.0001  0.0935</code></pre>
+##  0.0993  0.0004  0.0999</code></pre>
 <p>In this case, n is small, so the extra work in GEOS has a higher overhead than the simple, legacy approach.</p>
 <pre class="r"><code>NY8_sf_1_nb</code></pre>
 <pre><code>## Neighbour list object:
@@ -1665,11 +1665,11 @@ NY87_nb &lt;- graph2nb(relativeneigh(NY8_ct_sf))</code></pre>
 <p>K-nearest neighbours use the coordinate matrices, and can handle Great Circle distances, but this is not demonstrated here, as the data set used is planar, in which case <code>dbscan::kNN()</code> in 2D or 3D building a kd-tree is used:</p>
 <pre class="r"><code>system.time(for (i in 1:reps) NY88_nb_sf &lt;- knn2nb(knearneigh(NY8_ct_sf, k=1)))/reps</code></pre>
 <pre><code>##    user  system elapsed 
-##  0.0279  0.0002  0.0282</code></pre>
+##  0.0262  0.0003  0.0267</code></pre>
 <p>Legacy code may be used omitting the kd-tree:</p>
 <pre class="r"><code>system.time(for (i in 1:reps) NY89_nb_sf &lt;- knn2nb(knearneigh(NY8_ct_sf, k=1, use_kd_tree=FALSE)))/reps</code></pre>
 <pre><code>##    user  system elapsed 
-##  0.0296  0.0003  0.0302</code></pre>
+##  0.0274  0.0000  0.0276</code></pre>
 </div>
 <div id="distance-neighbours" class="section level3">
 <h3>Distance neighbours</h3>
@@ -1682,11 +1682,11 @@ summary(dsts)</code></pre>
 <p><code>dnearneigh</code> can also handle Great Circle distances, but this is not demonstrated here, as the data set used is planar:</p>
 <pre class="r"><code>system.time(for (i in 1:reps) NY810_nb &lt;- dnearneigh(NY8_ct_sf, d1=0, d2=0.75*max_1nn))/reps</code></pre>
 <pre><code>##    user  system elapsed 
-##  0.0451  0.0001  0.0460</code></pre>
+##  0.0406  0.0006  0.0414</code></pre>
 <p>By default, the function uses <code>dbscan::frNN()</code> to build a kd-tree in 2D or 3D which is then used to find distance neighbours. For small n, the argument <code>use_kd_tree=FALSE</code> may speed up computation a little by reverting to legacy code not building a kd-tree first, but in general the differences are so small that the user will not notice:</p>
 <pre class="r"><code>system.time(for (i in 1:reps) NY811_nb &lt;- dnearneigh(NY8_ct_sf, d1=0, d2=0.75*max_1nn, use_kd_tree=FALSE))/reps</code></pre>
 <pre><code>##    user  system elapsed 
-##  0.0278  0.0002  0.0281</code></pre>
+##  0.0266  0.0003  0.0269</code></pre>
 </div>
 </div>
 </div>
