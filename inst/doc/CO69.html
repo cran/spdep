@@ -1845,7 +1845,7 @@ Prop_stdN  &lt;- lapply(vars, function(x) moran.test(eire_ge1[[x]], listw=lw_std
 Prop_stdR  &lt;- lapply(vars, function(x) moran.test(eire_ge1[[x]], listw=lw_std, randomisation=TRUE))
 })</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.134   0.000   0.136</code></pre>
+##   0.131   0.000   0.132</code></pre>
 <pre class="r"><code>res &lt;- sapply(c(&quot;MoranN&quot;, &quot;MoranR&quot;, &quot;GearyN&quot;, &quot;GearyR&quot;, &quot;Prop_unstdN&quot;, &quot;Prop_unstdR&quot;, &quot;Prop_stdN&quot;, &quot;Prop_stdR&quot;), function(x) sapply(get(x), &quot;[[&quot;, &quot;statistic&quot;))
 rownames(res) &lt;- vars
 ores &lt;- res[,c(1,2,5:8)]</code></pre>
@@ -1984,7 +1984,7 @@ Prop_unstdSad  &lt;- lapply(lm_objs, function(x) lm.morantest.sad(x, listw=lw_un
 Prop_stdSad  &lt;- lapply(lm_objs, function(x) lm.morantest.sad(x, listw=lw_std))
 })</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.076   0.000   0.079</code></pre>
+##   0.079   0.001   0.081</code></pre>
 <pre class="r"><code>res &lt;- sapply(c(&quot;MoranSad&quot;, &quot;Prop_unstdSad&quot;, &quot;Prop_stdSad&quot;), function(x) sapply(get(x), &quot;[[&quot;, &quot;statistic&quot;))
 rownames(res) &lt;- vars</code></pre>
 <p>Although the analytical standard deviates (under Normality) are larger than those reached using the Saddlepoint approximation when measured by median absolute deviation, the differences do not lead to different inferences at this chosen cut-off. This reflects the fact that the shape of the distribution is very sensitive to small <span class="math inline">\(n\)</span>, but for moderate <span class="math inline">\(n\)</span> and global Moran’s <span class="math inline">\(I\)</span>, the effects are seen only further out in the tails. The consequences for local Moran’s <span class="math inline">\(I_i\)</span> are much stronger, because the clique of neighbours of each observation is typically very small. It is perhaps of interest that the differences are much smaller for the case of general weights than for unstandardised binary weights.</p>
@@ -2019,7 +2019,7 @@ Prop_unstdEx  &lt;- lapply(lm_objs, function(x) lm.morantest.exact(x, listw=lw_u
 Prop_stdEx  &lt;- lapply(lm_objs, function(x) lm.morantest.exact(x, listw=lw_std))
 })</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.098   0.000   0.101</code></pre>
+##   0.091   0.000   0.092</code></pre>
 <pre class="r"><code>res &lt;- sapply(c(&quot;MoranEx&quot;, &quot;Prop_unstdEx&quot;, &quot;Prop_stdEx&quot;), function(x) sapply(get(x), &quot;[[&quot;, &quot;statistic&quot;))
 rownames(res) &lt;- vars</code></pre>
 <p>The output is comparable with that of the Saddlepoint approximation, and the inferences drawn here are the same for the chosen cut-off as for the analytical standard deviates calculated under Normality.</p>
@@ -2128,7 +2128,7 @@ Three contrasted spatial weights definitions
 <div class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p>cropped scans of tables are available from <a href="http://spatial.nhh.no/R/etc/CO69-PNGs.zip" class="uri">http://spatial.nhh.no/R/etc/CO69-PNGs.zip</a>.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn1"><p>cropped scans of tables are available from <a href="https://github.com/rsbivand/CO69" class="uri">https://github.com/rsbivand/CO69</a>.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
 
@@ -2170,6 +2170,9 @@ $(document).ready(function () {
 
 <script>
 $(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
 
     // move toc-ignore selectors from section div to header
     $('div.section.toc-ignore')

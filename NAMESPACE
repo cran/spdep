@@ -11,7 +11,7 @@ importFrom(stats, influence.measures, lag, punif, lm, var, integrate,
              aggregate, "coefficients", "fitted", "gaussian",
              "model.frame", "model.matrix", "model.response", "na.fail",
              "na.omit", "naresid", "optimise", "printCoefmat", "resid",
-             "terms", "uniroot", "weighted.residuals", "weights")
+             "terms", "uniroot", "weighted.residuals", "weights", "median")
 
 importFrom(stats, model.matrix, model.response, model.extract, coefficients, residuals, deviance, optimize, optim, nlminb, na.fail, as.formula, terms, coef, gaussian, model.weights, model.offset, glm.fit, logLik, predict, formula, lm.fit, model.frame, AIC, anova, napredict, nlm, optimHess, resid, fitted, weighted.residuals, weights, naresid, optimise, fitted.values, delete.response, printCoefmat, uniroot, na.omit, predict.lm, "dbeta", "rchisq", "runif", "spline") # deprecated
 
@@ -23,6 +23,9 @@ importFrom(utils, write.table, object.size, read.table, read.csv, packageDescrip
 importFrom(grDevices, rainbow)
 if (.Platform$OS.type == "windows") importFrom(grDevices, bringToTop)
 importFrom(utils, packageVersion)
+importFrom(units, set_units)
+importFrom(s2, s2_distance, s2_closest_edges, s2_buffer_cells, s2_intersects_matrix, s2_dwithin_matrix)
+importFrom(e1071, skewness, kurtosis)
 
 importFrom(MASS, mvrnorm) # deprecated
 importFrom(coda, as.mcmc, HPDinterval) # deprecated

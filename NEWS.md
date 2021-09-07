@@ -1,4 +1,17 @@
-# Version 1.1-8 (development)
+# Version 1.1-11 (development)
+
+* `knearneigh()` and `nbdists()`; added prototype adaptation to **s2** for unprojected coordinates, used if `sf_use_s2()` is `TRUE` which became the default for **sf** 1.0.0 https://github.com/r-spatial/s2/issues/125. These are activated by default.
+
+* `dnearneigh()` can choose the prototype **s2** approach if `sf_use_s2()` is `TRUE` and `use_s2=TRUE` for unprojected coordinates; from https://github.com/r-spatial/s2/issues/125 it seems that distance thresholds at present use brute-force rather than spatial indexing. Use is not activated by default.
+
+* `poly2nb()` now uses `sf::st_intersects()` to find candidate neighbours unless `findInBounds=` is not NULL. With spatial indexing, this is very fast and scales well for large data sets. If `sf_use_s2()` is `TRUE`, `sf::st_intersects()` passes the geometries to `s2::s2_intersects_matrix()`, which also uses spatial indexing and is very fast, scaling well for large data sets.
+
+* `localmoran()` and `localmoran_perm()` return cluster quadrants in an attribute for three splits, zeros, means and medians on the variable of interest and its spatial lag.
+
+* `localmoran_perm()` returns the skewness and kurtosis of the permutation samples.
+
+
+# Version 1.1-8 (2021-05-23)
 
 * #55 related to #20 and cycling order in setting up grids provoked re-design of interface to `cell2nb()`, with passing of `"GridTopology"` or `"SpatialGrid"` objects as unnamed first or `x=` argument. Coerce `"RasterLayer"` or similar **raster**, **terra** or **stars** objects to **sp** class objects first if need be.
 

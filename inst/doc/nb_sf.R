@@ -33,13 +33,7 @@ eps <- sqrt(.Machine$double.eps)
 system.time(for(i in 1:reps) NY8_sf_1_nb <- poly2nb(NY8_sf, queen=TRUE, snap=eps))/reps
 
 ## ---- echo=dothis, eval=dothis----------------------------------------------------------
-system.time(for(i in 1:reps) NY8_sf_1_nb_STR <- poly2nb(NY8_sf, queen=TRUE, snap=eps, small_n=250))/reps
-
-## ---- echo=dothis, eval=dothis----------------------------------------------------------
 NY8_sf_1_nb
-
-## ---- echo=dothis, eval=dothis----------------------------------------------------------
-all.equal(NY8_sf_1_nb, NY8_sf_1_nb_STR, check.attributes=FALSE)
 
 ## ---- echo=dothis, eval=dothis----------------------------------------------------------
 NY8_sf_old <- st_read(system.file("shapes/NY8_utm18.shp", package="spData"), quiet=TRUE)
@@ -50,15 +44,28 @@ try(NY8_sf_old_1_nb <- poly2nb(NY8_sf_old), silent = TRUE)
 all.equal(NY8_sf_old_1_nb, NY8_sf_1_nb, check.attributes=FALSE)
 
 ## ---- echo=dothis, eval=dothis----------------------------------------------------------
-NY8_sf_old_buf <- st_buffer(NY8_sf_old, dist=0)
-table(st_is_valid(NY8_sf_old_buf))
+NY8_sf_old_val <- st_make_valid(NY8_sf_old, dist=0)
+table(st_is_valid(NY8_sf_old_val))
 
 ## ---- echo=dothis, eval=dothis----------------------------------------------------------
-try(NY8_sf_old_1_nb_buf <- poly2nb(NY8_sf_old_buf), silent = TRUE)
-all.equal(NY8_sf_old_1_nb_buf, NY8_sf_1_nb, check.attributes=FALSE)
+class(st_geometry(NY8_sf_old))
 
 ## ---- echo=dothis, eval=dothis----------------------------------------------------------
-all.equal(NY8_sf_old_1_nb_buf, NY8_sf_old_1_nb, check.attributes=FALSE)
+class(st_geometry(NY8_sf_old_val))
+
+## ---- echo=dothis, eval=dothis----------------------------------------------------------
+table(sapply(st_geometry(NY8_sf_old_val), function(x) class(x)[[2]]))
+
+## ---- echo=dothis, eval=dothis----------------------------------------------------------
+NY8_sf_old_val <- st_collection_extract(NY8_sf_old_val, "POLYGON")
+table(sapply(st_geometry(NY8_sf_old_val), function(x) class(x)[[2]]))
+
+## ---- echo=dothis, eval=dothis----------------------------------------------------------
+try(NY8_sf_old_1_nb_val <- poly2nb(NY8_sf_old_val), silent = TRUE)
+all.equal(NY8_sf_old_1_nb_val, NY8_sf_1_nb, check.attributes=FALSE)
+
+## ---- echo=dothis, eval=dothis----------------------------------------------------------
+all.equal(NY8_sf_old_1_nb_val, NY8_sf_old_1_nb, check.attributes=FALSE)
 
 ## ---- echo=dothis, eval=dothis----------------------------------------------------------
 NY8_ct_sf <- st_centroid(st_geometry(NY8_sf), of_largest_polygon=TRUE)
@@ -98,4 +105,53 @@ system.time(for (i in 1:reps) NY810_nb <- dnearneigh(NY8_ct_sf, d1=0, d2=0.75*ma
 
 ## ---- echo=dothis, eval=dothis----------------------------------------------------------
 system.time(for (i in 1:reps) NY811_nb <- dnearneigh(NY8_ct_sf, d1=0, d2=0.75*max_1nn, use_kd_tree=FALSE))/reps
+
+## ---- echo=dothis, eval=dothis----------------------------------------------------------
+pts_ll <- st_transform(NY8_ct_sf, "OGC:CRS84")
+st_is_longlat(pts_ll)
+
+## ---- echo=dothis, eval=dothis----------------------------------------------------------
+(old_use_s2 <- sf_use_s2())
+
+## ---- echo=dothis, eval=dothis----------------------------------------------------------
+sf_use_s2(TRUE)
+system.time(for (i in 1:reps) pts_ll1_nb <- knn2nb(knearneigh(pts_ll, k=6)))/reps
+
+## ---- echo=dothis, eval=dothis----------------------------------------------------------
+sf_use_s2(FALSE)
+system.time(for (i in 1:reps) pts_ll2_nb <- knn2nb(knearneigh(pts_ll, k=6)))/reps
+
+## ---- echo=dothis, eval=dothis----------------------------------------------------------
+all.equal(pts_ll1_nb, pts_ll2_nb, check.attributes=FALSE)
+
+## ---- echo=dothis, eval=dothis----------------------------------------------------------
+pts_ll1_nb[[52]]
+pts_ll2_nb[[52]]
+pts_ll1_nb[[124]]
+pts_ll2_nb[[124]]
+
+## ---- echo=dothis, eval=dothis----------------------------------------------------------
+sf_use_s2(old_use_s2)
+
+## ---- echo=dothis, eval=dothis----------------------------------------------------------
+system.time(pts_ll3_nb <- dnearneigh(pts_ll, d1=0, d2=0.75*max_1nn, use_s2=TRUE))
+
+## ---- echo=dothis, eval=dothis----------------------------------------------------------
+system.time(pts_ll4_nb <- dnearneigh(pts_ll, d1=0, d2=0.75*max_1nn, use_s2=TRUE, max_cells=500))
+
+## ---- echo=dothis, eval=dothis----------------------------------------------------------
+system.time(for (i in 1:(reps/5)) pts_ll5_nb <- dnearneigh(pts_ll, d1=0, d2=0.75*max_1nn, use_s2=TRUE, dwithin=TRUE))/(reps/5)
+
+## ---- echo=dothis, eval=dothis----------------------------------------------------------
+system.time(for (i in 1:reps) pts_ll6_nb <- dnearneigh(pts_ll, d1=0, d2=0.75*max_1nn))/reps
+
+## ---- echo=dothis, eval=dothis----------------------------------------------------------
+NY8_sf_ll <- st_transform(NY8_sf, "OGC:CRS84")
+st_is_longlat(NY8_sf_ll)
+
+## ---- echo=dothis, eval=dothis----------------------------------------------------------
+system.time(for (i in 1:reps) NY8_sf_1_nb_ll <- poly2nb(NY8_sf_ll, queen=TRUE, snap=eps))/reps
+
+## ---- echo=dothis, eval=dothis----------------------------------------------------------
+all.equal(NY8_sf_1_nb, NY8_sf_1_nb_ll, check.attributes=FALSE)
 

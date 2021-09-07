@@ -1544,7 +1544,7 @@ if (dothis) {
   else getGDALVersionInfo()
 }</code></pre>
 <pre><code>##           GDAL GDAL_with_GEOS           PROJ             sp           EPSG 
-##        &quot;3.3.0&quot;         &quot;TRUE&quot;        &quot;8.0.1&quot;        &quot;1.4-6&quot;      &quot;v10.018&quot;</code></pre>
+##        &quot;3.3.2&quot;         &quot;TRUE&quot;        &quot;8.1.1&quot;        &quot;1.4-6&quot;      &quot;v10.028&quot;</code></pre>
 <pre class="r"><code>library(rgdal)
 columbus &lt;- readOGR(system.file(&quot;shapes/columbus.shp&quot;, package=&quot;spData&quot;)[1])</code></pre>
 <pre><code>## OGR data source with driver: ESRI Shapefile 
@@ -1902,6 +1902,9 @@ $(document).ready(function () {
 
 <script>
 $(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
 
     // move toc-ignore selectors from section div to header
     $('div.section.toc-ignore')
