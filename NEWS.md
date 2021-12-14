@@ -1,4 +1,12 @@
-# Version 1.1-12 (development)
+# Version 1.1-13 (development)
+
+* Recent changes in `poly2nb()` had reduced and most recently (1.1-8) removed the use of `snap=` in finding candidate neighbours; many thanks to Matilda Brown for a clear and well-documented issue #65 
+
+* Add local Geary's C #66 thanks to Josiah Parry, discussion on further work on #68
+
+* `localmoran_perm()` returns both look-up and folded rank p-values
+
+# Version 1.1-12 (2021-11-09)
 
 * In `poly2nb()`, reverted removal of legacy interpreted overlapping envelope code for sp objects that cannot be coerced to sf without **rgeos**.
 
