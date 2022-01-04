@@ -296,18 +296,21 @@ oores <- res - ores[,c(1,3,5)]
 apply(oores, 2, mad)
 all((res >= alpha_0.05) == (ores[,c(1,3,5)] >= alpha_0.05))
 
-## ----echo=TRUE,eval=TRUE----------------------------------------------------------------
+## ---- echo=FALSE,eval=TRUE--------------------------------------------------------------
+run <- require("spatialreg", quiet=TRUE) && packageVersion("spatialreg") >= "1.2"
+
+## ----echo=TRUE,eval=run-----------------------------------------------------------------
 vars_scaled <- lapply(vars, function(x) scale(eire_ge1[[x]], scale=FALSE))
 nb_W <- nb2listw(lw_unstand$neighbours, style="W")
-pre <- spdep:::preAple(0, listw=nb_W)
-MoranAPLE <- sapply(vars_scaled, function(x) spdep:::inAple(x, pre))
-pre <- spdep:::preAple(0, listw=lw_std, override_similarity_check=TRUE)
-Prop_stdAPLE <- sapply(vars_scaled, function(x) spdep:::inAple(x, pre))
+pre <- spatialreg:::preAple(0, listw=nb_W)
+MoranAPLE <- sapply(vars_scaled, function(x) spatialreg:::inAple(x, pre))
+pre <- spatialreg:::preAple(0, listw=lw_std, override_similarity_check=TRUE)
+Prop_stdAPLE <- sapply(vars_scaled, function(x) spatialreg:::inAple(x, pre))
 res <- cbind(MoranAPLE, Prop_stdAPLE)
 colnames(res) <- c("APLE W", "APLE Gstd")
 rownames(res) <- vars
 
-## ----echo=TRUE,eval=TRUE----------------------------------------------------------------
+## ----echo=TRUE,eval=run-----------------------------------------------------------------
 print(formatC(res, format="f", digits=4), quote=FALSE)
 
 ## ----results='asis',eval=TRUE,echo=FALSE, fig.cap="Three contrasted spatial weights definitions"----
