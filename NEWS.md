@@ -1,4 +1,16 @@
-# Version 1.2-1 (development)
+# Version 1.2-2 (development)
+
+* Replace `rainbow()` by `hcl.colors(..., "Set 2")` in `plot.skater()`.
+
+* Add link to R-sig-geo thread on `EBlocal()` NaN estimates when many counts are zero on help page.
+
+* Revise and add documentation for object returned by `localC_perm()` #68 #72 #73 #74 #75 #76
+
+* `localmoran.sad()`, `localmoran.exact()` and `localmoran.exact.alt()` will now use multiple compute nodes if needed; if `Omega` is used, multiple cores may need more memory #77
+
+* For **s2** > 1.0.7, use indexed distances in `dnearneigh()` https://github.com/r-spatial/s2/pull/162.
+
+# Version 1.2-1 (2022-01-05)
 
 * Switching deprecated functions moved to **spatialreg** to defunct.
 

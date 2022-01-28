@@ -134,16 +134,43 @@ pts_ll2_nb[[124]]
 sf_use_s2(old_use_s2)
 
 ## ---- echo=dothis, eval=dothis----------------------------------------------------------
-system.time(pts_ll3_nb <- dnearneigh(pts_ll, d1=0, d2=0.75*max_1nn, use_s2=TRUE))
+max_1nn_ll <- max(unlist(nbdists(knn2nb(knearneigh(pts_ll, k=1)), pts_ll)))
 
 ## ---- echo=dothis, eval=dothis----------------------------------------------------------
-system.time(pts_ll4_nb <- dnearneigh(pts_ll, d1=0, d2=0.75*max_1nn, use_s2=TRUE, max_cells=500))
+if (packageVersion("s2") > "1.0.7") {
+  system.time(for (i in 1:(reps/5)) pts_ll3_nb <- dnearneigh(pts_ll, d1=0,
+      d2=0.75*max_1nn_ll))/(reps/5)
+}
 
 ## ---- echo=dothis, eval=dothis----------------------------------------------------------
-system.time(for (i in 1:(reps/5)) pts_ll5_nb <- dnearneigh(pts_ll, d1=0, d2=0.75*max_1nn, use_s2=TRUE, dwithin=TRUE))/(reps/5)
+system.time(for (i in 1:(reps/5)) pts_ll5_nb <- dnearneigh(pts_ll, d1=0, d2=0.75*max_1nn_ll, use_s2=TRUE, dwithin=TRUE))/(reps/5)
 
 ## ---- echo=dothis, eval=dothis----------------------------------------------------------
-system.time(for (i in 1:reps) pts_ll6_nb <- dnearneigh(pts_ll, d1=0, d2=0.75*max_1nn))/reps
+if (packageVersion("s2") > "1.0.7") all.equal(pts_ll3_nb, pts_ll5_nb, check.attributes=FALSE)
+
+## ---- echo=dothis, eval=dothis----------------------------------------------------------
+if (packageVersion("s2") > "1.0.7") {
+  system.time(for (i in 1:(reps/5)) pts_ll3a_nb <- dnearneigh(pts_ll, d1=5,
+      d2=0.75*max_1nn_ll))/(reps/5)
+}
+
+## ---- echo=dothis, eval=dothis----------------------------------------------------------
+system.time(for (i in 1:(reps/5)) pts_ll5a_nb <- dnearneigh(pts_ll, d1=5, d2=0.75*max_1nn_ll, use_s2=TRUE, dwithin=TRUE))/(reps/5)
+
+## ---- echo=dothis, eval=dothis----------------------------------------------------------
+if (packageVersion("s2") > "1.0.7") all.equal(pts_ll3a_nb, pts_ll5a_nb, check.attributes=FALSE)
+
+## ---- echo=dothis, eval=dothis----------------------------------------------------------
+system.time(for (i in 1:reps) pts_ll6_nb <- dnearneigh(pts_ll, d1=0, d2=0.75*max_1nn_ll, use_s2=FALSE))/reps
+
+## ---- echo=dothis, eval=dothis----------------------------------------------------------
+all.equal(pts_ll5_nb, pts_ll6_nb, check.attributes=FALSE)
+
+## ---- echo=dothis, eval=dothis----------------------------------------------------------
+system.time(for (i in 1:reps) pts_ll6a_nb <- dnearneigh(pts_ll, d1=5, d2=0.75*max_1nn_ll, use_s2=FALSE))/reps
+
+## ---- echo=dothis, eval=dothis----------------------------------------------------------
+all.equal(pts_ll5a_nb, pts_ll6a_nb, check.attributes=FALSE)
 
 ## ---- echo=dothis, eval=dothis----------------------------------------------------------
 NY8_sf_ll <- st_transform(NY8_sf, "OGC:CRS84")
