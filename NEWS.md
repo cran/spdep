@@ -1,4 +1,14 @@
-# Version 1.2-2 (development)
+# Version 1.2-3 (development)
+
+* replace deprecated S-compatibility macros `DOUBLE_`
+
+* #81 improved `dnearneigh()` help page.
+
+* #79 remove `"htest"` class from `LOSH.mc()` output object.
+
+* Added GA SI article to citations.
+
+# Version 1.2-2 (2022-01-28)
 
 * Replace `rainbow()` by `hcl.colors(..., "Set 2")` in `plot.skater()`.
 
