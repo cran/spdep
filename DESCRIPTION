@@ -1,6 +1,6 @@
 Package: spdep
-Version: 1.2-3
-Date: 2022-03-26
+Version: 1.2-4
+Date: 2022-04-18
 Title: Spatial Dependence: Weighting Schemes, Statistics
 Encoding: UTF-8
 Authors@R: c(person("Roger", "Bivand", role = c("cre", "aut"), email = "Roger.Bivand@nhh.no", comment=c(ORCID="0000-0003-2392-6140")),	person("Micah", "Altman", role = "ctb"),
@@ -71,7 +71,7 @@ License: GPL (>= 2)
 VignetteBuilder: knitr
 RoxygenNote: RoxygenNote: 6.1.1
 NeedsCompilation: yes
-Packaged: 2022-03-26 18:39:01 UTC; rsb
+Packaged: 2022-04-17 16:58:23 UTC; rsb
 Author: Roger Bivand [cre, aut] (<https://orcid.org/0000-0003-2392-6140>),
   Micah Altman [ctb],
   Luc Anselin [ctb],
@@ -102,4 +102,4 @@ Author: Roger Bivand [cre, aut] (<https://orcid.org/0000-0003-2392-6140>),
   Danlin Yu [ctb]
 Maintainer: Roger Bivand <Roger.Bivand@nhh.no>
 Repository: CRAN
-Date/Publication: 2022-03-29 07:40:02 UTC
+Date/Publication: 2022-04-18 06:20:02 UTC

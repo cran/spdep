@@ -302,7 +302,7 @@ st_write(sf_bna2_utm18, &quot;NY8_bna_utm18.gpkg&quot;)</code></pre>
 }
 if (dothis) sf_extSoftVersion()</code></pre>
 <pre><code>##                  GEOS                  GDAL                proj.4        GDAL_with_GEOS 
-##              &quot;3.10.2&quot; &quot;3.5.0dev-adb88dd814&quot;               &quot;9.0.0&quot;                &quot;true&quot; 
+##              &quot;3.10.2&quot; &quot;3.5.0dev-33f49c1ed0&quot;               &quot;9.0.0&quot;                &quot;true&quot; 
 ##            USE_PROJ_H                  PROJ 
 ##                &quot;true&quot;               &quot;9.0.0&quot;</code></pre>
 <p>Let us read the GPKG file with valid geometries in to ‘sf’ and ‘sp’ objects:</p>
@@ -319,7 +319,7 @@ reps &lt;- 10
 eps &lt;- sqrt(.Machine$double.eps)
 system.time(for(i in 1:reps) NY8_sf_1_nb &lt;- poly2nb(NY8_sf, queen=TRUE, snap=eps))/reps</code></pre>
 <pre><code>##    user  system elapsed 
-##  0.1897  0.0030  0.1934</code></pre>
+##  0.1760  0.0037  0.1806</code></pre>
 <p>Using spatial indices to check intersection of polygons is much faster than the legacy method in poly2nb. From <strong>spdep</strong> 1.1-7, use is made of GEOS through <strong>sf</strong> to find candidate neighbours when <code>foundInBox=NULL</code>, the default value. Because contiguity is symmetric by definition, <code>foundInBox=</code> only requires intersections for higher indices, leading to a slight overhead to remove duplicates, as <code>st_intersects()</code> reports both <code>i j</code> ans <code>j i</code> relationships. As <code>st_intersects()</code> does not report whether neighbours are <code>queen</code> or <code>rook</code>, a further step is needed to distinguish the two cases.</p>
 <pre class="r"><code>NY8_sf_1_nb</code></pre>
 <pre><code>## Neighbour list object:
@@ -411,11 +411,11 @@ NY87_nb &lt;- graph2nb(relativeneigh(NY8_ct_sf))</code></pre>
 <p>K-nearest neighbours use the coordinate matrices, and can handle Great Circle distances, but this is not demonstrated here, as the data set used is planar, in which case <code>dbscan::kNN()</code> in 2D or 3D building a kd-tree is used:</p>
 <pre class="r"><code>system.time(for (i in 1:reps) NY88_nb_sf &lt;- knn2nb(knearneigh(NY8_ct_sf, k=1)))/reps</code></pre>
 <pre><code>##    user  system elapsed 
-##  0.0799  0.0022  0.0826</code></pre>
+##  0.0630  0.0029  0.0661</code></pre>
 <p>Legacy code may be used omitting the kd-tree:</p>
 <pre class="r"><code>system.time(for (i in 1:reps) NY89_nb_sf &lt;- knn2nb(knearneigh(NY8_ct_sf, k=1, use_kd_tree=FALSE)))/reps</code></pre>
 <pre><code>##    user  system elapsed 
-##  0.0797  0.0018  0.0818</code></pre>
+##  0.0645  0.0025  0.0672</code></pre>
 </div>
 <div id="distance-neighbours" class="section level3">
 <h3>Distance neighbours</h3>
@@ -428,11 +428,11 @@ summary(dsts)</code></pre>
 <p><code>dnearneigh</code> can also handle Great Circle distances, but this is not demonstrated here, as the data set used is planar:</p>
 <pre class="r"><code>system.time(for (i in 1:reps) NY810_nb &lt;- dnearneigh(NY8_ct_sf, d1=0, d2=0.75*max_1nn))/reps</code></pre>
 <pre><code>##    user  system elapsed 
-##  0.1030  0.0023  0.1058</code></pre>
+##  0.0788  0.0025  0.0816</code></pre>
 <p>By default, the function uses <code>dbscan::frNN()</code> to build a kd-tree in 2D or 3D which is then used to find distance neighbours. For small n, the argument <code>use_kd_tree=FALSE</code> may speed up computation a little by reverting to legacy code not building a kd-tree first, but in general the differences are so small that the user will not notice:</p>
 <pre class="r"><code>system.time(for (i in 1:reps) NY811_nb &lt;- dnearneigh(NY8_ct_sf, d1=0, d2=0.75*max_1nn, use_kd_tree=FALSE))/reps</code></pre>
 <pre><code>##    user  system elapsed 
-##  0.0845  0.0022  0.0871</code></pre>
+##  0.0633  0.0022  0.0657</code></pre>
 </div>
 </div>
 <div id="spherical-point-based-neighbours" class="section level2">
@@ -450,13 +450,13 @@ st_is_longlat(pts_ll)</code></pre>
 <pre class="r"><code>sf_use_s2(TRUE)
 system.time(for (i in 1:reps) pts_ll1_nb &lt;- knn2nb(knearneigh(pts_ll, k=6)))/reps</code></pre>
 <pre><code>##    user  system elapsed 
-##  0.0271  0.0000  0.0272</code></pre>
+##  0.0241  0.0002  0.0243</code></pre>
 <p>For this smaller data set, the legacy approach without spatial indexing is adequate, but slows down as the number of observations increases:</p>
 <pre class="r"><code>sf_use_s2(FALSE)</code></pre>
 <pre><code>## Spherical geometry (s2) switched off</code></pre>
 <pre class="r"><code>system.time(for (i in 1:reps) pts_ll2_nb &lt;- knn2nb(knearneigh(pts_ll, k=6)))/reps</code></pre>
 <pre><code>##    user  system elapsed 
-##  0.0218  0.0000  0.0219</code></pre>
+##  0.0194  0.0000  0.0194</code></pre>
 <p>The WGS84 ellipsoid Great Circle distances differ a very little from the <strong>s2</strong> spherical distances, yielding output that here diverges for two tract centroids:</p>
 <pre class="r"><code>all.equal(pts_ll1_nb, pts_ll2_nb, check.attributes=FALSE)</code></pre>
 <pre><code>## [1] &quot;Component 52: Mean relative difference: 1.466667&quot;  
@@ -481,24 +481,30 @@ system.time(for (i in 1:reps) pts_ll1_nb &lt;- knn2nb(knearneigh(pts_ll, k=6)))/
   system.time(for (i in 1:(reps/5)) pts_ll3_nb &lt;- dnearneigh(pts_ll, d1=0,
       d2=0.75*max_1nn_ll))/(reps/5)
 }</code></pre>
+<pre><code>##    user  system elapsed 
+##  0.0285  0.0000  0.0290</code></pre>
 <p>Alternatively, spherical distances can be used with <code>s2::s2_dwithin_matrix()</code>; performance also deteriorates with increasing numbers of observations:</p>
 <pre class="r"><code>system.time(for (i in 1:(reps/5)) pts_ll5_nb &lt;- dnearneigh(pts_ll, d1=0, d2=0.75*max_1nn_ll, use_s2=TRUE, dwithin=TRUE))/(reps/5)</code></pre>
 <pre><code>##    user  system elapsed 
-##  0.0745  0.0000  0.0750</code></pre>
+##  0.0655  0.0000  0.0655</code></pre>
 <pre class="r"><code>if (packageVersion(&quot;s2&quot;) &gt; &quot;1.0.7&quot;) all.equal(pts_ll3_nb, pts_ll5_nb, check.attributes=FALSE)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
 <p>Using <code>s2::s2_closest_edges()</code> respects <code>d1 &gt; 0</code> without requiring a second pass in R, so is faster than <code>s2::s2_dwithin_matrix()</code>:</p>
 <pre class="r"><code>if (packageVersion(&quot;s2&quot;) &gt; &quot;1.0.7&quot;) {
   system.time(for (i in 1:(reps/5)) pts_ll3a_nb &lt;- dnearneigh(pts_ll, d1=5,
       d2=0.75*max_1nn_ll))/(reps/5)
 }</code></pre>
+<pre><code>##    user  system elapsed 
+##  0.0285  0.0000  0.0285</code></pre>
 <pre class="r"><code>system.time(for (i in 1:(reps/5)) pts_ll5a_nb &lt;- dnearneigh(pts_ll, d1=5, d2=0.75*max_1nn_ll, use_s2=TRUE, dwithin=TRUE))/(reps/5)</code></pre>
 <pre><code>##    user  system elapsed 
-##  0.1335  0.0005  0.1345</code></pre>
+##  0.1225  0.0000  0.1230</code></pre>
 <pre class="r"><code>if (packageVersion(&quot;s2&quot;) &gt; &quot;1.0.7&quot;) all.equal(pts_ll3a_nb, pts_ll5a_nb, check.attributes=FALSE)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
 <p>Setting <code>use_s2=FALSE</code> falls back to the legacy version, which uses symmetry to reduce time:</p>
 <pre class="r"><code>system.time(for (i in 1:reps) pts_ll6_nb &lt;- dnearneigh(pts_ll, d1=0, d2=0.75*max_1nn_ll, use_s2=FALSE))/reps</code></pre>
 <pre><code>##    user  system elapsed 
-##  0.0118  0.0000  0.0118</code></pre>
+##  0.0105  0.0000  0.0105</code></pre>
 <p>Minor differences may occur between the legacy ellipsoid and <strong>s2</strong> spherical approaches:</p>
 <pre class="r"><code>all.equal(pts_ll5_nb, pts_ll6_nb, check.attributes=FALSE)</code></pre>
 <pre><code>##  [1] &quot;Component 20: Numeric: lengths (6, 5) differ&quot;     
@@ -525,7 +531,7 @@ system.time(for (i in 1:reps) pts_ll1_nb &lt;- knn2nb(knearneigh(pts_ll, k=6)))/
 ## [22] &quot;Component 245: Numeric: lengths (16, 15) differ&quot;</code></pre>
 <pre class="r"><code>system.time(for (i in 1:reps) pts_ll6a_nb &lt;- dnearneigh(pts_ll, d1=5, d2=0.75*max_1nn_ll, use_s2=FALSE))/reps</code></pre>
 <pre><code>##    user  system elapsed 
-##  0.0116  0.0000  0.0117</code></pre>
+##  0.0114  0.0002  0.0118</code></pre>
 <pre class="r"><code>all.equal(pts_ll5a_nb, pts_ll6a_nb, check.attributes=FALSE)</code></pre>
 <pre><code>##  [1] &quot;Component 20: Numeric: lengths (6, 5) differ&quot;       
 ##  [2] &quot;Component 28: Numeric: lengths (7, 6) differ&quot;       
@@ -566,7 +572,7 @@ st_is_longlat(NY8_sf_ll)</code></pre>
 <p>The timings are a little slower when <code>st_intersects()</code> hands off geometry predicates to <code>s2_intersects_matrix()</code>, but the results are the same, and because spatial indexing is used, this scales well for larger data sets:</p>
 <pre class="r"><code>system.time(for (i in 1:reps) NY8_sf_1_nb_ll &lt;- poly2nb(NY8_sf_ll, queen=TRUE, snap=eps))/reps</code></pre>
 <pre><code>##    user  system elapsed 
-##  0.2157  0.0010  0.2175</code></pre>
+##  0.1584  0.0010  0.1599</code></pre>
 <pre class="r"><code>all.equal(NY8_sf_1_nb, NY8_sf_1_nb_ll, check.attributes=FALSE)</code></pre>
 <pre><code>## [1] TRUE</code></pre>
 </div>
