@@ -1,12 +1,7 @@
 ## ---------------------------------------------------------------------------------------
-if (require(rgdal, quietly=TRUE)) {
-  NY8 <- readOGR(system.file("shapes/NY8_utm18.shp", package="spData"))
-} else {
-  require(maptools, quietly=TRUE)
-  NY8 <- readShapeSpatial(system.file("shapes/NY8_utm18.shp", package="spData"))
-}
 library(spdep)
-NY_nb <- read.gal(system.file("weights/NY_nb.gal", package="spData"), region.id=row.names(NY8))
+NY8 <- as(sf::st_read(system.file("shapes/NY8_utm18.shp", package="spData")), "Spatial")
+NY_nb <- read.gal(system.file("weights/NY_nb.gal", package="spData"), region.id=as.character(as.integer(row.names(NY8))-1L))
 
 ## ---------------------------------------------------------------------------------------
 Syracuse <- NY8[NY8$AREANAME == "Syracuse city",]

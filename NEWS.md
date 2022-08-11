@@ -1,8 +1,18 @@
-# Version 1.2-4 (development)
+# Version 1.2-5 (development)
+
+* permit use of data.frame or tibble as matrix for functions creating neighbour objects from 2D points (preferred use an object inheriting from  ``"SpatialPoints"` or `"sfc"`)
+
+* fix #87 wrong logic in infinite weights in `nb2listwdist()`
+
+* https://github.com/r-spatial/s2/pull/174 speeds up `dnearneigh()` for geographical coordinates without using `s2::s2_closest_edges()`.
+
+* Adapting vignettes for absence of **rgdal** and **maptools**
+
+# Version 1.2-4 (2022-04-18)
 
 * added `remove.self()`, thanks to Josiah Parry #83.
 
-* unescape underscores in help pages
+* unescape underscores in help pages.
 
 # Version 1.2-3 (2022-03-29)
 

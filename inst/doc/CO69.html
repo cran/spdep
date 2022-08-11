@@ -283,12 +283,7 @@ div.tocify {
 <p><span class="citation">Cliff and Ord (1969)</span>, published forty years ago, marked a turning point in the treatment of spatial autocorrelation in quantitative geography. It provided the framework needed by any applied researcher to attempt an implementation for a different system, possibly using a different programming language. In this spirit, here we examine how spatial weights have been represented in implementations and may be reproduced, how the tabulated results in the paper may be reproduced, and how they may be extended to cover simulation.</p>
 <p>One of the major assertions of <span class="citation">Cliff and Ord (1969)</span> is that their statistic advances the measurement of spatial autocorrelation with respect to <span class="citation">Moran (1950)</span> and <span class="citation">Geary (1954)</span> because a more general specification of spatial weights could be used. This more general form has implications both for the preparation of the weights themselves, and for the calculation of the measures. We will look at spatial weights first, before moving on to consider the measures presented in the paper and some of their subsequent developments. Before doing this, we will put together a data set matching that used in <span class="citation">Cliff and Ord (1969)</span>. They provide tabulated data for the counties of the Irish Republic, but omit Dublin from analyses. A shapefile included in this package, kindly made available by Michael Tiefelsdorf, is used as a starting point:</p>
 <pre class="r"><code>library(spdep)
-if (require(rgdal, quietly=TRUE)) {
-  eire &lt;- readOGR(system.file(&quot;shapes/eire.shp&quot;, package=&quot;spData&quot;)[1])
-} else {
-  require(maptools, quietly=TRUE)
-  eire &lt;- readShapeSpatial(system.file(&quot;shapes/eire.shp&quot;, package=&quot;spData&quot;)[1])
-}
+eire &lt;- as(sf::st_read(system.file(&quot;shapes/eire.shp&quot;, package=&quot;spData&quot;)[1]), &quot;Spatial&quot;)
 row.names(eire) &lt;- as.character(eire$names)
 proj4string(eire) &lt;- CRS(&quot;+proj=utm +zone=30 +ellps=airy +units=km&quot;)</code></pre>
 <pre class="r"><code>class(eire)</code></pre>
@@ -310,8 +305,7 @@ names(ge)</code></pre>
 <pre class="r"><code>row.names(ge) &lt;- as.character(ge$county)
 all.equal(row.names(ge), row.names(eire))</code></pre>
 <pre><code>## [1] TRUE</code></pre>
-<pre class="r"><code>library(maptools)
-eire_ge &lt;- spCbind(eire, ge)</code></pre>
+<pre class="r"><code>eire_ge &lt;- cbind(eire, ge)</code></pre>
 <p>Finally, we need to drop the Dublin county omitted in the analyses conducted in <span class="citation">Cliff and Ord (1969)</span>:</p>
 <pre class="r"><code>eire_ge1 &lt;- eire_ge[!(row.names(eire_ge) %in% &quot;Dublin&quot;),]
 length(row.names(eire_ge1))</code></pre>
@@ -464,14 +458,18 @@ County boundaries and contiguities
 </p>
 </div>
 <p>An attempt has also been made to reproduce the generalised weights for 25 Irish counties reported by <span class="citation">Cliff and Ord (1969)</span>, after Dublin is omitted. Reproducing the inverse distance component <span class="math inline">\(d_{ij}^{-1}\)</span> of the generalised weights <span class="math inline">\(d_{ij}^{-1} \beta_{i(j)}\)</span> is eased by the statement in <span class="citation">Cliff and Ord (1973, 55)</span> that the points chosen to represent the counties were their “geographic centres,” so not very different from the centroids yielded by applying a chosen computational geometry function. The distance metric is not given, and may have been in kilometers or miles — both were tried, but the results were not sensitive to the difference as it applies equally across the weights; miles are used here. Computing the proportion of shared distance measure <span class="math inline">\(\beta_{i(j)}\)</span> is harder, because it requires the availability of the full topology of the input polygons. <span class="citation">Roger S. Bivand, Pebesma, and Gómez-Rubio (2008, 244)</span> show how to employ the <span><code>vect2neigh</code></span> function (written by Markus Neteler) in the package when using GRASS GIS vector handling to create a full topology from spaghetti vector data and to extract border segment lengths; a similar approach also is mentioned there using ArcGIS coverages for the same purpose. GRASS was used to create the topology, and next the proportion of shared distance measure was calculated.</p>
-<pre class="r"><code>library(maptools)
-SG &lt;- Sobj_SpatialGrid(eire_ge1)$SG
-library(spgrass6)
-grass_home &lt;- &quot;/home/rsb/topics/grass/g64/grass-6.4.0svn&quot;
+<pre class="r"><code>library(terra)
+v_eire_ge1 &lt;-vect(eire_ge1)
+SG &lt;- rasterize(v_eire_ge1, rast(nrows=70, ncols=50, extent=ext(v_eire_ge1)), field=&quot;county&quot;)
+library(rgrass7)
+grass_home &lt;- &quot;/home/rsb/topics/grass/g820/grass82&quot;
 initGRASS(grass_home, home=tempdir(), SG=SG, override=TRUE)
-writeVECT6(eire_ge1, &quot;eire&quot;, v.in.ogr_flags=c(&quot;o&quot;, &quot;overwrite&quot;))
+write_VECT(v_eire_ge1, &quot;eire&quot;, flags=c(&quot;o&quot;, &quot;overwrite&quot;))
 res &lt;- vect2neigh(&quot;eire&quot;, ID=&quot;serlet&quot;)</code></pre>
-<pre class="r"><code>grass_borders &lt;- sn2listw(res)
+<pre class="r"><code>res$length &lt;- res$length*1000
+attr(res, &quot;external&quot;) &lt;- attr(res, &quot;external&quot;)*1000
+attr(res, &quot;total&quot;) &lt;- attr(res, &quot;total&quot;)*1000
+grass_borders &lt;- sn2listw(res)
 raw_borders &lt;- grass_borders$weights
 int_tot &lt;- attr(res, &quot;total&quot;) - attr(res, &quot;external&quot;)
 prop_borders &lt;- lapply(1:length(int_tot), function(i) raw_borders[[i]]/int_tot[i])
@@ -498,7 +496,7 @@ summary(combo_km_lw)</code></pre>
 ## Weights style: B 
 ## Weights constants summary:
 ##    n  nn        S0       S1.5        S2
-## B 25 625 0.9083141 0.02191843 0.1427745</code></pre>
+## B 25 625 0.9083144 0.02191845 0.1427746</code></pre>
 <p>To compare, we need to remove the Tarbert–Killimer ferry link manually, and view the summary of the original weights, as well as a correlation coefficient between these and the reconstructed weights. Naturally, unless the boundary coordinates used here are identical with those in the original analysis, presumably measured by hand, small differences will occur.</p>
 <pre class="r"><code>red_lw_unstand &lt;- lw_unstand
 Clare &lt;- which(attr(lw_unstand, &quot;region.id&quot;) == &quot;C&quot;)
@@ -530,7 +528,7 @@ summary(red_lw_unstand)</code></pre>
 ##    n  nn     S0         S1        S2
 ## B 25 625 0.8437 0.01870287 0.1222501</code></pre>
 <pre class="r"><code>cor(unlist(red_lw_unstand$weights), unlist(combo_km_lw$weights))</code></pre>
-<pre><code>## [1] 0.9695429</code></pre>
+<pre><code>## [1] 0.969543</code></pre>
 <p>Even though the differences in the general weights, for identical contiguities, are so small, the consequences for the measure of spatial autocorrelation are substantial, Here we use the fifth variable, other cattle per 1000 acres crops and pasture (1952), and see that the reconstructed weights seem to “reveal” more autocorrelation than the original weights.</p>
 <pre class="r"><code>flatten &lt;- function(x, digits=3, statistic=&quot;I&quot;) {
   res &lt;- c(format(x$estimate, digits=digits),
@@ -603,7 +601,7 @@ Prop_stdN  &lt;- lapply(vars, function(x) moran.test(eire_ge1[[x]], listw=lw_std
 Prop_stdR  &lt;- lapply(vars, function(x) moran.test(eire_ge1[[x]], listw=lw_std, randomisation=TRUE))
 })</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.108   0.000   0.108</code></pre>
+##   0.113   0.008   0.121</code></pre>
 <pre class="r"><code>res &lt;- sapply(c(&quot;MoranN&quot;, &quot;MoranR&quot;, &quot;GearyN&quot;, &quot;GearyR&quot;, &quot;Prop_unstdN&quot;, &quot;Prop_unstdR&quot;, &quot;Prop_stdN&quot;, &quot;Prop_stdR&quot;), function(x) sapply(get(x), &quot;[[&quot;, &quot;statistic&quot;))
 rownames(res) &lt;- vars
 ores &lt;- res[,c(1,2,5:8)]</code></pre>
@@ -742,7 +740,7 @@ Prop_unstdSad  &lt;- lapply(lm_objs, function(x) lm.morantest.sad(x, listw=lw_un
 Prop_stdSad  &lt;- lapply(lm_objs, function(x) lm.morantest.sad(x, listw=lw_std))
 })</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.063   0.001   0.064</code></pre>
+##   0.065   0.001   0.069</code></pre>
 <pre class="r"><code>res &lt;- sapply(c(&quot;MoranSad&quot;, &quot;Prop_unstdSad&quot;, &quot;Prop_stdSad&quot;), function(x) sapply(get(x), &quot;[[&quot;, &quot;statistic&quot;))
 rownames(res) &lt;- vars</code></pre>
 <p>Although the analytical standard deviates (under Normality) are larger than those reached using the Saddlepoint approximation when measured by median absolute deviation, the differences do not lead to different inferences at this chosen cut-off. This reflects the fact that the shape of the distribution is very sensitive to small <span class="math inline">\(n\)</span>, but for moderate <span class="math inline">\(n\)</span> and global Moran’s <span class="math inline">\(I\)</span>, the effects are seen only further out in the tails. The consequences for local Moran’s <span class="math inline">\(I_i\)</span> are much stronger, because the clique of neighbours of each observation is typically very small. It is perhaps of interest that the differences are much smaller for the case of general weights than for unstandardised binary weights.</p>
@@ -777,7 +775,7 @@ Prop_unstdEx  &lt;- lapply(lm_objs, function(x) lm.morantest.exact(x, listw=lw_u
 Prop_stdEx  &lt;- lapply(lm_objs, function(x) lm.morantest.exact(x, listw=lw_std))
 })</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.080   0.000   0.081</code></pre>
+##   0.081   0.000   0.080</code></pre>
 <pre class="r"><code>res &lt;- sapply(c(&quot;MoranEx&quot;, &quot;Prop_unstdEx&quot;, &quot;Prop_stdEx&quot;), function(x) sapply(get(x), &quot;[[&quot;, &quot;statistic&quot;))
 rownames(res) &lt;- vars</code></pre>
 <p>The output is comparable with that of the Saddlepoint approximation, and the inferences drawn here are the same for the chosen cut-off as for the analytical standard deviates calculated under Normality.</p>

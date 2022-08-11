@@ -3,12 +3,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
 ## ----echo=TRUE,eval=TRUE,results='hide'---------------------------------------
 library(spdep)
-if (require(rgdal, quietly=TRUE)) {
-  eire <- readOGR(system.file("shapes/eire.shp", package="spData")[1])
-} else {
-  require(maptools, quietly=TRUE)
-  eire <- readShapeSpatial(system.file("shapes/eire.shp", package="spData")[1])
-}
+eire <- as(sf::st_read(system.file("shapes/eire.shp", package="spData")[1]), "Spatial")
 row.names(eire) <- as.character(eire$names)
 proj4string(eire) <- CRS("+proj=utm +zone=30 +ellps=airy +units=km")
 
@@ -24,8 +19,7 @@ names(ge)
 ## ----echo=TRUE,eval=TRUE------------------------------------------------------
 row.names(ge) <- as.character(ge$county)
 all.equal(row.names(ge), row.names(eire))
-library(maptools)
-eire_ge <- spCbind(eire, ge)
+eire_ge <- cbind(eire, ge)
 
 ## ----echo=TRUE,eval=TRUE------------------------------------------------------
 eire_ge1 <- eire_ge[!(row.names(eire_ge) %in% "Dublin"),]
@@ -84,18 +78,22 @@ legend("topleft", legend=c("Contiguous", "Ferry"), lwd=2, lty=1, col=c(1,3), bty
 par(mfrow=c(1,1))
 
 ## ----echo=FALSE,eval=TRUE-----------------------------------------------------
-load(system.file("etc/misc/raw_grass_borders.RData", package="spdep")[1])
+load(system.file("etc/misc/raw_grass_borders_new.RData", package="spdep")[1])
 
 ## ----echo=TRUE,eval=FALSE,results='hide'--------------------------------------
-#  library(maptools)
-#  SG <- Sobj_SpatialGrid(eire_ge1)$SG
-#  library(spgrass6)
-#  grass_home <- "/home/rsb/topics/grass/g64/grass-6.4.0svn"
+#  library(terra)
+#  v_eire_ge1 <-vect(eire_ge1)
+#  SG <- rasterize(v_eire_ge1, rast(nrows=70, ncols=50, extent=ext(v_eire_ge1)), field="county")
+#  library(rgrass7)
+#  grass_home <- "/home/rsb/topics/grass/g820/grass82"
 #  initGRASS(grass_home, home=tempdir(), SG=SG, override=TRUE)
-#  writeVECT6(eire_ge1, "eire", v.in.ogr_flags=c("o", "overwrite"))
+#  write_VECT(v_eire_ge1, "eire", flags=c("o", "overwrite"))
 #  res <- vect2neigh("eire", ID="serlet")
 
 ## ----echo=TRUE,eval=TRUE------------------------------------------------------
+res$length <- res$length*1000
+attr(res, "external") <- attr(res, "external")*1000
+attr(res, "total") <- attr(res, "total")*1000
 grass_borders <- sn2listw(res)
 raw_borders <- grass_borders$weights
 int_tot <- attr(res, "total") - attr(res, "external")
