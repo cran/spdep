@@ -5,7 +5,7 @@
 lee.mc <- function(x, y, listw, nsim, zero.policy=NULL,
 	alternative="greater", na.action=na.fail, spChk=NULL,
         return_boot=FALSE) {
-	alternative <- match.arg(alternative, c("greater", "less"))
+	alternative <- match.arg(alternative, c("greater", "less", "two.sided"))
 	if(!inherits(listw, "listw")) stop(paste(deparse(substitute(listw)),
 		"is not a listw object"))
 	if(!is.numeric(x) | !is.numeric(y)) stop(paste(deparse(substitute(x)),
@@ -58,21 +58,10 @@ lee.mc <- function(x, y, listw, nsim, zero.policy=NULL,
 #                return(moran(x=var, ...)$I)
 		return(lee(x=var[i,1], y=var[i,2], ...)$L)
             }
-            cores <- get.coresOption()
-            if (is.null(cores)) {
-            parallel <- "no"
-            } else {
-                parallel <- ifelse (get.mcOption(), "multicore", "snow")
-            }
-            ncpus <- ifelse(is.null(cores), 1L, cores)
-            cl <- NULL
-            if (parallel == "snow") {
-                cl <- get.ClusterOption()
-                if (is.null(cl)) {
-                    parallel <- "no"
-                    warning("no cluster in ClusterOption, parallel set to no")
-                }
-            }
+            p_setup <- parallel_setup(NULL)
+            parallel <- p_setup$parallel
+            ncpus <- p_setup$ncpus
+            cl <- p_setup$cl
             res <- boot(xy, statistic=lee_boot, R=nsim,
                 sim="permutation", listw=listw, n=n, S2=S2, 
                 zero.policy=zero.policy, parallel=parallel, ncpus=ncpus, cl=cl)
@@ -94,6 +83,8 @@ lee.mc <- function(x, y, listw, nsim, zero.policy=NULL,
         	pval <- punif((diff + 1)/(nsim + 1), lower.tail=FALSE)
     	else if (alternative == "greater") 
         	pval <- punif((diff + 1)/(nsim + 1))
+        else pval <- punif(abs(xrank - (nsim+1)/2)/(nsim + 1), 0, 0.5,
+                lower.tail=FALSE)
 	if (!is.finite(pval) || pval < 0 || pval > 1) 
 		warning("Out-of-range p-value: reconsider test arguments")
 	statistic <- res[nsim+1]

@@ -1,4 +1,22 @@
-# Version 1.2-5 (development)
+# Version 1.2-7 (development)
+
+* #103 refactoring local joincount test by Josiah Parry
+
+* add `hotspot` methods for `localmoran` (analytical, permutation, Saddlepoint and exact), `localC` (univariate and multivariate) and `localG` (analytical and permutation)
+
+* #95 add `"two.sided"` to `lee.mc()`, same for `sp.mantel.mc()`, `EBImoran.mc()`, `joincount.mc()`, `geary.mc()`
+
+* #92, #93, #94, #96, #97  contributions of prototype bivariate Moran, local  bivariate Moran and local joincount and bivariate joincount tests by Josiah Parry
+
+* #91 `tolerance.nb()` update by F. Guillaume Blanchet
+
+* updating coercion for **Matrix** 1.4-2
+
+* fix ncpus issue in dontrun examples
+
+* remove suggested packages **rgdal**, **rgeos**, **maptools**
+
+# Version 1.2-5 (2022-08-11)
 
 * permit use of data.frame or tibble as matrix for functions creating neighbour objects from 2D points (preferred use an object inheriting from  ``"SpatialPoints"` or `"sfc"`)
 

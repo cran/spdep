@@ -26,7 +26,7 @@ EBImoran.mc <- function (n, x, listw, nsim, zero.policy = NULL,
         if (is.null(zero.policy))
             zero.policy <- get("zeroPolicy", envir = .spdepOptions)
         stopifnot(is.logical(zero.policy))
-    alternative <- match.arg(alternative, c("greater", "less"))
+    alternative <- match.arg(alternative, c("greater", "less", "two.sided"))
     if (!inherits(listw, "listw")) 
         stop(paste(deparse(substitute(listw)), "is not a listw object"))
     if (missing(nsim)) 
@@ -58,21 +58,10 @@ EBImoran.mc <- function (n, x, listw, nsim, zero.policy = NULL,
             var <- var[i]
             return(EBImoran(z=var, ...))
         }
-        cores <- get.coresOption()
-        if (is.null(cores)) {
-        parallel <- "no"
-        } else {
-            parallel <- ifelse (get.mcOption(), "multicore", "snow")
-        }
-        ncpus <- ifelse(is.null(cores), 1L, cores)
-        cl <- NULL
-        if (parallel == "snow") {
-            cl <- get.ClusterOption()
-            if (is.null(cl)) {
-                parallel <- "no"
-                warning("no cluster in ClusterOption, parallel set to no")
-            }
-        }
+        p_setup <- parallel_setup(NULL)
+        parallel <- p_setup$parallel
+        ncpus <- p_setup$ncpus
+        cl <- p_setup$cl
         res <- boot(z, statistic=EBI_boot, R=nsim,
             sim="permutation", listw=listw, nn=m, S0=S0,
             zero.policy=zero.policy,
@@ -93,6 +82,8 @@ EBImoran.mc <- function (n, x, listw, nsim, zero.policy = NULL,
         pval <- punif((diff + 1)/(nsim + 1), lower.tail=FALSE)
     else if (alternative == "greater") 
         pval <- punif((diff + 1)/(nsim + 1))
+    else pval <- punif(abs(zrank - (nsim+1)/2)/(nsim + 1), 0, 0.5,
+        lower.tail=FALSE)
     if (!is.finite(pval) || pval < 0 || pval > 1) 
 	warning("Out-of-range p-value: reconsider test arguments")
     statistic <- res[nsim + 1]
