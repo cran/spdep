@@ -130,8 +130,8 @@ pre code {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -139,16 +139,9 @@ pre code {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -361,8 +354,13 @@ IDs &lt;- row.names(as(Syracuse, &quot;data.frame&quot;))
 Sy4_nb &lt;- tri2nb(coords, row.names=IDs)
 if (require(dbscan, quietly=TRUE)) {
   Sy5_nb &lt;- graph2nb(soi.graph(Sy4_nb, coords), row.names=IDs)
-} else Sy5_nb &lt;- NULL
-Sy6_nb &lt;- graph2nb(gabrielneigh(coords), row.names=IDs)
+} else Sy5_nb &lt;- NULL</code></pre>
+<pre><code>## 
+## Attaching package: &#39;dbscan&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:stats&#39;:
+## 
+##     as.dendrogram</code></pre>
+<pre class="r"><code>Sy6_nb &lt;- graph2nb(gabrielneigh(coords), row.names=IDs)
 Sy7_nb &lt;- graph2nb(relativeneigh(coords), row.names=IDs)</code></pre>
 <pre class="r"><code>oopar &lt;- par(mfrow=c(2,2), mar=c(1,1,1,1)+0.1)
 plot(Syracuse, border=&quot;grey60&quot;)

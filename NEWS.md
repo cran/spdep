@@ -1,4 +1,30 @@
-# Version 1.2-7 (development)
+# Version 1.2-8 (development)
+
+* `mat2listw()` warning if no `style=` argument given, or if `M"` is given https://github.com/r-spatial/spatialreg/issues/24, https://github.com/r-spatial/spatialreg/issues/23. 
+
+* remaining users of `run_perm()` - `localC()`, `localmoran_bv()` and `local_joincount_uni()` get `no_repeat_in_row=` arguments.
+
+* Address 2) in #124; `localG_perm()` and `localmoran_perm()` get `no_repeat_in_row=` arguments to use conditional permutation without replacement by sample vectors; the default implementation uses sampling with replacement, which is acceptable across simulation draws, but arguably less acceptable within draws. Feedback would be valued.
+
+* Address 1) in #124; `localG_perm()` and `localG()` now return the same analytical standard deviates. The standard deviates from the simulated distributions are now returned in `attr(., "internals")[,"StdDev.Gi"]` from `localG_perm()`, as are p-values, etc.
+
+* move **sp** from Depends to Imports, to reduce the visual impression that **sp** objects are required for **spdep**; **sf** objects are now preferred, but **sp** objects can be used as before, although users may need to attach **sp** expliciitly.
+
+* fix #121 and #123; correcting returned values for `localG_perm()` when estimating the G-star measure (fix self x values and weights)
+
+* address #120, moving documentation of `listw2U()` from `?lm.morantest` to `?nb2listw`
+
+* addressing #119 for interpretation of `moran_bv()` results
+
+* adding #116, René Westerholt
+
+* fix #113, too low R version for `grDevices::hcl.colors()`
+
+* addressing #111 by Josiah Parry
+
+* PRs from René Westerholt, ending with #109, for the local GS measure 
+
+# Version 1.2-7 (2022-10-01)
 
 * #103 refactoring local joincount test by Josiah Parry
 

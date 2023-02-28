@@ -1,13 +1,20 @@
 library(spdep)
 data(boston, package="spData")
 lw <- nb2listw(boston.soi)
+lws <- nb2listw(include.self(boston.soi))
 x <- boston.c$NOX
 y <- boston.c$LSTAT
 xx <- cbind(boston.c$NOX, boston.c$LSTAT, boston.c$RM)
 nsim <- 499L
 iseed=1L
 expect_silent(no <- system.time(localmoran_perm(x, lw, nsim=nsim, iseed=iseed))["elapsed"])
-expect_silent(no <- system.time(localG_perm(x, lw, nsim=nsim, iseed=iseed))["elapsed"])
+expect_silent(no <- system.time(localmoran_perm(x, lw, nsim=nsim, iseed=iseed, no_repeat_in_row=TRUE))["elapsed"])
+expect_silent(no <- system.time(G <- localG_perm(x, lw, nsim=nsim, iseed=iseed))["elapsed"])
+expect_equal(c(G), c(localG(x, lw)))
+expect_silent(no <- system.time(Gs <- localG_perm(x, lws, nsim=nsim, iseed=iseed))["elapsed"])
+expect_false(isTRUE(all.equal(attr(G, "internals")[,6], attr(Gs, "internals")[,6])))
+expect_equal(c(Gs), c(localG(x, lws)))
+expect_silent(no <- system.time(Gs_no_rep <- localG_perm(x, lws, nsim=nsim, iseed=iseed, no_repeat_in_row=TRUE))["elapsed"])
 expect_silent(no <- system.time(localC_perm(x, lw, nsim=nsim, iseed=iseed))["elapsed"])
 expect_silent(no <- system.time(localC_perm(xx, lw, nsim=nsim, iseed=iseed))["elapsed"])
 expect_silent(no <- system.time(localmoran_bv(x, y, lw, nsim=nsim, iseed=iseed))["elapsed"])
