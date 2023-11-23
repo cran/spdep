@@ -1,4 +1,20 @@
-# Version 1.2-8 (development)
+# Version 1.3-1 (development)
+
+* functions creating `nb` objects now warn if the object has a sub-graph count of > 1 and  `get.SubgraphOption` is `TRUE` (default `FALSE`): `complement.nb`, `diffnb`, `dnearneigh`, `droplinks`, `edit.nb`, `graph2nb`, `knn2nb`, `nb2blocknb`, `nblag`, `nblag_cumul`, `poly2nb`, `read.gal`, `read.gwt2nb`, `setdiff.nb`, `tolerance.nb`, `tri2nb`, `union.nb`
+
+* `summary.nb`, `print.nb`, `summary.listw` and `print.listw` now report the subgraph count from `n.comp.nb` if it is more than one
+
+* `subset.nb` now reports if the subgraph count of the neighbour object increases on subsetting
+
+* adding a `zero.policy` attribute to functions creating `listw` objects: `nb2listw`, `sn2listw`, `mat2listw`, `nb2listwdist`. Default `zero.policy=` argument updated to use `attr(., "zero.policy")` in `summary.listw`, `print.listw`, `moran`, `moran.test`, `moran.mc`, `moran.plot`, `geary.mc`, `geary`, `geary.test`, `globalG.test`, `joincount.test`, `joincount.mc`, `joincount.multi`, `localC`, `localC_perm`, `localmoran`, `localmoran_perm`, `localG`, `localG_perm`, `lee`, `lee.test`, `lee.mc`, `lm.morantest`, `lm.LMtests`, `sp.mantel.mc`, `listw2star`, `lag.listw`, `lm.morantest`, `lm.LMtests`, `subset.listw`, `EBImoran.mc`, `LOSH`, `LOSH.mc`, `LOSH.cs`, `lm.morantest.exact`and `lm.morantest.sad`
+
+* confusing error message in `moran.plot()` if no-neighbour cases, but `zero.policy=FALSE`
+
+* replace `rgrass7` with `rgrass` in vignette
+
+* fix #133 (`edit.nb` affected by not attaching `sp`)
+
+# Version 1.2-8 (2023-02-28)
 
 * `mat2listw()` warning if no `style=` argument given, or if `M"` is given https://github.com/r-spatial/spatialreg/issues/24, https://github.com/r-spatial/spatialreg/issues/23. 
 

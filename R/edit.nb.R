@@ -27,7 +27,7 @@ edit.nb <- function(name, coords, polys=NULL, ..., use_region.id=FALSE) {
   plot.window(xlim = xlim, ylim = ylim, "", asp=1)
   if (!is.null(polys))
     if (inherits(polys, "SpatialPolygons"))
-        plot(polys, border="grey", add=TRUE)
+        sp::plot(polys, border="grey", add=TRUE)
     else stop("polys of unknown class")
 # bug report Conceicao Ribeiro 100731
   for (i in 1:n) {
@@ -135,7 +135,7 @@ edit.nb <- function(name, coords, polys=NULL, ..., use_region.id=FALSE) {
       plot.new()
       plot.window(xlim = xlim, ylim = ylim, "", asp=1)
       if (!is.null(polys))
-         plot(polys, border="grey", add=TRUE)
+         sp::plot(polys, border="grey", add=TRUE)
       for (i in 1:n) {
         if(nb[[i]][1]!=0 & length(nb[[i]])>0L)
           segments(x[i],y[i],x[nb[[i]]],y[nb[[i]]])
@@ -162,6 +162,10 @@ edit.nb <- function(name, coords, polys=NULL, ..., use_region.id=FALSE) {
   if (is.null(icl)) class(nb) <- "nb"
   else class(nb) <- c("nb", icl)
   nb <- sym.attr.nb(nb)
+  if (get.SubgraphOption()) {
+     nsg <- n.comp.nb(nb)$nc
+     if (nsg > 1) warning("neighbour object has ", nsg, " sub-graphs")
+  }
   nb
 }
 

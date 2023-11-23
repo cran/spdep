@@ -1,7 +1,7 @@
 ## ----setup, include=FALSE---------------------------------------------------------------
 knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
-## ---- echo=FALSE,eval=TRUE,warning=FALSE, message=FALSE---------------------------------
+## ----echo=FALSE,eval=TRUE,warning=FALSE, message=FALSE----------------------------------
 library(spdep)
 
 ## ----echo=TRUE,eval=TRUE----------------------------------------------------------------
@@ -115,7 +115,7 @@ tm_shape(nc) + tm_fill(c("low", "high"), palette="Set1", title="p-values") +
 pmap <- probmap(nc$SID74, nc$BIR74)
 nc$pmap <- pmap$pmap
 
-## ---- eval=is_tmap, echo=TRUE-----------------------------------------------------------
+## ----eval=is_tmap, echo=TRUE------------------------------------------------------------
 brks <- c(0,0.001,0.01,0.025,0.05,0.95,0.975,0.99,0.999,1)
 tm_shape(nc) + tm_fill("pmap", breaks=brks, midpoint=0.5, palette="RdBu") + tm_layout(legend.outside=TRUE)
 
@@ -126,7 +126,7 @@ hist(nc$pmap, main="")
 res <- glm(SID74 ~ offset(log(BIR74)), data=nc, family="quasipoisson")
 nc$stdres <- rstandard(res)
 
-## ---- eval=is_tmap, echo=TRUE-----------------------------------------------------------
+## ----eval=is_tmap, echo=TRUE------------------------------------------------------------
 brks <- c(-4, -3, -2, -1.5, -1, -0.5, 0.5, 1, 1.5, 2, 3, 4)
 tm_shape(nc) + tm_fill("stdres", breaks=brks, midpoint=0, palette="RdBu") + tm_layout(legend.outside=TRUE)
 
@@ -136,7 +136,7 @@ nc$Expected <- global_rate * nc$BIR74
 res <- EBlocal(nc$SID74, nc$Expected, ncCC89, zero.policy=TRUE)
 nc$EB_loc <- res$est
 
-## ---- eval=is_tmap----------------------------------------------------------------------
+## ----eval=is_tmap-----------------------------------------------------------------------
 brks <- c(0, 0.25, 0.5, 0.75, 1, 2, 3, 4, 5)
 nc_miss <- st_centroid(st_geometry(nc[card(ncCC89) == 0,]), of_largest_polygon)
 tm_shape(nc) + tm_fill("EB_loc", breaks=brks, midpoint=1, palette="RdBu") + tm_layout(legend.outside=TRUE) + tm_shape(nc_miss) + tm_symbols(shape=8, size=0.5)
@@ -150,7 +150,7 @@ EBImoran.mc(nc$SID74, nc$BIR74, nb2listw(ncCC89, style="B", zero.policy=TRUE), n
 nc$both <- factor(paste(nc$L_id, nc$M_id, sep=":"))
 nboth <- length(table(unclass(nc$both)))
 
-## ---- eval=is_tmap----------------------------------------------------------------------
+## ----eval=is_tmap-----------------------------------------------------------------------
 tm_shape(nc) + tm_fill("both", palette="Set1", title="rough\nrectangles") + tm_layout(legend.outside=TRUE)
 
 ## ----echo=TRUE--------------------------------------------------------------------------
@@ -177,7 +177,7 @@ mM_id <- model.matrix(~ as.factor(nc$M_id) -1)
 nc$pred <- c(med$overall + mL_id %*% med$row + mM_id %*% med$col)
 nc$mp_resid <- nc$ft.SID74 - nc$pred
 
-## ---- eval=is_tmap----------------------------------------------------------------------
+## ----eval=is_tmap-----------------------------------------------------------------------
 out1 <- tm_shape(nc) + tm_fill(c("ft.SID74", "pred")) + tm_facets(free.scales=FALSE) + tm_layout(panel.labels=c("Observed", "Median polish prediction"))
 out2 <- tm_shape(nc) + tm_fill("mp_resid", midpoint=0) + tm_layout(legend.outside=TRUE)
 tmap_arrange(out1, out2, ncol=1)

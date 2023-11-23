@@ -18,7 +18,7 @@ skater(edges, data, ncuts, crit, vec.crit, method = c("euclidean",
   \item{edges}{A matrix with 2 colums with each row is an edge}
   \item{data}{A data.frame with data observed over nodes.}
   \item{ncuts}{The number of cuts}
-  \item{crit}{A scalar ow two dimensional vector with with
+  \item{crit}{A scalar or two dimensional vector with
     criteria for groups. Examples: limits of group size or
     limits of population size. If scalar, is the minimum
     criteria for groups.}
@@ -172,7 +172,7 @@ mst.bh <- mstree(nb.w,5)
 ### three groups with no restriction
 system.time(res1 <- skater(mst.bh[,1:2], dpad, 2))
 library(parallel)
-nc <- detectCores(logical=FALSE)-1L
+nc <- max(2L, detectCores(logical=FALSE), na.rm = TRUE)-1L
 # set nc to 1L here
 if (nc > 1L) nc <- 1L
 coresOpt <- get.coresOption()

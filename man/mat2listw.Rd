@@ -10,7 +10,7 @@ object, optionally adding region IDs from the row names of the matrix, as a
 sequence of numbers 1:nrow(x), or as given as an argument. The style can be imposed by rebuilting the weights list object internally.
 }
 \usage{
-mat2listw(x, row.names = NULL, style=NULL)
+mat2listw(x, row.names = NULL, style=NULL, zero.policy = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -18,6 +18,7 @@ mat2listw(x, row.names = NULL, style=NULL)
 weights; may be a matrix of class \dQuote{sparseMatrix}}
   \item{row.names}{row names to use for region IDs}
   \item{style}{default NULL, missing, set to "M" and warning given; if not "M", passed to \code{\link{nb2listw}} to re-build the object}
+  \item{zero.policy}{default NULL, use global option value; if FALSE stop with error for any empty neighbour sets, if TRUE permit the weights list to be formed with zero-length weights vectors}
 }
 
 \value{
@@ -36,18 +37,20 @@ columbus <- st_read(system.file("shapes/columbus.shp", package="spData")[1], qui
 col005 <- dnearneigh(st_coordinates(st_centroid(st_geometry(columbus),
  of_largest_polygon=TRUE)), 0, 0.5, as.character(columbus$NEIGNO))
 summary(col005)
-col005.w.mat <- nb2mat(col005, zero.policy=TRUE)
-col005.w.b <- mat2listw(col005.w.mat)
+col005.w.mat <- nb2mat(col005, style="W", zero.policy=TRUE)
+try(col005.w.b <- mat2listw(col005.w.mat, style="W"))
+col005.w.b <- mat2listw(col005.w.mat, style="W", zero.policy=TRUE)
 summary(col005.w.b$neighbours)
 diffnb(col005, col005.w.b$neighbours)
 col005.w.mat.3T <- kronecker(diag(3), col005.w.mat)
-col005.w.b.3T <- mat2listw(col005.w.mat.3T, style="W")
+col005.w.b.3T <- mat2listw(col005.w.mat.3T, style="W", zero.policy=TRUE)
 summary(col005.w.b.3T$neighbours)
 run <- FALSE
 if (require("spatialreg", quiet=TRUE)) run <- TRUE
 if (run) {
 W <- as(nb2listw(col005, style="W", zero.policy=TRUE), "CsparseMatrix")
-col005.spM <- mat2listw(W)
+try(col005.spM <- mat2listw(W))
+col005.spM <- mat2listw(W, style="W", zero.policy=TRUE)
 summary(col005.spM$neighbours)
 }
 if (run) {
@@ -55,7 +58,7 @@ diffnb(col005, col005.spM$neighbours)
 }
 if (run && require("Matrix", quiet=TRUE)) {
 IW <- kronecker(Diagonal(3), W)
-col005.spM.3T <- mat2listw(as(IW, "CsparseMatrix"), style="W")
+col005.spM.3T <- mat2listw(as(IW, "CsparseMatrix"), style="W", zero.policy=TRUE)
 summary(col005.spM.3T$neighbours)
 }
 }

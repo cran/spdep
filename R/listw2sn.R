@@ -21,9 +21,17 @@ listw2sn <- function(listw) {
 	res
 }
 
-sn2listw <- function(sn) {
+sn2listw <- function(sn, style=NULL, zero.policy=NULL, from_mat2listw=FALSE) {
 	if(!inherits(sn, "spatial.neighbour")) 
 	    stop("not a spatial.neighbour object")
+        if (is.null(zero.policy))
+            zero.policy <- get("zeroPolicy", envir = .spdepOptions)
+        stopifnot(is.logical(zero.policy))
+        if (is.null(style)) {
+            style <- "M"
+        }
+        if (style == "M")
+            warning("style is M (missing); style should be set to a valid value")
 	n <- attr(sn, "n")
 	if (n < 1) stop("non-positive n")
 	region.id <- attr(sn, "region.id")
@@ -35,7 +43,7 @@ sn2listw <- function(sn) {
 	attr(nlist, "region.id") <- region.id
 	vlist <- vector(mode="list", length=n)
 	rle.sn <- rle(sn[,1])
-	if (n != length(rle.sn$lengths)) {
+	if (!zero.policy && n != length(rle.sn$lengths)) {
             nnhits <- region.id[which(!(1:n %in% rle.sn$values))]
 	    warning(paste(paste(nnhits, collapse=", "),
                 ifelse(length(nnhits) < 2, "is not an origin",
@@ -55,12 +63,28 @@ sn2listw <- function(sn) {
 			nlist[[i]] <- 0L
 		}
 	}
-	res <- list(style=as.character(NA), neighbours=nlist, weights=vlist)
+	res <- list(style=style, neighbours=nlist, weights=vlist)
 	class(res) <- c("listw", "nb")
+        if (any(card(res$neighbours) == 0L)) {
+            if (!from_mat2listw) {
+                if (!zero.policy) {
+                    stop("no-neighbour observations found, set zero.policy to TRUE")
+                }
+            } else {
+                warning("no-neighbour observations found, set zero.policy to TRUE;\nthis warning will soon become an error")
+            }
+        }
 	if (!(is.null(attr(sn, "GeoDa"))))
 		attr(res, "GeoDa") <- attr(sn, "GeoDa")
 	attr(res, "region.id") <- region.id
 	attr(res, "call") <- match.call()
+        attr(res, "zero.policy") <- zero.policy
+        if (style != "M") {
+	    if (!(style %in% c("W", "B", "C", "S", "U", "minmax")))
+		stop(paste("Style", style, "invalid"))
+            res <- nb2listw(res$neighbours, glist=res$weights, style=style,
+                zero.policy=zero.policy)
+        }
 	res
 }
 

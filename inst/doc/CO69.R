@@ -1,7 +1,7 @@
 ## ----setup, include=FALSE-----------------------------------------------------
 knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
-## ---- echo=FALSE,eval=TRUE----------------------------------------------------
+## ----echo=FALSE,eval=TRUE-----------------------------------------------------
 run <- require("sp", quiet=TRUE)
 
 ## ----echo=TRUE,eval=run,results='hide'----------------------------------------
@@ -87,7 +87,7 @@ load(system.file("etc/misc/raw_grass_borders_new.RData", package="spdep")[1])
 #  library(terra)
 #  v_eire_ge1 <-vect(eire_ge1)
 #  SG <- rasterize(v_eire_ge1, rast(nrows=70, ncols=50, extent=ext(v_eire_ge1)), field="county")
-#  library(rgrass7)
+#  library(rgrass)
 #  grass_home <- "/home/rsb/topics/grass/g820/grass82"
 #  initGRASS(grass_home, home=tempdir(), SG=SG, override=TRUE)
 #  write_VECT(v_eire_ge1, "eire", flags=c("o", "overwrite"))
@@ -297,7 +297,7 @@ oores <- res - ores[,c(1,3,5)]
 apply(oores, 2, mad)
 all((res >= alpha_0.05) == (ores[,c(1,3,5)] >= alpha_0.05))
 
-## ---- echo=FALSE,eval=run---------------------------------------------------------------
+## ----echo=FALSE,eval=run----------------------------------------------------------------
 run <- run && require("spatialreg", quiet=TRUE) && packageVersion("spatialreg") >= "1.2"
 
 ## ----echo=TRUE,eval=run-----------------------------------------------------------------
