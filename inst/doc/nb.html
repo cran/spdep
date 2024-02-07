@@ -1543,12 +1543,8 @@ file has been created and read into R.</p>
 <pre class="r"><code>library(spdep)
 NY8 &lt;- as(sf::st_read(system.file(&quot;shapes/NY8_utm18.shp&quot;, package=&quot;spData&quot;)), &quot;Spatial&quot;)</code></pre>
 <pre><code>## Reading layer `NY8_utm18&#39; from data source 
-##   `/home/rsb/lib/r_libs/spData/shapes/NY8_utm18.shp&#39; using driver `ESRI Shapefile&#39;</code></pre>
-<pre><code>## Warning in CPL_read_ogr(dsn, layer, query, as.character(options), quiet, : GDAL Message
-## 1: /home/rsb/lib/r_libs/spData/shapes/NY8_utm18.shp contains polygon(s) with rings with
-## invalid winding order. Autocorrecting them, but that shapefile should be corrected using
-## ogr2ogr for example.</code></pre>
-<pre><code>## Simple feature collection with 281 features and 17 fields
+##   `/home/rsb/lib/r_libs/spData/shapes/NY8_utm18.shp&#39; using driver `ESRI Shapefile&#39;
+## Simple feature collection with 281 features and 17 fields
 ## Geometry type: POLYGON
 ## Dimension:     XY
 ## Bounding box:  xmin: 358241.9 ymin: 4649755 xmax: 480393.1 ymax: 4808545
@@ -1686,9 +1682,8 @@ contributed by Nicholas Lewin-Koh.</p>
 <pre class="r"><code>coords &lt;- coordinates(Syracuse)
 IDs &lt;- row.names(as(Syracuse, &quot;data.frame&quot;))
 #FIXME library(tripack)
-Sy4_nb &lt;- tri2nb(coords, row.names=IDs)</code></pre>
-<pre><code>## Warning in sn2listw(df1): style is M (missing); style should be set to a valid value</code></pre>
-<pre class="r"><code>if (require(dbscan, quietly=TRUE)) {
+Sy4_nb &lt;- tri2nb(coords, row.names=IDs)
+if (require(dbscan, quietly=TRUE)) {
   Sy5_nb &lt;- graph2nb(soi.graph(Sy4_nb, coords), row.names=IDs)
 } else Sy5_nb &lt;- NULL</code></pre>
 <pre><code>## 

@@ -1,4 +1,16 @@
-# Version 1.3-1 (development)
+# Version 1.3-3 (development)
+
+* change `lm.LMtests` to `lm.RStests` and re-name Lagrange multiplier to Rao's score; add `GNM_` prefix to test names if the input object inherits from `SlX` created by `spatialreg::lmSLX` (Koley, forthcoming)
+
+* add `SD.RStests` implementation of Rao's score tests for spatial Durbin models (Koley and Bera, 2024) and for SDEM models (Koley, forthcoming)
+ 
+* #143 `row.names` pass-through in `poly2nb` corrected, harmonised `row.names` pass-through also in `nbdists` and `dnearneigh`
+
+* #139 add `na.action` argument to `geary.test`, `geary.mc` and `globalG.test`
+
+* add `style` to `sn2listw` use in `tri2nb`
+
+# Version 1.3-1 (2023-11-23)
 
 * functions creating `nb` objects now warn if the object has a sub-graph count of > 1 and  `get.SubgraphOption` is `TRUE` (default `FALSE`): `complement.nb`, `diffnb`, `dnearneigh`, `droplinks`, `edit.nb`, `graph2nb`, `knn2nb`, `nb2blocknb`, `nblag`, `nblag_cumul`, `poly2nb`, `read.gal`, `read.gwt2nb`, `setdiff.nb`, `tolerance.nb`, `tri2nb`, `union.nb`
 

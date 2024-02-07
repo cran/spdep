@@ -1951,7 +1951,7 @@ Prop_stdN  &lt;- lapply(vars, function(x) moran.test(eire_ge1[[x]], listw=lw_std
 Prop_stdR  &lt;- lapply(vars, function(x) moran.test(eire_ge1[[x]], listw=lw_std, randomisation=TRUE))
 })</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.122   0.003   0.126</code></pre>
+##   0.118   0.003   0.121</code></pre>
 <pre class="r"><code>res &lt;- sapply(c(&quot;MoranN&quot;, &quot;MoranR&quot;, &quot;GearyN&quot;, &quot;GearyR&quot;, &quot;Prop_unstdN&quot;, &quot;Prop_unstdR&quot;, &quot;Prop_stdN&quot;, &quot;Prop_stdR&quot;), function(x) sapply(get(x), &quot;[[&quot;, &quot;statistic&quot;))
 rownames(res) &lt;- vars
 ores &lt;- res[,c(1,2,5:8)]</code></pre>
@@ -2159,7 +2159,7 @@ Prop_unstdSad  &lt;- lapply(lm_objs, function(x) lm.morantest.sad(x, listw=lw_un
 Prop_stdSad  &lt;- lapply(lm_objs, function(x) lm.morantest.sad(x, listw=lw_std))
 })</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.069   0.000   0.069</code></pre>
+##   0.064   0.001   0.065</code></pre>
 <pre class="r"><code>res &lt;- sapply(c(&quot;MoranSad&quot;, &quot;Prop_unstdSad&quot;, &quot;Prop_stdSad&quot;), function(x) sapply(get(x), &quot;[[&quot;, &quot;statistic&quot;))
 rownames(res) &lt;- vars</code></pre>
 <p>Although the analytical standard deviates (under Normality) are
@@ -2207,7 +2207,7 @@ Prop_unstdEx  &lt;- lapply(lm_objs, function(x) lm.morantest.exact(x, listw=lw_u
 Prop_stdEx  &lt;- lapply(lm_objs, function(x) lm.morantest.exact(x, listw=lw_std))
 })</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.085   0.001   0.085</code></pre>
+##   0.083   0.000   0.083</code></pre>
 <pre class="r"><code>res &lt;- sapply(c(&quot;MoranEx&quot;, &quot;Prop_unstdEx&quot;, &quot;Prop_stdEx&quot;), function(x) sapply(get(x), &quot;[[&quot;, &quot;statistic&quot;))
 rownames(res) &lt;- vars</code></pre>
 <p>The output is comparable with that of the Saddlepoint approximation,
