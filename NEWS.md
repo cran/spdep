@@ -1,4 +1,16 @@
-# Version 1.3-3 (development)
+# Version 1.3-4 (development)
+
+* add `scale` argument to `geary.test`, `geary.mc` and `geary` #151, and appropriate tests
+
+* Introduce error in `knearneigh` for `k` less than the largest count of identical points; if encountered, increase `k`
+
+* remove spurious warning in `knearneigh` for longlat geometries
+
+* fix https://github.com/edzer/sdsr/issues/121, wrong assignment of old test names in `lmRStests`
+
+* fix #144 in `plot.nb` and `nb2lines`
+
+# Version 1.3-3 (2024-02-07)
 
 * change `lm.LMtests` to `lm.RStests` and re-name Lagrange multiplier to Rao's score; add `GNM_` prefix to test names if the input object inherits from `SlX` created by `spatialreg::lmSLX` (Koley, forthcoming)
 
