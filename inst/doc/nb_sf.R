@@ -36,7 +36,13 @@ system.time(for(i in 1:reps) NY8_sf_1_nb <- poly2nb(NY8_sf, queen=TRUE, snap=eps
 NY8_sf_1_nb
 
 ## ----echo=dothis, eval=dothis-----------------------------------------------------------
-NY8_sf_old <- st_read(system.file("shapes/NY8_utm18.shp", package="spData"), quiet=TRUE)
+if (packageVersion("spData") >= "2.3.2") {
+    NY8_sf_old <- sf::st_read(system.file("shapes/NY8_utm18.gpkg", package="spData"))
+} else {
+    NY8_sf_old <- sf::st_read(system.file("shapes/NY8_bna_utm18.gpkg", package="spData"))
+    sf::st_crs(NY8_sf_old) <- "EPSG:32618"
+    NY8_sf_old$Cases <- NY8_sf_old$TRACTCAS
+}
 table(st_is_valid(NY8_sf_old))
 
 ## ----echo=dothis, eval=dothis-----------------------------------------------------------

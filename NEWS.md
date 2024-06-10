@@ -1,4 +1,12 @@
-# Version 1.3-4 (development)
+# Version 1.3-5 (development)
+
+* #157 migrate ESRI Shapefile to GPKG files; convert bhicv.shp to GPKG 
+
+* #155 Throw error if `hotspot` despatched on object without a `"quadr"` attribute
+
+* #154 turn on `s2` in vignette
+
+# Version 1.3-4 (2024-05-31)
 
 * add `scale` argument to `geary.test`, `geary.mc` and `geary` #151, and appropriate tests
 
