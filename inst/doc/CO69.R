@@ -314,32 +314,32 @@ rownames(res) <- vars
 ## ----echo=TRUE,eval=run-----------------------------------------------------------------
 print(formatC(res, format="f", digits=4), quote=FALSE)
 
-## ----results='asis',eval=run,echo=FALSE, fig.cap="Three contrasted spatial weights definitions"----
-pal <- grey.colors(9, 1, 0.5, 2.2)
-oopar <- par(mfrow=c(1,3), mar=c(1,1,3,1)+0.1)
-z <- t(listw2mat(nb_B))
-brks <- c(0,0.1,1)
-image(1:25, 1:25, z[,ncol(z):1], breaks=brks, col=pal[c(1,9)],
- main="Binary", axes=FALSE)
-box()
-z <- t(listw2mat(lw_unstand))
-brks <- c(0,quantile(c(z)[c(z) > 0], seq(0,1,1/8)))
-image(1:25, 1:25, z[,ncol(z):1], breaks=brks, col=pal, main="General", axes=FALSE)
-box()
-z <- t(listw2mat(lw_std))
-brks <- c(0,quantile(c(z)[c(z) > 0], seq(0,1,1/8)))
-image(1:25, 1:25, z[,ncol(z):1], breaks=brks, col=pal,
- main="Std. general", axes=FALSE)
-box()
-par(oopar)
+## ----results='asis',eval=FALSE,echo=FALSE, fig.cap="Three contrasted spatial weights definitions"----
+#  pal <- grey.colors(9, 1, 0.5, 2.2)
+#  oopar <- par(mfrow=c(1,3), mar=c(1,1,3,1)+0.1)
+#  z <- t(listw2mat(nb_B))
+#  brks <- c(0,0.1,1)
+#  image(1:25, 1:25, z[,ncol(z):1], breaks=brks, col=pal[c(1,9)],
+#   main="Binary", axes=FALSE)
+#  box()
+#  z <- t(listw2mat(lw_unstand))
+#  brks <- c(0,quantile(c(z)[c(z) > 0], seq(0,1,1/8)))
+#  image(1:25, 1:25, z[,ncol(z):1], breaks=brks, col=pal, main="General", axes=FALSE)
+#  box()
+#  z <- t(listw2mat(lw_std))
+#  brks <- c(0,quantile(c(z)[c(z) > 0], seq(0,1,1/8)))
+#  image(1:25, 1:25, z[,ncol(z):1], breaks=brks, col=pal,
+#   main="Std. general", axes=FALSE)
+#  box()
+#  par(oopar)
 
-## ----results='asis',eval=run,echo=FALSE-------------------------------------------------
-eire_ge1$nb_B <- sapply(nb_B$weights, sum)
-eire_ge1$lw_unstand <- sapply(lw_unstand$weights, sum)
-library(lattice)
-trellis.par.set(sp.theme())
-p1 <- spplot(eire_ge1, c("nb_B"), main="Binary")
-p2 <- spplot(eire_ge1, c("lw_unstand"), main="General")
-print(p1, split=c(1,1,2,1), more=TRUE)
-print(p2, split=c(2,1,2,1), more=FALSE)
+## ----results='asis',eval=FALSE,echo=FALSE-----------------------------------------------
+#  eire_ge1$nb_B <- sapply(nb_B$weights, sum)
+#  eire_ge1$lw_unstand <- sapply(lw_unstand$weights, sum)
+#  library(lattice)
+#  trellis.par.set(sp.theme())
+#  p1 <- spplot(eire_ge1, c("nb_B"), main="Binary")
+#  p2 <- spplot(eire_ge1, c("lw_unstand"), main="General")
+#  print(p1, split=c(1,1,2,1), more=TRUE)
+#  print(p2, split=c(2,1,2,1), more=FALSE)
 

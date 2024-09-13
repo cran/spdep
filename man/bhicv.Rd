@@ -24,7 +24,16 @@
 %%\format{}
 %%\details{}
 \examples{
-bh <- st_read(system.file("etc/shapes/bhicv.gpkg",
-      package="spdep")[1])
+(GDAL37 <- as.numeric_version(unname(sf_extSoftVersion()["GDAL"])) >= "3.7.0")
+file <- "etc/shapes/bhicv.gpkg.zip"
+zipfile <- system.file(file, package="spdep")
+if (GDAL37) {
+    bh <- st_read(zipfile)
+} else {
+    td <- tempdir()
+    bn <- sub(".zip", "", basename(file), fixed=TRUE)
+    target <- unzip(zipfile, files=bn, exdir=td)
+    bh <- st_read(target)
+}
 }
 \keyword{data}% at least one, from doc/KEYWORDS

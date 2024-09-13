@@ -10,10 +10,10 @@ nc <- st_read(system.file("shapes/sids.gpkg", package="spData")[1], quiet=TRUE)
 #st_crs(nc) <- "EPSG:4267"
 row.names(nc) <- as.character(nc$FIPSNO)
 
-## ----echo=TRUE--------------------------------------------------------------------------
-sf_use_s2(TRUE)
-plot(st_geometry(nc), axes=TRUE)
-text(st_coordinates(st_centroid(st_geometry(nc), of_largest_polygon=TRUE)), label=nc$FIPSNO, cex=0.5)
+## ----echo=TRUE,eval=FALSE---------------------------------------------------------------
+#  sf_use_s2(TRUE)
+#  plot(st_geometry(nc), axes=TRUE)
+#  text(st_coordinates(st_centroid(st_geometry(nc), of_largest_polygon=TRUE)), label=nc$FIPSNO, cex=0.5)
 
 ## ----echo=TRUE,eval=TRUE----------------------------------------------------------------
 names(nc)
@@ -81,9 +81,9 @@ gal_file <- system.file("weights/ncCC89.gal", package="spData")[1]
 ncCC89 <- read.gal(gal_file, region.id=nc$FIPSNO)
 ncCC89
 
-## ----label=plot-CC89.nb, echo=TRUE------------------------------------------------------
-plot(st_geometry(nc), border="grey")
-plot(ncCC89, st_centroid(st_geometry(nc), of_largest_polygon), add=TRUE, col="blue")
+## ----label=plot-CC89.nb, echo=TRUE,eval=FALSE-------------------------------------------
+#  plot(st_geometry(nc), border="grey")
+#  plot(ncCC89, st_centroid(st_geometry(nc), of_largest_polygon), add=TRUE, col="blue")
 
 ## ----echo=TRUE--------------------------------------------------------------------------
 r.id <- attr(ncCC89, "region.id")
@@ -108,8 +108,13 @@ is_tmap
 
 ## ----choymap, echo=TRUE, eval=is_tmap---------------------------------------------------
 library(tmap)
+tmap4 <- packageVersion("tmap") >= "3.99"
+if (tmap4) {
+  tm_shape(nc) + tm_polygons(fill=c("low", "high"), fill.scale = tm_scale(values="brewer.set1"), fill.legend = tm_legend("p-values", frame=FALSE, item.r = 0), fill.free=FALSE, lwd=0.01) + tm_layout(panel.labels=c("low", "high"))
+} else {
 tm_shape(nc) + tm_fill(c("low", "high"), palette="Set1", title="p-values") +
   tm_facets(free.scales=FALSE) + tm_layout(panel.labels=c("low", "high"))
+}
 
 ## ----echo=TRUE--------------------------------------------------------------------------
 pmap <- probmap(nc$SID74, nc$BIR74)
@@ -117,7 +122,11 @@ nc$pmap <- pmap$pmap
 
 ## ----eval=is_tmap, echo=TRUE------------------------------------------------------------
 brks <- c(0,0.001,0.01,0.025,0.05,0.95,0.975,0.99,0.999,1)
+if (tmap4) {
+  tm_shape(nc) + tm_polygons(fill="pmap", fill.scale = tm_scale(values="brewer.rd_bu", midpoint=0.5, breaks=brks), fill.legend = tm_legend(frame=FALSE, item.r = 0, position = tm_pos_out("right", "center")), lwd=0.01) + tm_layout(component.autoscale=FALSE)
+} else {
 tm_shape(nc) + tm_fill("pmap", breaks=brks, midpoint=0.5, palette="RdBu") + tm_layout(legend.outside=TRUE)
+}
 
 ## ----label=poishist, echo=TRUE----------------------------------------------------------
 hist(nc$pmap, main="")
@@ -128,7 +137,11 @@ nc$stdres <- rstandard(res)
 
 ## ----eval=is_tmap, echo=TRUE------------------------------------------------------------
 brks <- c(-4, -3, -2, -1.5, -1, -0.5, 0.5, 1, 1.5, 2, 3, 4)
-tm_shape(nc) + tm_fill("stdres", breaks=brks, midpoint=0, palette="RdBu") + tm_layout(legend.outside=TRUE)
+if (tmap4) {
+  tm_shape(nc) + tm_polygons(fill="stdres", fill.scale = tm_scale(values="brewer.rd_bu", midpoint=0.5, breaks=brks), fill.legend = tm_legend(frame=FALSE, item.r = 0, position = tm_pos_out("right", "center")), lwd=0.01) + tm_layout(component.autoscale=FALSE)
+} else {
+  tm_shape(nc) + tm_fill("stdres", breaks=brks, midpoint=0, palette="RdBu") + tm_layout(legend.outside=TRUE)
+}
 
 ## ----echo=TRUE--------------------------------------------------------------------------
 global_rate <- sum(nc$SID74)/sum(nc$BIR74)
@@ -139,8 +152,11 @@ nc$EB_loc <- res$est
 ## ----eval=is_tmap-----------------------------------------------------------------------
 brks <- c(0, 0.25, 0.5, 0.75, 1, 2, 3, 4, 5)
 nc_miss <- st_centroid(st_geometry(nc[card(ncCC89) == 0,]), of_largest_polygon)
+if (tmap4) {
+  tm_shape(nc) + tm_polygons(fill="stdres", fill.scale = tm_scale(values="brewer.rd_bu", midpoint=0.5, breaks=brks), fill.legend = tm_legend(frame=FALSE, item.r = 0, position = tm_pos_out("right", "center")), lwd=0.01) + tm_layout(component.autoscale=FALSE) + tm_shape(nc_miss) + tm_symbols(shape=8, size=0.5)
+} else {
 tm_shape(nc) + tm_fill("EB_loc", breaks=brks, midpoint=1, palette="RdBu") + tm_layout(legend.outside=TRUE) + tm_shape(nc_miss) + tm_symbols(shape=8, size=0.5)
-
+}
 
 ## ----echo=TRUE--------------------------------------------------------------------------
 set.seed(1)
@@ -151,7 +167,11 @@ nc$both <- factor(paste(nc$L_id, nc$M_id, sep=":"))
 nboth <- length(table(unclass(nc$both)))
 
 ## ----eval=is_tmap-----------------------------------------------------------------------
+if (tmap4) {
+  tm_shape(nc) + tm_polygons(fill="both", fill.scale=tm_scale(values="brewer.set1"), fill.legend = tm_legend("rough\nrectangles", frame=FALSE, item.r = 0, position = tm_pos_out("right", "center")), lwd=0.01) + tm_layout(component.autoscale=FALSE)
+} else {
 tm_shape(nc) + tm_fill("both", palette="Set1", title="rough\nrectangles") + tm_layout(legend.outside=TRUE)
+}
 
 ## ----echo=TRUE--------------------------------------------------------------------------
 nc$ft.SID74 <- sqrt(1000)*(sqrt(nc$SID74/nc$BIR74) + sqrt((nc$SID74+1)/nc$BIR74))
@@ -178,7 +198,12 @@ nc$pred <- c(med$overall + mL_id %*% med$row + mM_id %*% med$col)
 nc$mp_resid <- nc$ft.SID74 - nc$pred
 
 ## ----eval=is_tmap-----------------------------------------------------------------------
+if (tmap4) {
+  out1 <- tm_shape(nc) + tm_polygons(fill=c("ft.SID74", "pred"), fill.scale=tm_scale(values="brewer.yl_or_br"), fill.legend=tm_legend(position=tm_pos_out("right", "center"), frame=FALSE, item.r = 0), fill.free=FALSE, lwd=0.01) + tm_layout(panel.labels=c("Observed", "Median polish prediction"))
+  out2 <- tm_shape(nc) + tm_polygons(fill="mp_resid", fill.scale=tm_scale(values="brewer.rd_yl_gn", midpoint=0), fill.legend=tm_legend(position=tm_pos_out("right", "center"), frame=FALSE, item.r = 0), lwd=0.01)
+} else {
 out1 <- tm_shape(nc) + tm_fill(c("ft.SID74", "pred")) + tm_facets(free.scales=FALSE) + tm_layout(panel.labels=c("Observed", "Median polish prediction"))
 out2 <- tm_shape(nc) + tm_fill("mp_resid", midpoint=0) + tm_layout(legend.outside=TRUE)
+}
 tmap_arrange(out1, out2, ncol=1)
 

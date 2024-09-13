@@ -5,7 +5,7 @@
 nb2mat <- function(neighbours, glist=NULL, style="W", zero.policy=NULL)
 {
         if (is.null(zero.policy))
-            zero.policy <- get("zeroPolicy", envir = .spdepOptions)
+            zero.policy <- get.ZeroPolicyOption()
         stopifnot(is.logical(zero.policy))
 	if(!inherits(neighbours, "nb")) stop("Not a neighbours list")
 	listw <- nb2listw(neighbours, glist=glist, style=style,
@@ -40,7 +40,7 @@ mat2listw <- function(x, row.names=NULL, style=NULL, zero.policy=NULL) {
 	if (any(x < 0)) stop("values in x cannot be negative")
 	if (any(is.na(x))) stop("NA values in x not allowed")
         if (is.null(zero.policy))
-            zero.policy <- get("zeroPolicy", envir = .spdepOptions)
+            zero.policy <- get.ZeroPolicyOption()
     	if (!is.null(row.names)) {
 		if(length(row.names) != n)
             		stop("row.names wrong length")
@@ -95,11 +95,20 @@ mat2listw <- function(x, row.names=NULL, style=NULL, zero.policy=NULL) {
  	attr(neighbours, "call") <- NA
         attr(neighbours, "sym") <- is.symmetric.nb(neighbours, 
 		verbose=FALSE, force=TRUE)
-        if (any(card(neighbours) == 0L)) {
+        cnb <- card(neighbours)
+        if (any(cnb == 0L)) {
             if (!zero.policy) {
                 warning("no-neighbour observations found, set zero.policy to TRUE;\nthis warning will soon become an error")
             }
         }
+
+        NE <- length(neighbours) + sum(cnb)
+        if (get.SubgraphOption() && get.SubgraphCeiling() > NE) {
+          ncomp <- n.comp.nb(neighbours)
+          attr(neighbours, "ncomp") <- ncomp
+          if (ncomp$nc > 1) warning("neighbour object has ", ncomp$nc, " sub-graphs")
+        }
+
 	res <- list(style=style, neighbours=neighbours, weights=weights)
 	class(res) <- c("listw", "nb")
 	attr(res, "region.id") <- attr(neighbours, "region.id")

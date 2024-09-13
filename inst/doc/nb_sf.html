@@ -1543,13 +1543,13 @@ included villages were in/excluded by in-out umbilical cords to the
 boundary of the enclosing tract, when the underlying BNA file was first
 converted to MapInfo (holes could not exist then).</p>
 <p>Here we will use a GPKG file created as follows (rgdal could also be
-used with the same output; GDAL here is built with GEOS, so the BNA
-vector driver will use geometry tests: The BNA driver supports reading
-of polygons with holes or lakes. It determines what is a hole or a lake
-only from geometrical analysis (inclusion, non-intersection tests) and
-ignores completely the notion of polygon winding (whether the polygon
-edges are described clockwise or counter-clockwise). GDAL must be built
-with GEOS enabled to make geometry test work.):</p>
+used with the same output; GDAL prior to GDAL 3.3 built with GEOS, so
+the BNA vector driver will use geometry tests: The BNA driver supports
+reading of polygons with holes or lakes. It determines what is a hole or
+a lake only from geometrical analysis (inclusion, non-intersection
+tests) and ignores completely the notion of polygon winding (whether the
+polygon edges are described clockwise or counter-clockwise). GDAL must
+be built with GEOS enabled to make geometry test work.):</p>
 <pre class="r"><code>library(sf)
 sf_bna &lt;- st_read(&quot;t8_36.bna&quot;, stringsAsFactors=FALSE)
 table(st_is_valid(sf_bna))
@@ -1612,7 +1612,7 @@ when packages are missing or out-of-date:</p>
 }
 if (dothis) sf_extSoftVersion()</code></pre>
 <pre><code>##           GEOS           GDAL         proj.4 GDAL_with_GEOS     USE_PROJ_H           PROJ 
-##       &quot;3.12.2&quot;        &quot;3.9.0&quot;        &quot;9.4.1&quot;         &quot;true&quot;         &quot;true&quot;        &quot;9.4.1&quot;</code></pre>
+##       &quot;3.13.0&quot;        &quot;3.9.2&quot;        &quot;9.5.0&quot;         &quot;true&quot;         &quot;true&quot;        &quot;9.5.0&quot;</code></pre>
 <p>Let us read the GPKG file with valid geometries in to ‘sf’ and ‘sp’
 objects:</p>
 <pre class="r"><code>NY8_sf &lt;- st_read(system.file(&quot;shapes/NY8_bna_utm18.gpkg&quot;, package=&quot;spData&quot;), quiet=TRUE)
@@ -1636,7 +1636,7 @@ reps &lt;- 10
 eps &lt;- sqrt(.Machine$double.eps)
 system.time(for(i in 1:reps) NY8_sf_1_nb &lt;- poly2nb(NY8_sf, queen=TRUE, snap=eps))/reps</code></pre>
 <pre><code>##    user  system elapsed 
-##  0.0925  0.0017  0.0945</code></pre>
+##  0.0989  0.0022  0.1014</code></pre>
 <p>Using spatial indices to check intersection of polygons is much
 faster than the legacy method in poly2nb. From <strong>spdep</strong>
 1.1-7, use is made of GEOS through <strong>sf</strong> to find candidate
@@ -1670,32 +1670,34 @@ for spherical geometries, see section @ref(spher-poly2nb) below.</p>
 <p>Next, we explore a further possible source of differences in
 neighbour object reproduction, using the original version of the tract
 boundaries used in ASDAR, but with some invalid geometries as mentioned
-earlier:</p>
+earlier (<code>NY8_utm18.gpkg</code> was created from the original ESRI
+Shapefile used in ASDAR):</p>
 <pre class="r"><code>if (packageVersion(&quot;spData&quot;) &gt;= &quot;2.3.2&quot;) {
     NY8_sf_old &lt;- sf::st_read(system.file(&quot;shapes/NY8_utm18.gpkg&quot;, package=&quot;spData&quot;))
 } else {
-    NY8_sf_old &lt;- sf::st_read(system.file(&quot;shapes/NY8_bna_utm18.gpkg&quot;, package=&quot;spData&quot;))
-    sf::st_crs(NY8_sf_old) &lt;- &quot;EPSG:32618&quot;
-    NY8_sf_old$Cases &lt;- NY8_sf_old$TRACTCAS
+    NY8_sf_old &lt;- sf::st_read(system.file(&quot;shapes/NY8_utm18.shp&quot;, package=&quot;spData&quot;))
 }</code></pre>
-<pre><code>## Reading layer `sf_bna2_utm18&#39; from data source 
-##   `/home/rsb/lib/r_libs/spData/shapes/NY8_bna_utm18.gpkg&#39; using driver `GPKG&#39;
-## Simple feature collection with 281 features and 12 fields
-## Geometry type: MULTIPOLYGON
+<pre><code>## Reading layer `NY8_utm18&#39; from data source 
+##   `/home/rsb/lib/r_libs/spData/shapes/NY8_utm18.gpkg&#39; using driver `GPKG&#39;
+## Simple feature collection with 281 features and 17 fields
+## Geometry type: POLYGON
 ## Dimension:     XY
-## Bounding box:  xmin: 357628 ymin: 4649538 xmax: 480360.3 ymax: 4808317
-## Projected CRS: UTM Zone 18, Northern Hemisphere</code></pre>
-<pre><code>## Warning: st_crs&lt;- : replacing crs does not reproject data; use st_transform for that</code></pre>
+## Bounding box:  xmin: 358241.9 ymin: 4649755 xmax: 480393.1 ymax: 4808545
+## Projected CRS: WGS 84 / UTM zone 18N</code></pre>
 <pre class="r"><code>table(st_is_valid(NY8_sf_old))</code></pre>
 <pre><code>## 
-## TRUE 
-##  281</code></pre>
+## FALSE  TRUE 
+##     5   276</code></pre>
 <p>We can see that there are a number of differences between the
 neighbour sets derived from the fully valid geometries and the older
 partly invalid set:</p>
 <pre class="r"><code>try(NY8_sf_old_1_nb &lt;- poly2nb(NY8_sf_old), silent = TRUE)
 all.equal(NY8_sf_old_1_nb, NY8_sf_1_nb, check.attributes=FALSE)</code></pre>
-<pre><code>## [1] TRUE</code></pre>
+<pre><code>## [1] &quot;Component 57: Numeric: lengths (4, 5) differ&quot; 
+## [2] &quot;Component 58: Numeric: lengths (5, 6) differ&quot; 
+## [3] &quot;Component 66: Numeric: lengths (7, 11) differ&quot;
+## [4] &quot;Component 73: Numeric: lengths (4, 5) differ&quot; 
+## [5] &quot;Component 260: Numeric: lengths (8, 9) differ&quot;</code></pre>
 <p>Using <code>st_make_valid()</code> to make the geometries valid:</p>
 <pre class="r"><code>NY8_sf_old_val &lt;- st_make_valid(NY8_sf_old, dist=0)
 table(st_is_valid(NY8_sf_old_val))</code></pre>
@@ -1705,7 +1707,7 @@ table(st_is_valid(NY8_sf_old_val))</code></pre>
 <p>we also see that the geometry type of the geometry column
 changes:</p>
 <pre class="r"><code>class(st_geometry(NY8_sf_old))</code></pre>
-<pre><code>## [1] &quot;sfc_MULTIPOLYGON&quot; &quot;sfc&quot;</code></pre>
+<pre><code>## [1] &quot;sfc_POLYGON&quot; &quot;sfc&quot;</code></pre>
 <pre class="r"><code>class(st_geometry(NY8_sf_old_val))</code></pre>
 <pre><code>## [1] &quot;sfc_GEOMETRY&quot; &quot;sfc&quot;</code></pre>
 <p>and checking the <code>&quot;sfg&quot;</code> objects, two now have objects of
@@ -1713,7 +1715,7 @@ different topological dimensions.</p>
 <pre class="r"><code>table(sapply(st_geometry(NY8_sf_old_val), function(x) class(x)[[2]]))</code></pre>
 <pre><code>## 
 ## MULTIPOLYGON      POLYGON 
-##            4          277</code></pre>
+##            3          278</code></pre>
 <p>This can be remedied using <code>st_collection_extract()</code> to
 get the polygon objects:</p>
 <pre class="r"><code>NY8_sf_old_val &lt;- st_collection_extract(NY8_sf_old_val, &quot;POLYGON&quot;)
@@ -1726,7 +1728,11 @@ the new sets of neighbours still differ from those made with the valid
 geometries in the same ways as before imposing validity:</p>
 <pre class="r"><code>try(NY8_sf_old_1_nb_val &lt;- poly2nb(NY8_sf_old_val), silent = TRUE)
 all.equal(NY8_sf_old_1_nb_val, NY8_sf_1_nb, check.attributes=FALSE)</code></pre>
-<pre><code>## [1] TRUE</code></pre>
+<pre><code>## [1] &quot;Component 57: Numeric: lengths (4, 5) differ&quot; 
+## [2] &quot;Component 58: Numeric: lengths (5, 6) differ&quot; 
+## [3] &quot;Component 66: Numeric: lengths (7, 11) differ&quot;
+## [4] &quot;Component 73: Numeric: lengths (4, 5) differ&quot; 
+## [5] &quot;Component 260: Numeric: lengths (8, 9) differ&quot;</code></pre>
 <p>The neighbour sets are the same for the old boundaries with or
 without imposing validity:</p>
 <pre class="r"><code>all.equal(NY8_sf_old_1_nb_val, NY8_sf_old_1_nb, check.attributes=FALSE)</code></pre>
@@ -1764,8 +1770,9 @@ coordinates only):</p>
 NY84_nb &lt;- tri2nb(NY8_ct_sf)
 if (require(dbscan, quietly=TRUE)) {
   NY85_nb &lt;- graph2nb(soi.graph(NY84_nb, NY8_ct_sf))
-} else NY85_nb &lt;- NULL
-NY86_nb &lt;- graph2nb(gabrielneigh(NY8_ct_sf))
+} else NY85_nb &lt;- NULL</code></pre>
+<pre><code>## Warning in graph2nb(soi.graph(NY84_nb, NY8_ct_sf)): neighbour object has 2 sub-graphs</code></pre>
+<pre class="r"><code>NY86_nb &lt;- graph2nb(gabrielneigh(NY8_ct_sf))
 NY87_nb &lt;- graph2nb(relativeneigh(NY8_ct_sf))</code></pre>
 </div>
 <div id="k-nearest-neighbours" class="section level3">
@@ -1774,13 +1781,13 @@ NY87_nb &lt;- graph2nb(relativeneigh(NY8_ct_sf))</code></pre>
 Great Circle distances, but this is not demonstrated here, as the data
 set used is planar, in which case <code>dbscan::kNN()</code> in 2D or 3D
 building a kd-tree is used:</p>
-<pre class="r"><code>system.time(for (i in 1:reps) NY88_nb_sf &lt;- knn2nb(knearneigh(NY8_ct_sf, k=1)))/reps</code></pre>
+<pre class="r"><code>system.time(for (i in 1:reps) suppressWarnings(NY88_nb_sf &lt;- knn2nb(knearneigh(NY8_ct_sf, k=1))))/reps</code></pre>
 <pre><code>##    user  system elapsed 
-##  0.0177  0.0008  0.0185</code></pre>
+##  0.0221  0.0011  0.0232</code></pre>
 <p>Legacy code may be used omitting the kd-tree:</p>
-<pre class="r"><code>system.time(for (i in 1:reps) NY89_nb_sf &lt;- knn2nb(knearneigh(NY8_ct_sf, k=1, use_kd_tree=FALSE)))/reps</code></pre>
+<pre class="r"><code>system.time(for (i in 1:reps) suppressWarnings(NY89_nb_sf &lt;- knn2nb(knearneigh(NY8_ct_sf, k=1, use_kd_tree=FALSE))))/reps</code></pre>
 <pre><code>##    user  system elapsed 
-##  0.0181  0.0008  0.0190</code></pre>
+##  0.0232  0.0009  0.0242</code></pre>
 </div>
 <div id="distance-neighbours" class="section level3">
 <h3>Distance neighbours</h3>
@@ -1793,18 +1800,18 @@ summary(dsts)</code></pre>
 <pre class="r"><code>max_1nn &lt;- max(dsts)</code></pre>
 <p><code>dnearneigh</code> can also handle Great Circle distances, but
 this is not demonstrated here, as the data set used is planar:</p>
-<pre class="r"><code>system.time(for (i in 1:reps) NY810_nb &lt;- dnearneigh(NY8_ct_sf, d1=0, d2=0.75*max_1nn))/reps</code></pre>
+<pre class="r"><code>system.time(for (i in 1:reps) suppressWarnings(NY810_nb &lt;- dnearneigh(NY8_ct_sf, d1=0, d2=0.75*max_1nn)))/reps</code></pre>
 <pre><code>##    user  system elapsed 
-##  0.0314  0.0012  0.0327</code></pre>
+##  0.0589  0.0010  0.0601</code></pre>
 <p>By default, the function uses <code>dbscan::frNN()</code> to build a
 kd-tree in 2D or 3D which is then used to find distance neighbours. For
 small n, the argument <code>use_kd_tree=FALSE</code> may speed up
 computation a little by reverting to legacy code not building a kd-tree
 first, but in general the differences are so small that the user will
 not notice:</p>
-<pre class="r"><code>system.time(for (i in 1:reps) NY811_nb &lt;- dnearneigh(NY8_ct_sf, d1=0, d2=0.75*max_1nn, use_kd_tree=FALSE))/reps</code></pre>
+<pre class="r"><code>system.time(for (i in 1:reps) suppressWarnings(NY811_nb &lt;- dnearneigh(NY8_ct_sf, d1=0, d2=0.75*max_1nn, use_kd_tree=FALSE)))/reps</code></pre>
 <pre><code>##    user  system elapsed 
-##  0.0174  0.0006  0.0181</code></pre>
+##  0.0452  0.0014  0.0468</code></pre>
 </div>
 </div>
 <div id="spherical-point-based-neighbours" class="section level2">
@@ -1829,7 +1836,7 @@ will use spatially indexed points and
 <pre class="r"><code>sf_use_s2(TRUE)
 system.time(for (i in 1:reps) pts_ll1_nb &lt;- knn2nb(knearneigh(pts_ll, k=6)))/reps</code></pre>
 <pre><code>##    user  system elapsed 
-##  0.0232  0.0000  0.0233</code></pre>
+##  0.0336  0.0001  0.0340</code></pre>
 <p>For this smaller data set, the legacy approach without spatial
 indexing is adequate, but slows down as the number of observations
 increases:</p>
@@ -1837,7 +1844,7 @@ increases:</p>
 <pre><code>## Spherical geometry (s2) switched off</code></pre>
 <pre class="r"><code>system.time(for (i in 1:reps) pts_ll2_nb &lt;- knn2nb(knearneigh(pts_ll, k=6)))/reps</code></pre>
 <pre><code>##    user  system elapsed 
-##  0.0176  0.0000  0.0176</code></pre>
+##  0.0272  0.0001  0.0274</code></pre>
 <p>The WGS84 ellipsoid Great Circle distances differ a very little from
 the <strong>s2</strong> spherical distances, yielding output that here
 diverges for two tract centroids:</p>
@@ -1867,6 +1874,7 @@ then only calculating distances from <code>i</code> to <code>j</code>
 and copying those to <code>j</code> to <code>i</code> through symmetry.
 The distance metric is alway <code>&quot;km&quot;</code>.</p>
 <pre class="r"><code>max_1nn_ll &lt;- max(unlist(nbdists(knn2nb(knearneigh(pts_ll, k=1)), pts_ll)))</code></pre>
+<pre><code>## Warning in knn2nb(knearneigh(pts_ll, k = 1)): neighbour object has 62 sub-graphs</code></pre>
 <pre class="r"><code>args(dnearneigh)</code></pre>
 <pre><code>## function (x, d1, d2, row.names = NULL, longlat = NULL, bounds = c(&quot;GE&quot;, 
 ##     &quot;LE&quot;), use_kd_tree = TRUE, symtest = FALSE, use_s2 = packageVersion(&quot;s2&quot;) &gt; 
@@ -1876,46 +1884,46 @@ The distance metric is alway <code>&quot;km&quot;</code>.</p>
 arguments set, and <strong>s2</strong> &gt; 1.0-7,
 <code>s2::s2_dwithin_matrix()</code> is run:</p>
 <pre class="r"><code>if (packageVersion(&quot;s2&quot;) &gt; &quot;1.0.7&quot;) {
-  system.time(for (i in 1:(reps/5)) pts_ll3_nb &lt;- dnearneigh(pts_ll, d1=0,
-      d2=0.75*max_1nn_ll))/(reps/5)
+  system.time(for (i in 1:(reps/5)) suppressWarnings(pts_ll3_nb &lt;- dnearneigh(pts_ll, d1=0,
+      d2=0.75*max_1nn_ll)))/(reps/5)
 }</code></pre>
 <pre><code>##    user  system elapsed 
-##    0.04    0.00    0.04</code></pre>
+##  0.0665  0.0000  0.0665</code></pre>
 <p>Alternatively, spherical distances can be used with
 <code>dwithin=FALSE</code> and <code>s2::s2_closest_edges()</code>;
 although running in similar time, <code>s2::s2_closest_edges()</code>
 depends on the additional <code>k=</code> argument, which, if mis-set,
 may miss valid neighbours:</p>
-<pre class="r"><code>system.time(for (i in 1:(reps/5)) pts_ll5_nb &lt;- dnearneigh(pts_ll, d1=0, d2=0.75*max_1nn_ll, dwithin=FALSE))/(reps/5)</code></pre>
+<pre class="r"><code>system.time(for (i in 1:(reps/5)) suppressWarnings(pts_ll5_nb &lt;- dnearneigh(pts_ll, d1=0, d2=0.75*max_1nn_ll, dwithin=FALSE)))/(reps/5)</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.026   0.000   0.026</code></pre>
+##  0.0520  0.0000  0.0525</code></pre>
 <pre class="r"><code>if (packageVersion(&quot;s2&quot;) &gt; &quot;1.0.7&quot;) all.equal(pts_ll3_nb, pts_ll5_nb, check.attributes=FALSE)</code></pre>
 <pre><code>## [1] TRUE</code></pre>
 <p>Using <code>s2::s2_closest_edges()</code> respects
 <code>d1 &gt; 0</code> without requiring a second pass in R, so is
 faster than <code>s2::s2_dwithin_matrix()</code>:</p>
 <pre class="r"><code>if (packageVersion(&quot;s2&quot;) &gt; &quot;1.0.7&quot;) {
-  system.time(for (i in 1:(reps/5)) pts_ll3a_nb &lt;- dnearneigh(pts_ll, d1=5,
-      d2=0.75*max_1nn_ll, dwithin=FALSE))/(reps/5)
+  system.time(for (i in 1:(reps/5)) suppressWarnings(pts_ll3a_nb &lt;- dnearneigh(pts_ll, d1=5,
+      d2=0.75*max_1nn_ll, dwithin=FALSE)))/(reps/5)
 }</code></pre>
 <pre><code>##    user  system elapsed 
-##  0.0255  0.0000  0.0260</code></pre>
+##  0.0435  0.0000  0.0435</code></pre>
 <p>Using <code>s2::s2_dwithin_matrix()</code> requires a second pass,
 one for the lower bound, another for the upper bound, and a set
 difference operation to find neighbours in the distance band:</p>
 <pre class="r"><code>if (packageVersion(&quot;s2&quot;) &gt; &quot;1.0.7&quot;) {
-    system.time(for (i in 1:(reps/5)) pts_ll5a_nb &lt;- dnearneigh(pts_ll, d1=5,
-        d2=0.75*max_1nn_ll))/(reps/5)
+    system.time(for (i in 1:(reps/5)) suppressWarnings(pts_ll5a_nb &lt;- dnearneigh(pts_ll, d1=5,
+        d2=0.75*max_1nn_ll)))/(reps/5)
 }</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.066   0.000   0.066</code></pre>
+##  0.0860  0.0000  0.0855</code></pre>
 <pre class="r"><code>if (packageVersion(&quot;s2&quot;) &gt; &quot;1.0.7&quot;) all.equal(pts_ll3a_nb, pts_ll5a_nb, check.attributes=FALSE)</code></pre>
 <pre><code>## [1] TRUE</code></pre>
 <p>Setting <code>use_s2=FALSE</code> falls back to the legacy version,
 which uses symmetry to reduce time:</p>
-<pre class="r"><code>system.time(for (i in 1:reps) pts_ll6_nb &lt;- dnearneigh(pts_ll, d1=0, d2=0.75*max_1nn_ll, use_s2=FALSE))/reps</code></pre>
+<pre class="r"><code>system.time(for (i in 1:reps) suppressWarnings(pts_ll6_nb &lt;- dnearneigh(pts_ll, d1=0, d2=0.75*max_1nn_ll, use_s2=FALSE)))/reps</code></pre>
 <pre><code>##    user  system elapsed 
-##  0.0094  0.0000  0.0094</code></pre>
+##  0.0384  0.0002  0.0390</code></pre>
 <p>Minor differences may occur between the legacy ellipsoid and
 <strong>s2</strong> spherical approaches:</p>
 <pre class="r"><code>all.equal(pts_ll5_nb, pts_ll6_nb, check.attributes=FALSE)</code></pre>
@@ -1941,9 +1949,9 @@ which uses symmetry to reduce time:</p>
 ## [20] &quot;Component 235: Numeric: lengths (40, 39) differ&quot;  
 ## [21] &quot;Component 237: Numeric: lengths (14, 15) differ&quot;  
 ## [22] &quot;Component 245: Numeric: lengths (16, 15) differ&quot;</code></pre>
-<pre class="r"><code>system.time(for (i in 1:reps) pts_ll6a_nb &lt;- dnearneigh(pts_ll, d1=5, d2=0.75*max_1nn_ll, use_s2=FALSE))/reps</code></pre>
+<pre class="r"><code>system.time(for (i in 1:reps) suppressWarnings(pts_ll6a_nb &lt;- dnearneigh(pts_ll, d1=5, d2=0.75*max_1nn_ll, use_s2=FALSE)))/reps</code></pre>
 <pre><code>##    user  system elapsed 
-##  0.0095  0.0000  0.0096</code></pre>
+##  0.0281  0.0000  0.0282</code></pre>
 <pre class="r"><code>if (packageVersion(&quot;s2&quot;) &gt; &quot;1.0.7&quot;) all.equal(pts_ll5a_nb, pts_ll6a_nb, check.attributes=FALSE)</code></pre>
 <pre><code>##  [1] &quot;Component 20: Numeric: lengths (6, 5) differ&quot;       
 ##  [2] &quot;Component 28: Numeric: lengths (7, 6) differ&quot;       
@@ -1988,9 +1996,10 @@ st_is_longlat(NY8_sf_ll)</code></pre>
 hands off geometry predicates to <code>s2_intersects_matrix()</code>,
 but the results are the same, and because spatial indexing is used, this
 scales well for larger data sets:</p>
-<pre class="r"><code>system.time(for (i in 1:reps) NY8_sf_1_nb_ll &lt;- poly2nb(NY8_sf_ll, queen=TRUE, snap=eps))/reps</code></pre>
+<pre class="r"><code>sf_use_s2(TRUE)
+system.time(for (i in 1:reps) NY8_sf_1_nb_ll &lt;- poly2nb(NY8_sf_ll, queen=TRUE, snap=eps))/reps</code></pre>
 <pre><code>##    user  system elapsed 
-##  0.1495  0.0005  0.1506</code></pre>
+##  0.1554  0.0016  0.1578</code></pre>
 <pre class="r"><code>all.equal(NY8_sf_1_nb, NY8_sf_1_nb_ll, check.attributes=FALSE)</code></pre>
 <pre><code>## [1] TRUE</code></pre>
 </div>

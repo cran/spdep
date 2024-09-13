@@ -39,9 +39,7 @@ NY8_sf_1_nb
 if (packageVersion("spData") >= "2.3.2") {
     NY8_sf_old <- sf::st_read(system.file("shapes/NY8_utm18.gpkg", package="spData"))
 } else {
-    NY8_sf_old <- sf::st_read(system.file("shapes/NY8_bna_utm18.gpkg", package="spData"))
-    sf::st_crs(NY8_sf_old) <- "EPSG:32618"
-    NY8_sf_old$Cases <- NY8_sf_old$TRACTCAS
+    NY8_sf_old <- sf::st_read(system.file("shapes/NY8_utm18.shp", package="spData"))
 }
 table(st_is_valid(NY8_sf_old))
 
@@ -96,10 +94,10 @@ NY86_nb <- graph2nb(gabrielneigh(NY8_ct_sf))
 NY87_nb <- graph2nb(relativeneigh(NY8_ct_sf))
 
 ## ----echo=dothis, eval=dothis-----------------------------------------------------------
-system.time(for (i in 1:reps) NY88_nb_sf <- knn2nb(knearneigh(NY8_ct_sf, k=1)))/reps
+system.time(for (i in 1:reps) suppressWarnings(NY88_nb_sf <- knn2nb(knearneigh(NY8_ct_sf, k=1))))/reps
 
 ## ----echo=dothis, eval=dothis-----------------------------------------------------------
-system.time(for (i in 1:reps) NY89_nb_sf <- knn2nb(knearneigh(NY8_ct_sf, k=1, use_kd_tree=FALSE)))/reps
+system.time(for (i in 1:reps) suppressWarnings(NY89_nb_sf <- knn2nb(knearneigh(NY8_ct_sf, k=1, use_kd_tree=FALSE))))/reps
 
 ## ----echo=dothis, eval=dothis-----------------------------------------------------------
 dsts <- unlist(nbdists(NY88_nb_sf, NY8_ct_sf))
@@ -107,10 +105,10 @@ summary(dsts)
 max_1nn <- max(dsts)
 
 ## ----echo=dothis, eval=dothis-----------------------------------------------------------
-system.time(for (i in 1:reps) NY810_nb <- dnearneigh(NY8_ct_sf, d1=0, d2=0.75*max_1nn))/reps
+system.time(for (i in 1:reps) suppressWarnings(NY810_nb <- dnearneigh(NY8_ct_sf, d1=0, d2=0.75*max_1nn)))/reps
 
 ## ----echo=dothis, eval=dothis-----------------------------------------------------------
-system.time(for (i in 1:reps) NY811_nb <- dnearneigh(NY8_ct_sf, d1=0, d2=0.75*max_1nn, use_kd_tree=FALSE))/reps
+system.time(for (i in 1:reps) suppressWarnings(NY811_nb <- dnearneigh(NY8_ct_sf, d1=0, d2=0.75*max_1nn, use_kd_tree=FALSE)))/reps
 
 ## ----echo=dothis, eval=dothis-----------------------------------------------------------
 pts_ll <- st_transform(NY8_ct_sf, "OGC:CRS84")
@@ -147,39 +145,39 @@ args(dnearneigh)
 
 ## ----echo=dothis, eval=dothis-----------------------------------------------------------
 if (packageVersion("s2") > "1.0.7") {
-  system.time(for (i in 1:(reps/5)) pts_ll3_nb <- dnearneigh(pts_ll, d1=0,
-      d2=0.75*max_1nn_ll))/(reps/5)
+  system.time(for (i in 1:(reps/5)) suppressWarnings(pts_ll3_nb <- dnearneigh(pts_ll, d1=0,
+      d2=0.75*max_1nn_ll)))/(reps/5)
 }
 
 ## ----echo=dothis, eval=dothis-----------------------------------------------------------
-system.time(for (i in 1:(reps/5)) pts_ll5_nb <- dnearneigh(pts_ll, d1=0, d2=0.75*max_1nn_ll, dwithin=FALSE))/(reps/5)
+system.time(for (i in 1:(reps/5)) suppressWarnings(pts_ll5_nb <- dnearneigh(pts_ll, d1=0, d2=0.75*max_1nn_ll, dwithin=FALSE)))/(reps/5)
 
 ## ----echo=dothis, eval=dothis-----------------------------------------------------------
 if (packageVersion("s2") > "1.0.7") all.equal(pts_ll3_nb, pts_ll5_nb, check.attributes=FALSE)
 
 ## ----echo=dothis, eval=dothis-----------------------------------------------------------
 if (packageVersion("s2") > "1.0.7") {
-  system.time(for (i in 1:(reps/5)) pts_ll3a_nb <- dnearneigh(pts_ll, d1=5,
-      d2=0.75*max_1nn_ll, dwithin=FALSE))/(reps/5)
+  system.time(for (i in 1:(reps/5)) suppressWarnings(pts_ll3a_nb <- dnearneigh(pts_ll, d1=5,
+      d2=0.75*max_1nn_ll, dwithin=FALSE)))/(reps/5)
 }
 
 ## ----echo=dothis, eval=dothis-----------------------------------------------------------
 if (packageVersion("s2") > "1.0.7") {
-    system.time(for (i in 1:(reps/5)) pts_ll5a_nb <- dnearneigh(pts_ll, d1=5,
-        d2=0.75*max_1nn_ll))/(reps/5)
+    system.time(for (i in 1:(reps/5)) suppressWarnings(pts_ll5a_nb <- dnearneigh(pts_ll, d1=5,
+        d2=0.75*max_1nn_ll)))/(reps/5)
 }
 
 ## ----echo=dothis, eval=dothis-----------------------------------------------------------
 if (packageVersion("s2") > "1.0.7") all.equal(pts_ll3a_nb, pts_ll5a_nb, check.attributes=FALSE)
 
 ## ----echo=dothis, eval=dothis-----------------------------------------------------------
-system.time(for (i in 1:reps) pts_ll6_nb <- dnearneigh(pts_ll, d1=0, d2=0.75*max_1nn_ll, use_s2=FALSE))/reps
+system.time(for (i in 1:reps) suppressWarnings(pts_ll6_nb <- dnearneigh(pts_ll, d1=0, d2=0.75*max_1nn_ll, use_s2=FALSE)))/reps
 
 ## ----echo=dothis, eval=dothis-----------------------------------------------------------
 all.equal(pts_ll5_nb, pts_ll6_nb, check.attributes=FALSE)
 
 ## ----echo=dothis, eval=dothis-----------------------------------------------------------
-system.time(for (i in 1:reps) pts_ll6a_nb <- dnearneigh(pts_ll, d1=5, d2=0.75*max_1nn_ll, use_s2=FALSE))/reps
+system.time(for (i in 1:reps) suppressWarnings(pts_ll6a_nb <- dnearneigh(pts_ll, d1=5, d2=0.75*max_1nn_ll, use_s2=FALSE)))/reps
 
 ## ----echo=dothis, eval=dothis-----------------------------------------------------------
 if (packageVersion("s2") > "1.0.7") all.equal(pts_ll5a_nb, pts_ll6a_nb, check.attributes=FALSE)
@@ -189,6 +187,7 @@ NY8_sf_ll <- st_transform(NY8_sf, "OGC:CRS84")
 st_is_longlat(NY8_sf_ll)
 
 ## ----echo=dothis, eval=dothis-----------------------------------------------------------
+sf_use_s2(TRUE)
 system.time(for (i in 1:reps) NY8_sf_1_nb_ll <- poly2nb(NY8_sf_ll, queen=TRUE, snap=eps))/reps
 
 ## ----echo=dothis, eval=dothis-----------------------------------------------------------

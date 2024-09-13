@@ -11,7 +11,8 @@ importFrom(stats, influence.measures, lag, punif, lm, var, integrate,
              aggregate, "coefficients", "fitted", "gaussian",
              "model.frame", "model.matrix", "model.response", "na.fail",
              "na.omit", "naresid", "optimise", "printCoefmat", "resid",
-             "terms", "uniroot", "weighted.residuals", "weights", "median")
+             "terms", "uniroot", "weighted.residuals", "weights", "median",
+             "pbinom")
 
 importFrom(deldir, deldir)
 importFrom(boot, boot)
@@ -33,14 +34,16 @@ exportMethods(coerce)
 
 export(EBImoran.mc, probmap, choynowski, EBest, EBlocal)
 
-export(airdist, card, cell2nb, vi2mrc, n.comp.nb, diffnb, dnearneigh, droplinks)
+export(airdist, card, cell2nb, vi2mrc, n.comp.nb, diffnb, dnearneigh, droplinks,
+	addlinks1)
 
 export(gabrielneigh, geary.test, geary, geary.mc, globalG.test, graph2nb,
 	joincount.test, joincount.mc, joincount.multi, print.jcmulti,
 	knearneigh, knn2nb)
 
-export(listw2sn, sn2listw, read.gwt2nb,	write.sn2gwt, lm.LMtests, 
-        lm.RStests, SD.RStests,
+export(listw2sn, sn2listw, read.gwt2nb,	write.sn2gwt,
+        read.swmdbf2listw, read_swm_dbf, write.sn2DBF,
+        lm.LMtests, lm.RStests, SD.RStests,
 	lm.morantest, localG, localG_perm, localmoran, localmoran_perm, moran,
 	moran.test, moran.mc, moran.plot, localmoran.sad, lm.morantest.sad,
 	nb2listw, nb2listwdist, nb2mat, listw2mat, mat2listw, nbdists, nblag,
@@ -83,12 +86,15 @@ export(grid2nb)
 export(autocov_dist)
 
 export(set.VerboseOption, get.VerboseOption, set.ZeroPolicyOption,
-        get.ZeroPolicyOption, get.SubgraphOption, set.SubgraphOption)
+        get.ZeroPolicyOption, get.SubgraphOption, set.SubgraphOption,
+        get.SubgraphCeiling, set.SubgraphCeiling, get.NoNeighbourOption,
+        set.NoNeighbourOption)
 export(set.mcOption, get.mcOption, set.coresOption, get.coresOption,
         set.ClusterOption, get.ClusterOption)
 
 export(localmoran_bv, moran_bv,local_joincount_uni, local_joincount_bv)
 
+export(licd_multi)
 
 S3method(print, nb)
 S3method(summary, nb)
@@ -148,3 +154,4 @@ S3method(hotspot, summary.localmoransad)
 S3method(hotspot, data.frame.localmoranex)
 S3method(hotspot, localC)
 S3method(hotspot, localG)
+S3method(hotspot, licd)
