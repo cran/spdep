@@ -1,14 +1,14 @@
 ## ----eval=FALSE-------------------------------------------------------------------------
-#  library(sf)
-#  sf_bna <- st_read("t8_36.bna", stringsAsFactors=FALSE)
-#  table(st_is_valid(sf_bna))
-#  sf_bna$AREAKEY <- gsub("\\.", "", sf_bna$Primary.ID)
-#  data(NY_data, package="spData")
-#  key <- as.character(nydata$AREAKEY)
-#  sf_bna1 <- sf_bna[match(key, sf_bna$AREAKEY), c("AREAKEY")]
-#  sf_bna2 <- merge(sf_bna1, nydata, by="AREAKEY")
-#  sf_bna2_utm18 <- st_transform(sf_bna2, "+proj=utm +zone=18 +datum=NAD27")
-#  st_write(sf_bna2_utm18, "NY8_bna_utm18.gpkg")
+# library(sf)
+# sf_bna <- st_read("t8_36.bna", stringsAsFactors=FALSE)
+# table(st_is_valid(sf_bna))
+# sf_bna$AREAKEY <- gsub("\\.", "", sf_bna$Primary.ID)
+# data(NY_data, package="spData")
+# key <- as.character(nydata$AREAKEY)
+# sf_bna1 <- sf_bna[match(key, sf_bna$AREAKEY), c("AREAKEY")]
+# sf_bna2 <- merge(sf_bna1, nydata, by="AREAKEY")
+# sf_bna2_utm18 <- st_transform(sf_bna2, "+proj=utm +zone=18 +datum=NAD27")
+# st_write(sf_bna2_utm18, "NY8_bna_utm18.gpkg")
 
 ## ----echo=FALSE-------------------------------------------------------------------------
 rv <- R.Version()

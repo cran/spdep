@@ -1325,6 +1325,7 @@ if (window.hljs) {
 div.csl-bib-body { }
 div.csl-entry {
 clear: both;
+margin-bottom: 0em;
 }
 .hanging div.csl-entry {
 margin-left:2em;
@@ -1951,7 +1952,7 @@ Prop_stdN  &lt;- lapply(vars, function(x) moran.test(eire_ge1[[x]], listw=lw_std
 Prop_stdR  &lt;- lapply(vars, function(x) moran.test(eire_ge1[[x]], listw=lw_std, randomisation=TRUE))
 })</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.117   0.006   0.124</code></pre>
+##   0.113   0.010   0.123</code></pre>
 <pre class="r"><code>res &lt;- sapply(c(&quot;MoranN&quot;, &quot;MoranR&quot;, &quot;GearyN&quot;, &quot;GearyR&quot;, &quot;Prop_unstdN&quot;, &quot;Prop_unstdR&quot;, &quot;Prop_stdN&quot;, &quot;Prop_stdR&quot;), function(x) sapply(get(x), &quot;[[&quot;, &quot;statistic&quot;))
 rownames(res) &lt;- vars
 ores &lt;- res[,c(1,2,5:8)]</code></pre>
@@ -2030,8 +2031,9 @@ function implementing equations 3 and 4:</p>
 <p><span class="math display">\[I =
 \frac{\sum_{i=1}^{n}\sum_{j=i+1}^{n}w_{ij}(x_i-\bar{x})(x_j-\bar{x})}{\sum_{i=1}^{n}(x_i
 - \bar{x})^2}\]</span></p>
-<p>where crucially the inner summation is over <span class="math inline">\(i+1 \ldots n\)</span>, not <span class="math inline">\(1 \ldots n\)</span>, we can reproduce the values
-of the measure shown in the original Table 5:</p>
+<p>where crucially the inner summation is over <span class="math inline">\(i+1 \ldots n\)</span>, not <span class="math inline">\(1 \ldots
+n\)</span>, we can reproduce the values of the measure shown in the
+original Table 5:</p>
 <pre class="r"><code>oMoranf &lt;- function(x, nb) {
   z &lt;- scale(x, scale=FALSE)
   n &lt;- length(z)
@@ -2159,7 +2161,7 @@ Prop_unstdSad  &lt;- lapply(lm_objs, function(x) lm.morantest.sad(x, listw=lw_un
 Prop_stdSad  &lt;- lapply(lm_objs, function(x) lm.morantest.sad(x, listw=lw_std))
 })</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.064   0.000   0.064</code></pre>
+##   0.061   0.002   0.063</code></pre>
 <pre class="r"><code>res &lt;- sapply(c(&quot;MoranSad&quot;, &quot;Prop_unstdSad&quot;, &quot;Prop_stdSad&quot;), function(x) sapply(get(x), &quot;[[&quot;, &quot;statistic&quot;))
 rownames(res) &lt;- vars</code></pre>
 <p>Although the analytical standard deviates (under Normality) are
@@ -2207,7 +2209,7 @@ Prop_unstdEx  &lt;- lapply(lm_objs, function(x) lm.morantest.exact(x, listw=lw_u
 Prop_stdEx  &lt;- lapply(lm_objs, function(x) lm.morantest.exact(x, listw=lw_std))
 })</code></pre>
 <pre><code>##    user  system elapsed 
-##    0.08    0.00    0.08</code></pre>
+##   0.079   0.000   0.079</code></pre>
 <pre class="r"><code>res &lt;- sapply(c(&quot;MoranEx&quot;, &quot;Prop_unstdEx&quot;, &quot;Prop_stdEx&quot;), function(x) sapply(get(x), &quot;[[&quot;, &quot;statistic&quot;))
 rownames(res) &lt;- vars</code></pre>
 <p>The output is comparable with that of the Saddlepoint approximation,
@@ -2309,7 +2311,7 @@ data sets of this size and shape.</p>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2 class="unnumbered">References</h2>
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 <div id="ref-bivandetal:09" class="csl-entry">
 Bivand, R. S., W. Müller, and M. Reder. 2009. <span>“Power Calculations
 for Global and Local <span>M</span>oran’s <span><span class="math inline">\(I\)</span></span>.”</span> <em>Computational

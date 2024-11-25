@@ -11,9 +11,9 @@ nc <- st_read(system.file("shapes/sids.gpkg", package="spData")[1], quiet=TRUE)
 row.names(nc) <- as.character(nc$FIPSNO)
 
 ## ----echo=TRUE,eval=FALSE---------------------------------------------------------------
-#  sf_use_s2(TRUE)
-#  plot(st_geometry(nc), axes=TRUE)
-#  text(st_coordinates(st_centroid(st_geometry(nc), of_largest_polygon=TRUE)), label=nc$FIPSNO, cex=0.5)
+# sf_use_s2(TRUE)
+# plot(st_geometry(nc), axes=TRUE)
+# text(st_coordinates(st_centroid(st_geometry(nc), of_largest_polygon=TRUE)), label=nc$FIPSNO, cex=0.5)
 
 ## ----echo=TRUE,eval=TRUE----------------------------------------------------------------
 names(nc)
@@ -82,8 +82,8 @@ ncCC89 <- read.gal(gal_file, region.id=nc$FIPSNO)
 ncCC89
 
 ## ----label=plot-CC89.nb, echo=TRUE,eval=FALSE-------------------------------------------
-#  plot(st_geometry(nc), border="grey")
-#  plot(ncCC89, st_centroid(st_geometry(nc), of_largest_polygon), add=TRUE, col="blue")
+# plot(st_geometry(nc), border="grey")
+# plot(ncCC89, st_centroid(st_geometry(nc), of_largest_polygon), add=TRUE, col="blue")
 
 ## ----echo=TRUE--------------------------------------------------------------------------
 r.id <- attr(ncCC89, "region.id")

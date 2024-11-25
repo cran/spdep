@@ -169,7 +169,7 @@ set.ZeroPolicyOption(TRUE)
 get.ZeroPolicyOption()
 
 ## ----eval=FALSE, echo=TRUE--------------------------------------------------------------
-#  (lw <- nb2listw(nb_W_50m))
+# (lw <- nb2listw(nb_W_50m))
 
 ## ----echo=FALSE-------------------------------------------------------------------------
 # repeated to overcome CMD build latency

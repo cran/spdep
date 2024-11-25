@@ -28,27 +28,27 @@ isTRUE(all.equal(Sy0_nb, Sy2_nb, check.attributes=FALSE))
 run <- require("sp", quiet=TRUE)
 
 ## ----echo=TRUE,eval=FALSE---------------------------------------------------------------
-#  oopar <- par(mfrow=c(1,2), mar=c(3,3,1,1)+0.1)
-#  plot(Syracuse, border="grey60")
-#  plot(Sy0_nb, coordinates(Syracuse), add=TRUE, pch=19, cex=0.6)
-#  text(bbox(Syracuse)[1,1], bbox(Syracuse)[2,2], labels="a)", cex=0.8)
-#  plot(Syracuse, border="grey60")
-#  plot(Sy0_nb, coordinates(Syracuse), add=TRUE, pch=19, cex=0.6)
-#  plot(diffnb(Sy0_nb, Sy2_nb, verbose=FALSE), coordinates(Syracuse),
-#    add=TRUE, pch=".", cex=0.6, lwd=2, col="orange")
-#  text(bbox(Syracuse)[1,1], bbox(Syracuse)[2,2], labels="b)", cex=0.8)
-#  par(oopar)
+# oopar <- par(mfrow=c(1,2), mar=c(3,3,1,1)+0.1)
+# plot(Syracuse, border="grey60")
+# plot(Sy0_nb, coordinates(Syracuse), add=TRUE, pch=19, cex=0.6)
+# text(bbox(Syracuse)[1,1], bbox(Syracuse)[2,2], labels="a)", cex=0.8)
+# plot(Syracuse, border="grey60")
+# plot(Sy0_nb, coordinates(Syracuse), add=TRUE, pch=19, cex=0.6)
+# plot(diffnb(Sy0_nb, Sy2_nb, verbose=FALSE), coordinates(Syracuse),
+#   add=TRUE, pch=".", cex=0.6, lwd=2, col="orange")
+# text(bbox(Syracuse)[1,1], bbox(Syracuse)[2,2], labels="b)", cex=0.8)
+# par(oopar)
 
 ## ----eval=FALSE-------------------------------------------------------------------------
-#  library(rgrass)
-#  v <- terra::vect(sf::st_as_sf(Syracuse))
-#  SG <- terra::rast(terra::ext(v), crs=terra::crs(v))
-#  pr <- initGRASS("/home/rsb/topics/grass/g840/grass84", tempdir(), SG=SG, override=TRUE)
-#  write_VECT(v, "SY0", flags=c("o", "overwrite"))
-#  contig <- vect2neigh("SY0")
-#  Sy3_nb <- sn2listw(contig, style="B")$neighbours
-#  isTRUE(all.equal(Sy3_nb, Sy2_nb, check.attributes=FALSE))
-#  ## [1] TRUE
+# library(rgrass)
+# v <- terra::vect(sf::st_as_sf(Syracuse))
+# SG <- terra::rast(terra::ext(v), crs=terra::crs(v))
+# pr <- initGRASS("/home/rsb/topics/grass/g840/grass84", tempdir(), SG=SG, override=TRUE)
+# write_VECT(v, "SY0", flags=c("o", "overwrite"))
+# contig <- vect2neigh("SY0")
+# Sy3_nb <- sn2listw(contig, style="B")$neighbours
+# isTRUE(all.equal(Sy3_nb, Sy2_nb, check.attributes=FALSE))
+# ## [1] TRUE
 
 ## ----echo=run---------------------------------------------------------------------------
 coords <- coordinates(Syracuse)
@@ -62,22 +62,22 @@ Sy6_nb <- graph2nb(gabrielneigh(coords), row.names=IDs)
 Sy7_nb <- graph2nb(relativeneigh(coords), row.names=IDs)
 
 ## ----echo=run,eval=FALSE----------------------------------------------------------------
-#  oopar <- par(mfrow=c(2,2), mar=c(1,1,1,1)+0.1)
-#  plot(Syracuse, border="grey60")
-#  plot(Sy4_nb, coords, add=TRUE, pch=".")
-#  text(bbox(Syracuse)[1,1], bbox(Syracuse)[2,2], labels="a)", cex=0.8)
-#  plot(Syracuse, border="grey60")
-#  if (!is.null(Sy5_nb)) {
-#    plot(Sy5_nb, coords, add=TRUE, pch=".")
-#    text(bbox(Syracuse)[1,1], bbox(Syracuse)[2,2], labels="b)", cex=0.8)
-#  }
-#  plot(Syracuse, border="grey60")
-#  plot(Sy6_nb, coords, add=TRUE, pch=".")
-#  text(bbox(Syracuse)[1,1], bbox(Syracuse)[2,2], labels="c)", cex=0.8)
-#  plot(Syracuse, border="grey60")
-#  plot(Sy7_nb, coords, add=TRUE, pch=".")
-#  text(bbox(Syracuse)[1,1], bbox(Syracuse)[2,2], labels="d)", cex=0.8)
-#  par(oopar)
+# oopar <- par(mfrow=c(2,2), mar=c(1,1,1,1)+0.1)
+# plot(Syracuse, border="grey60")
+# plot(Sy4_nb, coords, add=TRUE, pch=".")
+# text(bbox(Syracuse)[1,1], bbox(Syracuse)[2,2], labels="a)", cex=0.8)
+# plot(Syracuse, border="grey60")
+# if (!is.null(Sy5_nb)) {
+#   plot(Sy5_nb, coords, add=TRUE, pch=".")
+#   text(bbox(Syracuse)[1,1], bbox(Syracuse)[2,2], labels="b)", cex=0.8)
+# }
+# plot(Syracuse, border="grey60")
+# plot(Sy6_nb, coords, add=TRUE, pch=".")
+# text(bbox(Syracuse)[1,1], bbox(Syracuse)[2,2], labels="c)", cex=0.8)
+# plot(Syracuse, border="grey60")
+# plot(Sy7_nb, coords, add=TRUE, pch=".")
+# text(bbox(Syracuse)[1,1], bbox(Syracuse)[2,2], labels="d)", cex=0.8)
+# par(oopar)
 
 ## ----echo=run---------------------------------------------------------------------------
 nb_l <- list(Triangulation=Sy4_nb, Gabriel=Sy6_nb,
@@ -95,17 +95,17 @@ sapply(nb_l, function(x) is.symmetric.nb(x, verbose=FALSE, force=TRUE))
 sapply(nb_l, function(x) n.comp.nb(x)$nc)
 
 ## ----echo=run,eval=FALSE----------------------------------------------------------------
-#  oopar <- par(mfrow=c(1,3), mar=c(1,1,1,1)+0.1)
-#  plot(Syracuse, border="grey60")
-#  plot(Sy8_nb, coords, add=TRUE, pch=".")
-#  text(bbox(Syracuse)[1,1], bbox(Syracuse)[2,2], labels="a)", cex=0.8)
-#  plot(Syracuse, border="grey60")
-#  plot(Sy9_nb, coords, add=TRUE, pch=".")
-#  text(bbox(Syracuse)[1,1], bbox(Syracuse)[2,2], labels="b)", cex=0.8)
-#  plot(Syracuse, border="grey60")
-#  plot(Sy10_nb, coords, add=TRUE, pch=".")
-#  text(bbox(Syracuse)[1,1], bbox(Syracuse)[2,2], labels="c)", cex=0.8)
-#  par(oopar)
+# oopar <- par(mfrow=c(1,3), mar=c(1,1,1,1)+0.1)
+# plot(Syracuse, border="grey60")
+# plot(Sy8_nb, coords, add=TRUE, pch=".")
+# text(bbox(Syracuse)[1,1], bbox(Syracuse)[2,2], labels="a)", cex=0.8)
+# plot(Syracuse, border="grey60")
+# plot(Sy9_nb, coords, add=TRUE, pch=".")
+# text(bbox(Syracuse)[1,1], bbox(Syracuse)[2,2], labels="b)", cex=0.8)
+# plot(Syracuse, border="grey60")
+# plot(Sy10_nb, coords, add=TRUE, pch=".")
+# text(bbox(Syracuse)[1,1], bbox(Syracuse)[2,2], labels="c)", cex=0.8)
+# par(oopar)
 
 ## ----echo=run---------------------------------------------------------------------------
 dsts <- unlist(nbdists(Sy8_nb, coords))
@@ -120,17 +120,17 @@ sapply(nb_l, function(x) is.symmetric.nb(x, verbose=FALSE, force=TRUE))
 sapply(nb_l, function(x) n.comp.nb(x)$nc)
 
 ## ----echo=run,eval=FALSE----------------------------------------------------------------
-#  oopar <- par(mfrow=c(1,3), mar=c(1,1,1,1)+0.1)
-#  plot(Syracuse, border="grey60")
-#  plot(Sy11_nb, coords, add=TRUE, pch=".")
-#  text(bbox(Syracuse)[1,1], bbox(Syracuse)[2,2], labels="a)", cex=0.8)
-#  plot(Syracuse, border="grey60")
-#  plot(Sy12_nb, coords, add=TRUE, pch=".")
-#  text(bbox(Syracuse)[1,1], bbox(Syracuse)[2,2], labels="b)", cex=0.8)
-#  plot(Syracuse, border="grey60")
-#  plot(Sy13_nb, coords, add=TRUE, pch=".")
-#  text(bbox(Syracuse)[1,1], bbox(Syracuse)[2,2], labels="c)", cex=0.8)
-#  par(oopar)
+# oopar <- par(mfrow=c(1,3), mar=c(1,1,1,1)+0.1)
+# plot(Syracuse, border="grey60")
+# plot(Sy11_nb, coords, add=TRUE, pch=".")
+# text(bbox(Syracuse)[1,1], bbox(Syracuse)[2,2], labels="a)", cex=0.8)
+# plot(Syracuse, border="grey60")
+# plot(Sy12_nb, coords, add=TRUE, pch=".")
+# text(bbox(Syracuse)[1,1], bbox(Syracuse)[2,2], labels="b)", cex=0.8)
+# plot(Syracuse, border="grey60")
+# plot(Sy13_nb, coords, add=TRUE, pch=".")
+# text(bbox(Syracuse)[1,1], bbox(Syracuse)[2,2], labels="c)", cex=0.8)
+# par(oopar)
 
 ## ----echo=run---------------------------------------------------------------------------
 dS <- c(0.75, 1, 1.5)*max_1nn

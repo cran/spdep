@@ -1325,6 +1325,7 @@ if (window.hljs) {
 div.csl-bib-body { }
 div.csl-entry {
 clear: both;
+margin-bottom: 0em;
 }
 .hanging div.csl-entry {
 margin-left:2em;
@@ -1532,8 +1533,8 @@ for symmetric neighbours, showing in addition which observations belong
 to which subgraph. Obviously, no-neighbour observations are singleton
 graph nodes, but subgraphs are also troubling for spatial analysis,
 because there is no connection between the spatial processes in those
-subgraphs. The ripples in one pond cannot cross into a separate pond if
-they are not connected.</p>
+subgraphs. <strong>The ripples in one pond cannot cross into a separate
+pond if they are not connected</strong>.</p>
 <p>From <code>spdep</code> 1.3-1, steps began to raise awareness of the
 possibility that neighbour objects might be created that are
 disconnected in some way, mostly through warnings, and through the
@@ -1605,7 +1606,7 @@ if (GDAL37) {
     w50m &lt;- st_read(target)
 }</code></pre>
 <pre><code>## Reading layer `GB_2024_Wales_50m&#39; from data source 
-##   `/tmp/RtmpW6BURj/Rinst1339b624a050e0/spdep/etc/shapes/GB_2024_Wales_50m.gpkg.zip&#39; 
+##   `/tmp/RtmpuXWiUZ/Rinst716761a687a3f/spdep/etc/shapes/GB_2024_Wales_50m.gpkg.zip&#39; 
 ##   using driver `GPKG&#39;
 ## Simple feature collection with 32 features and 19 fields
 ## Geometry type: MULTIPOLYGON
@@ -1775,7 +1776,7 @@ if (GDAL37) {
     sc50m &lt;- st_read(target)
 }</code></pre>
 <pre><code>## Reading layer `GB_2024_southcoast_50m&#39; from data source 
-##   `/tmp/RtmpW6BURj/Rinst1339b624a050e0/spdep/etc/shapes/GB_2024_southcoast_50m.gpkg.zip&#39; 
+##   `/tmp/RtmpuXWiUZ/Rinst716761a687a3f/spdep/etc/shapes/GB_2024_southcoast_50m.gpkg.zip&#39; 
 ##   using driver `GPKG&#39;
 ## Simple feature collection with 119 features and 19 fields
 ## Geometry type: MULTIPOLYGON
@@ -2022,7 +2023,7 @@ if (GDAL37) {
     tokyo &lt;- st_read(target)
 }</code></pre>
 <pre><code>## Reading layer `tokyo&#39; from data source 
-##   `/tmp/RtmpW6BURj/Rinst1339b624a050e0/spdep/etc/shapes/tokyo.gpkg.zip&#39; 
+##   `/tmp/RtmpuXWiUZ/Rinst716761a687a3f/spdep/etc/shapes/tokyo.gpkg.zip&#39; 
 ##   using driver `GPKG&#39;
 ## Simple feature collection with 262 features and 3 fields
 ## Geometry type: MULTIPOLYGON
@@ -2095,7 +2096,7 @@ degrees:</p>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2 class="unnumbered">References</h2>
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 <div id="ref-bivandetal13" class="csl-entry">
 Bivand, Roger, Jan Hauke, and Tomasz Kossowski. 2013. <span>“Computing
 the <span>J</span>acobian in <span>G</span>aussian Spatial
