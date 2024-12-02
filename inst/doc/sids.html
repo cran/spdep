@@ -1536,7 +1536,7 @@ manual <span class="citation">(Kaluzny et al. 1996)</span>.</p>
 <div id="getting-the-data-into-r" class="section level2">
 <h2>Getting the data into R</h2>
 <p>We will be using the <strong>spdep</strong> and
-<strong>spreg</strong> packages, here version: spdep, version 1.3-7,
+<strong>spreg</strong> packages, here version: spdep, version 1.3-8,
 2024-11-25, the <strong>sf</strong> package and the
 <strong>tmap</strong> package. The data from the sources referred to
 above is documented in the help page for the <code>nc.sids</code> data
@@ -1634,14 +1634,32 @@ st_crs(nc_sf)</code></pre>
 ##             ORDER[2],
 ##             ANGLEUNIT[&quot;degree&quot;,0.0174532925199433]],
 ##     ID[&quot;EPSG&quot;,4267]]</code></pre>
-<pre class="r"><code>nc &lt;- st_read(system.file(&quot;shapes/sids.shp&quot;,
+<pre class="r"><code>nc &lt;- st_read(system.file(&quot;shapes/sids.gpkg&quot;,
                  package=&quot;spData&quot;), quiet=TRUE)
 st_crs(nc)</code></pre>
-<pre><code>## Coordinate Reference System: NA</code></pre>
-<p>As the actual CRS is unknown, <strong>spData</strong> reports
-missing, although it may very well be
-<code>+proj=longlat +datum=NAD27</code></p>
-<pre class="r"><code>st_crs(nc) &lt;- &quot;+proj=longlat +datum=NAD27&quot;</code></pre>
+<pre><code>## Coordinate Reference System:
+##   User input: NAD27 
+##   wkt:
+## GEOGCRS[&quot;NAD27&quot;,
+##     DATUM[&quot;North American Datum 1927&quot;,
+##         ELLIPSOID[&quot;Clarke 1866&quot;,6378206.4,294.978698213898,
+##             LENGTHUNIT[&quot;metre&quot;,1]]],
+##     PRIMEM[&quot;Greenwich&quot;,0,
+##         ANGLEUNIT[&quot;degree&quot;,0.0174532925199433]],
+##     CS[ellipsoidal,2],
+##         AXIS[&quot;geodetic latitude (Lat)&quot;,north,
+##             ORDER[1],
+##             ANGLEUNIT[&quot;degree&quot;,0.0174532925199433]],
+##         AXIS[&quot;geodetic longitude (Lon)&quot;,east,
+##             ORDER[2],
+##             ANGLEUNIT[&quot;degree&quot;,0.0174532925199433]],
+##     USAGE[
+##         SCOPE[&quot;Geodesy.&quot;],
+##         AREA[&quot;North and central America: Antigua and Barbuda - onshore. Bahamas - onshore plus offshore over internal continental shelf only. Belize - onshore. British Virgin Islands - onshore. Canada onshore - Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland and Labrador, Northwest Territories, Nova Scotia, Nunavut, Ontario, Prince Edward Island, Quebec, Saskatchewan and Yukon - plus offshore east coast. Cuba - onshore and offshore. El Salvador - onshore. Guatemala - onshore. Honduras - onshore. Panama - onshore. Puerto Rico - onshore. Mexico - onshore plus offshore east coast. Nicaragua - onshore. United States (USA) onshore and offshore - Alabama, Alaska, Arizona, Arkansas, California, Colorado, Connecticut, Delaware, Florida, Georgia, Idaho, Illinois, Indiana, Iowa, Kansas, Kentucky, Louisiana, Maine, Maryland, Massachusetts, Michigan, Minnesota, Mississippi, Missouri, Montana, Nebraska, Nevada, New Hampshire, New Jersey, New Mexico, New York, North Carolina, North Dakota, Ohio, Oklahoma, Oregon, Pennsylvania, Rhode Island, South Carolina, South Dakota, Tennessee, Texas, Utah, Vermont, Virginia, Washington, West Virginia, Wisconsin and Wyoming - plus offshore . US Virgin Islands - onshore.&quot;],
+##         BBOX[7.15,167.65,83.17,-47.74]],
+##     ID[&quot;EPSG&quot;,4267]]</code></pre>
+<p>As the actual CRS was unknown, the GeoPackage <strong>spData</strong>
+version has been updated to <code>&quot;EPSG:4267&quot;</code>.</p>
 <p>Next, are the geometries the same? <code>sf::st_equals</code> returns
 a logical matrix, so we’ll check that the diagonal values are all
 <code>TRUE</code>, and that only those values are <code>TRUE</code> by

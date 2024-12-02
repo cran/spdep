@@ -24,12 +24,9 @@ library(sf)
 nc_sf <- st_read(system.file("shape/nc.shp", package="sf"),
                  quiet=TRUE)
 st_crs(nc_sf)
-nc <- st_read(system.file("shapes/sids.shp",
+nc <- st_read(system.file("shapes/sids.gpkg",
                  package="spData"), quiet=TRUE)
 st_crs(nc)
-
-## ----echo=TRUE,eval=TRUE----------------------------------------------------------------
-st_crs(nc) <- "+proj=longlat +datum=NAD27"
 
 ## ----echo=TRUE,eval=TRUE----------------------------------------------------------------
 suppressWarnings(st_crs(nc_sf) <- st_crs(nc))
