@@ -1,5 +1,14 @@
-# Version 1.3-8 (development)
+# Version 1.3-9 (development)
 
+* revisit `diffnb` and set operations like `union.nb` and `setdiff.nb` following up #175; `diffnb` largely rewritten and should no longer generate deformed output; set operations modified to match base functions actions
+
+* convert `error` to `Rf_error` in `src/ml_sse.c` to accommodate `R_NO_REMAP`
+
+* re-instate **rgeoda** references
+
+# Version 1.3-8 (2024-12-02)
+
+* Remove remaining `spData` ESRI shapefile use
 
 # Version 1.3-7 (2024-11-25)
 

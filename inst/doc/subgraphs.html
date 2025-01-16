@@ -1591,7 +1591,7 @@ compressed GeoPackage files, if not they must be decompressed first.</p>
 <pre><code>## [1] TRUE</code></pre>
 <p>The boundaries are taken from the Ordnance Survey Boundary-Line site,
 <a href="https://osdatahub.os.uk/downloads/open/BoundaryLine" class="uri">https://osdatahub.os.uk/downloads/open/BoundaryLine</a>,
-choosing the 2024 Westminster constituencies (<a href="https://www.os.uk/opendata/licence" class="uri">https://www.os.uk/opendata/licence</a>), simplified using a
+choosing the 2024 Westminster constituencies, simplified using a
 tolerance of 50m to reduce object size, and merged with selected voting
 outcomes for constituencies in Great Britain <a href="https://electionresults.parliament.uk/countries/1" class="uri">https://electionresults.parliament.uk/countries/1</a>, (<a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" class="uri">https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/</a>).
 Here, the subset for Wales is useful as we will see:</p>
@@ -1606,7 +1606,7 @@ if (GDAL37) {
     w50m &lt;- st_read(target)
 }</code></pre>
 <pre><code>## Reading layer `GB_2024_Wales_50m&#39; from data source 
-##   `/tmp/RtmpRJBEOV/Rinst3afc0726ca4663/spdep/etc/shapes/GB_2024_Wales_50m.gpkg.zip&#39; 
+##   `/tmp/RtmpVEZhyg/Rinst3645e24a0dc84/spdep/etc/shapes/GB_2024_Wales_50m.gpkg.zip&#39; 
 ##   using driver `GPKG&#39;
 ## Simple feature collection with 32 features and 19 fields
 ## Geometry type: MULTIPOLYGON
@@ -1776,7 +1776,7 @@ if (GDAL37) {
     sc50m &lt;- st_read(target)
 }</code></pre>
 <pre><code>## Reading layer `GB_2024_southcoast_50m&#39; from data source 
-##   `/tmp/RtmpRJBEOV/Rinst3afc0726ca4663/spdep/etc/shapes/GB_2024_southcoast_50m.gpkg.zip&#39; 
+##   `/tmp/RtmpVEZhyg/Rinst3645e24a0dc84/spdep/etc/shapes/GB_2024_southcoast_50m.gpkg.zip&#39; 
 ##   using driver `GPKG&#39;
 ## Simple feature collection with 119 features and 19 fields
 ## Geometry type: MULTIPOLYGON
@@ -2023,7 +2023,7 @@ if (GDAL37) {
     tokyo &lt;- st_read(target)
 }</code></pre>
 <pre><code>## Reading layer `tokyo&#39; from data source 
-##   `/tmp/RtmpRJBEOV/Rinst3afc0726ca4663/spdep/etc/shapes/tokyo.gpkg.zip&#39; 
+##   `/tmp/RtmpVEZhyg/Rinst3645e24a0dc84/spdep/etc/shapes/tokyo.gpkg.zip&#39; 
 ##   using driver `GPKG&#39;
 ## Simple feature collection with 262 features and 3 fields
 ## Geometry type: MULTIPOLYGON

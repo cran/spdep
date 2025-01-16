@@ -60,8 +60,8 @@ lw_unstand
 nb <- poly2nb(eire_ge1)
 nb
 
-## ----echo=TRUE,eval=run-------------------------------------------------------
-xx <- diffnb(nb, lw_unstand$neighbours, verbose=TRUE)
+## ----echo=TRUE,eval=run,warning=FALSE-----------------------------------------
+xx <- diffnb(nb, lw_unstand$neighbours, legacy=TRUE, verbose=TRUE)
 
 ## ----echo=TRUE,eval=FALSE,results='hide'--------------------------------------
 # plot(eire_ge1, border="grey60")
