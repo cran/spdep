@@ -9,7 +9,8 @@ args(moran.test)
 eigen(0)$values
 
 ## ---------------------------------------------------------------------------------------
-(GDAL37 <- as.numeric_version(unname(sf_extSoftVersion()["GDAL"])) >= "3.7.0")
+GDAL37 <- numeric_version(unname(sf::sf_extSoftVersion()["GDAL"]), strict=FALSE)
+(GDAL37 <- ifelse(is.na(GDAL37), FALSE, GDAL37 >= "3.7.0"))
 
 ## ---------------------------------------------------------------------------------------
 file <- "etc/shapes/GB_2024_Wales_50m.gpkg.zip"
@@ -24,10 +25,10 @@ if (GDAL37) {
 }
 
 ## ---------------------------------------------------------------------------------------
-(w50m |> poly2nb(row.names=as.character(w50m$Constituency)) -> nb_W_50m)
+(nb_W_50m <- poly2nb(w50m, row.names=as.character(w50m$Constituency)))
 
 ## ---------------------------------------------------------------------------------------
-attr(nb_W_50m, "ncomp")$comp.id |>table() |> table()
+table(table(attr(nb_W_50m, "ncomp")$comp.id))
 
 ## ---------------------------------------------------------------------------------------
 ynys_mon <- w50m$Constituency == "Ynys Môn"
@@ -188,11 +189,11 @@ get.SubgraphCeiling()
 
 ## ---------------------------------------------------------------------------------------
 set.NoNeighbourOption(FALSE)
-(w50m |> poly2nb(row.names=as.character(w50m$Constituency)) -> nb_W_50mz)
+(nb_W_50mz <- poly2nb(w50m, row.names=as.character(w50m$Constituency)))
 
 ## ---------------------------------------------------------------------------------------
 set.SubgraphOption(FALSE)
-(w50m |> poly2nb(row.names=as.character(w50m$Constituency)) -> nb_W_50my)
+(nb_W_50my <- poly2nb(w50m, row.names=as.character(w50m$Constituency)))
 
 ## ---------------------------------------------------------------------------------------
 str(attr(nb_W_50my, "ncomp"))
@@ -200,7 +201,7 @@ str(attr(nb_W_50my, "ncomp"))
 ## ---------------------------------------------------------------------------------------
 set.SubgraphOption(TRUE)
 set.SubgraphCeiling(100L)
-(w50m |> poly2nb(row.names=as.character(w50m$Constituency)) -> nb_W_50mx)
+(nb_W_50mx <- poly2nb(w50m, row.names=as.character(w50m$Constituency)))
 
 ## ---------------------------------------------------------------------------------------
 str(attr(nb_W_50mx, "ncomp"))
