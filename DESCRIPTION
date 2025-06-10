@@ -1,6 +1,6 @@
 Package: spdep
-Version: 1.3-11
-Date: 2025-04-24
+Version: 1.3-13
+Date: 2025-06-10
 Title: Spatial Dependence: Weighting Schemes, Statistics
 Encoding: UTF-8
 Authors@R: c(person("Roger", "Bivand", role = c("cre", "aut"), 
@@ -50,7 +50,7 @@ Imports: stats, deldir, boot (>= 1.3-1), graphics, utils, grDevices,
 Suggests: spatialreg (>= 1.2-1), Matrix, parallel, dbscan,
         RColorBrewer, lattice, xtable, foreign, igraph, RSpectra,
         knitr, classInt, tmap, spam, ggplot2, rmarkdown, tinytest,
-        rgeoda (>= 0.0.11.1)
+        rgeoda (>= 0.0.11.1), mipfp, Guerry, codingMatrices
 URL: https://github.com/r-spatial/spdep/,
         https://r-spatial.github.io/spdep/
 BugReports: https://github.com/r-spatial/spdep/issues/
@@ -81,10 +81,16 @@ Description: A collection of functions to create spatial weights matrix
   in linear models are provided ('Anselin et al'. 1996)
   <doi:10.1016/0166-0462(95)02111-6>, as are 'Rao' score tests for hypothesised
   spatial 'Durbin' models based on linear models ('Koley' and 'Bera' 2023)
+  <doi:10.1080/17421772.2023.2256810>. Additions in 2024 include Local
+  Indicators for Categorical Data based on 'Carrer' et al. (2021)
+  <doi:10.1016/j.jas.2020.105306> and 'Bivand' et al. (2017)
+  <doi:10.1016/j.spasta.2017.03.003>; also Weighted Multivariate Spatial
+  Autocorrelation Measures ('Bavaud' 2024) <doi:10.1111/gean.12390>.
   <doi:10.1080/17421772.2023.2256810>. A local indicators for categorical data
   (LICD) implementation based on 'Carrer et al.' (2021) 
   <doi:10.1016/j.jas.2020.105306> and 'Bivand et al.' (2017) 
-  <doi:10.1016/j.spasta.2017.03.003> was added in 1.3-7.
+  <doi:10.1016/j.spasta.2017.03.003> was added in 1.3-7. Multivariate
+  'spatialdelta' ('Bavaud' 2024) <doi:10.1111/gean.12390> was added in 1.3-13.
   From 'spdep' and 'spatialreg' versions >= 1.2-1, the model fitting functions
   previously present in this package are defunct in 'spdep' and may be found
   in 'spatialreg'.
@@ -92,8 +98,9 @@ License: GPL (>= 2)
 VignetteBuilder: knitr
 RoxygenNote: RoxygenNote: 6.1.1
 NeedsCompilation: yes
-Packaged: 2025-04-24 16:31:31 UTC; rsb
-Author: Roger Bivand [cre, aut] (<https://orcid.org/0000-0003-2392-6140>),
+Packaged: 2025-06-09 19:39:08 UTC; rsb
+Author: Roger Bivand [cre, aut] (ORCID:
+    <https://orcid.org/0000-0003-2392-6140>),
   Micah Altman [ctb],
   Luc Anselin [ctb],
   Renato Assunção [ctb],
@@ -105,10 +112,10 @@ Author: Roger Bivand [cre, aut] (<https://orcid.org/0000-0003-2392-6140>),
   Yongwan Chun [ctb],
   Carsten Dormann [ctb],
   Stéphane Dray [ctb],
-  Dewey Dunnington [ctb] (<https://orcid.org/0000-0002-9415-4582>),
+  Dewey Dunnington [ctb] (ORCID: <https://orcid.org/0000-0002-9415-4582>),
   Virgilio Gómez-Rubio [ctb],
   Malabika Koley [ctb],
-  Tomasz Kossowski [ctb] (<https://orcid.org/0000-0002-9976-4398>),
+  Tomasz Kossowski [ctb] (ORCID: <https://orcid.org/0000-0002-9976-4398>),
   Elias Krainski [ctb],
   Pierre Legendre [ctb],
   Nicholas Lewin-Koh [ctb],
@@ -116,17 +123,17 @@ Author: Roger Bivand [cre, aut] (<https://orcid.org/0000-0003-2392-6140>),
   Giovanni Millo [ctb],
   Werner Mueller [ctb],
   Hisaji Ono [ctb],
-  Josiah Parry [ctb] (<https://orcid.org/0000-0001-9910-865X>),
+  Josiah Parry [ctb] (ORCID: <https://orcid.org/0000-0001-9910-865X>),
   Pedro Peres-Neto [ctb],
-  Michał Pietrzak [ctb] (<https://orcid.org/0000-0002-9263-4478>),
+  Michał Pietrzak [ctb] (ORCID: <https://orcid.org/0000-0002-9263-4478>),
   Gianfranco Piras [ctb],
   Markus Reder [ctb],
   Jeff Sauer [ctb],
   Michael Tiefelsdorf [ctb],
   René Westerholt [ctb],
-  Justyna Wilk [ctb] (<https://orcid.org/0000-0003-1495-2910>),
+  Justyna Wilk [ctb] (ORCID: <https://orcid.org/0000-0003-1495-2910>),
   Levi Wolf [ctb],
   Danlin Yu [ctb]
 Maintainer: Roger Bivand <Roger.Bivand@nhh.no>
 Repository: CRAN
-Date/Publication: 2025-04-24 17:40:02 UTC
+Date/Publication: 2025-06-10 07:30:02 UTC

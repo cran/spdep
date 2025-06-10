@@ -1589,7 +1589,7 @@ election. If GDAL is at least version 3.7.0, the driver supports
 compressed GeoPackage files, if not they must be decompressed first.</p>
 <pre class="r"><code>GDAL37 &lt;- numeric_version(unname(sf::sf_extSoftVersion()[&quot;GDAL&quot;]), strict=FALSE)
 (GDAL37 &lt;- ifelse(is.na(GDAL37), FALSE, GDAL37 &gt;= &quot;3.7.0&quot;))</code></pre>
-<pre><code>## [1] FALSE</code></pre>
+<pre><code>## [1] TRUE</code></pre>
 <p>The boundaries are taken from the Ordnance Survey Boundary-Line site,
 <a href="https://osdatahub.os.uk/downloads/open/BoundaryLine" class="uri">https://osdatahub.os.uk/downloads/open/BoundaryLine</a>,
 choosing the 2024 Westminster constituencies, simplified using a
@@ -1606,7 +1606,9 @@ if (GDAL37) {
     target &lt;- unzip(zipfile, files=bn, exdir=td)
     w50m &lt;- st_read(target)
 }</code></pre>
-<pre><code>## Reading layer `GB_2024_Wales_50m&#39; from data source `/tmp/RtmpXYq4Dd/GB_2024_Wales_50m.gpkg&#39; using driver `GPKG&#39;
+<pre><code>## Reading layer `GB_2024_Wales_50m&#39; from data source 
+##   `/tmp/RtmpoNBpqF/Rinst1d3b51b1bd5c9/spdep/etc/shapes/GB_2024_Wales_50m.gpkg.zip&#39; 
+##   using driver `GPKG&#39;
 ## Simple feature collection with 32 features and 19 fields
 ## Geometry type: MULTIPOLYGON
 ## Dimension:     XY
@@ -1775,7 +1777,8 @@ if (GDAL37) {
     sc50m &lt;- st_read(target)
 }</code></pre>
 <pre><code>## Reading layer `GB_2024_southcoast_50m&#39; from data source 
-##   `/tmp/RtmpXYq4Dd/GB_2024_southcoast_50m.gpkg&#39; using driver `GPKG&#39;
+##   `/tmp/RtmpoNBpqF/Rinst1d3b51b1bd5c9/spdep/etc/shapes/GB_2024_southcoast_50m.gpkg.zip&#39; 
+##   using driver `GPKG&#39;
 ## Simple feature collection with 119 features and 19 fields
 ## Geometry type: MULTIPOLYGON
 ## Dimension:     XY
@@ -2004,7 +2007,7 @@ set.NoNeighbourOption(TRUE)</code></pre>
 such a way that disconnected graphs are generated when extracting
 contiguities. One such case was raised in <a href="https://github.com/r-spatial/spdep/issues/162" class="uri">https://github.com/r-spatial/spdep/issues/162</a>, for
 subdivisions of Tokyo. The original data file <code>tokyomet262.*</code>
-from <a href="https://sgsup.asu.edu/sites/default/files/SparcFiles/tokyo_0.zip" class="uri">https://sgsup.asu.edu/sites/default/files/SparcFiles/tokyo_0.zip</a>
+from <a href="https://sgsup.asu.edu/sites/g/files/litvpz426/files/SparcFiles/tokyo_0.zip" class="uri">https://sgsup.asu.edu/sites/g/files/litvpz426/files/SparcFiles/tokyo_0.zip</a>
 was created some twenty years ago by Tomoki Nakaya and Martin Charlton,
 and some geometry issues were known at the time. A possibility that may
 affect legacy files is projection of geometries on 32-bit platforms, but
@@ -2020,7 +2023,9 @@ if (GDAL37) {
     target &lt;- unzip(zipfile, files=bn, exdir=td)
     tokyo &lt;- st_read(target)
 }</code></pre>
-<pre><code>## Reading layer `tokyo&#39; from data source `/tmp/RtmpXYq4Dd/tokyo.gpkg&#39; using driver `GPKG&#39;
+<pre><code>## Reading layer `tokyo&#39; from data source 
+##   `/tmp/RtmpoNBpqF/Rinst1d3b51b1bd5c9/spdep/etc/shapes/tokyo.gpkg.zip&#39; 
+##   using driver `GPKG&#39;
 ## Simple feature collection with 262 features and 3 fields
 ## Geometry type: MULTIPOLYGON
 ## Dimension:     XY

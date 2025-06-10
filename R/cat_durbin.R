@@ -17,8 +17,12 @@ have_factor_preds_mf <- function(mf) {
         pred_contrasts <- character(length(factnames))
         pred_ordered <- logical(length(factnames))
         for (pred in seq(along=factnames)) {
+            code <- attr(mf[[factnames[pred]]], "contrasts")
             contr <- C(mf[[factnames[pred]]])
-            pred_contrasts[pred] <- attr(contr, "contrasts")
+            if (is.null(code)) {
+                code <- attr(contr, "contrasts")
+            }
+            pred_contrasts[pred] <- code
             pred_ordered[pred] <- names(attr(contr, "contrasts")) == "ordered"
         }
         names(pred_contrasts) <- names(pred_ordered) <- factnames
@@ -35,14 +39,15 @@ warn_factor_preds <- function(x) {
         paste(attr(x, "factnames"), collapse=", "),
         "\nis not well-understood")
     pred_ordered <- attr(x, "pred_ordered")
-    if (any(pred_ordered)) {
-        pred_contrasts <- attr(x, "pred_contrasts")
-        ordered <- which(pred_ordered)
+    pred_contrasts <- attr(x, "pred_contrasts")
+    if (any(pred_ordered & !is.na(pred_contrasts) &
+        pred_contrasts == "contr.poly")) {
+        ordered <- which(pred_ordered & !is.na(pred_contrasts) &
+            pred_contrasts == "contr.poly")
         plural <- length(ordered) > 1L
         warning("In addition ", ifelse(plural, "variables", "variable"), ":\n",
             paste(names(pred_ordered)[ordered], collapse=", "), 
             "\n", ifelse(plural, "are", "is"), 
-            " ordered (ordinal) with contrasts:\n",
-            paste(pred_contrasts[ordered], collapse=", "))
+            " ordered (ordinal) with polynomial contrasts.")
     }
 }
