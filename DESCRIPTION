@@ -1,11 +1,11 @@
 Package: spdep
-Version: 1.4-1
-Date: 2025-08-25
+Version: 1.4-2
+Date: 2026-02-13
 Title: Spatial Dependence: Weighting Schemes, Statistics
 Encoding: UTF-8
 Authors@R: c(person("Roger", "Bivand", role = c("cre", "aut"), 
            email = "Roger.Bivand@nhh.no",
-           comment=c(ORCID="0000-0003-2392-6140")),
+           comment=c(ORCID="0000-0003-2392-6140", ROR="04v53s997")),
 	person("Micah", "Altman", role = "ctb"),
 	person("Luc", "Anselin", role = "ctb"),
 	person("Renato", "Assunção", role = "ctb"),
@@ -90,7 +90,7 @@ Description: A collection of functions to create spatial weights matrix
   (LICD) implementation based on 'Carrer et al.' (2021) 
   <doi:10.1016/j.jas.2020.105306> and 'Bivand et al.' (2017) 
   <doi:10.1016/j.spasta.2017.03.003> was added in 1.3-7. Multivariate
-  'spatialdelta' ('Bavaud' 2024) <doi:10.1111/gean.12390> was added in 1.3-13 ('Bivand' 2025 <doi:10.26034/la.cdclsl.2025.8343>.
+  'spatialdelta' ('Bavaud' 2024) <doi:10.1111/gean.12390> was added in 1.3-13 ('Bivand' 2025 <doi:10.26034/la.cdclsl.2025.8343>).
   From 'spdep' and 'spatialreg' versions >= 1.2-1, the model fitting functions
   previously present in this package are defunct in 'spdep' and may be found
   in 'spatialreg'.
@@ -98,9 +98,10 @@ License: GPL (>= 2)
 VignetteBuilder: knitr
 RoxygenNote: RoxygenNote: 6.1.1
 NeedsCompilation: yes
-Packaged: 2025-08-29 13:44:39 UTC; rsb
+Packaged: 2026-02-13 12:34:33 UTC; rsb
 Author: Roger Bivand [cre, aut] (ORCID:
-    <https://orcid.org/0000-0003-2392-6140>),
+    <https://orcid.org/0000-0003-2392-6140>, ROR:
+    <https://ror.org/04v53s997>),
   Micah Altman [ctb],
   Luc Anselin [ctb],
   Renato Assunção [ctb],
@@ -136,4 +137,4 @@ Author: Roger Bivand [cre, aut] (ORCID:
   Danlin Yu [ctb]
 Maintainer: Roger Bivand <Roger.Bivand@nhh.no>
 Repository: CRAN
-Date/Publication: 2025-08-31 17:10:02 UTC
+Date/Publication: 2026-02-13 13:50:02 UTC
